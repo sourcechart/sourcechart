@@ -16,10 +16,10 @@
 	</video>
 	<div class="absolute mb-9 left-6 w-full h-full flex items-center pl-32 pt-10">
 		<div class="max-w-4xl">
-			<h1 class="text-black bg-zinc-800 font-bold text-6xl">
+			<h1 class="text-black bg-zinc-800 font-bold text-xl md:text-4xl lg:text-5xl xl:text-6xl">
 				Large Data Visualizations without the Cloud
 			</h1>
-			<p class="text-black max-w-xl font-semibold text-xl">
+			<p class="text-black max-w-xl font-semibold text-sm sm:text-base md:text-md lg:text-lg xl:text-xl">
 				Are you ready to revolutionize the way your business interacts with data? Start your journey
 				with SourceChart.io today and watch your data come alive.
 			</p>
@@ -38,4 +38,9 @@
 	.pb-fluid-video {
 		padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
 	}
+	@media screen and (max-width: 1000px) {
+	.try-now-button {
+		display: none;
+	}
+}
 </style>
