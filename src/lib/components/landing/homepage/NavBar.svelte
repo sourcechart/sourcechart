@@ -3,7 +3,7 @@
 	const logo = '/logo.png';
 
 	const enterFree = () => {
-		goto('/dashboard/emailSignIn');
+		goto('/dashboard/email-sign-up');
 	};
 
 	const signIn = () => {
