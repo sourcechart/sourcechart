@@ -16,7 +16,6 @@
 			va.track('signInEmail', { email: email });
 			showPopup = false;
 			dispatch('emailEntered', { email });
-			console.log("email logged")
 			goto('/dashboard/dashboard'); // Redirect to the /dashboard endpoint
 		} else {
 			alert('Please enter a valid email address.');
