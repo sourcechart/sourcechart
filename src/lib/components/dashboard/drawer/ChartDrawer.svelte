@@ -48,6 +48,13 @@
 		drawerToggle = true;
 	}
 </script>
-{#if drawerToggle}
-<Sidebar />
-{/if}
+
+<div
+	use:clickInside
+	on:click_inside={cInside}
+	use:clickOutside
+	on:click_outside={cOutside}
+	class="flex absolute container justify-center"
+>
+	<Sidebar />
+</div>
