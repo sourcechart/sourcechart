@@ -1,5 +1,6 @@
 <script lang='ts'>
     import { onMount } from 'svelte';
+    import { activeChart, clearChartOptions } from '$lib/io/stores';
   
     let isShown:boolean = false;
   
@@ -24,7 +25,7 @@
     }
   </style>
   
-  <div class="sidebar" class:sidebar.hidden={!isShown}>
+  <div class="sidebar" class:sidebar.hidden={$activeChart}>
     <div class="p-6">
       <h1 class="text-2xl mb-4">My Sidebar</h1>
       <div class="mb-2">
