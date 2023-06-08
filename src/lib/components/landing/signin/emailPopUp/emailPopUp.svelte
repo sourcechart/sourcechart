@@ -16,6 +16,7 @@
 			va.track('signInEmail', { email: email });
 			showPopup = false;
 			dispatch('emailEntered', { email });
+			console.log("email logged")
 			goto('/dashboard/dashboard'); // Redirect to the /dashboard endpoint
 		} else {
 			alert('Please enter a valid email address.');
@@ -57,7 +58,7 @@
 				type="submit"
 				class="mt-4 w-full py-2 px-4 text-black rounded-md login-with-button"
 				disabled={!emailValid}
-				on:change={handleSubmit}>Continue</button
+				on:click={handleSubmit}>Continue</button
 			>
 		</div>
 	</div>
