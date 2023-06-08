@@ -23,9 +23,6 @@
 				Are you ready to revolutionize the way your business interacts with data? Start your journey
 				with SourceChart.io today and watch your data come alive.
 			</p>
-			<button class="mt-4 bg-red-600 hover:bg-red-500 text-white text-xl font-bold py-2 px-4 rounded-lg" on:click={enterFree}>
-				Try now
-			</button>
 		</div>
 		<div class="mb-20" />
 	</div>
