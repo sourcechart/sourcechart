@@ -7,7 +7,7 @@
   resolved "https://registry.yarnpkg.com/@daybrush/utils/-/utils-0.10.5.tgz#96427101f5de99ceb13bce1f09916374e62c84f1"
   integrity sha512-VCPbgJgImkUmGHX33drZJh/5FYBhfSM+EFqlBY7fzKIahBGEemjYfninVSp9BdzqF9P2MyCh7R3hgxmySXLEzg==
 
-"@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.10.3", "@daybrush/utils@^1.3.1", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.1", "@daybrush/utils@^1.9.1":
+"@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.10.3", "@daybrush/utils@^1.3.1", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.1":
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/@daybrush/utils/-/utils-1.11.0.tgz#ad23a431fdb8f95ab4bb34fb6d080f2f7997a988"
   integrity sha512-/T0Oe7KkfUoCusFj1cJ6N+Tu+jFZXVkaKqDBcDY3P0goJfcfaT+4+oG8aHi4LDgBErNjP6uvC3IEOSMe2ka/yQ==
@@ -884,7 +884,7 @@ async-sema@^3.1.1:
   resolved "https://registry.yarnpkg.com/async-sema/-/async-sema-3.1.1.tgz#e527c08758a0f8f6f9f15f799a173ff3c40ea808"
   integrity sha512-tLRNUXati5MFePdAk8dw7Qt7DpxPB60ofAgn8WRhW6a2rcimZnYBP9oxHiv0OHy+Wz7kPMG+t4LGdt31+4EmGg==
 
-autoprefixer@^10.4.7:
+autoprefixer@^10.4.14:
   version "10.4.14"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-10.4.14.tgz#e28d49902f8e759dd25b153264e862df2705f79d"
   integrity sha512-FQzyfOsTlwVzjHxKEqRIAdJx9niO6VCBCoEwax/VLSoQF29ggECcPuBqUMZ+u8jCZOPSy8b8/8KnuFbp0SaFZQ==
@@ -1173,7 +1173,7 @@ css-select@^5.1.0:
     domutils "^3.0.1"
     nth-check "^2.0.1"
 
-css-styled@^1.0.0, css-styled@^1.0.1, css-styled@~1.0.1:
+css-styled@^1.0.0, css-styled@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/css-styled/-/css-styled-1.0.1.tgz#803dc2bf615954805a56679cc500065c756ad525"
   integrity sha512-psJCbNDPPusDBWH/gszP6BetPh577QaqpvaysTNPitxX0nxdGiTgELiOCus0gZ0yXk3gvjShBrFP07nvn58/TQ==
@@ -1799,7 +1799,7 @@ gauge@^3.0.0:
     strip-ansi "^6.0.1"
     wide-align "^1.1.2"
 
-gesto@^1.13.0, gesto@^1.15.1:
+gesto@^1.15.1:
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/gesto/-/gesto-1.16.0.tgz#ddfdc2c7c1f20fb8837306b2128ff06cfb28b940"
   integrity sha512-MEOwXVWqMljfcjgJhhmuY8PXoLAlAHRk+r6t51RKc6RFY8ra0UMWsTOo2awd1W1pHnWjvlznHsY647ZPOICr/Q==
@@ -1946,18 +1946,6 @@ imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
   integrity sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==
-
-infinite-viewer@~0.23.0:
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/infinite-viewer/-/infinite-viewer-0.23.0.tgz#5875b0f94b0b6bb20ceed2400810387fdee7ddfb"
-  integrity sha512-TIz6i1upOarlq3x9xeWP0RD1ZBjsX2IyPe+edZB3MLKYqbCoLbJfFI2uw27yU3rs72BA4REwtXMm+9FhRATS4A==
-  dependencies:
-    "@daybrush/utils" "^1.9.1"
-    "@egjs/agent" "^2.2.1"
-    "@scena/event-emitter" "^1.0.5"
-    css-styled "^1.0.1"
-    framework-utils "^1.1.0"
-    gesto "^1.13.0"
 
 inflight@^1.0.4:
   version "1.0.6"
@@ -2736,10 +2724,19 @@ postcss-value-parser@^4.0.0, postcss-value-parser@^4.2.0:
   resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz#723c09920836ba6d3e5af019f92bc0971c02e514"
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
-postcss@^8.0.9, postcss@^8.4.14, postcss@^8.4.21:
+postcss@^8.0.9, postcss@^8.4.21:
   version "8.4.23"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.23.tgz#df0aee9ac7c5e53e1075c24a3613496f9e6552ab"
   integrity sha512-bQ3qMcpF6A/YjR55xtoTr0jGOlnPOKAIMdOWiv0EIT6HVPEaJiJB4NLljSbiHoC2RX7DN5Uvjtpbg1NPdwv1oA==
+  dependencies:
+    nanoid "^3.3.6"
+    picocolors "^1.0.0"
+    source-map-js "^1.0.2"
+
+postcss@^8.4.24:
+  version "8.4.24"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.24.tgz#f714dba9b2284be3cc07dbd2fc57ee4dc972d2df"
+  integrity sha512-M0RzbcI0sO/XJNucsGjvWU9ERWxb/ytp1w6dKtxTKgixdtQDq4rmx/g8W1hnaheq9jgwL/oyEdH5Bc4WwJKMqg==
   dependencies:
     nanoid "^3.3.6"
     picocolors "^1.0.0"
@@ -3181,13 +3178,6 @@ svelte-hmr@^0.15.1:
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.15.1.tgz#d11d878a0bbb12ec1cba030f580cd2049f4ec86b"
   integrity sha512-BiKB4RZ8YSwRKCNVdNxK/GfY+r4Kjgp9jCLEy0DuqAKfmQtpL38cQK3afdpjw4sqSs4PLi3jIPJIFp259NkZtA==
-
-svelte-infinite-viewer@^0.22.0:
-  version "0.22.1"
-  resolved "https://registry.yarnpkg.com/svelte-infinite-viewer/-/svelte-infinite-viewer-0.22.1.tgz#1155728acf6ac6b18ef59ffdb868dd08ae77e78e"
-  integrity sha512-u80nGPI7fs07OfnfrCUw79xPikHFYiCpx6UsWHH84mAsTeW2NExV2XNF3UsGITK/Pds/nT4Vb1FECmBDr+cYaw==
-  dependencies:
-    infinite-viewer "~0.23.0"
 
 svelte-moveable@^0.37.0:
   version "0.37.0"
