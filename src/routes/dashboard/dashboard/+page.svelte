@@ -1,6 +1,6 @@
 <script>
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
-	import Dashboard from '$lib/components/dashboard/dashboard/dashboard.svelte';
+	import Dashboard from '$lib/components/dashboard/dashboard/Dashboard.svelte';
 	import { DarkMode } from 'flowbite-svelte';
 	import GetStarted from '$lib/components/dashboard/documentation/GetStarted.svelte';
 	import { setLocalStorage } from '$lib/io/storage';
