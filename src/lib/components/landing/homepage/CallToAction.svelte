@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let videoWebm: string;
 	export let videoMp4: string;
-	import {goto} from '$app/navigation';
+	import { goto } from '$app/navigation';
 
 	const enterFree = () => {
 		goto('/dashboard/emailSignIn');
@@ -23,6 +23,12 @@
 				Are you ready to revolutionize the way your business interacts with data? Start your journey
 				with SourceChart.io today and watch your data come alive.
 			</p>
+			<button
+				on:click={enterFree}
+				class="try-now-button inline-block text-xl font-bold px-4 py-2 leading-none border rounded-md text-white bg-red-600 border-black hover:border-transparent hover:text-white hover:bg-black mobile"
+			>
+				Try Now
+			</button>
 		</div>
 		<div class="mb-20" />
 	</div>
