@@ -30,7 +30,7 @@
 		</div>
 		<button
 			on:click={enterFree}
-			class="try-now-button inline-block text-xl font-bold px-4 py-2 leading-none border rounded-md text-white bg-red-600 border-black hover:border-transparent hover:text-white hover:bg-black"
+			class="try-now-button inline-block text-xl font-bold px-4 py-2 leading-none border rounded-md text-white bg-red-600 border-black hover:border-transparent hover:text-white hover:bg-black mobile"
 		>
 			Try Now
 		</button>
@@ -65,5 +65,16 @@
 	.try-now-button {
 		margin-top: 4px;
 		margin-left: 10px;
+	}
+
+	.desktop {
+		display: none;
+	}
+
+	@media screen and (min-width: 1000px) {
+		.desktop {
+			display: inline-block;
+		}
+
 	}
 </style>

@@ -1,10 +1,10 @@
 <script lang="ts">
 	export let videoWebm: string;
 	export let videoMp4: string;
-	import {goto} from '$app/navigation';
+	import { goto } from '$app/navigation';
 
 	const enterFree = () => {
-		goto('/dashboard/emailSignIn');
+		goto('/dashboard/email-sign-up');
 	};
 </script>
 
@@ -16,15 +16,18 @@
 	</video>
 	<div class="absolute mb-9 left-6 w-full h-full flex items-center pl-32 pt-10">
 		<div class="max-w-4xl">
-			<h1 class="text-black bg-zinc-800 font-bold text-6xl">
+			<h1 class="text-black bg-zinc-800 font-bold text-2xl xs:text-base sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
 				Large Data Visualizations without the Cloud
 			</h1>
-			<p class="text-black max-w-xl font-semibold text-xl">
-				Are you ready to revolutionize the way your business interacts with data? Start your journey
+			<p class="text-black max-w-xl font-semibold text-sm sm:text-base md:text-md lg:text-lg xl:text-xl">
+				Rrevolutionize the way your business interacts with data. Start your journey
 				with SourceChart.io today and watch your data come alive.
 			</p>
-			<button class="mt-4 bg-red-600 hover:bg-red-500 text-white text-xl font-bold py-2 px-4 rounded-lg" on:click={enterFree}>
-				Try now
+			<button
+				on:click={enterFree}
+				class="try-now-button inline-block text-xl font-bold px-4 py-2 leading-none border rounded-md text-white bg-red-600 border-black hover:border-transparent hover:text-white hover:bg-black mobile"
+			>
+				Try Now
 			</button>
 		</div>
 		<div class="mb-20" />
@@ -35,4 +38,9 @@
 	.pb-fluid-video {
 		padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
 	}
+	@media screen and (max-width: 1000px) {
+	.try-now-button {
+		display: none;
+	}
+}
 </style>
