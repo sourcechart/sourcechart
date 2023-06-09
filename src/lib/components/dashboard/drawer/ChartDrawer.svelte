@@ -9,11 +9,9 @@
 	import { sineIn } from 'svelte/easing';
 	import { onMount } from 'svelte';
 	import CustomSidebar from './components/CustomSidebar.svelte'; // ensure the path is correct
-
+	import CustomSideBar from './components/CustomSideBar.svelte';
 
 	let open: boolean; // = true
-
-	$: console.log($activeChart, open)
 
 	let transitionParams = {
 		x: -320,
@@ -43,14 +41,16 @@
 		}, 100);
 	}
 
-	function cInside(event: Event) {
+	function cInside() {
 		open = false;
 	}
 
-	function cOutside(event: Event) {
+	function cOutside() {
 		open = true;
 	}
+
 </script>
+
 <div
 	use:clickInside
 	on:click_inside={cInside}
@@ -58,15 +58,16 @@
 	on:click_outside={cOutside}
 	class="flex absolute container justify-center"
 >
-	<CustomSidebar bind:open={$activeChart} id="sidebar2">
-	<div class="overflow-y-auto py-4 px-3 rounded dark:bg-gray-800">
+	<CustomSideBar hidden={$activeChart} />
+</div>
+
+<!-- 
+<div class="overflow-y-auto py-4 px-3 rounded dark:bg-gray-800">
 		<DatasetDropDown />
 		<AxisDropDrown axis={'X'} />
 		<AxisDropDrown axis={'Y'} />
 
-		<div
-			class="text-center font-medium focus:ring-4 focus:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-gray-900 bg-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 hover:text-blue-700 focus:text-blue-700 dark:focus:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:bg-transparent dark:border-gray-800 dark:hover:border-gray-700 rounded-lg"
-		>
+		<div class="text-center font-medium focus:ring-4 focus:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-gray-900 bg-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 hover:text-blue-700 focus:text-blue-700 dark:focus:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:bg-transparent dark:border-gray-800 dark:hover:border-gray-700 rounded-lg">
 			Choose Y Axis Aggregator
 		</div>
 
@@ -81,16 +82,16 @@
 			Clear Choices
 		</button>
 	</div>
-</CustomSidebar>
 </div>
+-->
 
 <style>
 	aside {
 		left: -100%;
-		transition: left 0.3s ease-in-out
+		transition: left 0.3s ease-in-out;
 	}
-	
+
 	.open {
-		left: 0
+		left: 0;
 	}
 </style>
