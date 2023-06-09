@@ -2,14 +2,20 @@
 	import { onMount } from 'svelte';
 	import { activeChart } from '$lib/io/stores';
 
-	export let hidden:boolean;
-	export let id:string = ''
+	export let open: boolean;
+	export let id: string = '';
 
-	$: console.log(hidden)
+	$: console.log(open);
 
+	let isShown = open;
 </script>
 
-<div class="sidebar" class:sidebar.hidden={hidden} id={id}>
+<div
+	class="{open
+		? 'fixed bg-gray-700  text-white w-64 h-full overflow-auto transition-transform duration-200 ease-in-out'
+		: '-translate-x-full'}"
+	{id}
+>
 	<div class="p-6">
 		<h1 class="text-2xl mb-4">My Sidebar</h1>
 		<div class="mb-2">
@@ -30,10 +36,5 @@
 </div>
 
 <style>
-	.sidebar {
-		@apply fixed bg-gray-700 text-white w-64 h-full overflow-auto transition-transform duration-200 ease-in-out;
-	}
-	.sidebar.hidden {
-		@apply -translate-x-full;
-	}
+
 </style>

@@ -8,7 +8,6 @@
 	import { Drawer, Sidebar, SidebarWrapper } from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
 	import { onMount } from 'svelte';
-	import CustomSidebar from './components/CustomSidebar.svelte'; // ensure the path is correct
 	import CustomSideBar from './components/CustomSideBar.svelte';
 
 	let open: boolean; // = true
@@ -58,32 +57,9 @@
 	on:click_outside={cOutside}
 	class="flex absolute container justify-center"
 >
-	<CustomSideBar hidden={$activeChart} />
+	<CustomSideBar bind:open={$activeChart} />
 </div>
 
-<!-- 
-<div class="overflow-y-auto py-4 px-3 rounded dark:bg-gray-800">
-		<DatasetDropDown />
-		<AxisDropDrown axis={'X'} />
-		<AxisDropDrown axis={'Y'} />
-
-		<div class="text-center font-medium focus:ring-4 focus:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-gray-900 bg-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 hover:text-blue-700 focus:text-blue-700 dark:focus:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:bg-transparent dark:border-gray-800 dark:hover:border-gray-700 rounded-lg">
-			Choose Y Axis Aggregator
-		</div>
-
-		<Aggregator />
-		<Groupby />
-
-		<button
-			on:click={clearUpdatedChartObject}
-			type="button"
-			class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-		>
-			Clear Choices
-		</button>
-	</div>
-</div>
--->
 
 <style>
 	aside {
