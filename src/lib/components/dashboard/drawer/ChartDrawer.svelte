@@ -28,13 +28,6 @@
 		}, 100);
 	}
 
-	function cInside() {
-		open = true;
-	}
-
-	function cOutside() {
-		open = false;
-	}
 </script>
 
 <div class="flex absolute container justify-center">

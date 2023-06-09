@@ -1,7 +1,11 @@
 /** Dispatch event on click outside of node */
-export function clickOutside(node: Node) {
+export function clickOutside(node: Node, options: any = {}) {
 	const handleClick = (event: Event) => {
+		if (options.exclude && options.exclude.contains(event.target)) {
+			return;
+		}
 		if (node && !node.contains(event.target) && !event.defaultPrevented) {
+			console.log("Detected click outside"); // Add console log
 			node.dispatchEvent(new CustomEvent('click_outside', node));
 		}
 	};
@@ -15,9 +19,13 @@ export function clickOutside(node: Node) {
 	};
 }
 
-export function clickInside(node: Node) {
+export function clickInside(node: Node, options: any = {}) {
 	const handleClick = (event: Event) => {
+		if (options.exclude && options.exclude.contains(event.target)) {
+			return;
+		}
 		if (node && node.contains(event.target)) {
+			console.log("detected click inside")
 			node.dispatchEvent(new CustomEvent('click_inside', node));
 		}
 	};

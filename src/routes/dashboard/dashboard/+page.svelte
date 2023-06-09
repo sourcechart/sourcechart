@@ -1,5 +1,4 @@
 <script>
-	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Dashboard from '$lib/components/dashboard/dashboard/Dashboard.svelte';
 	import { DarkMode } from 'flowbite-svelte';
 	import GetStarted from '$lib/components/dashboard/documentation/GetStarted.svelte';
@@ -13,8 +12,6 @@
 		<DarkMode />
 	</div>
 </div>
-<div class="flex justify-center">
-	<NavBar />
-</div>
+
 <Dashboard />
 <GetStarted />
