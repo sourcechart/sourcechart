@@ -4,7 +4,7 @@
 	import { NavLi, NavUl } from 'flowbite-svelte';
 	import { EChartBuilder, ChartOptions } from '$lib/io/eChartBuilder';
 	import { generateID } from '$lib/io/fileUtils';
-	import { allCharts, newChartID } from '$lib/io/stores';
+	import { allCharts, newChartID, activeChart } from '$lib/io/stores';
 	import FileUpload from '$lib/components/dashboard/fileupload/FileUpload.svelte';
 
 	function addEChartPropsToStore(chart: string) {
@@ -14,6 +14,7 @@
 		$newChartID = id;
 		var data = addMetadataToChart(eChartDataset, id, chart); //@ts-ignore
 		$allCharts = [...$allCharts, data];
+		$activeChart=true
 	}
 
 	function addMetadataToChart(eChartDataset: object, id: string, chart: string) {

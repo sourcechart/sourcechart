@@ -9,20 +9,18 @@
 
 	function handleInside(event: Event) {
 		$mostRecentChartID = (event.target as HTMLElement).id;
-		$activeChart = false;
+		$activeChart = true;
 	}
 
 	function cOutside() {
-		$activeChart = true;
+		$activeChart = false;
 	}
 </script>
 
 <div
+	class="flex absolute container justify-center"
 	use:clickInside
 	on:click_inside={handleInside}
-	use:clickOutside
-	on:click_outside={cOutside}
-	class="flex absolute container justify-center"
 	{id}
 >
 	<Chart {options} />

@@ -1,19 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { activeChart } from '$lib/io/stores';
+	import { clickInside, clickOutside } from '$lib/actions/clickUtils';
 
 	export let open: boolean;
 	export let id: string = '';
 
-	$: console.log(open);
-
-	let isShown = open;
 </script>
 
 <div
-	class="{open
+	class={open
 		? 'fixed bg-gray-700  text-white w-64 h-full overflow-auto transition-transform duration-200 ease-in-out'
-		: '-translate-x-full'}"
+		: '-translate-x-full invisible'}
 	{id}
 >
 	<div class="p-6">
@@ -36,5 +34,4 @@
 </div>
 
 <style>
-
 </style>
