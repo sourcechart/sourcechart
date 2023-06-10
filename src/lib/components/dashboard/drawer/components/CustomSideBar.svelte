@@ -18,7 +18,7 @@
 
 <div
 	class={open
-		? 'fixed bg-gray-700  text-white w-64 h-full overflow-auto transition-transform duration-200 ease-in-out'
+		? 'fixed bg-gray-700  text-white w-64 overflow-auto transition-transform duration-200 ease-in-out'
 		: '-translate-x-full invisible'}
 	{id}
 >
