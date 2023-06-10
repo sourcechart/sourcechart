@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { activeChart } from '$lib/io/stores';
-	import { clickInside, clickOutside } from '$lib/actions/clickUtils';
 
 	export let open: boolean;
 	export let id: string = '';
@@ -18,7 +16,7 @@
 
 <div
 	class={open
-		? 'fixed bg-gray-700  text-white w-64 overflow-auto transition-transform duration-200 ease-in-out'
+		? 'bg-gray-700  text-white w-64 overflow-auto transition-transform duration-200 ease-in-out'
 		: '-translate-x-full invisible'}
 	{id}
 >
