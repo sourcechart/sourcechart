@@ -28,8 +28,17 @@
 		}, 100);
 	}
 
+	function handleInside() {
+		$activeChart = true;
+	}
+
+	function handleOutside(){
+		$activeChart=false
+	}
+
+
 </script>
 
-<div class="flex fixed top-0">
+<div class="flex fixed top-0" use:clickInside on:click_inside={handleInside} use:clickOutside on:click_outside={handleOutside} >
 		<CustomSideBar bind:open={$activeChart} />
 </div>

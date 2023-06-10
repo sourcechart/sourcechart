@@ -23,7 +23,7 @@
 	{id}
 >
 		
-	<div class="p-6" use:clickInside on:click_inside={handleInside} use:clickOutside on:click_outside={handleOutside} >
+	<div class="p-6"  >
 		<h1 class="text-2xl mb-4">My Sidebar</h1>
 		<div class="mb-2">
 			<h2 class="text-xl">Section 1</h2>
