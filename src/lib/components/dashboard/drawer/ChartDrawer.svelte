@@ -11,9 +11,6 @@
 	import CustomSideBar from './components/CustomSideBar.svelte';
 	let open: boolean; // = true
 
-	let transitionParams = {
-		easing: sineIn
-	};
 
 	const promiseWithDelay = function () {
 		return new Promise(function (resolve) {
@@ -43,5 +40,5 @@
 	use:clickOutside
 	on:click_outside={handleOutside}
 >
-	<CustomSideBar bind:open={$activeChart} />
+	<CustomSideBar bind:open={$activeChart} id='sidebar' />
 </div>
