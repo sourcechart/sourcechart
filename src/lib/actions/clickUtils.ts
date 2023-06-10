@@ -4,8 +4,8 @@ export function clickOutside(node: Node, options: any = {}) {
 		if (options.exclude && options.exclude.contains(event.target)) {
 			return;
 		}
-		if (node && !node.contains(event.target) && !event.defaultPrevented) {
-			console.log("Detected click outside"); // Add console log
+		if (node && !node.contains(event.target as HTMLElement) && !event.defaultPrevented) {
+			console.log("Detected click outside"); // @ts-ignore
 			node.dispatchEvent(new CustomEvent('click_outside', node));
 		}
 	};
@@ -25,7 +25,7 @@ export function clickInside(node: Node, options: any = {}) {
 			return;
 		}
 		if (node && node.contains(event.target as HTMLElement)) {
-			console.log("detected click inside")
+			console.log("detected click inside")  //@ts-ignore
 			node.dispatchEvent(new CustomEvent('click_inside', node));
 		}
 	};
@@ -39,8 +39,8 @@ export function clickInside(node: Node, options: any = {}) {
 }
 
 export function clickEscapeKey(node: Node) {
-	const handleClick = (event: Event) => {
-		if (node && event.key === 'Backspace'||"Delete") {
+	const handleClick = (event: Event) => { //@ts-ignore
+		if (node && event.key === 'Backspace'||"Delete") { //@ts-ignore 
 			node.dispatchEvent(new CustomEvent('escapeKeyPress', node));
 		}
 	};

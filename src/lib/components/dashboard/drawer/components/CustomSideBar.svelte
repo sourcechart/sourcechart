@@ -14,7 +14,7 @@
 		$activeChart=false
 	}
 
-
+	$: console.log(open);
 </script>
 
 <div
@@ -24,7 +24,7 @@
 	{id}
 >
 		
-	<div class="p-6" use:clickInside on:click_inside={handleInside}d >
+	<div class="p-6" use:clickInside on:click_inside={handleInside} use:clickOutside on:click_outside={handleOutside} >
 		<h1 class="text-2xl mb-4">My Sidebar</h1>
 		<div class="mb-2">
 			<h2 class="text-xl">Section 1</h2>
