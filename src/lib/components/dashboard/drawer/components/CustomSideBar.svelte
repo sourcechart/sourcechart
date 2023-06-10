@@ -14,7 +14,6 @@
 		$activeChart=false
 	}
 
-	$: console.log(open);
 </script>
 
 <div
