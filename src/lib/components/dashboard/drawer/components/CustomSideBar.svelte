@@ -6,6 +6,15 @@
 	export let open: boolean;
 	export let id: string = '';
 
+	function handleInside() {
+		$activeChart = true;
+	}
+
+	function handleOutside(){
+		$activeChart=false
+	}
+
+
 </script>
 
 <div
@@ -14,7 +23,8 @@
 		: '-translate-x-full invisible'}
 	{id}
 >
-	<div class="p-6">
+		
+	<div class="p-6" use:clickInside on:click_inside={handleInside}d >
 		<h1 class="text-2xl mb-4">My Sidebar</h1>
 		<div class="mb-2">
 			<h2 class="text-xl">Section 1</h2>

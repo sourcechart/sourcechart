@@ -31,5 +31,5 @@
 </script>
 
 <div class="flex absolute container justify-center">
-	<CustomSideBar bind:open={$activeChart} />
+		<CustomSideBar bind:open={$activeChart} />
 </div>

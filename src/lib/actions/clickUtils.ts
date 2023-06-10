@@ -24,7 +24,7 @@ export function clickInside(node: Node, options: any = {}) {
 		if (options.exclude && options.exclude.contains(event.target)) {
 			return;
 		}
-		if (node && node.contains(event.target)) {
+		if (node && node.contains(event.target as HTMLElement)) {
 			console.log("detected click inside")
 			node.dispatchEvent(new CustomEvent('click_inside', node));
 		}
