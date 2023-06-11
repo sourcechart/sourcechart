@@ -44,7 +44,7 @@
 	};
 </script>
 
-<div class="relative flex align-center justify-center flex-col">
+<div class="relative flex items-center align-center justify-center flex-col">
 	<h1>Upload File</h1>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
