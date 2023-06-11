@@ -19,7 +19,7 @@
 	];
 </script>
 
-<NavBarWrapper>d
+<NavBarWrapper>
 	{#each components as component (component)}
 		<div
 			class="flex items-center justify-between mx-1 rounded-md overflow-hidden dark:hover:bg-gray-600"
