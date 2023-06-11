@@ -21,9 +21,15 @@
 
 <NavBarWrapper>
 	{#each components as component (component)}
-		<div class="flex items-center justify-between mx-1">
-			<!-- Adjust the space-x-{n} to your preference -->
-			<svelte:component this={component.component} />
+		<div
+			class="flex items-center justify-between mx-1 dark:hover:bg-gray-600 dark:hover:rounded-md"
+		>
+			<div
+				class="relative flex align-center justify-items-center items-center flex-col dark:hover:bg-gray-600 dark:hover:rounded-md"
+			>
+				<!-- Adjust the space-x-{n} to your preference -->
+				<svelte:component this={component.component} />
+			</div>
 		</div>
 	{/each}
 </NavBarWrapper>

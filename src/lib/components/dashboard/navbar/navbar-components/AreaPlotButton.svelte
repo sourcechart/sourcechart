@@ -4,11 +4,11 @@
 </script>
 
 <div
-	class="relative flex items-center align-center justify-center flex-col"
 	on:click={() => addEChartPropsToStore(ChartOptions.area)}
 	on:keydown={() => null}
+	class="flex flex-col items-center justify-center cursor-pointer"
 >
-	Area Plot
+	<h1>Area Plot</h1>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		fill="none"

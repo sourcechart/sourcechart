@@ -4,9 +4,9 @@
 </script>
 
 <div
-	class="relative flex items-center align-center justify-center flex-col"
 	on:click={() => addEChartPropsToStore(ChartOptions.bar)}
 	on:keydown={() => null}
+	class="flex flex-col items-center justify-center cursor-pointer"
 >
 	<h1>Bar Plot</h1>
 	<svg

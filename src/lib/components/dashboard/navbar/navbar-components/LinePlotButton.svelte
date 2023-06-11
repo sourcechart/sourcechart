@@ -4,9 +4,9 @@
 </script>
 
 <div
-	class="relative flex items-center align-center justify-center flex-col"
 	on:click={() => addEChartPropsToStore(ChartOptions.line)}
 	on:keydown={() => null}
+	class="flex flex-col items-center justify-center cursor-pointer"
 >
 	<h1>Line Plot</h1>
 	<svg

@@ -43,7 +43,7 @@
 	};
 </script>
 
-<div class="relative flex items-center align-center justify-center flex-col">
+<div class="flex flex-col items-center justify-center cursor-pointer">
 	<h1>Upload File</h1>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
