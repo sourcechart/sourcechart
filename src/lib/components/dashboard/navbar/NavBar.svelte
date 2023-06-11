@@ -14,13 +14,16 @@
 		{ componentType: 'line', component: LinePlotButton },
 		{ componentType: 'area', component: AreaPlotButton },
 		{ componentType: 'scatter', component: ScatterPlotButton },
-		{ componentType: 'file-upload', component: FileUploadButton },
-		{ componentType: 'pie', component: PiePlotButton }
+		{ componentType: 'pie', component: PiePlotButton },
+		{ componentType: 'file-upload', component: FileUploadButton }
 	];
 </script>
 
 <NavBarWrapper>
 	{#each components as component (component)}
-		<svelte:component this={component.component} />
+		<div class="flex items-center justify-between mx-2">
+			<!-- Adjust the space-x-{n} to your preference -->
+			<svelte:component this={component.component} />
+		</div>
 	{/each}
 </NavBarWrapper>
