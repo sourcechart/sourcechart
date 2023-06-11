@@ -2,7 +2,6 @@
 	import { DuckDBClient } from '$lib/io/duckdbcli';
 	import { generateID } from '$lib/io/fileUtils';
 	import { fileUploadStore } from '$lib/io/stores';
-	import { clickInside } from '$lib/actions/clickUtils';
 	import type { AsyncDuckDB } from '@duckdb/duckdb-wasm';
 
 	let fileinput;
