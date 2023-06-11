@@ -25,23 +25,23 @@ type ChartOptions = {
 	];
 };
 
-type selectBlock = {
-	xColumn: { column: string };
-	yColumn: { column: string; aggregator: string | null };
-	from: string;
+type SelectBlock = {
+	xColumn: { column: string|null|undefined };
+	yColumn: { column: string|null|undefined; aggregator: string | null |undefined};
+	from: string|undefined|null;
 };
 
-type queries = {
-	select: selectBlock;
-	filters: Array<condition>;
-	having: Array<condition>;
-	groupbyColumns: Array<string>;
+type Queries = {
+	select: SelectBlock;
+	//filters: Array<Condition>;
+	//having: Array<Condition>;
+	groupbyColumns: Array<string|null|undefined>|undefined;
 };
-type condition = { column: string; filter: string | null | number };
+type Condition = { column: string; filter: string | null | number };
 
 type QueryObject = {
-	chartID: string;
-	queries: queries;
+	chartID: string|null|unknown;
+	queries: Queries;
 };
 
 type fileUpload = {

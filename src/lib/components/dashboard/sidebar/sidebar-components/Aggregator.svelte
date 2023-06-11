@@ -11,7 +11,7 @@
 		selected = $clickChart.aggregator;
 	}
 
-	function setAggregator(event: Event) {
+	function setAggregator() {
 		let chart = $allCharts[$i];
 		chart.aggregator = selected;
 		$allCharts[$i] = chart;

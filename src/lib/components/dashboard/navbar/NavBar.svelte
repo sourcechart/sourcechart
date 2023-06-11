@@ -5,16 +5,17 @@
 	import { EChartBuilder, ChartOptions } from '$lib/io/eChartBuilder';
 	import { generateID } from '$lib/io/fileUtils';
 	import { allCharts, newChartID, activeChart } from '$lib/io/stores';
-	import FileUpload from '$lib/components/dashboard/fileupload/FileUpload.svelte';
+	import FileUpload from '$lib/components/dashboard/file-upload/FileUpload.svelte';
 
 	function addEChartPropsToStore(chart: string) {
 		var echart = new EChartBuilder(chart);
 		var eChartDataset = echart.getOptions();
 		var id = generateID();
 		$newChartID = id;
-		var data = addMetadataToChart(eChartDataset, id, chart); //@ts-ignore
+		var data = addMetadataToChart(eChartDataset, id, chart);
+		console.log(data);
 		$allCharts = [...$allCharts, data];
-		$activeChart=true
+		$activeChart = true;
 	}
 
 	function addMetadataToChart(eChartDataset: object, id: string, chart: string) {
