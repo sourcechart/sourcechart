@@ -6,7 +6,7 @@
 <div
 	on:click={() => addEChartPropsToStore(ChartOptions.area)}
 	on:keydown={() => null}
-	class="flex flex-col items-center justify-center cursor-pointer"
+	class="flex flex-col items-center justify-center cursor-pointer dark:text-gray-300"
 >
 	<h1>Area Plot</h1>
 	<svg
