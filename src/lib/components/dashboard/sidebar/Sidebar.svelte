@@ -9,7 +9,6 @@
 	} from './sidebar-components';
 	import { clickOutside, clickInside } from '$lib/actions/clickUtils';
 	import { activeChart } from '$lib/io/stores';
-	//import { onMount } from 'svelte';
 
 	function handleInside() {
 		$activeChart = true;

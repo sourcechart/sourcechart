@@ -1,3 +1,4 @@
+<!-- I only put this here so it would be easier to navigate to in the file tree. Could definitely be in /dashboard/+page.svelte-->
 <script>
 	import MoveableChart from '$lib/components/dashboard/charts/MoveableChart.svelte';
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
