@@ -1,29 +1,15 @@
 <script lang="ts">
-	import DatasetDropDown from './dropdown/DatasetDropDown.svelte';
-	import AxisDropDrown from './dropdown/ColumnDropDrown.svelte';
-	import Groupby from './dropdown/Groupby.svelte';
-	import Aggregator from './dropdown/Aggregator.svelte';
-	import { activeChart, clearChartOptions } from '$lib/io/stores';
+	import {
+		DatasetDropDown,
+		AxisDropDrown,
+		Aggregator,
+		SidebarWrapper,
+		Groupby,
+		ClearChartOptions
+	} from './sidebar-components';
 	import { clickOutside, clickInside } from '$lib/actions/clickUtils';
-	import { Drawer, Sidebar, SidebarWrapper } from 'flowbite-svelte';
-	import { sineIn } from 'svelte/easing';
-	import { onMount } from 'svelte';
-	import CustomSideBar from './components/CustomSideBar.svelte';
-	let open: boolean; // = true
-
-
-	const promiseWithDelay = function () {
-		return new Promise(function (resolve) {
-			setTimeout(resolve, 1000);
-		});
-	};
-
-	function clearUpdatedChartObject() {
-		$clearChartOptions = true;
-		setTimeout(() => {
-			$clearChartOptions = false;
-		}, 100);
-	}
+	import { activeChart } from '$lib/io/stores';
+	//import { onMount } from 'svelte';
 
 	function handleInside() {
 		$activeChart = true;
@@ -40,5 +26,12 @@
 	use:clickOutside
 	on:click_outside={handleOutside}
 >
-	<CustomSideBar bind:open={$activeChart} id='sidebar' />
+	<SidebarWrapper bind:open={$activeChart} id="sidebar">
+		<DatasetDropDown />
+		<AxisDropDrown axis={'X'} />
+		<AxisDropDrown axis={'Y'} />
+		<Aggregator />
+		<Groupby />
+		<ClearChartOptions />
+	</SidebarWrapper>
 </div>

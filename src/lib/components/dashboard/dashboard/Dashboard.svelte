@@ -1,7 +1,7 @@
 <script>
 	import MoveableChart from '$lib/components/dashboard/charts/MoveableChart.svelte';
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
-	import ChartDrawer from '$lib/components/dashboard/drawer/ChartDrawer.svelte';
+	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import { allCharts } from '$lib/io/stores';
 </script>
 
@@ -14,5 +14,5 @@
 	{/each}
 </div>
 <div class="fixed top-1/2 left-0 transform -translate-y-1/2">
-	<ChartDrawer />
+	<Sidebar />
 </div>
