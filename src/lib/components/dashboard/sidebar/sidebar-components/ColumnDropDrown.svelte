@@ -1,5 +1,4 @@
 <script lang="ts">
-	/*This really needs to be refactored, but I haven't done it succesfully without breaking everything*/
 	import type { DuckDBClient } from '$lib/io/duckdbcli';
 	import {
 		getQuery,
@@ -67,7 +66,7 @@
 	function clearData() {
 		//change this to a derived store
 		let chart: Chart = $allCharts[$i];
-		chart.aggregator= null
+		chart.aggregator = null;
 		chart.xColumn = null;
 		chart.yColumn = null;
 		chart.filename = null;
