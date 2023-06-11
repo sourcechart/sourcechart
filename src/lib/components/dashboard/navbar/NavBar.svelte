@@ -12,8 +12,7 @@
 		var eChartDataset = echart.getOptions();
 		var id = generateID();
 		$newChartID = id;
-		var data = addMetadataToChart(eChartDataset, id, chart);
-		console.log(data);
+		var data = addMetadataToChart(eChartDataset, id, chart); //@ts-ignore
 		$allCharts = [...$allCharts, data];
 		$activeChart = true;
 	}

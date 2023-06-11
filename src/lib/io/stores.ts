@@ -56,6 +56,7 @@ export const getQuery = () =>
 			const chart = $allCharts.find(
 				(item: { chartID: string }) => item.chartID === $mostRecentChartID
 			);
+			//let groupbyColumns = chart?.groupbyColumns ? chart.groupbyColumns: [] 
 			const getQueryObject = ():QueryObject => {
 				return {
 					chartID: chart?.chartID,
@@ -65,7 +66,7 @@ export const getQuery = () =>
 							yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
 							from: chart?.filename
 						},
-						groupbyColumns: []
+						groupbyColumns: [...chart?.groupbyColumns ? chart.groupbyColumns: [] ]
 						//on: { column1: null, column2: null, HOW: null }
 						//filters: [
 						//	{ column: null, filter: null },
