@@ -31,6 +31,7 @@
 
 	function selectFile(filename: string) {
 		let chart: Chart = $allCharts[$i];
+		console.log(filename);
 		chart.filename = filename;
 		$chosenFile = filename;
 		if ($file?.database && $file?.datasetID) {
