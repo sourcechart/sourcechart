@@ -2,7 +2,7 @@
 import { writable, derived } from 'svelte/store';
 import { Query } from '$lib/io/queryBuilder';
 
-export const mostRecentChartID = writable('');
+export const mostRecentChartID = writable<string>('');
 export const chosenFile = writable<string>('');
 export const newChartID = writable<string>();
 export const activeChart = writable<boolean>();
@@ -56,32 +56,28 @@ export const getQuery = () =>
 			const chart = $allCharts.find(
 				(item: { chartID: string }) => item.chartID === $mostRecentChartID
 			);
-
-			const getQueryObject = (): QueryObject => {
+			//let groupbyColumns = chart?.groupbyColumns ? chart.groupbyColumns: [] 
+			const getQueryObject = ():QueryObject => {
 				return {
-					//@ts-ignore
 					chartID: chart?.chartID,
 					queries: {
 						select: {
-							//@ts-ignore
-							xColumn: { column: chart.xColumn }, //@ts-ignore
-							yColumn: { column: chart.yColumn, aggregator: chart.aggregator },
-							//@ts-ignore
-							from: chart.filename
+							xColumn: { column: chart?.xColumn },
+							yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
+							from: chart?.filename
 						},
+						groupbyColumns: [...chart?.groupbyColumns ? chart.groupbyColumns: [] ]
+						//on: { column1: null, column2: null, HOW: null }
 						//filters: [
 						//	{ column: null, filter: null },
 						//	{ column: null, filter: null }
 						//],
 						//having: [{ column: null, filter: null }],
-						//@ts-ignore
-						groupbyColumns: [...chart.groupbyColumns]
-						//on: { column1: null, column2: null, HOW: null }
 					}
 				};
 			};
 
-			let queryObject = getQueryObject();
+			var queryObject = getQueryObject();
 			const query = new Query(queryObject);
 			return query.build();
 		} else {

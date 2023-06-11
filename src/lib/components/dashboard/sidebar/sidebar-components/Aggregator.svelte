@@ -11,13 +11,18 @@
 		selected = $clickChart.aggregator;
 	}
 
-	function setAggregator(event: Event) {
+	function setAggregator() {
 		let chart = $allCharts[$i];
 		chart.aggregator = selected;
 		$allCharts[$i] = chart;
 	}
 </script>
 
+<div
+	class="text-center font-medium focus:ring-4 focus:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 hover:text-blue-700 focus:text-blue-700 dark:focus:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:bg-transparent dark:border-gray-800 dark:hover:border-gray-700 rounded-lg"
+>
+	Choose Y Axis Aggregator
+</div>
 <form>
 	<select bind:value={selected} on:change={setAggregator}>
 		{#each aggs as agg}

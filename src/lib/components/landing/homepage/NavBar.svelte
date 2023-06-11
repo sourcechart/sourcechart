@@ -6,13 +6,13 @@
 		goto('/dashboard/email-sign-up');
 	};
 
-	const signIn = () => {
-		goto('/dashboard/login');
-	};
+	//const signIn = () => {
+	//	goto('/dashboard/login');
+	//};
 
-	const signUp = () => {
-		goto('/dashboard/signup');
-	};
+	//const signUp = () => {
+	//	goto('/dashboard/signup');
+	//};
 </script>
 
 <nav class="navbar">
@@ -67,14 +67,6 @@
 		margin-left: 10px;
 	}
 
-	.desktop {
-		display: none;
-	}
-
 	@media screen and (min-width: 1000px) {
-		.desktop {
-			display: inline-block;
-		}
-
 	}
 </style>

@@ -4,8 +4,8 @@
 	import { fileUploadStore } from '$lib/io/stores';
 	import type { AsyncDuckDB } from '@duckdb/duckdb-wasm';
 
+	let fileinput;
 	//@ts-ignore
-	let fileinput: { click };
 	type fileUpload = {
 		filename: string;
 		columns: Array<null | string>;
@@ -27,7 +27,7 @@
 			datasetID: dataID,
 			size: fileSize, //@ts-ignore
 			database: database
-		}; //@ts-ignore
+		};
 		$fileUploadStore = [...$fileUploadStore, tableColumnsSize];
 	}
 
@@ -43,7 +43,7 @@
 	};
 </script>
 
-<div id="app">
+<div class="relative flex items-center align-center justify-center flex-col">
 	<h1>Upload File</h1>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
@@ -57,32 +57,15 @@
 			stroke-linecap="round"
 			stroke-linejoin="round"
 			d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-			on:click={() => {
-				fileinput.click();
-			}}
 		/>
 	</svg>
 
-	<div
-		class="chan"
-		on:click={() => {
-			fileinput.click();
-		}}
-	/>
 	<input
-		style="display:none"
 		type="file"
 		accept=".csv, .parquet, .txt, .json"
-		on:change={(e) => uploadFiles(e)}
 		bind:this={fileinput}
+		style="opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+		on:keydown={(e) => (e.key === 'Enter' ? uploadFiles(e) : null)}
+		on:change={(e) => uploadFiles(e)}
 	/>
 </div>
-
-<style>
-	#app {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-flow: column;
-	}
-</style>
