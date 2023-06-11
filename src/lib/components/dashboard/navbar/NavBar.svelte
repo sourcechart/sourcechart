@@ -21,7 +21,7 @@
 
 <NavBarWrapper>
 	{#each components as component (component)}
-		<div class="flex items-center justify-between mx-2">
+		<div class="flex items-center justify-between mx-1">
 			<!-- Adjust the space-x-{n} to your preference -->
 			<svelte:component this={component.component} />
 		</div>
