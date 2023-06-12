@@ -8,7 +8,7 @@
 		allCharts,
 		clickedChartIndex
 	} from '$lib/io/stores';
-	import { Dropdown, DropdownItem } from '$lib/components/common/ui';
+	import { Dropdown, DropdownItem } from '$lib/components/ui';
 	import Tags from 'svelte-tags-input';
 
 	let tags: Array<string> = [];
