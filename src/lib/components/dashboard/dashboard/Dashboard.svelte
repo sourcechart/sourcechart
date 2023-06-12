@@ -4,16 +4,22 @@
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import { allCharts } from '$lib/io/stores';
+	import { DarkMode } from 'flowbite-svelte';
 </script>
 
-<div class="flex justify-center justify-items-center">
-	<NavBar />
-</div>
-<div>
-	{#each $allCharts as item (item)}
-		<MoveableChart id={item.chartID} chartOptions={item.chartOptions} />
-	{/each}
-</div>
-<div class="fixed top-1/2 left-0 transform -translate-y-1/2">
-	<Sidebar />
+<div class="relative">
+	<div class="absolute top-0 right-0 mt-4">
+		<DarkMode />
+	</div>
+	<div class="flex justify-center justify-items-center">
+		<NavBar />
+	</div>
+	<div>
+		{#each $allCharts as item (item)}
+			<MoveableChart id={item.chartID} chartOptions={item.chartOptions} />
+		{/each}
+	</div>
+	<div class="fixed top-1/2 left-0 transform -translate-y-1/2">
+		<Sidebar />
+	</div>
 </div>
