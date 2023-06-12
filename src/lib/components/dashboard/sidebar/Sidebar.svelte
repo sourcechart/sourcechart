@@ -3,13 +3,12 @@
 		DatasetDropDown,
 		AxisDropDrown,
 		Aggregator,
-		SidebarWrapper,
 		Groupby,
 		ClearChartOptions
 	} from './sidebar-components';
+	import { SidebarWrapper } from '$lib/components/ui';
 	import { clickOutside, clickInside } from '$lib/actions/clickUtils';
 	import { activeChart } from '$lib/io/stores';
-	//import { onMount } from 'svelte';
 
 	function handleInside() {
 		$activeChart = true;

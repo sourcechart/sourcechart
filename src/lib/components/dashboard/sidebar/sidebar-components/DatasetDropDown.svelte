@@ -8,8 +8,7 @@
 		allCharts,
 		clickedChartIndex
 	} from '$lib/io/stores';
-	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
-	//@ts-expect-error
+	import { Dropdown, DropdownItem } from '$lib/components/ui';
 	import Tags from 'svelte-tags-input';
 
 	let tags: Array<string> = [];
@@ -42,11 +41,15 @@
 		$allCharts[$i] = chart;
 	}
 </script>
+<div>
+	<Dropdown let:toggle>
+		<div slot="trigger">Choose Datasets</div>
+		{#each $datasets as dataset}
+			<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
+		{/each}
+	</Dropdown>
+	<div class='mt-1'>
+		<Tags {tags} maxTags={1} />
+	</div>
+</div>
 
-<Button color="alternative">Choose Dataset</Button>
-<Dropdown>
-	{#each $datasets as dataset}
-		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
-	{/each}
-</Dropdown>
-<Tags {tags} maxTags={1} />

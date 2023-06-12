@@ -1,6 +1,7 @@
 {
-	"name": "Silvia",
+	"name": "sourcechart",
 	"version": "0.0.1",
+	"license": "sourcechart only",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -25,10 +26,10 @@
 		"autoprefixer": "^10.4.14",
 		"echarts": "^5.4.1",
 		"eslint": "^8.28.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-svelte3": "^4.0.0",
 		"flowbite": "^1.6.4",
 		"flowbite-svelte": "^0.34.1",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-svelte3": "^4.0.0",
 		"postcss": "^8.4.24",
 		"postcss-load-config": "^4.0.1",
 		"prettier": "^2.8.0",
@@ -52,7 +53,6 @@
 		"@supabase/auth-ui-shared": "^0.1.6",
 		"@supabase/auth-ui-svelte": "^0.2.2",
 		"@supabase/supabase-js": "^2.22.0",
-		"@vercel/analytics": "^1.0.1",
-		"cssnano": "^6.0.1"
+		"@vercel/analytics": "^1.0.1"
 	}
 }
