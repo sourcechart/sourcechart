@@ -3,10 +3,10 @@
 		DatasetDropDown,
 		AxisDropDrown,
 		Aggregator,
-		SidebarWrapper,
 		Groupby,
 		ClearChartOptions
 	} from './sidebar-components';
+	import {SidebarWrapper} from '$lib/components/common/ui';
 	import { clickOutside, clickInside } from '$lib/actions/clickUtils';
 	import { activeChart } from '$lib/io/stores';
 

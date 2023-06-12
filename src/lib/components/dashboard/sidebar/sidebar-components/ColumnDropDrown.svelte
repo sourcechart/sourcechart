@@ -9,7 +9,7 @@
 		allCharts,
 		clearChartOptions
 	} from '$lib/io/stores';
-	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	import { Dropdown, DropdownItem } from '$lib/components/common/ui';
 
 	//@ts-expect-error
 	import Tags from 'svelte-tags-input';
