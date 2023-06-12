@@ -17,9 +17,9 @@ const createDropdownStore = () => {
 
   return {
     subscribe,
-    open: (id) => set(id),
+    open: (id:any) => set(id),
     close: () => set(null),
-    toggle: (id) => update(currentId => currentId !== id ? id : null),
+    toggle: (id:any) => update(currentId => currentId !== id ? id : null),
   };
 }
 
