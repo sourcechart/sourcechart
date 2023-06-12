@@ -5,11 +5,9 @@
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import { allCharts } from '$lib/io/stores';
 	import { DarkMode } from '$lib/components/ui';
-<<<<<<< HEAD
-=======
+
 	//import DarkMode from '$lib/components/ui/darkmode/DarkMode.svelte';
 	//let dark = false;
->>>>>>> updating darkmode
 </script>
 
 <div class="relative">
