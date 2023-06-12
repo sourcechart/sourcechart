@@ -12,6 +12,20 @@ export const fileUploadStore = writable<Array<fileUpload>>([]);
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<Array<string>>([]);
 
+const createDropdownStore = () => {
+  const { subscribe, set, update } = writable(null);
+
+  return {
+    subscribe,
+    open: (id) => set(id),
+    close: () => set(null),
+    toggle: (id) => update(currentId => currentId !== id ? id : null),
+  };
+}
+
+export const dropdownStore = createDropdownStore();
+
+
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
 		const fObject = $fileUploadStore.find(
