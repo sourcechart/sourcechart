@@ -31,7 +31,6 @@
 
 	function selectFile(filename: string) {
 		let chart: Chart = $allCharts[$i];
-		console.log(filename);
 		chart.filename = filename;
 		$chosenFile = filename;
 		if ($file?.database && $file?.datasetID) {
@@ -42,6 +41,7 @@
 		$allCharts[$i] = chart;
 	}
 </script>
+
 <div>
 	<Dropdown let:toggle>
 		<div slot="trigger">Choose Datasets</div>
@@ -49,8 +49,7 @@
 			<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
 		{/each}
 	</Dropdown>
-	<div class='mt-1'>
+	<div class="mt-1">
 		<Tags {tags} maxTags={1} />
 	</div>
 </div>
-
