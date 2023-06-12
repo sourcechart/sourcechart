@@ -4,7 +4,7 @@
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import { allCharts } from '$lib/io/stores';
-	import { DarkMode } from 'flowbite-svelte';
+	import { DarkMode } from '$lib/components/ui';
 	//import DarkMode from '$lib/components/ui/darkmode/DarkMode.svelte';
 	//let dark = false;
 </script>
