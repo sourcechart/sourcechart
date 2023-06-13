@@ -27,26 +27,19 @@
 	class="space-y-4"
 >
 	<SidebarWrapper bind:open={$activeChart} id="sidebar">
-		<div class="space-y-2">
-			<div>
-				<h3>Datasets</h3>
+		<div class="space-y-3">
+			<div class="text-xs space-y-1">
+				<p>Datasets</p>
 				<DatasetDropDown />
-			</div>
-			<div class="space-y-1">
-				<h3>Axis Dropdown</h3>
+				<p>Axis Dropdown</p>
 				<AxisDropDrown axis={'X'} />
 				<AxisDropDrown axis={'Y'} />
-			</div>
-			<div>
-				<h3>Aggregate</h3>
+
+				<p>Aggregate</p>
 				<Aggregator />
-			</div>
-			<div>
-				<h3>GroupBy Columns</h3>
+				<p>GroupBy Columns</p>
 				<Groupby />
-			</div>
-			<div>
-				<h3>Clear Chart</h3>
+				<p>Clear Chart</p>
 				<ClearChartOptions />
 			</div>
 		</div>
