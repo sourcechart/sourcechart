@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { clearChartOptions } from '$lib/io/stores';
+	import { DropDownButton, Dropdown, DropdownItem } from '$lib/components/ui/dropdown';
 
 	function clearUpdatedChartObject() {
 		$clearChartOptions = true;

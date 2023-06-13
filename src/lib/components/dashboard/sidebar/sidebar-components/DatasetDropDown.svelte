@@ -8,7 +8,7 @@
 		allCharts,
 		clickedChartIndex
 	} from '$lib/io/stores';
-	import { Dropdown, DropdownItem } from '$lib/components/ui';
+	import { DropDownButton, Dropdown, DropdownItem } from '$lib/components/ui/dropdown';
 	import Tags from 'svelte-tags-input';
 
 	let tags: Array<string> = [];
@@ -42,14 +42,12 @@
 	}
 </script>
 
-<div>
-	<Dropdown let:toggle>
-		<div slot="trigger">Choose Datasets</div>
-		{#each $datasets as dataset}
-			<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
-		{/each}
-	</Dropdown>
-	<div class="mt-1">
-		<Tags {tags} maxTags={1} />
-	</div>
+<DropDownButton id="datasetdropdown">Choose Dataset</DropDownButton>
+<Dropdown id="datasetdropdown">
+	{#each $datasets as dataset}
+		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
+	{/each}
+</Dropdown>
+<div class="mt-1">
+	<Tags {tags} maxTags={1} />
 </div>

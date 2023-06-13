@@ -7,6 +7,7 @@
 
 	let handleClick = () => {
 		dispatch('click');
+		dropdownStore.toggle(id);
 	};
 </script>
 
