@@ -8,7 +8,7 @@
 		allCharts,
 		clickedChartIndex
 	} from '$lib/io/stores';
-	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte'; //@ts-ignore
 	import Tags from 'svelte-tags-input';
 
 	let tags: Array<string> = [];
