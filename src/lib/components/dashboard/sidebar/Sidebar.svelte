@@ -24,13 +24,31 @@
 	on:click_inside={handleInside}
 	use:clickOutside
 	on:click_outside={handleOutside}
+	class="space-y-4"
 >
 	<SidebarWrapper bind:open={$activeChart} id="sidebar">
-		<DatasetDropDown />
-		<AxisDropDrown axis={'X'} />
-		<AxisDropDrown axis={'Y'} />
-		<Aggregator />
-		<Groupby />
-		<ClearChartOptions />
+		<div class="space-y-2">
+			<div>
+				<h3>Datasets</h3>
+				<DatasetDropDown />
+			</div>
+			<div class="space-y-1">
+				<h3>Axis Dropdown</h3>
+				<AxisDropDrown axis={'X'} />
+				<AxisDropDrown axis={'Y'} />
+			</div>
+			<div>
+				<h3>Aggregate</h3>
+				<Aggregator />
+			</div>
+			<div>
+				<h3>GroupBy Columns</h3>
+				<Groupby />
+			</div>
+			<div>
+				<h3>Clear Chart</h3>
+				<ClearChartOptions />
+			</div>
+		</div>
 	</SidebarWrapper>
 </div>

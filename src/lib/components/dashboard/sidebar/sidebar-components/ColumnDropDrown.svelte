@@ -143,12 +143,13 @@
 	}
 </script>
 
-<div class="flex">
+<!-- <div class="flex">
 	<Button color="alternative" pill={false} outline={false}>Choose {axis} Axis</Button>
 </div>
+-->
+<Button color="alternative" pill={false} outline={false}>Choose {axis} Axis</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>
 	{/each}
 </Dropdown>
-<Tags {tags} maxTags={1} />

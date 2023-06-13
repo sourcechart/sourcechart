@@ -48,4 +48,3 @@
 		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
 	{/each}
 </Dropdown>
-<Tags {tags} maxTags={1} />
