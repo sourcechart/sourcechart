@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Dropdown, DropdownItem } from '$lib/components/ui';
+	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+
 	import {
 		getColumnsFromFile,
 		clearChartOptions,
@@ -50,11 +51,9 @@
 	}
 </script>
 
-<!--
 <div class="flex">
 	<Button color="alternative" pill={false} outline={false}>Group By Column</Button>
 </div>
- -->
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>

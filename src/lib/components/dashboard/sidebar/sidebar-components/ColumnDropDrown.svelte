@@ -9,7 +9,7 @@
 		allCharts,
 		clearChartOptions
 	} from '$lib/io/stores';
-	import { Dropdown, DropdownItem } from '$lib/components/ui';
+	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
 	//@ts-expect-error
 	import Tags from 'svelte-tags-input';
@@ -143,10 +143,9 @@
 	}
 </script>
 
-<!-- <div class="flex">
+<div class="flex">
 	<Button color="alternative" pill={false} outline={false}>Choose {axis} Axis</Button>
 </div>
--->
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>
