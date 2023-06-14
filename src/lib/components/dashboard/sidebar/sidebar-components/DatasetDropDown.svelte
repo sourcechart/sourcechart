@@ -11,6 +11,8 @@
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte'; //@ts-ignore
 
 	let tags: Array<string> = [];
+	let selectedDataset = 'Choose Dataset';
+
 	$: file = getFileFromStore();
 	$: drawerOptions = chartOptions();
 	$: i = clickedChartIndex();
@@ -30,6 +32,7 @@
 
 	function selectFile(filename: string) {
 		let chart = $allCharts[$i];
+		selectedDataset = filename;
 		$chosenFile = filename;
 		chart.filename = filename;
 
@@ -42,7 +45,7 @@
 	}
 </script>
 
-<Button color="alternative">Choose Dataset</Button>
+<Button color="alternative">{selectedDataset}</Button>
 <Dropdown>
 	{#each $datasets as dataset}
 		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>

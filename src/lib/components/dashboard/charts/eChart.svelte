@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Chart } from 'svelte-echarts';
-	import { clickInside } from '$lib/actions/clickUtils';
 	import { mostRecentChartID, activeChart } from '$lib/io/stores';
 
 	export let id: string;
@@ -12,12 +11,7 @@
 	}
 </script>
 
-<div
-	class="flex absolute container justify-center"
-	{id}
-	use:clickInside
-	on:click_inside={handleInside}
->
+<div class="flex absolute container justify-center" {id}>
 	<Chart {options} />
 </div>
 

@@ -13,6 +13,8 @@
 
 	export let axis = '';
 
+	let selectedColumn = `Choose ${axis} Axis`;
+
 	let tags: Array<string> = [];
 	let chartObject: Chart;
 	let x;
@@ -23,7 +25,6 @@
 	$: drawerOptions = chartOptions();
 	$: chartObject = $allCharts[$i];
 
-	$: console.log(chartObject);
 	$: {
 		if ($drawerOptions.xColumn && $drawerOptions.yColumn && tags.length == 0) {
 			tags = getTagsOnClick();
@@ -126,6 +127,8 @@
 	function chooseColumn(column: string | null) {
 		//Add Tags to the Chosen Column Store.
 		if (column) {
+			selectedColumn = column;
+
 			if (axis.toUpperCase() === 'X') {
 				chartObject.xColumn = column;
 				tags = [column];
@@ -141,7 +144,7 @@
 	}
 </script>
 
-<Button color="alternative" pill={false} outline={false}>Choose {axis} Axis</Button>
+<Button color="alternative" pill={false} outline={false}>{selectedColumn}</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>
