@@ -1,7 +1,7 @@
 {
 	"name": "sourcechart",
 	"version": "0.0.1",
-	"license": "sourcechart only",
+	"license": "internal",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
