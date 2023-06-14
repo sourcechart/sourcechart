@@ -4,7 +4,7 @@
 
 	let selected: string | null = null;
 	let aggs = ['avg', 'max', 'min', 'sum', 'count'];
-
+	let agg: string | null = '';
 	$: i = clickedChartIndex();
 	$: clickChart = clickedChart();
 	$: $clearChartOptions, (selected = null);
@@ -20,17 +20,17 @@
 	}
 </script>
 
-<Button />
+<Button color="alternative" pill={false} outline={false}>
+	{#if (selected = null)}
+		Aggregatpr
+	{:else}
+		{agg}
+	{/if}
+</Button>
 <Dropdown
 	class="text-center font-medium inline-flex items-center justify-center text-sm text-black dark:bg-gray-800 dark:text-gray-600 hover:text-blue-700 focus:text-blue-700 dark:focus:text-gray-800"
 >
 	{#each aggs as agg}
-		<DropdownItem on:click={setAggregator}>
-			{#if (selected = null)}
-				{null}
-			{:else}
-				{agg}
-			{/if}
-		</DropdownItem>
+		<DropdownItem on:click={setAggregator}>{agg}</DropdownItem>
 	{/each}
 </Dropdown>

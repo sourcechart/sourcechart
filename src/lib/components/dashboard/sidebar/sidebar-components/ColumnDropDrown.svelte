@@ -23,6 +23,7 @@
 	$: drawerOptions = chartOptions();
 	$: chartObject = $allCharts[$i];
 
+	$: console.log(chartObject);
 	$: {
 		if ($drawerOptions.xColumn && $drawerOptions.yColumn && tags.length == 0) {
 			tags = getTagsOnClick();
