@@ -2,35 +2,30 @@
 	import { allCharts, clickedChartIndex, clickedChart, clearChartOptions } from '$lib/io/stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
-	let selected: string | null = null;
 	let aggs = ['avg', 'max', 'min', 'sum', 'count'];
-	let agg: string | null = '';
+	let selectedAggregator = 'Aggregator';
+
 	$: i = clickedChartIndex();
 	$: clickChart = clickedChart();
-	$: $clearChartOptions, (selected = null);
+	$: $clearChartOptions, (selectedAggregator = '');
 
 	$: if ($clickChart?.aggregator) {
-		selected = $clickChart.aggregator;
+		selectedAggregator = $clickChart.aggregator;
 	}
 
-	function setAggregator() {
+	function selectAggregator(agg: string) {
+		selectedAggregator = agg;
 		let chart = $allCharts[$i];
-		chart.aggregator = selected;
+		chart.aggregator = selectedAggregator;
 		$allCharts[$i] = chart;
 	}
 </script>
 
-<Button color="alternative" pill={false} outline={false}>
-	{#if (selected = null)}
-		Aggregatpr
-	{:else}
-		{agg}
-	{/if}
-</Button>
+<Button color="alternative" pill={false} outline={false}>{selectedAggregator}</Button>
 <Dropdown
 	class="text-center font-medium inline-flex items-center justify-center text-sm text-black dark:bg-gray-800 dark:text-gray-600 hover:text-blue-700 focus:text-blue-700 dark:focus:text-gray-800"
 >
 	{#each aggs as agg}
-		<DropdownItem on:click={setAggregator}>{agg}</DropdownItem>
+		<DropdownItem on:click={() => selectAggregator(agg)}>{agg}</DropdownItem>
 	{/each}
 </Dropdown>
