@@ -45,7 +45,7 @@
 	});
 </script>
 
-<div class="flex justify-center items-center h-screen bg-gray-100">
+<div class="flex justify-center items-center">
 	<div
 		class="flex items-center rounded-full bg-white shadow px-4 py-2 w-64 border border-gray-300 text-base"
 		use:clickOutside={{ exclude: document.querySelector('.pill') }}
@@ -75,7 +75,3 @@
 		/>
 	</div>
 </div>
-
-<style>
-	@import 'https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.2/tailwind.min.css';
-</style>
