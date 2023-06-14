@@ -16,15 +16,15 @@
 		$clearChartOptions = true;
 		setTimeout(() => {
 			$clearChartOptions = false;
-		}, 100);
+		}, 10);
 		$allCharts = $allCharts.filter((item) => item.chartID !== $mostRecentChartID);
 		$activeChart = false;
 	}
 
-	function handleInside() {
+	function handleInside(event: Event) {
+		$mostRecentChartID = (event.target as HTMLElement).id;
 		$activeChart = true;
 	}
-
 </script>
 
 <div

@@ -11,10 +11,9 @@
 	} from '$lib/io/stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
-	//@ts-expect-error
-	import Tags from 'svelte-tags-input';
-
 	export let axis = '';
+
+	let selectedColumn = `Choose ${axis} Axis`;
 
 	let tags: Array<string> = [];
 	let chartObject: Chart;
@@ -128,6 +127,8 @@
 	function chooseColumn(column: string | null) {
 		//Add Tags to the Chosen Column Store.
 		if (column) {
+			selectedColumn = column;
+
 			if (axis.toUpperCase() === 'X') {
 				chartObject.xColumn = column;
 				tags = [column];
@@ -143,12 +144,9 @@
 	}
 </script>
 
-<div class="flex">
-	<Button color="alternative" pill={false} outline={false}>Choose {axis} Axis</Button>
-</div>
+<Button color="alternative" pill={false} outline={false}>{selectedColumn}</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>
 	{/each}
 </Dropdown>
-<Tags {tags} maxTags={1} />
