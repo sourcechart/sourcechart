@@ -33,7 +33,6 @@
 	}
 
 	function addColumnToGroupBy(column: string | null) {
-		console.log(column);
 		let chart = $allCharts[$i];
 		if (column) {
 			tags = [...tags, column]; //@ts-ignore
@@ -67,4 +66,4 @@
 		<DropdownItem on:click={() => addColumnToGroupBy(column)}>{column}</DropdownItem>
 	{/each}
 </Dropdown>
-<Tags {tags} {removeItem} />
+<Tags items={tags} {removeItem} />

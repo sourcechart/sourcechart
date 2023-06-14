@@ -1,19 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { clickOutside } from '$lib/actions/clickUtils';
 
 	export let items: Array<string> = [];
 	export let removeItem: (item: string) => void;
 
 	let selectedItem: number | null = null;
 	let value: string = '';
-
-	function addValue() {
-		if (value !== '') {
-			items = [...items, value];
-			value = '';
-		}
-	}
 
 	function selectItem(index: number) {
 		removeItem(items[index]);
@@ -41,8 +33,6 @@
 			window.removeEventListener('keydown', handleKeyDown);
 		};
 	});
-
-	$: console.log(items);
 </script>
 
 <div class="flex justify-center items-center">
@@ -51,13 +41,23 @@
 	>
 		{#each items as item, i (i)}
 			<div
+				role="button"
 				class="mr-2 rounded-full bg-blue-600 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-500"
+				tabindex="0"
 				on:click={() => selectItem(i)}
+				on:keydown={(e) => {
+					if (e.key === 'Enter') selectItem(i);
+				}}
 			>
 				{item}
 				<div
+					role="button"
 					class="inline-block ml-2 text-xs cursor-pointer"
+					tabindex="0"
 					on:click|stopPropagation={() => removeItem(item)}
+					on:keydown|stopPropagation={(e) => {
+						if (e.key === 'Enter') removeItem(item);
+					}}
 				>
 					x
 				</div>

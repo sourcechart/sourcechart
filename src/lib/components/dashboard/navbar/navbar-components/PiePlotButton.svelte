@@ -3,9 +3,12 @@
 	import { ChartOptions } from '$lib/io/eChartBuilder';
 </script>
 
-<div
-	on:click={() => addEChartPropsToStore(ChartOptions.line)}
-	on:keydown={() => null}
+<button
+	on:click|stopPropagation={() => addEChartPropsToStore(ChartOptions.bar)}
+	on:keydown|stopPropagation={(e) => {
+		if (e.key === 'Enter') addEChartPropsToStore(ChartOptions.bar);
+	}}
+	tabindex="0"
 	class="flex flex-col items-center justify-center cursor-pointer dark:text-gray-300"
 >
 	<h1>Pie Plot</h1>
@@ -24,4 +27,4 @@
 			d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"
 		/>
 	</svg>
-</div>
+</button>
