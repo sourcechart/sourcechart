@@ -11,9 +11,6 @@
 	} from '$lib/io/stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
-	//import { Tags } from '$lib/components/ui/tags';
-	//import Tags from 'svelte-tags-input';
-
 	export let axis = '';
 
 	let tags: Array<string> = [];
