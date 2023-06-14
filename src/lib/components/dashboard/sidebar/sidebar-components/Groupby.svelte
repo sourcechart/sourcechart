@@ -11,7 +11,6 @@
 		groupbyColumns
 	} from '$lib/io/stores';
 
-	
 	let tags: Array<string> = [];
 
 	$: columns = getColumnsFromFile();
@@ -33,7 +32,8 @@
 		$allCharts[$i] = chart;
 	}
 
-	function chooseColumn(column: string | null) {
+	function addColumnToGroupBy(column: string | null) {
+		console.log(column);
 		let chart = $allCharts[$i];
 		if (column) {
 			tags = [...tags, column]; //@ts-ignore
@@ -50,6 +50,13 @@
 		}
 		return tags;
 	}
+
+	function removeItem(item: string) {
+		tags = tags.filter((tag) => tag !== item);
+		let chart = $allCharts[$i];
+		chart.groupbyColumns = tags;
+		$allCharts[$i] = chart;
+	}
 </script>
 
 <div class="flex">
@@ -57,7 +64,7 @@
 </div>
 <Dropdown>
 	{#each $columns as column}
-		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>
+		<DropdownItem on:click={() => addColumnToGroupBy(column)}>{column}</DropdownItem>
 	{/each}
 </Dropdown>
-<Tags {tags} maxTags={1} />
+<Tags {tags} {removeItem} />

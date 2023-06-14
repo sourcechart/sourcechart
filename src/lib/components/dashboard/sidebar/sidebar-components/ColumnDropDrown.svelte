@@ -11,8 +11,8 @@
 	} from '$lib/io/stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
-	//@ts-expect-error
-	import Tags from 'svelte-tags-input';
+	//import { Tags } from '$lib/components/ui/tags';
+	//import Tags from 'svelte-tags-input';
 
 	export let axis = '';
 
@@ -143,10 +143,6 @@
 	}
 </script>
 
-<!-- <div class="flex">
-	<Button color="alternative" pill={false} outline={false}>Choose {axis} Axis</Button>
-</div>
--->
 <Button color="alternative" pill={false} outline={false}>Choose {axis} Axis</Button>
 <Dropdown>
 	{#each $columns as column}

@@ -29,9 +29,10 @@
 	}
 
 	function selectFile(filename: string) {
-		let chart: Chart = $allCharts[$i];
-		chart.filename = filename;
+		let chart = $allCharts[$i];
 		$chosenFile = filename;
+		chart.filename = filename;
+
 		if ($file?.database && $file?.datasetID) {
 			chart.datasetID = $file.datasetID;
 			chart.database = $file.database;

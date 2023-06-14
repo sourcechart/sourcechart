@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Chart } from 'svelte-echarts';
-	import { activeChart, mostRecentChartID } from '$lib/io/stores';
-	import { clickInside, clickOutside } from '$lib/actions/clickUtils';
+	import { mostRecentChartID, activeChart } from '$lib/io/stores';
+	import { clickInside } from '$lib/actions/clickUtils';
 
 	export let id: string;
 	//@ts-ignore
@@ -9,10 +9,7 @@
 
 	function handleInside(event: Event) {
 		$mostRecentChartID = (event.target as HTMLElement).id;
-	}
-
-	function cOutside() {
-		$activeChart = false;
+		$activeChart = true;
 	}
 </script>
 
@@ -21,7 +18,7 @@
 	{id}
 	use:clickInside
 	on:click_inside={handleInside}
-	>
+>
 	<Chart {options} />
 </div>
 

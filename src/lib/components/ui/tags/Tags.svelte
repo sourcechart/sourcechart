@@ -2,9 +2,11 @@
 	import { onMount } from 'svelte';
 	import { clickOutside } from '$lib/actions/clickUtils';
 
-	export let items: Array<string | number> = [];
-	let value: string = '';
+	export let items: Array<string> = [];
+	export let removeItem: (item: string) => void;
+
 	let selectedItem: number | null = null;
+	let value: string = '';
 
 	function addValue() {
 		if (value !== '') {
@@ -13,12 +15,8 @@
 		}
 	}
 
-	function removeItem(index: number) {
-		items = items.filter((_, i) => i !== index);
-	}
-
 	function selectItem(index: number) {
-		selectedItem = index;
+		removeItem(items[index]);
 	}
 
 	onMount(() => {
@@ -32,7 +30,7 @@
 				(event.key === 'Escape' || event.key === 'Backspace' || event.key === 'Delete') &&
 				selectedItem !== null
 			) {
-				removeItem(selectedItem);
+				removeItem(items[selectedItem]);
 				selectedItem = null;
 			}
 		};
@@ -43,35 +41,27 @@
 			window.removeEventListener('keydown', handleKeyDown);
 		};
 	});
+
+	$: console.log(items);
 </script>
 
 <div class="flex justify-center items-center">
 	<div
 		class="flex items-center rounded-full bg-white shadow px-4 py-2 w-64 border border-gray-300 text-base"
-		use:clickOutside={{ exclude: document.querySelector('.pill') }}
-		on:click_outside={() => (selectedItem = null)}
 	>
 		{#each items as item, i (i)}
 			<div
-				class="mr-2 rounded-full px-2 py-1 text-sm cursor-pointer pill {selectedItem === i
-					? 'bg-blue-500 text-white'
-					: 'bg-blue-600 text-white hover:bg-blue-500'}"
-				on:click={(e) => {
-					e.stopPropagation();
-					selectItem(i);
-				}}
+				class="mr-2 rounded-full bg-blue-600 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-500"
+				on:click={() => selectItem(i)}
 			>
 				{item}
+				<div
+					class="inline-block ml-2 text-xs cursor-pointer"
+					on:click|stopPropagation={() => removeItem(item)}
+				>
+					x
+				</div>
 			</div>
 		{/each}
-		<input
-			class={items.length > 0
-				? 'text-transparent bg-transparent border-0 focus:outline-none focus:ring-0'
-				: 'flex-1 bg-white text-gray-700 border-0 focus:outline-none focus:ring-0'}
-			type="text"
-			placeholder={items.length > 0 ? '' : 'Add item...'}
-			bind:value
-			on:keydown={(e) => e.key === 'Enter' && addValue()}
-		/>
 	</div>
 </div>
