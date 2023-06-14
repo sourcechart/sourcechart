@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	import { Tags } from '$lib/components/ui/tags';
 
 	import {
 		getColumnsFromFile,
@@ -9,8 +10,8 @@
 		clickedChartIndex,
 		groupbyColumns
 	} from '$lib/io/stores';
-	//@ts-expect-error
-	import Tags from 'svelte-tags-input';
+
+	
 	let tags: Array<string> = [];
 
 	$: columns = getColumnsFromFile();

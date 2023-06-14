@@ -2,8 +2,8 @@
 	import { onMount } from 'svelte';
 	import { clickOutside } from '$lib/actions/clickUtils';
 
+	export let items: Array<string | number> = [];
 	let value: string = '';
-	let items: Array<string | number> = [];
 	let selectedItem: number | null = null;
 
 	function addValue() {
