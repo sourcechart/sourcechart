@@ -1,41 +1,39 @@
 /** Dispatch event on click outside of node */
-export function clickOutside(node: Node, options: any = {}) {
-	const handleClick = (event: MouseEvent) => {
-		if (options.exclude && options.exclude.contains(event.target)) {
-			return;
-		}
-		if (node && !node.contains(event.target as Node) && !event.defaultPrevented) {
-			// @ts-ignore
-			node.dispatchEvent(new CustomEvent('click_outside', node));
-		}
-	};
+export function clickOutside(node: HTMLElement, options: any = {}) {
+    const handleClick = (event: MouseEvent) => {
+        if (options.exclude && options.exclude.contains(event.target)) {
+            return;
+        }
+        if (node && !node.contains(event.target as Node) && !event.defaultPrevented) {
+            node.dispatchEvent(new CustomEvent('click_outside'));
+        }
+    };
 
-	document.addEventListener('click', handleClick, true);
+    document.addEventListener('click', handleClick, true);
 
-	return {
-		destroy() {
-			document.removeEventListener('click', handleClick, true);
-		}
-	};
+    return {
+        destroy() {
+            document.removeEventListener('click', handleClick, true);
+        }
+    };
 }
 
-export function clickInside(node: Node, options: any = {}) {
-	const handleClick = (event: MouseEvent) => {
-		if (options.exclude && options.exclude.contains(event.target)) {
-			return;
-		}
-		if (node && node.contains(event.target as Node)) {
-      //@ts-ignore
-			node.dispatchEvent(new CustomEvent('click_inside', node));
-		}
-	};
-	document.addEventListener('click', handleClick, true);
+export function clickInside(node: HTMLElement, options: any = {}) {
+    const handleClick = (event: MouseEvent) => {
+        if (options.exclude && options.exclude.contains(event.target)) {
+            return;
+        }
+        if (node && node.contains(event.target as Node)) {
+            node.dispatchEvent(new CustomEvent('click_inside'));
+        }
+    };
+    document.addEventListener('click', handleClick, true);
 
-	return {
-		destroy() {
-			document.removeEventListener('click', handleClick, true);
-		}
-	};
+    return {
+        destroy() {
+            document.removeEventListener('click', handleClick, true);
+        }
+    };
 }
 
 export function clickEscapeKey(node: Node) {
