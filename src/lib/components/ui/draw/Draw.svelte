@@ -1,89 +1,73 @@
 <script lang="ts">
-	import { onMount, createEventDispatcher } from 'svelte';
+	import { onMount } from 'svelte';
+
+	export let width: number = 1000;
+	export let height: number = 1000;
 
 	let canvas: HTMLCanvasElement;
-	let ctx: CanvasRenderingContext2D | null;
+	let context: CanvasRenderingContext2D | null;
 	let isDrawing: boolean = false;
-	let startX: number = 0;
-	let startY: number = 0;
-	let rectangles: { x: number; y: number; width: number; height: number }[] = [];
+	let start: { x: number; y: number };
 
-	const dispatch = createEventDispatcher();
-
-	function drawRect(rect: { x: number; y: number; width: number; height: number }) {
-		if (ctx) {
-			ctx.fillStyle = 'rgba(0,0,0,0)'; // Transparent fill
-			ctx.strokeStyle = '#000000'; // Black outline
-			ctx.beginPath();
-			ctx.rect(rect.x, rect.y, rect.width, rect.height);
-			ctx.fill();
-			ctx.stroke();
-		}
-	}
+	let t: number, l: number;
 
 	onMount(() => {
-		ctx = canvas.getContext('2d');
-
-		const onMouseDown = (e: MouseEvent) => {
-			isDrawing = true;
-			startX = e.clientX - canvas.getBoundingClientRect().left;
-			startY = e.clientY - canvas.getBoundingClientRect().top;
-		};
-
-		const onKeyDown = (e: KeyboardEvent) => {
-			if (e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') {
-				dispatch('remove');
-			}
-		};
-
-		const onMouseMove = (e: MouseEvent) => {
-			if (!isDrawing) return;
-			let mouseX: number = e.clientX - canvas.getBoundingClientRect().left;
-			let mouseY: number = e.clientY - canvas.getBoundingClientRect().top;
-			if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
-			rectangles.forEach(drawRect); // Draw all the completed rectangles
-			drawRect({
-				x: Math.min(mouseX, startX),
-				y: Math.min(mouseY, startY),
-				width: Math.abs(mouseX - startX),
-				height: Math.abs(mouseY - startY)
-			});
-		};
-
-		const onMouseUp = (e: MouseEvent) => {
-			isDrawing = false;
-			let mouseX: number = e.clientX - canvas.getBoundingClientRect().left;
-			let mouseY: number = e.clientY - canvas.getBoundingClientRect().top;
-			rectangles.push({
-				x: Math.min(mouseX, startX),
-				y: Math.min(mouseY, startY),
-				width: Math.abs(mouseX - startX),
-				height: Math.abs(mouseY - startY)
-			});
-		};
-
-		window.addEventListener('keydown', onKeyDown);
-		canvas.addEventListener('mousedown', onMouseDown);
-		canvas.addEventListener('mousemove', onMouseMove);
-		canvas.addEventListener('mouseup', onMouseUp);
-
-		return () => {
-			canvas.removeEventListener('mousedown', onMouseDown);
-			canvas.removeEventListener('mousemove', onMouseMove);
-			canvas.removeEventListener('mouseup', onMouseUp);
-			window.removeEventListener('keydown', onKeyDown);
-		};
+		context = canvas.getContext('2d');
+		handleSize();
 	});
+
+	const handleStart = ({ offsetX: x, offsetY: y }: { offsetX: number; offsetY: number }) => {
+		isDrawing = true;
+		start = { x, y };
+	};
+
+	const handleEnd = (): void => {
+		isDrawing = false;
+		if (context) context.clearRect(0, 0, width, height); // Clear the canvas
+	};
+
+	const handleMove = ({ offsetX: x1, offsetY: y1 }: { offsetX: number; offsetY: number }) => {
+		if (!isDrawing) return;
+
+		const { x, y } = start;
+		if (context) {
+			context.clearRect(0, 0, width, height); // Clear the canvas before drawing
+			context.beginPath();
+			context.rect(x, y, x1 - x, y1 - y);
+			context.stroke();
+		}
+	};
+
+	const handleSize = (): void => {
+		const { top, left } = canvas.getBoundingClientRect();
+		t = top;
+		l = left;
+	};
 </script>
 
-<canvas bind:this={canvas} class="w-full h-full" />
+<svelte:window on:resize={handleSize} />
 
-<style>
-	canvas {
-		margin: auto;
-		display: block;
-		box-shadow: 0px 2px 12px -2px rgba(0, 0, 0, 0.15);
-		height: 100vh;
-		width: 100vw;
-	}
-</style>
+<canvas
+	{width}
+	{height}
+	bind:this={canvas}
+	on:mousedown={handleStart}
+	on:touchstart={(e) => {
+		const { clientX, clientY } = e.touches[0];
+		handleStart({
+			offsetX: clientX - l,
+			offsetY: clientY - t
+		});
+	}}
+	on:mouseup={handleEnd}
+	on:touchend={handleEnd}
+	on:mouseleave={handleEnd}
+	on:mousemove={handleMove}
+	on:touchmove={(e) => {
+		const { clientX, clientY } = e.touches[0];
+		handleMove({
+			offsetX: clientX - l,
+			offsetY: clientY - t
+		});
+	}}
+/>
