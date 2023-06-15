@@ -14,22 +14,17 @@ const config = {
 			pink: '#d53369',
 			yellow: '#daae51'
 		}),
-		extend: {}
+		extend: { width: {
+        'full': '100%',
+      },
+      height: {
+        'full': '100%',
+      },
+    },
 	},
 
 	plugins: [require('flowbite/plugin')],
 	darkMode: 'class',
-
-	rules: {
-		'at-rule-no-unknown': [
-			true,
-			{
-				ignoreAtRules: ['tailwind', 'apply', 'variants', 'responsive', 'screen']
-			}
-		],
-		'declaration-block-trailing-semicolon': null,
-		'no-descending-specificity': null
-	}
 };
 
 module.exports = config;
