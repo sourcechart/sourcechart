@@ -17,8 +17,8 @@
 		<NavBar />
 	</div>
 	<div>
-		{#each $allCharts as item (item)}
-			<MoveableChart id={item.chartID} chartOptions={item.chartOptions} />
+		{#each $allCharts as chart (chart)}
+			<MoveableChart id={chart.chartID} chartOptions={chart.chartOptions} />
 		{/each}
 	</div>
 	<div class="fixed top-1/2 left-0 transform -translate-y-1/2">
