@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import {
 		AreaPlotButton,
 		BarPlotButton,
@@ -6,8 +7,7 @@
 		ScatterPlotButton,
 		FileUploadButton,
 		PiePlotButton
-	} from '../sidebar/sidebar-components/navbar-components';
-	import NavBarWrapper from '../sidebar/sidebar-components/navbar-components/NavBarWrapper.svelte';
+	} from './chart-components';
 
 	let components = [
 		{ componentType: 'bar', component: BarPlotButton },
@@ -19,16 +19,11 @@
 	];
 </script>
 
-<NavBarWrapper>
+<Button color="alternative" pill={false} outline={false}>Select Component</Button>
+<Dropdown>
 	{#each components as component (component)}
-		<div
-			class="flex items-center justify-between mx-1 rounded-md overflow-hidden dark:hover:bg-gray-600"
+		<DropdownItem>
+			<svelte:component this={component.component} /></DropdownItem
 		>
-			<div
-				class="relative flex align-center justify-items-center items-center flex-col dark:hover:bg-gray-600"
-			>
-				<svelte:component this={component.component} />
-			</div>
-		</div>
 	{/each}
-</NavBarWrapper>
+</Dropdown>
