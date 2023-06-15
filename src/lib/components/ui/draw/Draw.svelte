@@ -25,6 +25,7 @@
 	let isDrawing: boolean = false;
 	let start: Point;
 	let rectangles: Rect[] = [];
+	let selectedRectIndex: number | null = null;
 
 	onMount(() => {
 		context = canvas.getContext('2d');
@@ -32,10 +33,11 @@
 		height = window.innerHeight;
 	});
 
-	const drawRect = (rect: Rect): void => {
+	const drawRect = (rect: Rect, index: number): void => {
 		if (context) {
 			context.beginPath();
 			context.rect(rect.x, rect.y, rect.width, rect.height);
+			context.strokeStyle = selectedRectIndex === index ? 'red' : 'black';
 			context.stroke();
 		}
 	};
@@ -55,12 +57,21 @@
 		});
 	};
 
+	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
+		selectedRectIndex = rectangles.findIndex(
+			(rect) => x > rect.x && x < rect.x + rect.width && y > rect.y && y < rect.y + rect.height
+		);
+	};
+
 	const handleMove = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		if (!isDrawing) return;
 		if (context) {
 			context.clearRect(0, 0, width, height); // Clear the canvas before drawing
 			rectangles.forEach(drawRect); // Draw all the completed rectangles
-			drawRect({ x: start.x, y: start.y, width: x - start.x, height: y - start.y }); // Draw current rectangle
+			drawRect(
+				{ x: start.x, y: start.y, width: x - start.x, height: y - start.y },
+				rectangles.length
+			); // Draw current rectangle
 		}
 	};
 </script>
@@ -81,4 +92,5 @@
 	on:mousedown={handleStart}
 	on:mouseup={handleEnd}
 	on:mousemove={handleMove}
+	on:click={handleClick}
 />
