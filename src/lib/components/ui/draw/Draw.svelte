@@ -31,7 +31,28 @@
 		context = canvas.getContext('2d');
 		width = window.innerWidth;
 		height = window.innerHeight;
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (
+				(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
+				selectedRectIndex !== null
+			) {
+				rectangles.splice(selectedRectIndex, 1);
+				selectedRectIndex = null;
+				redraw();
+			}
+		};
+		window.addEventListener('keydown', handleKeyDown);
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+		};
 	});
+
+	const redraw = (): void => {
+		if (context) {
+			context.clearRect(0, 0, width, height);
+			rectangles.forEach(drawRect);
+		}
+	};
 
 	const drawRect = (rect: Rect, index: number): void => {
 		if (context) {
@@ -93,4 +114,6 @@
 	on:mouseup={handleEnd}
 	on:mousemove={handleMove}
 	on:click={handleClick}
-/>
+>
+	<slot />
+</canvas>
