@@ -2,13 +2,12 @@
 	import { onMount } from 'svelte';
 
 	let canvas: HTMLCanvasElement;
-	let ctx: CanvasRenderingContext2D;
+	let ctx: CanvasRenderingContext2D | null;
 	let isDrawing: boolean = false;
 	let startX: number = 0;
 	let startY: number = 0;
 
 	onMount(() => {
-		//@ts-ignore
 		ctx = canvas.getContext('2d');
 
 		const onMouseDown = (e: MouseEvent) => {
@@ -21,14 +20,21 @@
 			if (!isDrawing) return;
 			let mouseX: number = e.clientX - canvas.getBoundingClientRect().left;
 			let mouseY: number = e.clientY - canvas.getBoundingClientRect().top;
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.fillStyle = '#000000';
-			ctx.fillRect(
-				Math.min(mouseX, startX),
-				Math.min(mouseY, startY),
-				Math.abs(mouseX - startX),
-				Math.abs(mouseY - startY)
-			);
+
+			if (ctx) {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.fillStyle = 'rgba(0,0,0,0)'; // Transparent fill
+				ctx.strokeStyle = '#000000'; // Black outline
+				ctx.beginPath();
+				ctx.rect(
+					Math.min(mouseX, startX),
+					Math.min(mouseY, startY),
+					Math.abs(mouseX - startX),
+					Math.abs(mouseY - startY)
+				);
+				ctx.fill();
+				ctx.stroke();
+			}
 		};
 
 		const onMouseUp = () => {
@@ -54,7 +60,7 @@
 		margin: auto;
 		display: block;
 		box-shadow: 0px 2px 12px -2px rgba(0, 0, 0, 0.15);
-		height: 100vh; /* Make sure the canvas has a height */
-		width: 100vw; /* Make sure the canvas has a width */
+		height: 100vh;
+		width: 100vw;
 	}
 </style>
