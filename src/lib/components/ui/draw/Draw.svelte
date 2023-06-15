@@ -24,8 +24,10 @@
 	let context: CanvasRenderingContext2D | null;
 	let isDrawing: boolean = false;
 	let start: Point = { x: 0, y: 0 };
-	let rectangles: Rect[] = [];
+	let rectangles: Rect[] = [{ x: 0, y: 0, width: 0, height: 0 }];
 	let selectedRectIndex: number | null = null;
+	let isDragging: boolean = false;
+	let dragOffset: Point = { x: 0, y: 0 };
 
 	onMount(() => {
 		context = canvas.getContext('2d');
@@ -64,11 +66,25 @@
 	};
 
 	const handleStart = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
+		if (selectedRectIndex !== null) {
+			const rect = rectangles[selectedRectIndex];
+			if (x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height) {
+				isDragging = true;
+				dragOffset = { x: x - rect.x, y: y - rect.y };
+				return;
+			}
+		}
+
 		isDrawing = true;
 		start = { x, y };
 	};
 
 	const handleEnd = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
+		if (isDragging) {
+			isDragging = false;
+			return;
+		}
+
 		isDrawing = false;
 		rectangles.push({
 			x: start.x,
@@ -76,15 +92,17 @@
 			width: x - start.x,
 			height: y - start.y
 		});
-	};
-
-	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
-		selectedRectIndex = rectangles.findIndex(
-			(rect) => x > rect.x && x < rect.x + rect.width && y > rect.y && y < rect.y + rect.height
-		);
+		redraw();
 	};
 
 	const handleMove = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
+		if (isDragging && selectedRectIndex !== null) {
+			rectangles[selectedRectIndex].x = x - dragOffset.x;
+			rectangles[selectedRectIndex].y = y - dragOffset.y;
+			redraw();
+			return;
+		}
+
 		if (!isDrawing) return;
 		if (context) {
 			context.clearRect(0, 0, width, height); // Clear the canvas before drawing
@@ -94,6 +112,13 @@
 				rectangles.length
 			); // Draw current rectangle
 		}
+	};
+
+	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
+		selectedRectIndex = rectangles.findIndex(
+			(rect) => x > rect.x && x < rect.x + rect.width && y > rect.y && y < rect.y + rect.height
+		);
+		redraw();
 	};
 </script>
 
@@ -114,6 +139,4 @@
 	on:mouseup={handleEnd}
 	on:mousemove={handleMove}
 	on:click={handleClick}
->
-	<slot />
-</canvas>
+/>
