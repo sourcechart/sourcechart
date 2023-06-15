@@ -23,7 +23,7 @@
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let isDrawing: boolean = false;
-	let start: Point;
+	let start: Point = { x: 0, y: 0 };
 	let rectangles: Rect[] = [];
 	let selectedRectIndex: number | null = null;
 
