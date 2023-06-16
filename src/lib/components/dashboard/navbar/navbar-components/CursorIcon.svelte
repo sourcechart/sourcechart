@@ -6,11 +6,11 @@
 	const dispatch = createEventDispatcher();
 
 	function handleClick() {
-		dispatch('mode', 'editing');
+		dispatch('mode', 'select');
 	}
 </script>
 
-<button on:click={handleClick} class={mode === 'editing' ? 'dark:bg-gray-600' : 'dark:bg-gray-700'}>
+<button on:click={handleClick} class={mode === 'select' ? 'dark:bg-gray-600' : 'dark:bg-gray-700'}>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		x="0px"

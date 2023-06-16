@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { navBarMode } from '$lib/io/stores';
+
 	interface Rect {
 		x: number;
 		y: number;
@@ -16,6 +18,7 @@
 		offsetX: number;
 		offsetY: number;
 	}
+
 	let width: number;
 	let height: number;
 	let canvas: HTMLCanvasElement;
@@ -27,7 +30,7 @@
 	let isDragging: boolean = false;
 	let dragOffset: Point = { x: 0, y: 0 };
 
-	let mode = 'editing'; // Default mode is editin
+	$: mode = $navBarMode; // Default mode is editin
 
 	onMount(() => {
 		context = canvas.getContext('2d');
@@ -66,20 +69,24 @@
 	};
 
 	const handleStart = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
-		if (mode === 'editing' && selectedRectIndex !== null) {
-			const rect = rectangles[selectedRectIndex];
-			if (x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height) {
+		if (mode === 'select') {
+			selectedRectIndex = rectangles.findIndex(
+				(rect) =>
+					x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height
+			);
+			if (selectedRectIndex !== -1) {
 				isDragging = true;
+				const rect = rectangles[selectedRectIndex];
 				dragOffset = { x: x - rect.x, y: y - rect.y };
 				return;
 			}
 		}
-		if (mode === 'drawing' && !isDrawing) {
+
+		if (mode === 'drawRectangle' && !isDrawing) {
 			isDrawing = true;
 			start = { x, y };
 		}
 	};
-
 	const handleEnd = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		if (isDragging) {
 			isDragging = false;
