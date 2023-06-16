@@ -1,6 +1,8 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
+	import { navBarMode } from '$lib/io/stores';
 
+	$: mode = $navBarMode;
 	const dispatch = createEventDispatcher();
 
 	function handleClick() {
@@ -8,7 +10,7 @@
 	}
 </script>
 
-<button on:click={handleClick} class="dark:hover:bg-gray-600">
+<button on:click={handleClick} class={mode === 'editing' ? 'dark:bg-gray-600' : 'dark:bg-gray-700'}>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		x="0px"
