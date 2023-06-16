@@ -1,22 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { navBarMode } from '$lib/io/stores';
-
-	interface Rect {
-		x: number;
-		y: number;
-		width: number;
-		height: number;
-	}
+	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
 
 	interface Point {
 		x: number;
 		y: number;
 	}
 
-	interface MouseEventExtended extends MouseEvent {
-		offsetX: number;
-		offsetY: number;
+	interface Polygon {
+		vertices: Point[];
 	}
 
 	let width: number = 0;
@@ -25,8 +18,8 @@
 	let context: CanvasRenderingContext2D | null;
 	let isDrawing: boolean = false;
 	let start: Point = { x: 0, y: 0 };
-	let rectangles: Rect[] = [];
-	let selectedRectIndex: number | null = null;
+	let polygons: Polygon[] = [];
+	let selectedPolygonIndex: number | null = null;
 	let isDragging: boolean = false;
 	let dragOffset: Point = { x: 0, y: 0 };
 
@@ -41,10 +34,10 @@
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (
 				(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
-				selectedRectIndex !== null
+				selectedPolygonIndex !== null
 			) {
-				rectangles.splice(selectedRectIndex, 1);
-				selectedRectIndex = null;
+				polygons.splice(selectedPolygonIndex, 1);
+				selectedPolygonIndex = null;
 				redraw();
 			}
 		};
@@ -57,31 +50,35 @@
 	const redraw = (): void => {
 		if (context) {
 			context.clearRect(0, 0, width, height);
-			rectangles.forEach(drawRect);
+			polygons.forEach(drawPolygon);
 		}
 	};
 
-	const drawRect = (rect: Rect, index: number): void => {
+	const drawPolygon = (polygon: Polygon, index: number): void => {
 		if (context) {
 			context.beginPath();
-			context.rect(rect.x, rect.y, rect.width, rect.height);
-			context.strokeStyle = selectedRectIndex === index ? 'red' : 'black';
+			polygon.vertices.forEach((point, idx) => {
+				if (idx === 0) {
+					//@ts-ignore
+					context.moveTo(point.x, point.y);
+				} else {
+					//@ts-ignore
+					context.lineTo(point.x, point.y);
+				}
+			});
+			context.closePath();
+			context.strokeStyle = selectedPolygonIndex === index ? 'red' : 'black';
 			context.stroke();
 		}
 	};
 
-	const handleStart = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
-		if (mode === 'select' && selectedRectIndex !== null) {
-			const rect = rectangles[selectedRectIndex];
-			if (
-				rect &&
-				x >= rect.x &&
-				x <= rect.x + rect.width &&
-				y >= rect.y &&
-				y <= rect.y + rect.height
-			) {
+	const handleStart = ({ offsetX: x, offsetY: y }: MouseEvent) => {
+		if (mode === 'select' && selectedPolygonIndex !== null) {
+			const polygon = polygons[selectedPolygonIndex];
+			if (polygon && isPointInPolygon({ x, y }, polygon)) {
 				isDragging = true;
-				dragOffset = { x: x - rect.x, y: y - rect.y };
+				const startPoint = polygon.vertices[0];
+				dragOffset = { x: x - startPoint.x, y: y - startPoint.y };
 				return;
 			}
 		}
@@ -91,52 +88,58 @@
 		}
 	};
 
-	const handleEnd = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
+	const handleEnd = ({ offsetX: x, offsetY: y }: MouseEvent) => {
 		if (isDragging) {
 			isDragging = false;
 			return;
 		}
 		if (isDrawing && start) {
 			isDrawing = false;
-			rectangles.push({
-				x: start.x,
-				y: start.y,
-				width: x - start.x,
-				height: y - start.y
+			polygons.push({
+				vertices: [
+					{ x: start.x, y: start.y },
+					{ x: x, y: start.y },
+					{ x: x, y: y },
+					{ x: start.x, y: y }
+				]
 			});
 			redraw();
 		}
 	};
 
-	const handleMove = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
-		if (isDragging && selectedRectIndex !== null) {
-			rectangles[selectedRectIndex].x = x - dragOffset.x;
-			rectangles[selectedRectIndex].y = y - dragOffset.y;
+	const handleMove = ({ offsetX: x, offsetY: y }: MouseEvent) => {
+		if (isDragging && selectedPolygonIndex !== null) {
+			const dx = x - dragOffset.x;
+			const dy = y - dragOffset.y;
+			polygons[selectedPolygonIndex].vertices = polygons[selectedPolygonIndex].vertices.map(
+				(vertex) => ({ x: vertex.x + dx, y: vertex.y + dy })
+			);
 			redraw();
 			return;
 		}
 		if (!isDrawing) return;
 		if (context) {
 			context.clearRect(0, 0, width, height); // Clear the canvas before drawing
-			rectangles.forEach(drawRect); // Draw all the completed rectangles
-			drawRect(
-				{ x: start.x, y: start.y, width: x - start.x, height: y - start.y },
-				rectangles.length
+			polygons.forEach(drawPolygon); // Draw all the completed rectangles
+			drawPolygon(
+				{
+					vertices: [
+						{ x: start.x, y: start.y },
+						{ x: x, y: start.y },
+						{ x: x, y: y },
+						{ x: start.x, y: y }
+					]
+				},
+				polygons.length
 			); // Draw current rectangle
 		}
 	};
 
-	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
-		selectedRectIndex = rectangles.findIndex(
-			(rect) => x > rect.x && x < rect.x + rect.width && y > rect.y && y < rect.y + rect.height
-		);
-
-		if (selectedRectIndex === -1) {
-			// Handle the case when no rectangle is selected
-			console.log('No rectangle selected');
-		} else {
-			redraw();
-		}
+	const handleClick = ({ offsetX: x, offsetY: y }: MouseEvent) => {
+		const point: Point = { x, y };
+		const polygon = getContainingPolygon(point, polygons);
+		selectedPolygonIndex = polygon ? polygons.indexOf(polygon) : null;
+		redraw();
 	};
 </script>
 

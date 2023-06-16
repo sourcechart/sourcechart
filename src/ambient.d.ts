@@ -58,3 +58,17 @@ type Field = {
 	nullable?: boolean;
 	databaseType: string;
 };
+
+interface Point {
+		x: number;
+		y: number;
+	}
+
+interface Polygon {
+		vertices: Point[];
+	}
+
+interface MouseEventExtended extends MouseEvent {
+		offsetX: number;
+		offsetY: number;
+	}
