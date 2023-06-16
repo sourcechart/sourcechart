@@ -1,5 +1,17 @@
 <script lang="ts">
 	import { CursorIcon, DrawBoundary } from './navbar-components';
+	import NavBarWrapper from './NavBarWrapper.svelte';
+
+	let components = [
+		{
+			name: 'CursorIcon',
+			component: CursorIcon
+		},
+		{
+			name: 'DrawBoundary',
+			component: DrawBoundary
+		}
+	];
 </script>
 
 <NavBarWrapper>
