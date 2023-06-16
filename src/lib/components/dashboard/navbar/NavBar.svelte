@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { CursorIcon, DrawBoundary } from './navbar-components';
 	import NavBarWrapper from './NavBarWrapper.svelte';
-	let mode = 'editing'; // Default mode is editing
+	import { navBarMode } from '$lib/io/stores';
 
 	let components = [
 		{
@@ -13,8 +13,10 @@
 			component: DrawBoundary
 		}
 	];
+
 	const setMode = (event: any) => {
-		mode = event.detail;
+		console.log(event.detail);
+		navBarMode.set(event.detail);
 	};
 </script>
 

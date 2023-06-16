@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { CursorIcon, DrawBoundary } from '$lib/components/dashboard/navbar/navbar-components';
 	interface Rect {
 		x: number;
 		y: number;
@@ -75,7 +74,7 @@
 				return;
 			}
 		}
-		if (mode === 'drawing') {
+		if (mode === 'drawing' && !isDrawing) {
 			isDrawing = true;
 			start = { x, y };
 		}
@@ -86,15 +85,16 @@
 			isDragging = false;
 			return;
 		}
-
-		isDrawing = false;
-		rectangles.push({
-			x: start.x,
-			y: start.y,
-			width: x - start.x,
-			height: y - start.y
-		});
-		redraw();
+		if (isDrawing && start) {
+			isDrawing = false;
+			rectangles.push({
+				x: start.x,
+				y: start.y,
+				width: x - start.x,
+				height: y - start.y
+			});
+			redraw();
+		}
 	};
 
 	const handleMove = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {

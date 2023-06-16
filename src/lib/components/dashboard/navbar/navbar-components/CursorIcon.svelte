@@ -8,7 +8,7 @@
 	}
 </script>
 
-<button on:click={handleClick} class=" dark:hover:bg-gray-600">
+<button on:click={handleClick} class="dark:hover:bg-gray-600">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		x="0px"
