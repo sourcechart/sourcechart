@@ -1,22 +1,5 @@
 <script lang="ts">
-	import {
-		AreaPlotButton,
-		BarPlotButton,
-		LinePlotButton,
-		ScatterPlotButton,
-		FileUploadButton,
-		PiePlotButton
-	} from '../sidebar/sidebar-components/navbar-components';
-	import NavBarWrapper from '../sidebar/sidebar-components/navbar-components/NavBarWrapper.svelte';
-
-	let components = [
-		{ componentType: 'bar', component: BarPlotButton },
-		{ componentType: 'line', component: LinePlotButton },
-		{ componentType: 'area', component: AreaPlotButton },
-		{ componentType: 'scatter', component: ScatterPlotButton },
-		{ componentType: 'pie', component: PiePlotButton },
-		{ componentType: 'file-upload', component: FileUploadButton }
-	];
+	import { CursorIcon, DrawBoundary } from './navbar-components';
 </script>
 
 <NavBarWrapper>

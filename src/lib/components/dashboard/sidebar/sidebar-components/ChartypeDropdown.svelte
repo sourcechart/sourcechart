@@ -9,6 +9,11 @@
 		PiePlotButton
 	} from './chart-components';
 
+	let chosenComponent = 'Select Component';
+
+	function chooseChart(componentType: string) {
+		chosenComponent = componentType;
+	}
 	let components = [
 		{ componentType: 'bar', component: BarPlotButton },
 		{ componentType: 'line', component: LinePlotButton },
@@ -19,10 +24,10 @@
 	];
 </script>
 
-<Button color="alternative" pill={false} outline={false}>Select Component</Button>
+<Button color="alternative" pill={false} outline={false}>{chosenComponent}</Button>
 <Dropdown>
 	{#each components as component (component)}
-		<DropdownItem>
+		<DropdownItem on:click={() => chooseChart(component.componentType)}>
 			<svelte:component this={component.component} /></DropdownItem
 		>
 	{/each}
