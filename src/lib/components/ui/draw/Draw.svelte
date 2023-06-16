@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-
+	import { CursorIcon, DrawBoundary } from '$lib/components/dashboard/navbar/navbar-components';
 	interface Rect {
 		x: number;
 		y: number;
@@ -17,17 +17,18 @@
 		offsetX: number;
 		offsetY: number;
 	}
-
 	let width: number;
 	let height: number;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let isDrawing: boolean = false;
-	let start: Point = { x: 0, y: 0 };
-	let rectangles: Rect[] = [{ x: 0, y: 0, width: 0, height: 0 }];
+	let start: Point;
+	let rectangles: Rect[] = [];
 	let selectedRectIndex: number | null = null;
 	let isDragging: boolean = false;
 	let dragOffset: Point = { x: 0, y: 0 };
+
+	let mode = 'editing'; // Default mode is editin
 
 	onMount(() => {
 		context = canvas.getContext('2d');
@@ -66,7 +67,7 @@
 	};
 
 	const handleStart = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
-		if (selectedRectIndex !== null) {
+		if (mode === 'editing' && selectedRectIndex !== null) {
 			const rect = rectangles[selectedRectIndex];
 			if (x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height) {
 				isDragging = true;
@@ -74,9 +75,10 @@
 				return;
 			}
 		}
-
-		isDrawing = true;
-		start = { x, y };
+		if (mode === 'drawing') {
+			isDrawing = true;
+			start = { x, y };
+		}
 	};
 
 	const handleEnd = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
