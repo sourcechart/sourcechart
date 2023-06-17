@@ -76,10 +76,15 @@
 			context.stroke();
 		}
 	};
-
 	const handleStart = ({ offsetX: x, offsetY: y }: MouseEvent) => {
 		if (mode === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
+			if (polygon && isPointInPolygon({ x, y }, polygon)) {
+				isDragging = true;
+				const startPoint = polygon.vertices[0];
+				dragOffset = { x: x - startPoint.x, y: y - startPoint.y };
+				return;
+			}
 			if (polygon) {
 				// Check if the user started dragging near an edge of the rectangle
 				if (Math.abs(y - polygon.vertices[0].y) < tolerance) {
@@ -100,12 +105,6 @@
 					return;
 				}
 				redraw();
-				return;
-			}
-			if (polygon && isPointInPolygon({ x, y }, polygon)) {
-				isDragging = true;
-				const startPoint = polygon.vertices[0];
-				dragOffset = { x: x - startPoint.x, y: y - startPoint.y };
 				return;
 			}
 		}
@@ -138,7 +137,6 @@
 			redraw();
 		}
 	};
-
 	const handleMove = ({ offsetX: x, offsetY: y }: MouseEvent) => {
 		if (isDragging && selectedPolygonIndex !== null) {
 			const dx = x - dragOffset.x;
