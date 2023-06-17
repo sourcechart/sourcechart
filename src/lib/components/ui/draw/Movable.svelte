@@ -11,6 +11,7 @@
 	interface Polygon {
 		vertices: Point[];
 	}
+
 	type Edge = 'top' | 'right' | 'bottom' | 'left';
 
 	let width: number = 0;
@@ -23,10 +24,9 @@
 	let selectedPolygonIndex: number | null = null;
 	let isDragging: boolean = false;
 	let dragOffset: Point = { x: 0, y: 0 };
-	let tolerance = 200; // How close to the edge the user must start dragging
+	let tolerance = 10; // How close to the edge the user must start dragging
 	let resizeEdge: Edge | null = null;
 	let isResizing: boolean = false;
-	let resizeCursor: string = '';
 
 	$: mode = $navBarMode;
 
@@ -64,11 +64,9 @@
 			context.beginPath();
 			polygon.vertices.forEach((point, idx) => {
 				if (idx === 0) {
-					//@ts-ignore
-					context.moveTo(point.x, point.y);
+					if (context) context.moveTo(point.x, point.y);
 				} else {
-					//@ts-ignore
-					context.lineTo(point.x, point.y);
+					if (context) context.lineTo(point.x, point.y);
 				}
 			});
 			context.closePath();
@@ -76,6 +74,7 @@
 			context.stroke();
 		}
 	};
+
 	const handleStart = ({ offsetX: x, offsetY: y }: MouseEvent) => {
 		if (mode === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
@@ -83,95 +82,46 @@
 				isDragging = true;
 				const startPoint = polygon.vertices[0];
 				dragOffset = { x: x - startPoint.x, y: y - startPoint.y };
-				resizeCursor = 'grabbable';
 				return;
 			}
-			// Check if the user started dragging near an edge of the rectangle
 			if (polygon) {
+				// Check if the user started dragging near an edge of the rectangle
 				if (Math.abs(y - polygon.vertices[0].y) < tolerance) {
 					isResizing = true;
 					resizeEdge = 'top';
-					resizeCursor = 'ns-resize';
 					return;
 				} else if (Math.abs(x - polygon.vertices[1].x) < tolerance) {
 					isResizing = true;
 					resizeEdge = 'right';
-					resizeCursor = 'ew-resize';
 					return;
 				} else if (Math.abs(y - polygon.vertices[2].y) < tolerance) {
 					isResizing = true;
 					resizeEdge = 'bottom';
-					resizeCursor = 'ns-resize';
 					return;
-				} else if (Math.abs(x - polygon.vertices[3].x) < tolerance) {
+				} else if (Math.abs(x - polygon.vertices[0].x) < tolerance) {
 					isResizing = true;
 					resizeEdge = 'left';
-					resizeCursor = 'ew-resize';
 					return;
 				}
 			}
 		}
 		if (mode === 'drawRectangle' && !isDrawing) {
-			// 'drawRectangle' instead of 'draw'
 			isDrawing = true;
 			start = { x, y };
 		}
 	};
 
-	const handleMove = ({ offsetX: x, offsetY: y }: MouseEvent) => {
-		if (isResizing && selectedPolygonIndex !== null) {
-			const polygon = polygons[selectedPolygonIndex];
-			if (polygon && resizeEdge) {
-				switch (resizeEdge) {
-					case 'top':
-						polygon.vertices[0].y = y;
-						polygon.vertices[3].y = y;
-						break;
-					case 'right':
-						polygon.vertices[1].x = x;
-						polygon.vertices[2].x = x;
-						break;
-					case 'bottom':
-						polygon.vertices[2].y = y;
-						polygon.vertices[1].y = y;
-						break;
-					case 'left':
-						polygon.vertices[0].x = x;
-						polygon.vertices[3].x = x;
-						break;
-				}
-				redraw();
-			}
-			return;
-		}
-		if (isDragging && selectedPolygonIndex !== null) {
-			const polygon = polygons[selectedPolygonIndex];
-			if (polygon) {
-				const diffX = x - dragOffset.x - polygon.vertices[0].x;
-				const diffY = y - dragOffset.y - polygon.vertices[0].y;
-				polygon.vertices.forEach((vertex) => {
-					vertex.x += diffX;
-					vertex.y += diffY;
-				});
-				redraw();
-			}
-			return;
-		}
-		if (isDrawing) {
-			redraw();
-			if (context) {
-				context.beginPath();
-				//@ts-ignore
-				context.rect(start.x, start.y, x - start.x, y - start.y);
-				context.closePath();
-				context.strokeStyle = 'black';
-				context.stroke();
-			}
-		}
-	};
-
 	const handleEnd = ({ offsetX: x, offsetY: y }: MouseEvent) => {
-		if (isDrawing) {
+		if (isDragging) {
+			isDragging = false;
+			return;
+		}
+		if (isResizing) {
+			isResizing = false;
+			resizeEdge = null;
+			return;
+		}
+		if (isDrawing && start) {
 			isDrawing = false;
 			polygons.push({
 				vertices: [
@@ -181,27 +131,73 @@
 					{ x: start.x, y: y }
 				]
 			});
-		} else if (mode === 'select') {
-			// Add this condition
-			const containedPolygon = getContainingPolygon({ x, y }, polygons);
-			selectedPolygonIndex = containedPolygon ? polygons.indexOf(containedPolygon) : null;
 			redraw();
 		}
-		if (isDragging) {
-			isDragging = false;
+	};
+
+	const handleMove = ({ offsetX: x, offsetY: y }: MouseEvent) => {
+		canvas.style.cursor = 'default'; // reset cursor
+
+		// Check if cursor is on a rectangle
+		const point: Point = { x, y };
+		const hoveredPolygonIndex = polygons.findIndex((polygon) => isPointInPolygon(point, polygon));
+		if (hoveredPolygonIndex !== -1) {
+			canvas.style.cursor = 'pointer';
 		}
-		if (isResizing) {
-			isResizing = false;
+
+		if (isDragging && selectedPolygonIndex !== null) {
+			const dx = x - dragOffset.x;
+			const dy = y - dragOffset.y;
+			polygons[selectedPolygonIndex].vertices = polygons[selectedPolygonIndex].vertices.map(
+				(vertex) => ({ x: vertex.x + dx, y: vertex.y + dy })
+			);
+			dragOffset = { x, y };
+			redraw();
+			return;
 		}
-		resizeCursor = '';
+
+		if (isResizing && selectedPolygonIndex !== null && resizeEdge !== null) {
+			const polygon = polygons[selectedPolygonIndex];
+			// resize logic
+			if (resizeEdge === 'top') {
+				polygon.vertices[0].y = y;
+				polygon.vertices[3].y = y;
+			} else if (resizeEdge === 'right') {
+				polygon.vertices[1].x = x;
+				polygon.vertices[2].x = x;
+			} else if (resizeEdge === 'bottom') {
+				polygon.vertices[2].y = y;
+				polygon.vertices[1].y = y;
+			} else if (resizeEdge === 'left') {
+				polygon.vertices[0].x = x;
+				polygon.vertices[3].x = x;
+			}
+			redraw();
+			return;
+		}
+
+		if (isDrawing && context) {
+			context.clearRect(0, 0, width, height); // Clear the canvas before drawing
+			polygons.forEach(drawPolygon); // Draw all the completed rectangles
+			drawPolygon(
+				{
+					vertices: [
+						{ x: start.x, y: start.y },
+						{ x: x, y: start.y },
+						{ x: x, y: y },
+						{ x: start.x, y: y }
+					]
+				},
+				polygons.length
+			); // Draw current rectangle
+		}
 	};
 
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEvent) => {
-		if (mode === 'select') {
-			const containedPolygon = getContainingPolygon({ x, y }, polygons);
-			selectedPolygonIndex = containedPolygon ? polygons.indexOf(containedPolygon) : null;
-			redraw();
-		}
+		const point: Point = { x, y };
+		const polygon = getContainingPolygon(point, polygons);
+		selectedPolygonIndex = polygon ? polygons.indexOf(polygon) : null;
+		redraw();
 	};
 </script>
 
@@ -214,14 +210,12 @@
 	}}
 />
 
-<div class={resizeCursor}>
-	<canvas
-		{width}
-		{height}
-		bind:this={canvas}
-		on:mousedown={handleStart}
-		on:mouseup={handleEnd}
-		on:mousemove={handleMove}
-		on:click={handleClick}
-	/>
-</div>
+<canvas
+	{width}
+	{height}
+	bind:this={canvas}
+	on:mousedown={handleStart}
+	on:mouseup={handleEnd}
+	on:mousemove={handleMove}
+	on:click={handleClick}
+/>
