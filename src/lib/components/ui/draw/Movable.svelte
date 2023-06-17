@@ -24,7 +24,7 @@
 	let selectedPolygonIndex: number | null = null;
 	let isDragging: boolean = false;
 	let dragOffset: Point = { x: 0, y: 0 };
-	let tolerance = 100; // How close to the edge the user must start dragging
+	let tolerance = 200; // How close to the edge the user must start dragging
 	let resizeEdge: Edge | null = null;
 	let isResizing: boolean = false;
 
@@ -137,6 +137,7 @@
 			redraw();
 		}
 	};
+
 	const handleMove = ({ offsetX: x, offsetY: y }: MouseEvent) => {
 		if (isDragging && selectedPolygonIndex !== null) {
 			const dx = x - dragOffset.x;
@@ -167,8 +168,8 @@
 			redraw();
 			return;
 		}
-		if (!isDrawing) return;
-		if (context) {
+
+		if (isDrawing && context) {
 			context.clearRect(0, 0, width, height); // Clear the canvas before drawing
 			polygons.forEach(drawPolygon); // Draw all the completed rectangles
 			drawPolygon(
@@ -211,3 +212,41 @@
 	on:mousemove={handleMove}
 	on:click={handleClick}
 />
+
+<style>
+	.grabbable {
+		cursor: move; /* fallback if grab cursor is unsupported */
+		cursor: grab;
+		cursor: -moz-grab;
+		cursor: -webkit-grab;
+	}
+
+	.grabbable:active {
+		cursor: grabbing;
+		cursor: -moz-grabbing;
+		cursor: -webkit-grabbing;
+	}
+
+	.grabbable.ns-resize {
+		cursor: ns-resize;
+		cursor: -moz-grabbing;
+		cursor: -webkit-grabbing;
+	}
+	.grabbable.ew-resize {
+		cursor: ew-resize;
+		cursor: -moz-grabbing;
+		cursor: -webkit-grabbing;
+	}
+
+	.grabbable.nesw-resize {
+		cursor: nesw-resize;
+		cursor: -webkit-grabbing;
+		cursor: -moz-grabbing;
+	}
+
+	.grabbable.nwse-resize {
+		cursor: nwse-resize;
+		cursor: -webkit-grabbing;
+		cursor: -moz-grabbing;
+	}
+</style>
