@@ -1,3 +1,3 @@
-import Movable from './Canvas.svelte'
+import Movable from './Movable.svelte'
 
 export {Movable}
