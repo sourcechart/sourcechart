@@ -12,6 +12,8 @@
 		vertices: Point[];
 	}
 
+	type Edge = 'top' | 'right' | 'bottom' | 'left';
+
 	let width: number = 0;
 	let height: number = 0;
 	let canvas: HTMLCanvasElement;
@@ -22,6 +24,9 @@
 	let selectedPolygonIndex: number | null = null;
 	let isDragging: boolean = false;
 	let dragOffset: Point = { x: 0, y: 0 };
+	let tolerance = 5; // How close to the edge the user must start dragging
+	let resizeEdge: Edge | null = null;
+	let isResizing: boolean = false;
 
 	$: mode = $navBarMode;
 
@@ -75,6 +80,28 @@
 	const handleStart = ({ offsetX: x, offsetY: y }: MouseEvent) => {
 		if (mode === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
+			if (polygon) {
+				// Check if the user started dragging near an edge of the rectangle
+				if (Math.abs(y - polygon.vertices[0].y) < tolerance) {
+					isResizing = true;
+					resizeEdge = 'top';
+					return;
+				} else if (Math.abs(x - polygon.vertices[1].x) < tolerance) {
+					isResizing = true;
+					resizeEdge = 'right';
+					return;
+				} else if (Math.abs(y - polygon.vertices[2].y) < tolerance) {
+					isResizing = true;
+					resizeEdge = 'bottom';
+					return;
+				} else if (Math.abs(x - polygon.vertices[3].x) < tolerance) {
+					isResizing = true;
+					resizeEdge = 'left';
+					return;
+				}
+				redraw();
+				return;
+			}
 			if (polygon && isPointInPolygon({ x, y }, polygon)) {
 				isDragging = true;
 				const startPoint = polygon.vertices[0];
