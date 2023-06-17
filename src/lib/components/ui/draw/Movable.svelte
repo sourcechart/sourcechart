@@ -144,9 +144,11 @@
 			polygons[selectedPolygonIndex].vertices = polygons[selectedPolygonIndex].vertices.map(
 				(vertex) => ({ x: vertex.x + dx, y: vertex.y + dy })
 			);
+			dragOffset = { x, y };
 			redraw();
 			return;
 		}
+
 		if (isResizing && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
 			if (resizeEdge === 'top') {
