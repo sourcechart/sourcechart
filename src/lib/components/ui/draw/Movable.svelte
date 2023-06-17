@@ -24,7 +24,7 @@
 	let selectedPolygonIndex: number | null = null;
 	let isDragging: boolean = false;
 	let dragOffset: Point = { x: 0, y: 0 };
-	let tolerance = 5; // How close to the edge the user must start dragging
+	let tolerance = 100; // How close to the edge the user must start dragging
 	let resizeEdge: Edge | null = null;
 	let isResizing: boolean = false;
 
@@ -120,6 +120,11 @@
 			isDragging = false;
 			return;
 		}
+		if (isResizing) {
+			isResizing = false;
+			resizeEdge = null;
+			return;
+		}
 		if (isDrawing && start) {
 			isDrawing = false;
 			polygons.push({
@@ -141,6 +146,24 @@
 			polygons[selectedPolygonIndex].vertices = polygons[selectedPolygonIndex].vertices.map(
 				(vertex) => ({ x: vertex.x + dx, y: vertex.y + dy })
 			);
+			redraw();
+			return;
+		}
+		if (isResizing && selectedPolygonIndex !== null) {
+			const polygon = polygons[selectedPolygonIndex];
+			if (resizeEdge === 'top') {
+				polygon.vertices[0].y = y;
+				polygon.vertices[1].y = y;
+			} else if (resizeEdge === 'right') {
+				polygon.vertices[1].x = x;
+				polygon.vertices[2].x = x;
+			} else if (resizeEdge === 'bottom') {
+				polygon.vertices[2].y = y;
+				polygon.vertices[3].y = y;
+			} else if (resizeEdge === 'left') {
+				polygon.vertices[3].x = x;
+				polygon.vertices[0].x = x;
+			}
 			redraw();
 			return;
 		}
