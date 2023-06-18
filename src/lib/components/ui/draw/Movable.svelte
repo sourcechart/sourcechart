@@ -24,7 +24,7 @@
 	let selectedPolygonIndex: number | null = null;
 	let isDragging: boolean = false;
 	let dragOffset: Point = { x: 0, y: 0 };
-	let tolerance = 10; // How close to the edge the user must start dragging
+	let tolerance = 200; // How close to the edge the user must start dragging
 	let resizeEdge: Edge | null = null;
 	let isResizing: boolean = false;
 
@@ -64,9 +64,11 @@
 			context.beginPath();
 			polygon.vertices.forEach((point, idx) => {
 				if (idx === 0) {
-					if (context) context.moveTo(point.x, point.y);
+					//@ts-ignore
+					context.moveTo(point.x, point.y);
 				} else {
-					if (context) context.lineTo(point.x, point.y);
+					//@ts-ignore
+					context.lineTo(point.x, point.y);
 				}
 			});
 			context.closePath();
@@ -80,8 +82,7 @@
 			const polygon = polygons[selectedPolygonIndex];
 			if (polygon && isPointInPolygon({ x, y }, polygon)) {
 				isDragging = true;
-				const startPoint = polygon.vertices[0];
-				dragOffset = { x: x - startPoint.x, y: y - startPoint.y };
+				dragOffset = { x, y };
 				return;
 			}
 			if (polygon) {
@@ -98,7 +99,7 @@
 					isResizing = true;
 					resizeEdge = 'bottom';
 					return;
-				} else if (Math.abs(x - polygon.vertices[0].x) < tolerance) {
+				} else if (Math.abs(x - polygon.vertices[3].x) < tolerance) {
 					isResizing = true;
 					resizeEdge = 'left';
 					return;
@@ -136,15 +137,6 @@
 	};
 
 	const handleMove = ({ offsetX: x, offsetY: y }: MouseEvent) => {
-		canvas.style.cursor = 'default'; // reset cursor
-
-		// Check if cursor is on a rectangle
-		const point: Point = { x, y };
-		const hoveredPolygonIndex = polygons.findIndex((polygon) => isPointInPolygon(point, polygon));
-		if (hoveredPolygonIndex !== -1) {
-			canvas.style.cursor = 'pointer';
-		}
-
 		if (isDragging && selectedPolygonIndex !== null) {
 			const dx = x - dragOffset.x;
 			const dy = y - dragOffset.y;
@@ -156,21 +148,20 @@
 			return;
 		}
 
-		if (isResizing && selectedPolygonIndex !== null && resizeEdge !== null) {
+		if (isResizing && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
-			// resize logic
 			if (resizeEdge === 'top') {
 				polygon.vertices[0].y = y;
-				polygon.vertices[3].y = y;
+				polygon.vertices[1].y = y;
 			} else if (resizeEdge === 'right') {
 				polygon.vertices[1].x = x;
 				polygon.vertices[2].x = x;
 			} else if (resizeEdge === 'bottom') {
 				polygon.vertices[2].y = y;
-				polygon.vertices[1].y = y;
+				polygon.vertices[3].y = y;
 			} else if (resizeEdge === 'left') {
-				polygon.vertices[0].x = x;
 				polygon.vertices[3].x = x;
+				polygon.vertices[0].x = x;
 			}
 			redraw();
 			return;
@@ -219,3 +210,41 @@
 	on:mousemove={handleMove}
 	on:click={handleClick}
 />
+
+<style>
+	.grabbable {
+		cursor: move; /* fallback if grab cursor is unsupported */
+		cursor: grab;
+		cursor: -moz-grab;
+		cursor: -webkit-grab;
+	}
+
+	.grabbable:active {
+		cursor: grabbing;
+		cursor: -moz-grabbing;
+		cursor: -webkit-grabbing;
+	}
+
+	.grabbable.ns-resize {
+		cursor: ns-resize;
+		cursor: -moz-grabbing;
+		cursor: -webkit-grabbing;
+	}
+	.grabbable.ew-resize {
+		cursor: ew-resize;
+		cursor: -moz-grabbing;
+		cursor: -webkit-grabbing;
+	}
+
+	.grabbable.nesw-resize {
+		cursor: nesw-resize;
+		cursor: -webkit-grabbing;
+		cursor: -moz-grabbing;
+	}
+
+	.grabbable.nwse-resize {
+		cursor: nwse-resize;
+		cursor: -webkit-grabbing;
+		cursor: -moz-grabbing;
+	}
+</style>
