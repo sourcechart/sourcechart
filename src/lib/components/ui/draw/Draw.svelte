@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { navBarMode, mostRecentChartID, activeChart } from '$lib/io/stores';
+	import { navBarMode } from '$lib/io/stores';
 	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
 
 	export let id: string = '';
@@ -40,27 +41,38 @@
 	$: mode = $navBarMode;
 	$: cursorClass = hoverStatus ? cursorStyle : '';
 
-	onMount(() => {
-		context = canvas.getContext('2d');
-		if (typeof window !== 'undefined') {
+	if (browser) {
+		onMount(() => {
+			context = canvas.getContext('2d');
 			width = window.innerWidth;
 			height = window.innerHeight;
-		}
-		const handleKeyDown = (e: KeyboardEvent) => {
-			if (
-				(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
-				selectedPolygonIndex !== null
-			) {
-				polygons.splice(selectedPolygonIndex, 1);
-				selectedPolygonIndex = null;
-				redraw();
-			}
-		};
-		window.addEventListener('keydown', handleKeyDown);
-		return () => {
-			window.removeEventListener('keydown', handleKeyDown);
-		};
-	});
+
+			const handleClickOutside = (e: MouseEvent) => {
+				// Check if the click is outside the canvas
+				if (e.target !== canvas) {
+					selectedPolygonIndex = null;
+					redraw();
+				}
+			};
+			window.addEventListener('click', handleClickOutside);
+
+			const handleKeyDown = (e: KeyboardEvent) => {
+				if (
+					(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
+					selectedPolygonIndex !== null
+				) {
+					polygons.splice(selectedPolygonIndex, 1);
+					selectedPolygonIndex = null;
+					redraw();
+				}
+			};
+			window.addEventListener('keydown', handleKeyDown);
+			return () => {
+				window.removeEventListener('keydown', handleKeyDown);
+				window.removeEventListener('click', handleClickOutside);
+			};
+		});
+	}
 
 	const redraw = (): void => {
 		if (context) {
@@ -90,7 +102,7 @@
 
 			// Draw the outline and circles
 			context.strokeStyle = 'lime'; // Change this to your preferred color
-			context.lineWidth = 2; // Change this to your preferred line width
+			context.lineWidth = 1; // Change this to your preferred line width
 			handlePositions.forEach((point) => {
 				if (context) {
 					context.beginPath();
@@ -291,7 +303,19 @@
 		const point: Point = { x, y };
 		const polygon = getContainingPolygon(point, polygons);
 		if (polygon) {
-			selectedPolygonIndex = getPolygonIndex(polygon);
+			if (mode === 'textbox') {
+				selectedPolygonIndex = polygons.indexOf(polygon);
+				editingTextIndex = selectedPolygonIndex;
+				editingTextPosition = polygon
+					? { x: polygon.vertices[0].x, y: polygon.vertices[0].y }
+					: null;
+			} else {
+				selectedPolygonIndex = polygons.indexOf(polygon);
+				editingTextIndex = null;
+			}
+		} else {
+			selectedPolygonIndex = null;
+			editingTextIndex = null;
 		}
 		redraw();
 	};
@@ -316,8 +340,9 @@
 		on:mouseup={handleEnd}
 		on:mousemove={handleMove}
 		on:click={handleClick}
-	/>
-	<slot />
+	>
+		<slot />
+	</canvas>
 </div>
 
 <style>
