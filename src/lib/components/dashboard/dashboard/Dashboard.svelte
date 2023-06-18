@@ -6,6 +6,9 @@
 	import Draw from '$lib/components/ui/draw/Draw.svelte';
 	import { allCharts } from '$lib/io/stores';
 	import { DarkMode } from '$lib/components/ui';
+
+	//import DarkMode from '$lib/components/ui/darkmode/DarkMode.svelte';
+	//let dark = false;
 </script>
 
 <Draw />
