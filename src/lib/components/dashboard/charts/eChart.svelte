@@ -1,14 +1,8 @@
 <script lang="ts">
 	import { Chart } from 'svelte-echarts';
-	import { mostRecentChartID, activeSidebar } from '$lib/io/stores';
 
 	export let id: string;
 	export let options: any;
-
-	function handleInside(event: Event) {
-		$mostRecentChartID = (event.target as HTMLElement).id;
-		$activeSidebar = true;
-	}
 </script>
 
 <div class="flex absolute container justify-center" {id}>
