@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Chart } from 'svelte-echarts';
-	import { mostRecentChartID, activeChart } from '$lib/io/stores';
+	import { mostRecentChartID, activeSidebar } from '$lib/io/stores';
 
 	export let id: string;
 	export let options: any;
 
 	function handleInside(event: Event) {
 		$mostRecentChartID = (event.target as HTMLElement).id;
-		$activeChart = true;
+		$activeSidebar = true;
 	}
 </script>
 

@@ -1,19 +1,10 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { navBarMode } from '$lib/io/stores';
+	import { navBarMode, activeSidebar } from '$lib/io/stores';
 	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
 
 	export let id: string = '';
-
-	interface Point {
-		x: number;
-		y: number;
-	}
-
-	interface Polygon {
-		vertices: Point[];
-	}
 
 	type Edge = 'top' | 'right' | 'bottom' | 'left';
 
@@ -47,15 +38,6 @@
 			width = window.innerWidth;
 			height = window.innerHeight;
 
-			const handleClickOutside = (e: MouseEvent) => {
-				// Check if the click is outside the canvas
-				if (e.target !== canvas) {
-					selectedPolygonIndex = null;
-					redraw();
-				}
-			};
-			window.addEventListener('click', handleClickOutside);
-
 			const handleKeyDown = (e: KeyboardEvent) => {
 				if (
 					(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
@@ -69,7 +51,6 @@
 			window.addEventListener('keydown', handleKeyDown);
 			return () => {
 				window.removeEventListener('keydown', handleKeyDown);
-				window.removeEventListener('click', handleClickOutside);
 			};
 		});
 	}
@@ -303,6 +284,8 @@
 		const point: Point = { x, y };
 		const polygon = getContainingPolygon(point, polygons);
 		if (polygon) {
+			$activeSidebar = true;
+
 			if (mode === 'textbox') {
 				selectedPolygonIndex = polygons.indexOf(polygon);
 				editingTextIndex = selectedPolygonIndex;
@@ -314,6 +297,7 @@
 				editingTextIndex = null;
 			}
 		} else {
+			$activeSidebar = false;
 			selectedPolygonIndex = null;
 			editingTextIndex = null;
 		}

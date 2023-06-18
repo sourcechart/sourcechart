@@ -72,3 +72,12 @@ interface MouseEventExtended extends MouseEvent {
 		offsetX: number;
 		offsetY: number;
 	}
+
+interface Point {
+		x: number;
+		y: number;
+	}
+
+interface Polygon {
+		vertices: Point[];
+	}
