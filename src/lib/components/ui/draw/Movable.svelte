@@ -108,11 +108,9 @@
 			context.beginPath();
 			polygon.vertices.forEach((point, idx) => {
 				if (idx === 0) {
-					//@ts-ignore
-					context.moveTo(point.x, point.y);
+					if (context) context.moveTo(point.x, point.y);
 				} else {
-					//@ts-ignore
-					context.lineTo(point.x, point.y);
+					if (context) context.lineTo(point.x, point.y);
 				}
 			});
 			context.closePath();
