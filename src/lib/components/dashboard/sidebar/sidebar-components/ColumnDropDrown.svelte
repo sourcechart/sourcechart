@@ -3,18 +3,17 @@
 	import {
 		getQuery,
 		getColumnsFromFile,
-		activeChart,
+		activeSidebar,
 		clickedChartIndex,
 		chartOptions,
 		allCharts,
 		clearChartOptions
 	} from '$lib/io/stores';
-	import { Dropdown, DropdownItem } from '$lib/components/ui';
-
-	//@ts-expect-error
-	import Tags from 'svelte-tags-input';
+	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
 	export let axis = '';
+
+	let selectedColumn = `Choose ${axis} Axis`;
 
 	let tags: Array<string> = [];
 	let chartObject: Chart;
@@ -33,7 +32,7 @@
 	}
 
 	$: columns = getColumnsFromFile();
-	$: $activeChart, getAxisData();
+	$: $activeSidebar, getAxisData();
 
 	$: if (
 		$clearChartOptions &&
@@ -128,6 +127,8 @@
 	function chooseColumn(column: string | null) {
 		//Add Tags to the Chosen Column Store.
 		if (column) {
+			selectedColumn = column;
+
 			if (axis.toUpperCase() === 'X') {
 				chartObject.xColumn = column;
 				tags = [column];
@@ -143,13 +144,9 @@
 	}
 </script>
 
-<!-- <div class="flex">
-	<Button color="alternative" pill={false} outline={false}>Choose {axis} Axis</Button>
-</div>
--->
+<Button color="alternative" pill={false} outline={false}>{selectedColumn}</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>
 	{/each}
 </Dropdown>
-<Tags {tags} maxTags={1} />

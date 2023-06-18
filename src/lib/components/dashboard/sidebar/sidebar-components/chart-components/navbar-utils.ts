@@ -1,4 +1,4 @@
-import { allCharts, newChartID, activeChart } from '$lib/io/stores';
+import { allCharts, newChartID, activeChart, mostRecentChartID } from '$lib/io/stores';
 import { generateID } from '$lib/io/fileUtils';
 import { EChartBuilder } from '$lib/io/eChartBuilder';
 
@@ -7,6 +7,7 @@ export function addEChartPropsToStore(chart: string) {
     var eChartDataset = echart.getOptions();
     var id = generateID();
     newChartID.set(id);
+    mostRecentChartID.set(id);
     var newChart = addMetadataToChart(eChartDataset, id, chart); //@ts-ignore
     allCharts.update((existingCharts) => [...existingCharts, newChart]);
     activeChart.set(true);

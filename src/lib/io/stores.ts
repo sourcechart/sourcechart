@@ -2,10 +2,12 @@
 import { writable, derived } from 'svelte/store';
 import { Query } from '$lib/io/queryBuilder';
 
+
+export const navBarMode= writable<NavBar>("")
 export const mostRecentChartID = writable<string>('');
 export const chosenFile = writable<string>('');
 export const newChartID = writable<string>();
-export const activeChart = writable<boolean>();
+export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
 export const allCharts = writable<Array<Chart>>([]);
 export const fileUploadStore = writable<Array<fileUpload>>([]);

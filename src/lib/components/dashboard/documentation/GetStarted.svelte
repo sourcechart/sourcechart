@@ -1,5 +1,3 @@
-<!-- Use FlowBite Modal and Carousel for a popup guide to SourceChart -->
-<!-- 
 <script lang="ts">
 	import { Modal } from 'flowbite-svelte';
 	import { Carousel } from 'flowbite-svelte';
@@ -37,4 +35,3 @@
 		<Carousel {images} {showThumbs} {showCaptions} {slideControls} />
 	</Modal>
 {/if}
--->

@@ -7,30 +7,39 @@
 		ClearChartOptions
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
-	import { clickOutside, clickInside } from '$lib/actions/clickUtils';
-	import { activeChart } from '$lib/io/stores';
+	import { clickInside } from '$lib/actions/clickUtils';
+	import { activeSidebar } from '$lib/io/stores';
 
 	function handleInside() {
-		$activeChart = true;
-	}
-
-	function handleOutside() {
-		$activeChart = false;
+		$activeSidebar = true;
 	}
 </script>
 
-<div
-	use:clickInside
-	on:click_inside={handleInside}
-	use:clickOutside
-	on:click_outside={handleOutside}
->
-	<SidebarWrapper bind:open={$activeChart} id="sidebar">
-		<DatasetDropDown />
-		<AxisDropDrown axis={'X'} />
-		<AxisDropDrown axis={'Y'} />
-		<Aggregator />
-		<Groupby />
-		<ClearChartOptions />
+<div use:clickInside={{}} on:click_inside={handleInside} class="space-y-4">
+	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
+		<div class="space-y-3">
+			<div class="text-xs space-y-1">
+				<p>Datasets</p>
+				<DatasetDropDown />
+				<div class="text-xs space-y-1">
+					<p>Axis</p>
+				</div>
+				<AxisDropDrown axis={'X'} />
+				<AxisDropDrown axis={'Y'} />
+				<div class="text-xs space-y-1">
+					<p>Aggregator</p>
+				</div>
+				<Aggregator />
+				<div class="text-xs space-y-1">
+					<p>Groupby</p>
+				</div>
+
+				<Groupby />
+				<div class="text-xs space-y-1">
+					<p>ClearChartOptions</p>
+					<ClearChartOptions />
+				</div>
+			</div>
+		</div>
 	</SidebarWrapper>
 </div>
