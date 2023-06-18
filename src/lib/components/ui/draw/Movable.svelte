@@ -289,7 +289,9 @@
 		on:mouseup={handleEnd}
 		on:mousemove={handleMove}
 		on:click={handleClick}
-	/>
+	>
+		<slot />
+	</canvas>
 </div>
 
 <style>

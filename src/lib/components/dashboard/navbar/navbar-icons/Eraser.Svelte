@@ -13,7 +13,7 @@
 
 <button
 	on:click={clickBoundary}
-	class={mode === 'drawRectangle' ? 'dark:bg-gray-600' : 'dark:bg-gray-700'}
+	class={mode === 'eraser' ? 'dark:bg-gray-600' : 'dark:bg-gray-700'}
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
