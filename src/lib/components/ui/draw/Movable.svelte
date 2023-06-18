@@ -237,7 +237,7 @@
 	};
 </script>
 
-s<svelte:window
+<svelte:window
 	on:resize={() => {
 		if (typeof window !== 'undefined') {
 			width = window.innerWidth;
