@@ -84,21 +84,21 @@
 	const updateHoverStatus = (): void => {
 		hoverStatus = false;
 		cursorStyle = '';
-		if (selectedPolygonIndex !== null) {
-			const polygon = polygons[selectedPolygonIndex];
-			if (polygon) {
-				const edgeHovered = getEdgeHovered(polygon);
-				if (edgeHovered) {
-					hoverStatus = true;
-					if (edgeHovered === 'top' || edgeHovered === 'bottom') {
-						cursorStyle = 'ns-resize';
-					} else if (edgeHovered === 'left' || edgeHovered === 'right') {
-						cursorStyle = 'ew-resize';
-					}
-				} else if (isPointInPolygon(currentMousePosition, polygon)) {
-					hoverStatus = true;
-					cursorStyle = 'grabbable';
+		for (let i = 0; i < polygons.length; i++) {
+			const polygon = polygons[i];
+			const edgeHovered = getEdgeHovered(polygon);
+			if (edgeHovered) {
+				hoverStatus = true;
+				if (edgeHovered === 'top' || edgeHovered === 'bottom') {
+					cursorStyle = 'ns-resize';
+				} else if (edgeHovered === 'left' || edgeHovered === 'right') {
+					cursorStyle = 'ew-resize';
 				}
+				break;
+			} else if (isPointInPolygon(currentMousePosition, polygon)) {
+				hoverStatus = true;
+				cursorStyle = 'grabbable';
+				break;
 			}
 		}
 	};
@@ -237,7 +237,7 @@
 	};
 </script>
 
-<svelte:window
+s<svelte:window
 	on:resize={() => {
 		if (typeof window !== 'undefined') {
 			width = window.innerWidth;
@@ -245,6 +245,7 @@
 		}
 	}}
 />
+
 <div {id}>
 	<canvas
 		class={cursorClass}
