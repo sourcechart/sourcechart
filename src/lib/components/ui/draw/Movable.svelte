@@ -18,21 +18,23 @@
 
 	let width: number = 0;
 	let height: number = 0;
+	let tolerance = 10; // How close to the edge the user must start dragging
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
-	let isDrawing: boolean = false;
-	let start: Point = { x: 0, y: 0 };
 	let polygons: Polygon[] = [];
+	let hoverStatus: boolean = false;
+	let isDrawing: boolean = false;
 	let selectedPolygonIndex: number | null = null;
 	let isDragging: boolean = false;
-	let dragOffset: Point = { x: 0, y: 0 };
-	let tolerance = 200; // How close to the edge the user must start dragging
 	let resizeEdge: Edge | null = null;
 	let isResizing: boolean = false;
+	let start: Point = { x: 0, y: 0 };
+	let dragOffset: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
-	let hoverStatus: boolean = false;
+	let cursorStyle: string;
 
 	$: mode = $navBarMode;
+	$: cursorClass = hoverStatus ? cursorStyle : '';
 
 	onMount(() => {
 		context = canvas.getContext('2d');
@@ -60,6 +62,44 @@
 		if (context) {
 			context.clearRect(0, 0, width, height);
 			polygons.forEach(drawPolygon);
+		}
+	};
+
+	const getEdgeHovered = (polygon: Polygon): Edge | null => {
+		const { x, y } = currentMousePosition;
+
+		if (Math.abs(y - polygon.vertices[0].y) < tolerance) {
+			return 'top';
+		} else if (Math.abs(x - polygon.vertices[1].x) < tolerance) {
+			return 'right';
+		} else if (Math.abs(y - polygon.vertices[2].y) < tolerance) {
+			return 'bottom';
+		} else if (Math.abs(x - polygon.vertices[3].x) < tolerance) {
+			return 'left';
+		}
+
+		return null;
+	};
+
+	const updateHoverStatus = (): void => {
+		hoverStatus = false;
+		cursorStyle = '';
+		if (selectedPolygonIndex !== null) {
+			const polygon = polygons[selectedPolygonIndex];
+			if (polygon) {
+				const edgeHovered = getEdgeHovered(polygon);
+				if (edgeHovered) {
+					hoverStatus = true;
+					if (edgeHovered === 'top' || edgeHovered === 'bottom') {
+						cursorStyle = 'ns-resize';
+					} else if (edgeHovered === 'left' || edgeHovered === 'right') {
+						cursorStyle = 'ew-resize';
+					}
+				} else if (isPointInPolygon(currentMousePosition, polygon)) {
+					hoverStatus = true;
+					cursorStyle = 'grabbable';
+				}
+			}
 		}
 	};
 
@@ -140,20 +180,6 @@
 		}
 	};
 
-	const updateHoverStatus = (): void => {
-		hoverStatus = polygons.some((polygon) => {
-			// Assuming rectangle vertices are ordered: top-left, top-right, bottom-right, bottom-left
-			let topLeft = polygon.vertices[0];
-			let bottomRight = polygon.vertices[2];
-			return (
-				currentMousePosition.x >= topLeft.x &&
-				currentMousePosition.x <= bottomRight.x &&
-				currentMousePosition.y >= topLeft.y &&
-				currentMousePosition.y <= bottomRight.y
-			);
-		});
-	};
-
 	const handleMove = ({ offsetX: x, offsetY: y }: MouseEvent) => {
 		currentMousePosition = { x: x, y: y };
 		updateHoverStatus();
@@ -211,8 +237,6 @@
 		selectedPolygonIndex = polygon ? polygons.indexOf(polygon) : null;
 		redraw();
 	};
-	$: cursorClass = hoverStatus ? 'grabbable' : '';
-	$: console.log(hoverStatus);
 </script>
 
 <svelte:window
@@ -237,39 +261,27 @@
 </div>
 
 <style>
-	.grabbable {
+	.grabbable,
+	.ns-resize,
+	.ew-resize {
 		cursor: move; /* fallback if grab cursor is unsupported */
-		cursor: grab;
 		cursor: -moz-grab;
 		cursor: -webkit-grab;
 	}
 
-	.grabbable:active {
+	.grabbable:active,
+	.ns-resize:active,
+	.ew-resize:active {
 		cursor: grabbing;
 		cursor: -moz-grabbing;
 		cursor: -webkit-grabbing;
 	}
 
-	.grabbable.ns-resize {
+	.ns-resize {
 		cursor: ns-resize;
-		cursor: -moz-grabbing;
-		cursor: -webkit-grabbing;
 	}
-	.grabbable.ew-resize {
+
+	.ew-resize {
 		cursor: ew-resize;
-		cursor: -moz-grabbing;
-		cursor: -webkit-grabbing;
-	}
-
-	.grabbable.nesw-resize {
-		cursor: nesw-resize;
-		cursor: -webkit-grabbing;
-		cursor: -moz-grabbing;
-	}
-
-	.grabbable.nwse-resize {
-		cursor: nwse-resize;
-		cursor: -webkit-grabbing;
-		cursor: -moz-grabbing;
 	}
 </style>
