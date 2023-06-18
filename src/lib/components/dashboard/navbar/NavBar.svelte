@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Cursor, Draw, Eraser, Text } from './navbar-icons';
-	import NavBarWrapper from '$lib/components/ui/navbar/NavBarWrapper.svelte';
+	import { Cursor, Draw, Eraser } from './navbar-icons';
+	import NavBarWrapper from '$lib/components/dashboard/navbar/NavBarWrapper.svelte';
 	import { navBarMode } from '$lib/io/stores';
 
 	let icons = [
@@ -15,10 +15,6 @@
 		{
 			name: 'Eraser',
 			component: Eraser
-		},
-		{
-			name: 'Text',
-			component: Text
 		}
 	];
 
