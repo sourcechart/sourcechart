@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { navBarMode } from '$lib/io/stores';
+	import { navBarMode, mostRecentChartID, activeChart } from '$lib/io/stores';
 	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
 
 	export let id: string = '';
@@ -215,6 +215,7 @@
 					{ x: start.x, y: y }
 				]
 			});
+			navBarMode.set('select');
 			redraw();
 		}
 	};
@@ -277,20 +278,20 @@
 					]
 				},
 				polygons.length
-			); // Draw current rectangle
+			);
 		}
+	};
+
+	const getPolygonIndex = (polygon: Polygon): number | null => {
+		selectedPolygonIndex = polygon ? polygons.indexOf(polygon) : null;
+		return selectedPolygonIndex;
 	};
 
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEvent) => {
 		const point: Point = { x, y };
 		const polygon = getContainingPolygon(point, polygons);
-		if (mode === 'textbox') {
-			selectedPolygonIndex = polygon ? polygons.indexOf(polygon) : null;
-			editingTextIndex = selectedPolygonIndex;
-			editingTextPosition = polygon ? { x: polygon.vertices[0].x, y: polygon.vertices[0].y } : null;
-		} else {
-			selectedPolygonIndex = polygon ? polygons.indexOf(polygon) : null;
-			editingTextIndex = null;
+		if (polygon) {
+			selectedPolygonIndex = getPolygonIndex(polygon);
 		}
 		redraw();
 	};
@@ -315,9 +316,8 @@
 		on:mouseup={handleEnd}
 		on:mousemove={handleMove}
 		on:click={handleClick}
-	>
-		<slot />
-	</canvas>
+	/>
+	<slot />
 </div>
 
 <style>

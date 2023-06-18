@@ -1,3 +1,3 @@
-import Movable from './Movable.svelte'
+import Draw from './Draw.svelte'
 
-export {Movable}
+export {Draw}
