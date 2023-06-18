@@ -3,6 +3,8 @@
 	import { navBarMode } from '$lib/io/stores';
 	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
 
+	export let id: string = '';
+
 	interface Point {
 		x: number;
 		y: number;
@@ -27,6 +29,8 @@
 	let tolerance = 200; // How close to the edge the user must start dragging
 	let resizeEdge: Edge | null = null;
 	let isResizing: boolean = false;
+	let currentMousePosition: Point = { x: 0, y: 0 };
+	let hoverStatus: boolean = false;
 
 	$: mode = $navBarMode;
 
@@ -136,7 +140,24 @@
 		}
 	};
 
+	const updateHoverStatus = (): void => {
+		hoverStatus = polygons.some((polygon) => {
+			// Assuming rectangle vertices are ordered: top-left, top-right, bottom-right, bottom-left
+			let topLeft = polygon.vertices[0];
+			let bottomRight = polygon.vertices[2];
+			return (
+				currentMousePosition.x >= topLeft.x &&
+				currentMousePosition.x <= bottomRight.x &&
+				currentMousePosition.y >= topLeft.y &&
+				currentMousePosition.y <= bottomRight.y
+			);
+		});
+	};
+
 	const handleMove = ({ offsetX: x, offsetY: y }: MouseEvent) => {
+		currentMousePosition = { x: x, y: y };
+		updateHoverStatus();
+
 		if (isDragging && selectedPolygonIndex !== null) {
 			const dx = x - dragOffset.x;
 			const dy = y - dragOffset.y;
@@ -190,6 +211,8 @@
 		selectedPolygonIndex = polygon ? polygons.indexOf(polygon) : null;
 		redraw();
 	};
+	$: cursorClass = hoverStatus ? 'grabbable' : '';
+	$: console.log(hoverStatus);
 </script>
 
 <svelte:window
@@ -200,16 +223,18 @@
 		}
 	}}
 />
-
-<canvas
-	{width}
-	{height}
-	bind:this={canvas}
-	on:mousedown={handleStart}
-	on:mouseup={handleEnd}
-	on:mousemove={handleMove}
-	on:click={handleClick}
-/>
+<div {id}>
+	<canvas
+		class={cursorClass}
+		{width}
+		{height}
+		bind:this={canvas}
+		on:mousedown={handleStart}
+		on:mouseup={handleEnd}
+		on:mousemove={handleMove}
+		on:click={handleClick}
+	/>
+</div>
 
 <style>
 	.grabbable {
