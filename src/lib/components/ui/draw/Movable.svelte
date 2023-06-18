@@ -33,6 +33,10 @@
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let cursorStyle: string;
 
+	let editingTextIndex: number | null = null;
+	let editingTextPosition: Point | null = null;
+	let editText: string = '';
+
 	$: mode = $navBarMode;
 	$: cursorClass = hoverStatus ? cursorStyle : '';
 
@@ -62,6 +66,10 @@
 		if (context) {
 			context.clearRect(0, 0, width, height);
 			polygons.forEach(drawRectangle);
+			if (editingTextIndex !== null && editingTextPosition) {
+				context.font = '16px Arial';
+				context.fillText(editText, editingTextPosition.x, editingTextPosition.y);
+			}
 		}
 	};
 
@@ -276,12 +284,26 @@
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEvent) => {
 		const point: Point = { x, y };
 		const polygon = getContainingPolygon(point, polygons);
-		selectedPolygonIndex = polygon ? polygons.indexOf(polygon) : null;
+		if (mode === 'textbox') {
+			selectedPolygonIndex = polygon ? polygons.indexOf(polygon) : null;
+			editingTextIndex = selectedPolygonIndex;
+			editingTextPosition = polygon ? { x: polygon.vertices[0].x, y: polygon.vertices[0].y } : null;
+		} else {
+			selectedPolygonIndex = polygon ? polygons.indexOf(polygon) : null;
+			editingTextIndex = null;
+		}
 		redraw();
 	};
 </script>
 
-d<svelte:window
+{#if editingTextIndex !== null && editingTextPosition}
+	<input
+		style="position: absolute; left: {editingTextPosition.x}px; top: {editingTextPosition.y}px"
+		bind:value={editText}
+		on:blur={() => (editingTextIndex = null)}
+	/>
+{/if}
+<svelte:window
 	on:resize={() => {
 		if (typeof window !== 'undefined') {
 			width = window.innerWidth;
