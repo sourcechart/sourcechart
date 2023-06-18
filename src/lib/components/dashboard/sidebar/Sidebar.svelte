@@ -7,7 +7,7 @@
 		ClearChartOptions
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
-	import { clickOutside, clickInside } from '$lib/actions/clickUtils';
+	import { clickInside } from '$lib/actions/clickUtils';
 	import { activeSidebar } from '$lib/io/stores';
 
 	function handleInside() {
