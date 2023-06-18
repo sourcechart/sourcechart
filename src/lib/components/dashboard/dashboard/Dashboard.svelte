@@ -3,12 +3,12 @@
 	import MoveableChart from '$lib/components/dashboard/charts/MoveableChart.svelte';
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
-	import Movable from '$lib/components/ui/draw/Movable.svelte';
+	import Draw from '$lib/components/ui/draw/Draw.svelte';
 	import { allCharts } from '$lib/io/stores';
 	import { DarkMode } from '$lib/components/ui';
 </script>
 
-<Movable />
+<Draw />
 <div class="absolute top-0 right-0 mt-4">
 	<DarkMode />
 </div>

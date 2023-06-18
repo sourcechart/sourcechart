@@ -296,13 +296,6 @@
 	};
 </script>
 
-{#if editingTextIndex !== null && editingTextPosition}
-	<input
-		style="position: absolute; left: {editingTextPosition.x}px; top: {editingTextPosition.y}px"
-		bind:value={editText}
-		on:blur={() => (editingTextIndex = null)}
-	/>
-{/if}
 <svelte:window
 	on:resize={() => {
 		if (typeof window !== 'undefined') {
