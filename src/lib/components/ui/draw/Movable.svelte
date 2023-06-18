@@ -61,7 +61,7 @@
 	const redraw = (): void => {
 		if (context) {
 			context.clearRect(0, 0, width, height);
-			polygons.forEach(drawPolygon);
+			polygons.forEach(drawRectangle);
 		}
 	};
 
@@ -131,7 +131,7 @@
 		}
 	};
 
-	const drawPolygon = (polygon: Polygon, index: number): void => {
+	const drawRectangle = (polygon: Polygon, index: number): void => {
 		if (context) {
 			context.beginPath();
 			polygon.vertices.forEach((point, idx) => {
@@ -226,6 +226,17 @@
 			return;
 		}
 
+		if (mode === 'eraser') {
+			const point: Point = { x, y };
+			const polygon = getContainingPolygon(point, polygons);
+			const index = polygon ? polygons.indexOf(polygon) : -1;
+			if (index > -1) {
+				polygons.splice(index, 1);
+				redraw();
+			}
+			return;
+		}
+
 		if (isResizing && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
 			if (resizeEdge === 'top') {
@@ -247,8 +258,8 @@
 
 		if (isDrawing && context) {
 			context.clearRect(0, 0, width, height); // Clear the canvas before drawing
-			polygons.forEach(drawPolygon); // Draw all the completed rectangles
-			drawPolygon(
+			polygons.forEach(drawRectangle); // Draw all the completed rectangles
+			drawRectangle(
 				{
 					vertices: [
 						{ x: start.x, y: start.y },
@@ -270,7 +281,7 @@
 	};
 </script>
 
-<svelte:window
+d<svelte:window
 	on:resize={() => {
 		if (typeof window !== 'undefined') {
 			width = window.innerWidth;
