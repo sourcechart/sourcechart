@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Moveable from 'svelte-moveable';
 	import EChart from './eChart.svelte';
-	import { clickEscapeKey, clickInside } from '$lib/actions/clickUtils';
-	import { mostRecentChartID, allCharts, activeChart, clearChartOptions } from '$lib/io/stores';
+	import { clickEscapeKey } from '$lib/actions/clickUtils';
+	import { mostRecentChartID, allCharts, activeSidebar, clearChartOptions } from '$lib/io/stores';
 
 	export let chartOptions: object;
 	export let id: string;
@@ -18,7 +18,7 @@
 			$clearChartOptions = false;
 		}, 10);
 		$allCharts = $allCharts.filter((item) => item.chartID !== $mostRecentChartID);
-		$activeChart = false;
+		$activeSidebar = false;
 	}
 
 	function handleInside(event: Event) {
@@ -27,14 +27,7 @@
 	}
 </script>
 
-<div
-	class="container"
-	bind:this={moveable}
-	use:clickEscapeKey
-	on:escapeKeyPress={removeChart}
-	use:clickInside
-	on:click_inside={handleInside}
->
+<div class="container" bind:this={moveable} use:clickEscapeKey on:escapeKeyPress={removeChart}>
 	<EChart {id} options={chartOptions} />
 </div>
 <Moveable

@@ -3,7 +3,7 @@
 	import {
 		getQuery,
 		getColumnsFromFile,
-		activeChart,
+		activeSidebar,
 		clickedChartIndex,
 		chartOptions,
 		allCharts,
@@ -32,7 +32,7 @@
 	}
 
 	$: columns = getColumnsFromFile();
-	$: $activeChart, getAxisData();
+	$: $activeSidebar, getAxisData();
 
 	$: if (
 		$clearChartOptions &&
