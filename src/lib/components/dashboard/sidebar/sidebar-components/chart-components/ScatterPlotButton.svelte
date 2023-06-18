@@ -3,9 +3,12 @@
 	import { ChartOptions } from '$lib/io/eChartBuilder';
 </script>
 
-<div
-	on:click={() => addEChartPropsToStore(ChartOptions.scatter)}
-	on:keydown={() => null}
+<button
+	on:click|stopPropagation={() => addEChartPropsToStore(ChartOptions.bar)}
+	on:keydown|stopPropagation={(e) => {
+		if (e.key === 'Enter') addEChartPropsToStore(ChartOptions.bar);
+	}}
+	tabindex="0"
 	class="flex flex-col items-center justify-center cursor-pointer dark:text-gray-300"
 >
 	<h1>Scatter Plot</h1>
@@ -21,4 +24,4 @@
 		<path stroke="none" d="M0 0h24v24H0z" /> <circle cx="7" cy="17" r="1" />
 		<circle cx="12" cy="12" r="1" /> <circle cx="17" cy="7" r="1" /></svg
 	>
-</div>
+</button>

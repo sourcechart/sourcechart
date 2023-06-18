@@ -3,6 +3,7 @@
 	import MoveableChart from '$lib/components/dashboard/charts/MoveableChart.svelte';
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
+	import Draw from '$lib/components/ui/draw/Draw.svelte';
 	import { allCharts } from '$lib/io/stores';
 	import { DarkMode } from '$lib/components/ui';
 
@@ -10,16 +11,17 @@
 	//let dark = false;
 </script>
 
+<Draw />
+<div class="absolute top-0 right-0 mt-4">
+	<DarkMode />
+</div>
 <div class="relative">
-	<div class="absolute top-0 right-0 mt-4">
-		<DarkMode />
-	</div>
 	<div class="flex justify-center justify-items-center">
 		<NavBar />
 	</div>
 	<div>
-		{#each $allCharts as item (item)}
-			<MoveableChart id={item.chartID} chartOptions={item.chartOptions} />
+		{#each $allCharts as chart (chart)}
+			<MoveableChart id={chart.chartID} chartOptions={chart.chartOptions} />
 		{/each}
 	</div>
 	<div class="fixed top-1/2 left-0 transform -translate-y-1/2">

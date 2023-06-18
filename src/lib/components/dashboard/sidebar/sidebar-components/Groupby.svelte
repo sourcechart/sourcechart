@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Dropdown, DropdownItem } from '$lib/components/ui';
+	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	import { Tags } from '$lib/components/ui/tags';
+
 	import {
 		getColumnsFromFile,
 		clearChartOptions,
@@ -8,8 +10,7 @@
 		clickedChartIndex,
 		groupbyColumns
 	} from '$lib/io/stores';
-	//@ts-expect-error
-	import Tags from 'svelte-tags-input';
+
 	let tags: Array<string> = [];
 
 	$: columns = getColumnsFromFile();
@@ -31,7 +32,7 @@
 		$allCharts[$i] = chart;
 	}
 
-	function chooseColumn(column: string | null) {
+	function addColumnToGroupBy(column: string | null) {
 		let chart = $allCharts[$i];
 		if (column) {
 			tags = [...tags, column]; //@ts-ignore
@@ -48,16 +49,21 @@
 		}
 		return tags;
 	}
+
+	function removeItem(item: string) {
+		tags = tags.filter((tag) => tag !== item);
+		let chart = $allCharts[$i];
+		chart.groupbyColumns = tags;
+		$allCharts[$i] = chart;
+	}
 </script>
 
-<!--
 <div class="flex">
 	<Button color="alternative" pill={false} outline={false}>Group By Column</Button>
 </div>
- -->
 <Dropdown>
 	{#each $columns as column}
-		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>
+		<DropdownItem on:click={() => addColumnToGroupBy(column)}>{column}</DropdownItem>
 	{/each}
 </Dropdown>
-<Tags {tags} maxTags={1} />
+<Tags items={tags} {removeItem} />

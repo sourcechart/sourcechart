@@ -3,12 +3,15 @@
 	import { ChartOptions } from '$lib/io/eChartBuilder';
 </script>
 
-<div
-	on:click={() => addEChartPropsToStore(ChartOptions.line)}
-	on:keydown={() => null}
+<button
+	on:click|stopPropagation={() => addEChartPropsToStore(ChartOptions.bar)}
+	on:keydown|stopPropagation={(e) => {
+		if (e.key === 'Enter') addEChartPropsToStore(ChartOptions.bar);
+	}}
+	tabindex="0"
 	class="flex flex-col items-center justify-center cursor-pointer dark:text-gray-300"
 >
-	<h1>Pie Plot</h1>
+	<h1>Line Plot</h1>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		fill="none"
@@ -17,11 +20,10 @@
 		stroke="currentColor"
 		class="w-6 h-6"
 	>
-		<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
 		<path
 			stroke-linecap="round"
 			stroke-linejoin="round"
-			d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"
+			d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"
 		/>
 	</svg>
-</div>
+</button>

@@ -8,10 +8,11 @@
 		allCharts,
 		clickedChartIndex
 	} from '$lib/io/stores';
-	import { Dropdown, DropdownItem } from '$lib/components/ui';
-	import Tags from 'svelte-tags-input';
+	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte'; //@ts-ignore
 
 	let tags: Array<string> = [];
+	let selectedDataset = 'Choose Dataset';
+
 	$: file = getFileFromStore();
 	$: drawerOptions = chartOptions();
 	$: i = clickedChartIndex();
@@ -30,9 +31,11 @@
 	}
 
 	function selectFile(filename: string) {
-		let chart: Chart = $allCharts[$i];
-		chart.filename = filename;
+		let chart = $allCharts[$i];
+		selectedDataset = filename;
 		$chosenFile = filename;
+		chart.filename = filename;
+
 		if ($file?.database && $file?.datasetID) {
 			chart.datasetID = $file.datasetID;
 			chart.database = $file.database;
@@ -42,14 +45,9 @@
 	}
 </script>
 
-<div>
-	<Dropdown let:toggle>
-		<div slot="trigger">Choose Datasets</div>
-		{#each $datasets as dataset}
-			<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
-		{/each}
-	</Dropdown>
-	<div class="mt-1">
-		<Tags {tags} maxTags={1} />
-	</div>
-</div>
+<Button color="alternative">{selectedDataset}</Button>
+<Dropdown>
+	{#each $datasets as dataset}
+		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
+	{/each}
+</Dropdown>
