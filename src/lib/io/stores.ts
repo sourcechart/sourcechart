@@ -3,7 +3,7 @@ import { writable, derived } from 'svelte/store';
 import { Query } from '$lib/io/queryBuilder';
 
 
-export const navBarMode= writable<string>("")
+export const navBarMode= writable<NavBar>("")
 export const mostRecentChartID = writable<string>('');
 export const chosenFile = writable<string>('');
 export const newChartID = writable<string>();

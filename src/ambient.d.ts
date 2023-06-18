@@ -81,3 +81,5 @@ interface Point {
 interface Polygon {
 		vertices: Point[];
 	}
+
+type NavBar= "eraser" | "select" | "drawRectangle"|""|"textbox"
