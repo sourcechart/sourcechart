@@ -1,11 +1,3 @@
-interface Point {
-    x: number;
-    y: number;
-}
-
-interface Polygon {
-    vertices: Point[];
-}
 // checks if point is inside a polygon
 export function isPointInPolygon(point: Point, polygon: Polygon): boolean {
     const x = point.x;

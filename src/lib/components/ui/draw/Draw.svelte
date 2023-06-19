@@ -342,6 +342,7 @@
 				editingTextIndex = null;
 			}
 		} else {
+			$mostRecentChartID = '';
 			$activeSidebar = false;
 			selectedPolygonIndex = null;
 			editingTextIndex = null;
@@ -369,9 +370,8 @@
 		on:mouseup={handleEnd}
 		on:mousemove={handleMove}
 		on:click={handleClick}
-	>
-		<slot />
-	</canvas>
+	/>
+	<slot />
 </div>
 
 <style>
