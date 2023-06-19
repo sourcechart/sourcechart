@@ -1,3 +1,4 @@
+<!-- 
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
@@ -390,3 +391,4 @@
 		cursor: ew-resize;
 	}
 </style>
+-->

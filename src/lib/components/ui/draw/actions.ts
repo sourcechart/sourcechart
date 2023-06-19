@@ -1,28 +1,27 @@
-export function mouseTracker(node: Node, {onMove}: {onMove: (x: number, y: number) => void}) {
-    //@ts-expect-error
-    const handleMouseMove = (event) =>{
-        onMove(event.clientX, event.clientY)
-    }
+export function mouseTracker(
+	node: HTMLElement | HTMLCanvasElement,
+	{ onMove }: { onMove: (x: number, y: number) => void }
+) {
+	console.log('action attached');
 
-    node.addEventListener("mousemove", handleMouseMove);
-    return {
-        destroy() {
-            node.removeEventListener("mousemove", handleMouseMove);
-        }
-    };
+	return {
+		destroy() {
+			console.log('action destroyed');
+		}
+	};
 }
-
-
-
-export function mouseClick(node:Node, {onClick}: {onClick:(x:number, y:number) => void} ) {
-    //@ts-expect-error
-    const handleClick = (event)  => {
-        onClick(event.clientX, event.clientY)
-    }
-    node.addEventListener("mousemove", handleClick);
-    return {
-        destroy() {
-            node.removeEventListener("click", handleClick)
-        }
-    }
+/*
+export function touchTracker(node: Node, { onTouch }: { onTouch: (x: number, y: number) => void }) {
+	//@ts-expect-error
+	const handleTouch = (event) => {
+		const { clientX, clientY } = event.touches[0];
+		onTouch(clientX, clientY);
+	};
+	node.addEventListener('touchstart', handleTouch);
+	return {
+		destroy() {
+			node.removeEventListener('touchstart', handleTouch);
+		}
+	};
 }
+*/

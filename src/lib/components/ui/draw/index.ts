@@ -1,3 +1,3 @@
-import Draw from './Draw.svelte'
+import Draw from './Foo.svelte';
 
-export {Draw}
+export { Draw };

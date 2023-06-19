@@ -3,12 +3,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { mouseTracker } from './actions';
+	import { drawInteraction } from '$lib/io/stores';
 
 	let width: number = 0;
 	let height: number = 0;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
-
+	//let start: Point; //= { x: 0, y: 0 };
 	onMount(() => {
 		context = canvas.getContext('2d');
 		width = window.innerWidth;
@@ -56,6 +57,8 @@
     */
 
 	function handleMove(x, y) {
+		console.log('Mouse moved');
+
 		console.log(x, y);
 		// do something with the mouse coordinates
 	}
@@ -69,4 +72,4 @@
 		}
 	}}
 />
-<canvas use:mouseTracker={{ onMove: handleMove }} bind:this={canvas} width="800" height="600" />
+<canvas use:mouseTracker={{ onMove: handleMove }} bind:this={canvas} width="800px" height="600px" />
