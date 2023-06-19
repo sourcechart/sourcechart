@@ -60,9 +60,9 @@
 					selectedPolygonIndex !== null
 				) {
 					removeChart();
+					$activeSidebar = false;
 					polygons.splice(selectedPolygonIndex, 1);
 					selectedPolygonIndex = null;
-					$activeSidebar = false;
 					redraw();
 				}
 			};
