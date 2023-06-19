@@ -2,7 +2,6 @@
 	import {
 		chosenFile,
 		getFileFromStore,
-		chartOptions,
 		fileDropdown,
 		allCharts,
 		clickedChartIndex
@@ -17,6 +16,7 @@
 	function selectFile(filename: string) {
 		selectedDataset = filename;
 		$chosenFile = filename;
+		console.log(filename);
 
 		allCharts.update((charts) => {
 			let chart = charts[$i];
