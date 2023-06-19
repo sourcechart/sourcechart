@@ -1,3 +1,10 @@
+/****************************
+ *     -----------------    *
+ *     SOURCECHART TYPES    * 
+ *     -----------------    *
+ *                          *
+*****************************/ 
+
 type Chart = {
 	chartID: string;
   chartType:string|null;
@@ -66,6 +73,7 @@ interface Point {
 	}
 
 interface Polygon {
+    id?: string,
 		vertices: Point[];
 	}
 
@@ -83,8 +91,13 @@ interface Polygon {
 		vertices: Point[];
 	}
 
-type NavBar= "eraser" | "select" | "drawRectangle"|""|"textbox"
+type NavBar= "eraser" | "select" | "drawRectangle"|"textbox"|""
 
+/****************************
+ * ------------------------ *
+ * FLOWBITE SVELTE UI TYPES *
+ * ------------------------ * 
+ ***************************/ 
 type BlockQuoteType =
   | 'xs'
   | 'sm'

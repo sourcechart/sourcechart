@@ -6,8 +6,7 @@
 		activeSidebar,
 		clickedChartIndex,
 		chartOptions,
-		allCharts,
-		clearChartOptions
+		allCharts
 	} from '$lib/io/stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
