@@ -17,8 +17,8 @@
 
 	let tags: Array<string> = [];
 	let chartObject: Chart;
-	let x;
-	let y;
+	let x: any;
+	let y: any;
 
 	$: i = clickedChartIndex();
 	$: query = getQuery();
@@ -33,15 +33,6 @@
 
 	$: columns = getColumnsFromFile();
 	$: $activeSidebar, getAxisData();
-
-	$: if (
-		$clearChartOptions &&
-		(($drawerOptions.xColumn && $drawerOptions.yColumn) ||
-			$drawerOptions.xColumn ||
-			$drawerOptions.yColumn)
-	) {
-		tags = clearData();
-	}
 
 	function getTagsOnClick() {
 		tags = [];
@@ -63,39 +54,37 @@
 	}
 
 	function clearData() {
-		//change this to a derived store
-		let chart: Chart = $allCharts[$i];
-		chart.aggregator = null;
-		chart.xColumn = null;
-		chart.yColumn = null;
-		chart.filename = null;
-		chart.groupbyColumns = []; //@ts-ignore
-		chart.chartOptions.xAxis = { data: [] }; //@ts-ignore
-		chart.chartOptions.series[0] = { data: [], type: chart.chartType }; //@ts-ignore
-		chart.database = null; //@ts-ignore
-		//$allCharts[i] = chart;
-		if (axis === 'x') {
-			return [];
-		} else if (axis === 'y') {
-			return [];
-		} else {
-			return [];
-		}
+		allCharts.update((charts) => {
+			let chart: Chart = charts[$i];
+			chart.aggregator = null;
+			chart.xColumn = null;
+			chart.yColumn = null;
+			chart.filename = null;
+			chart.groupbyColumns = [];
+			chart.chartOptions.xAxis = { data: [] };
+			chart.chartOptions.series[0] = { data: [], type: chart.chartType };
+			chart.database = null;
+
+			if (axis === 'x') {
+				tags = [];
+			} else if (axis === 'y') {
+				tags = [];
+			} else {
+				tags = [];
+			}
+
+			return charts;
+		});
 	}
 
 	function getDataResults(res: object) {
 		const results = JSON.parse(
-			JSON.stringify(
-				res, //.toArray(),
-				(key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
-			)
+			JSON.stringify(res, (key, value) => (typeof value === 'bigint' ? value.toString() : value))
 		);
 		return results;
 	}
 
 	async function getAxisData() {
-		//Get the Axis data after the you choose columns
-		//@ts-ignore
 		if ($drawerOptions.xColumn && $drawerOptions.yColumn && $drawerOptions.database) {
 			const db: DuckDBClient = $drawerOptions.database;
 			var q = $query.toString();
@@ -107,14 +96,16 @@
 	}
 
 	function updateChart(data: Array<any>) {
-		//Should this be a derived query?
-		//Update chart object with columns dataset id.
 		let xColumn = getColumn(chartObject.xColumn);
 		let yColumn = getColumn(chartObject.yColumn);
 		x = data.map((item) => item[xColumn]);
 		y = data.map((item) => item[yColumn]);
-		$allCharts[$i].chartOptions.xAxis.data = x;
-		$allCharts[$i].chartOptions.series[0].data = y;
+
+		allCharts.update((charts) => {
+			charts[$i].chartOptions.xAxis.data = x;
+			charts[$i].chartOptions.series[0].data = y;
+			return charts;
+		});
 	}
 
 	function getColumn(column: string | null) {
@@ -124,20 +115,22 @@
 			return '';
 		}
 	}
+
 	function chooseColumn(column: string | null) {
-		//Add Tags to the Chosen Column Store.
 		if (column) {
 			selectedColumn = column;
 
-			if (axis.toUpperCase() === 'X') {
-				chartObject.xColumn = column;
-				tags = [column];
-			}
-			if (axis.toUpperCase() === 'Y') {
-				chartObject.yColumn = column;
-				tags = [column];
-			}
-			$allCharts[$i] = chartObject;
+			allCharts.update((charts) => {
+				if (axis.toUpperCase() === 'X') {
+					charts[$i].xColumn = column;
+					tags = [column];
+				}
+				if (axis.toUpperCase() === 'Y') {
+					charts[$i].yColumn = column;
+					tags = [column];
+				}
+				return charts;
+			});
 		} else {
 			tags = [];
 		}

@@ -1,35 +1,59 @@
 <script lang="ts">
 	import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
-	import { EChartBuilder, ChartOptions } from '$lib/io/eChartBuilder';
-	import { generateID } from '$lib/io/fileUtils';
-	import { allCharts, newChartID, mostRecentChartID } from '$lib/io/stores';
-
+	import { ChartOptions } from '$lib/io/eChartBuilder';
+	import { allCharts, mostRecentChartID } from '$lib/io/stores';
+	import {
+		AreaPlotButton,
+		BarPlotButton,
+		LinePlotButton,
+		ScatterPlotButton,
+		PiePlotButton
+	} from './chart-components';
 	let chosenPlot: string = 'Choose Plot';
 	let rectangleCharts = [
 		{
 			icon: '',
-			chartType: ChartOptions.bar
+			chartType: ChartOptions.bar,
+			component: BarPlotButton
 		},
 		{
 			icon: '',
-			chartType: ChartOptions.scatter
+			chartType: ChartOptions.scatter,
+			component: ScatterPlotButton
 		},
 		{
 			icon: '',
-			chartType: ChartOptions.pie
+			chartType: ChartOptions.pie,
+			component: PiePlotButton
 		},
 		{
 			icon: '',
-			chartType: ChartOptions.line
+			chartType: ChartOptions.line,
+			component: LinePlotButton
 		},
 		{
 			icon: '',
-			chartType: ChartOptions.area
+			chartType: ChartOptions.area,
+			component: AreaPlotButton
 		}
 	];
 
 	function chooseChart(plot: string) {
 		chosenPlot = plot;
+
+		mostRecentChartID.update((id) => {
+			allCharts.update((charts) => {
+				const index = charts.findIndex((chart) => chart.chartID === id);
+
+				if (index !== -1) {
+					charts[index].chartType = plot; // Assuming 'chartType' is a property of the charts in 'allCharts'
+				}
+
+				return charts;
+			});
+
+			return id; // Return current 'mostRecentChartID'
+		});
 	}
 </script>
 

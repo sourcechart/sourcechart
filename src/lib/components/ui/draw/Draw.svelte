@@ -63,6 +63,7 @@
 		let chartMetaData: Chart = {
 			chartID: id,
 			filename: null,
+			chartType: null,
 			aggregator: null,
 			datasetID: null,
 			columns: [],

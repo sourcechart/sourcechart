@@ -15,9 +15,11 @@
 
 	function selectAggregator(agg: string) {
 		selectedAggregator = agg;
-		let chart = $allCharts[$i];
-		chart.aggregator = selectedAggregator;
-		$allCharts[$i] = chart;
+
+		allCharts.update((charts) => {
+			charts[$i].aggregator = selectedAggregator;
+			return charts;
+		});
 	}
 </script>
 
