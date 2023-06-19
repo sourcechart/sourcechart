@@ -1,5 +1,6 @@
 type Chart = {
 	chartID: string;
+  chartType:string|null;
 	filename: string | null;
 	aggregator: string | null;
 	datasetID: string | null;
