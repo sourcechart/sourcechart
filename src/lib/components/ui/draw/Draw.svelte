@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { navBarMode, activeSidebar } from '$lib/io/stores';
+	import { generateID } from '$lib/io/fileUtils';
+	import { navBarMode, activeSidebar, allCharts } from '$lib/io/stores';
 	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
 
-	export let id: string = '';
+	let id: string;
 
 	type Edge = 'top' | 'right' | 'bottom' | 'left';
 
+	$: console.log($allCharts);
 	let width: number = 0;
 	let height: number = 0;
 	let tolerance = 10; // How close to the edge the user must start dragging
@@ -31,6 +33,30 @@
 
 	$: mode = $navBarMode;
 	$: cursorClass = hoverStatus ? cursorStyle : '';
+
+	const addMetadataToChart = (): void => {
+		id = generateID();
+
+		let chartMetaData: Chart = {
+			chartID: id,
+			filename: null,
+			aggregator: null,
+			datasetID: null,
+			columns: [],
+			groupbyColumns: [],
+			xColumn: null,
+			yColumn: null,
+			xData: [],
+			yData: [],
+			database: null, // placeholder
+			chartOptions: {
+				xAxis: { data: [] },
+				series: [{ data: [], type: '' }]
+			}
+		};
+
+		allCharts.update((value) => [...value, chartMetaData]);
+	};
 
 	if (browser) {
 		onMount(() => {
@@ -154,6 +180,7 @@
 	};
 
 	const handleStart = ({ offsetX: x, offsetY: y }: MouseEvent) => {
+		addMetadataToChart();
 		if (mode === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
 			if (polygon && isPointInPolygon({ x, y }, polygon)) {
