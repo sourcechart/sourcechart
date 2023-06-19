@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { ChartOptions } from '$lib/io/eChartBuilder';
 </script>
 
 <button

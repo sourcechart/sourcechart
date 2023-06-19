@@ -10,8 +10,9 @@
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
 	import { clickInside } from '$lib/actions/clickUtils';
-	import { activeSidebar } from '$lib/io/stores';
+	import { activeSidebar, allCharts } from '$lib/io/stores';
 
+	$: console.log($allCharts);
 	function handleInside() {
 		$activeSidebar = true;
 	}
