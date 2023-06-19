@@ -2,6 +2,7 @@
 
 <script lang="ts">
 	import { onMount } from 'svelte';
+    import {mouseTracker} from "./actions"
 
 	let width: number = 0;
 	let height: number = 0;
@@ -64,3 +65,4 @@
 		}
 	}}
 />
+<canvas use:

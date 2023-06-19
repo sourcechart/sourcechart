@@ -18,9 +18,9 @@ export function mouseClick(node:Node, {onClick}: {onClick:(x:number, y:number) =
         onClick(event.clientX, event.clientY)
     }
     node.addEventListener("mousemove", handleClick);
-return {
-    destroy() {
-        node.removeEventListener("click", handleClick)
-       }
+    return {
+        destroy() {
+            node.removeEventListener("click", handleClick)
+        }
     }
 }

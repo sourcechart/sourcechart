@@ -9,7 +9,7 @@
 		mostRecentChartID,
 		clearChartOptions
 	} from '$lib/io/stores';
-	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
+	import { isPointInPolygon, getContainingPolygon } from './polygonOperations';
 
 	let id: string;
 
@@ -350,15 +350,6 @@
 		redraw();
 	};
 </script>
-
-<svelte:window
-	on:resize={() => {
-		if (typeof window !== 'undefined') {
-			width = window.innerWidth;
-			height = window.innerHeight;
-		}
-	}}
-/>
 
 <div {id}>
 	<canvas
