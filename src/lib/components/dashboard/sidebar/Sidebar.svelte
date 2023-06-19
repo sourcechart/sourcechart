@@ -5,7 +5,8 @@
 		Aggregator,
 		Groupby,
 		ClearChartOptions,
-		FileUpload
+		FileUpload,
+		PlotDropdown
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
 	import { clickInside } from '$lib/actions/clickUtils';
@@ -29,8 +30,15 @@
 				<p>FileUpload</p>
 			</div>
 			<FileUpload />
-			<p>Datasets</p>
+			<div class="text-xs space-y-1">
+				<p>Datasets</p>
+			</div>
 			<DatasetDropDown />
+
+			<div class="text-xs space-y-1">
+				<p>Choose Chart</p>
+			</div>
+			<PlotDropdown />
 			<div class="text-xs space-y-1">
 				<p>Axis</p>
 			</div>
@@ -43,12 +51,11 @@
 			<div class="text-xs space-y-1">
 				<p>Groupby</p>
 			</div>
-
 			<Groupby />
 			<div class="text-xs space-y-1">
 				<p>ClearChartOptions</p>
-				<ClearChartOptions />
 			</div>
+			<ClearChartOptions />
 		</div>
 	</SidebarWrapper>
 </div>

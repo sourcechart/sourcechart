@@ -1,14 +1,41 @@
 <script lang="ts">
-	import { Button } from 'flowbite-svelte';
+	import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import { EChartBuilder, ChartOptions } from '$lib/io/eChartBuilder';
 	import { generateID } from '$lib/io/fileUtils';
-	import { allCharts, newChartID } from '$lib/io/stores';
+	import { allCharts, newChartID, mostRecentChartID } from '$lib/io/stores';
 
-	const addBarPlot = () => addEChartPropsToStore(ChartOptions.bar);
-	const addScatterPlot = () => addEChartPropsToStore(ChartOptions.scatter);
-	const addPiePlot = () => addEChartPropsToStore(ChartOptions.pi);
-	const addLinePlot = () => addEChartPropsToStore(ChartOptions.line);
-	const addAreaPlot = () => addEChartPropsToStore(ChartOptions.area);
+	let chosenPlot: string = 'Choose Plot';
+	let rectangleCharts = [
+		{
+			icon: '',
+			chartType: ChartOptions.bar
+		},
+		{
+			icon: '',
+			chartType: ChartOptions.scatter
+		},
+		{
+			icon: '',
+			chartType: ChartOptions.pie
+		},
+		{
+			icon: '',
+			chartType: ChartOptions.line
+		},
+		{
+			icon: '',
+			chartType: ChartOptions.area
+		}
+	];
+
+	function chooseChart(plot: string) {
+		chosenPlot = plot;
+	}
 </script>
 
-<Button color="alternative" pill={false} outline={false}>{chosenComponent}</Button>
+<Button color="alternative" pill={false} outline={false}>{chosenPlot}</Button>
+<Dropdown>
+	{#each rectangleCharts as { icon, chartType } (icon)}
+		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>
+	{/each}
+</Dropdown>

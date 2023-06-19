@@ -3,7 +3,7 @@ export enum ChartOptions {
 	line = 'line',
 	scatter = 'scatter',
 	area = 'area',
-	pi = 'pi'
+	pie = 'pie'
 }
 
 export class EChartBuilder {
