@@ -33,6 +33,30 @@
 	$: mode = $navBarMode;
 	$: cursorClass = hoverStatus ? cursorStyle : '';
 
+	if (browser) {
+		onMount(() => {
+			context = canvas.getContext('2d');
+			width = window.innerWidth;
+			height = window.innerHeight;
+
+			const handleKeyDown = (e: KeyboardEvent) => {
+				if (
+					(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
+					selectedPolygonIndex !== null
+				) {
+					polygons.splice(selectedPolygonIndex, 1);
+					selectedPolygonIndex = null;
+					$activeSidebar = false;
+					redraw();
+				}
+			};
+			window.addEventListener('keydown', handleKeyDown);
+			return () => {
+				window.removeEventListener('keydown', handleKeyDown);
+			};
+		});
+	}
+
 	const addMetadataToChart = (): void => {
 		id = generateID();
 
@@ -57,31 +81,6 @@
 		allCharts.update((value) => [...value, chartMetaData]);
 		$mostRecentChartID = id;
 	};
-
-	$: console.log($allCharts);
-
-	if (browser) {
-		onMount(() => {
-			context = canvas.getContext('2d');
-			width = window.innerWidth;
-			height = window.innerHeight;
-
-			const handleKeyDown = (e: KeyboardEvent) => {
-				if (
-					(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
-					selectedPolygonIndex !== null
-				) {
-					polygons.splice(selectedPolygonIndex, 1);
-					selectedPolygonIndex = null;
-					redraw();
-				}
-			};
-			window.addEventListener('keydown', handleKeyDown);
-			return () => {
-				window.removeEventListener('keydown', handleKeyDown);
-			};
-		});
-	}
 
 	const redraw = (): void => {
 		if (context) {
