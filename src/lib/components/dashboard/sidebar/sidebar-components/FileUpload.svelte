@@ -37,7 +37,7 @@
 
 <Label class="pb-2" for="multiple_files">Upload multiple files</Label>
 <Fileupload id="multiple_files" multiple bind:files on:change={uploadFiles} />
-<Listgroup items={files} let:item class="mt-2">
+<Listgroup {files} let:item class="mt-2">
 	{#if item}
 		{item.name}
 	{:else}
