@@ -2,14 +2,13 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { generateID } from '$lib/io/fileUtils';
-	import { navBarMode, activeSidebar, allCharts } from '$lib/io/stores';
+	import { navBarMode, activeSidebar, allCharts, mostRecentChartID } from '$lib/io/stores';
 	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
 
 	let id: string;
 
 	type Edge = 'top' | 'right' | 'bottom' | 'left';
 
-	$: console.log($allCharts);
 	let width: number = 0;
 	let height: number = 0;
 	let tolerance = 10; // How close to the edge the user must start dragging
@@ -56,7 +55,10 @@
 		};
 
 		allCharts.update((value) => [...value, chartMetaData]);
+		$mostRecentChartID = id;
 	};
+
+	$: console.log($allCharts);
 
 	if (browser) {
 		onMount(() => {

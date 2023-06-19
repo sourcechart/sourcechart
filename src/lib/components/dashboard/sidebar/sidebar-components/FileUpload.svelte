@@ -3,10 +3,8 @@
 	import { DuckDBClient } from '$lib/io/duckdbcli';
 	import { generateID } from '$lib/io/fileUtils';
 	import { fileUploadStore } from '$lib/io/stores';
-	// import type { AsyncDuckDB } from '@duckdb/duckdb-wasm';
 
-	let files;
-	let fileinput;
+	let files: ListGroupItemType | null;
 
 	function createFileStore(
 		filename: string,
