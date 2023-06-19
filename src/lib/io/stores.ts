@@ -4,6 +4,7 @@ import { Query } from '$lib/io/queryBuilder';
 
 
 export const navBarMode= writable<NavBar>("")
+export const drawInteraction = writable<DrawBehavior>()
 export const mostRecentChartID = writable<string>('');
 export const chosenFile = writable<string>('');
 export const newChartID = writable<string>();

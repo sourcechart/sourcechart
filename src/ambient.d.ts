@@ -72,6 +72,13 @@ interface Point {
 		y: number;
 	}
 
+/****************************
+ *                          *
+ *       Canvas Types       *
+ *                          *  
+ ***************************/ 
+type DrawBehavior = "isDragging" | "isResizing "  | "isDrawing" | "isErasing" | null 
+
 interface Polygon {
     id?: string,
 		vertices: Point[];
@@ -94,9 +101,9 @@ interface Polygon {
 type NavBar= "eraser" | "select" | "drawRectangle"|"textbox"|""
 
 /****************************
- * ------------------------ *
+ *                          *
  * FLOWBITE SVELTE UI TYPES *
- * ------------------------ * 
+ *                          *  
  ***************************/ 
 type BlockQuoteType =
   | 'xs'

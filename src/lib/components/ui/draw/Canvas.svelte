@@ -9,8 +9,11 @@
 	let context: CanvasRenderingContext2D | null;
 
 	onMount(() => {
-		context = canvas.getContext('2d');
-	});
+		context = canvas.getContext('2d')
+		width = window.innerWidth;
+		height = window.innerHeight;
+	})
+
 
 	const drawHandles = (polygon: Polygon) => {
 		if (context) {
@@ -40,28 +43,7 @@
 		}
 	};
 
-	const drawRectangle = (polygon: Polygon, index: number): void => {
-		if (context) {
-			context.beginPath();
-			polygon.vertices.forEach((point, idx) => {
-				if (idx === 0) {
-					if (context) context.moveTo(point.x, point.y);
-				} else {
-					if (context) context.lineTo(point.x, point.y);
-				}
-			});
-			context.closePath();
-			context.strokeStyle = selectedPolygonIndex === index ? 'red' : 'black';
-			context.stroke();
-
-			// If this is the selected polygon, draw the handles
-			if (selectedPolygonIndex === index) {
-				drawHandles(polygon);
-			}
-		}
-	};
-
-	const redraw = (): void => {
+	/*const redraw = (): void => {
 		if (context) {
 			context.clearRect(0, 0, width, height);
 			polygons.forEach(drawRectangle);
@@ -71,4 +53,14 @@
 			}
 		}
 	};
+    */
 </script>
+
+<svelte:window
+	on:resize={() => {
+		if (typeof window !== 'undefined') {
+			width = window.innerWidth;
+			height = window.innerHeight;
+		}
+	}}
+/>
