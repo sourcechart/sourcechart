@@ -59,7 +59,7 @@
 
 <Button color="alternative" pill={false} outline={false}>{chosenPlot}</Button>
 <Dropdown>
-	{#each rectangleCharts as { icon, chartType } (icon)}
+	{#each rectangleCharts as { icon, chartType, component }, i (i)}
 		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>
 	{/each}
 </Dropdown>
