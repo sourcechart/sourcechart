@@ -32,6 +32,7 @@
 
 	function selectFile(filename: string) {
 		let chart = $allCharts[$i];
+		console.log(chart);
 		selectedDataset = filename;
 		$chosenFile = filename;
 		chart.filename = filename;
