@@ -8,8 +8,8 @@
 		allCharts,
 		clickedChartIndex
 	} from '$lib/io/stores';
-	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte'; //@ts-ignore
-
+	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	import { Tags } from '$lib/components/ui/tags';
 	let tags: Array<string> = [];
 	let selectedDataset = 'Choose Dataset';
 
@@ -43,6 +43,13 @@
 		}
 		$allCharts[$i] = chart;
 	}
+
+	function removeItem(item: string) {
+		tags = tags.filter((tag) => tag !== item);
+		let chart = $allCharts[$i];
+		chart.groupbyColumns = tags;
+		$allCharts[$i] = chart;
+	}
 </script>
 
 <Button color="alternative">{selectedDataset}</Button>
@@ -51,6 +58,3 @@
 		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
 	{/each}
 </Dropdown>
-<div class="mt-1">
-	<Tags {tags} maxTags={1} />
-</div>
