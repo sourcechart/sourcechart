@@ -7,7 +7,6 @@
 		activeSidebar,
 		allCharts,
 		mostRecentChartID,
-		clickedChartIndex,
 		clearChartOptions
 	} from '$lib/io/stores';
 	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
