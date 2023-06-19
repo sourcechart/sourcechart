@@ -2,7 +2,14 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { generateID } from '$lib/io/fileUtils';
-	import { navBarMode, activeSidebar, allCharts, mostRecentChartID } from '$lib/io/stores';
+	import {
+		navBarMode,
+		activeSidebar,
+		allCharts,
+		mostRecentChartID,
+		clickedChartIndex,
+		clearChartOptions
+	} from '$lib/io/stores';
 	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
 
 	let id: string;
@@ -33,6 +40,15 @@
 	$: mode = $navBarMode;
 	$: cursorClass = hoverStatus ? cursorStyle : '';
 
+	const removeChart = () => {
+		$clearChartOptions = true;
+		setTimeout(() => {
+			$clearChartOptions = false;
+		}, 10);
+		$allCharts = $allCharts.filter((item) => item.chartID !== $mostRecentChartID);
+		$activeSidebar = false;
+	};
+
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -44,6 +60,7 @@
 					(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
 					selectedPolygonIndex !== null
 				) {
+					removeChart();
 					polygons.splice(selectedPolygonIndex, 1);
 					selectedPolygonIndex = null;
 					$activeSidebar = false;
@@ -182,7 +199,6 @@
 	};
 
 	const handleStart = ({ offsetX: x, offsetY: y }: MouseEvent) => {
-		addMetadataToChart();
 		if (mode === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
 			if (polygon && isPointInPolygon({ x, y }, polygon)) {
@@ -237,6 +253,7 @@
 					{ x: start.x, y: y }
 				]
 			});
+			addMetadataToChart();
 			navBarMode.set('select');
 			redraw();
 		}

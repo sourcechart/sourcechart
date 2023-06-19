@@ -18,7 +18,7 @@
 	}
 </script>
 
-<div use:clickInside={{}} on:click_inside={handleInside} class="space-y-4">
+<div use:clickInside on:click_inside={handleInside} class="space-y-4">
 	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
 		<div class="space-y-3">
 			<div class="text-xs space-y-1">
