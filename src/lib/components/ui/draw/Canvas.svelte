@@ -68,20 +68,23 @@
 			start = { x, y };
 		}
 	};
+
+	const onMouseMove = (x: number, y: number) => {
+		console.log('hovering: ', x, y);
+	};
+
+	const onTouchMove = (x: number, y: number) => {
+		console.log('touching: ', x, y);
+	};
 </script>
 
-<div
+<canvas
 	use:trackMouseState
 	use:touchMove={{
-		onMove: () => {
-			console.log('foo');
-		}
+		onMove: onTouchMove
 	}}
-	use:touchStart={{ onStart: handleDrawingStart }}
 	use:mouseMove={{
-		onMove: () => {
-			console.log('foo');
-		}
+		onMove: onMouseMove
 	}}
 	use:onMouseLeave={{
 		onLeave: () => {
