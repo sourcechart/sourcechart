@@ -107,7 +107,7 @@
 
 	const handleStart = (x: number, y: number) => {
 		//check if the user is not currently drawing.
-
+		id = generateID();
 		if ($navBarState && $mouseEventState !== 'isDrawing') {
 			addChartMetaData(id, $navBarState);
 			mouseEventState.set('isDrawing');
@@ -118,33 +118,31 @@
 	const onMouseMove = (x: number, y: number) => {
 		console.log('hovering: ', x, y);
 	};
-
-	const onTouchMove = (x: number, y: number) => {
-		console.log('touching: ', x, y);
-	};
 </script>
 
-<canvas
-	use:trackMouseState
-	use:touchMove={{
-		onMove: handleTouchMove
-	}}
-	use:mouseMove={{
-		onMove: onMouseMove
-	}}
-	use:onMouseLeave={{
-		onLeave: () => {
-			console.log('leave');
-		}
-	}}
-	use:touchStart={{
-		onStart: handleStart
-	}}
-	use:touchEnd={{
-		onEnd: handleEnd
-	}}
-	class="container"
-/>
+<div {id}>
+	<canvas
+		use:trackMouseState
+		use:touchMove={{
+			onMove: handleTouchMove
+		}}
+		use:mouseMove={{
+			onMove: onMouseMove
+		}}
+		use:onMouseLeave={{
+			onLeave: () => {
+				console.log('leave');
+			}
+		}}
+		use:touchStart={{
+			onStart: handleStart
+		}}
+		use:touchEnd={{
+			onEnd: handleEnd
+		}}
+		class="container"
+	/>
+</div>
 
 <svelte:window
 	on:resize={() => {
