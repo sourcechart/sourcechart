@@ -15,7 +15,7 @@
 		clearChartOptions,
 		mostRecentChartID,
 		navBarState,
-		mouseInteraction
+		mouseEventState
 	} from '$lib/io/stores';
 
 	import { generateID } from '$lib/io/generateID';
@@ -67,7 +67,7 @@
 
 	const handleTouchMove = (x: number, y: number) => {
 		console.log('touch move: ', x, ' ', y);
-		if ($mouseInteraction === 'isDrawing' && context) {
+		if ($mouseEventState === 'isDrawing' && context) {
 			if ($navBarState === 'drawRectangle') {
 				redraw(polygons, context, width, height);
 				drawRectangle(
@@ -86,13 +86,18 @@
 		}
 	};
 
+	const handleEnd = (x: number, y: number) => {
+		if ($mouseEventState === 'isDrawing' && start) {
+			mouseEventState.set('isHovering');
+		}
+	};
+
 	const handleStart = (x: number, y: number) => {
 		//check if the user is not currently drawing.
 		let id = generateID();
-		if ($navBarState === 'drawRectangle' && $mouseInteraction !== 'isDrawing') {
+		if ($navBarState && $mouseEventState !== 'isDrawing') {
 			addChartMetaData(id, $navBarState);
-
-			mouseInteraction.set('isDrawing');
+			mouseEventState.set('isDrawing');
 			start = { x, y };
 		}
 	};
