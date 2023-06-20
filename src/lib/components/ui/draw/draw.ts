@@ -49,4 +49,4 @@ const drawHandles = (polygon: Polygon, context: CanvasRenderingContext2D) => {
 	});
 };
 
-export { drawRectangle, redraw };
+export { drawRectangle, redraw, drawHandles };
