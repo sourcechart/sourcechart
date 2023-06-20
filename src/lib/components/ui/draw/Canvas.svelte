@@ -21,7 +21,7 @@
 
 	import { generateID } from '$lib/io/generateID';
 	import { addChartMetaData } from '$lib/io/chartMetaDataManagement';
-	import { redraw, drawRectangle } from './canvas-utils/draw';
+	import { redraw, drawRectangle, drawHandles } from './canvas-utils/draw';
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -65,27 +65,36 @@
 			selectedPolygonIndex = null;
 		}
 	}
-	const handleTouchMove = (x: number, y: number) => {
+
+	const handleTouchStart = (x: number, y: number) => {
+		//check if the user is not currently drawing.
+		id = generateID();
+		if ($navBarState && $mouseEventState !== 'isDrawing') {
+			addChartMetaData(id, $navBarState);
+			mouseEventState.set('isDrawing');
+			start = { x, y };
+		}
+	};
+
+	const handleTouchMove = (x: number, y: number): void => {
 		if ($mouseEventState === 'isDrawing' && context) {
 			if ($navBarState === 'drawRectangle') {
 				redraw(polygons, context, width, height);
-				drawRectangle(
-					{
-						id: id,
-						vertices: [
-							{ x: start.x, y: start.y },
-							{ x: x, y: start.y },
-							{ x: x, y: y },
-							{ x: start.x, y: y }
-						]
-					},
-					context
-				);
+				const polygon = {
+					id: id,
+					vertices: [
+						{ x: start.x, y: start.y },
+						{ x: x, y: start.y },
+						{ x: x, y: y },
+						{ x: start.x, y: y }
+					]
+				};
+				drawRectangle(polygon, context);
 			}
 		}
 	};
 
-	const handleEnd = (x: number, y: number) => {
+	const handleTouchEnd = (x: number, y: number) => {
 		if ($mouseEventState === 'isDrawing' && start) {
 			const polygon = {
 				id: id,
@@ -97,23 +106,20 @@
 				]
 			};
 			polygons.push(polygon);
-			if (context) {
-				context.strokeStyle = 'red';
-				context.stroke();
-			}
+			if (context) addHandleToShape(polygon, 'red', context);
+			mouseEventState.set('isHovering');
 		}
-		mouseEventState.set('isHovering');
 	};
 
-	const handleStart = (x: number, y: number) => {
-		//check if the user is not currently drawing.
-		id = generateID();
-		if ($navBarState && $mouseEventState !== 'isDrawing') {
-			addChartMetaData(id, $navBarState);
-			mouseEventState.set('isDrawing');
-			start = { x, y };
-		}
-	};
+	function addHandleToShape(
+		polygon: Polygon,
+		lineColor: string,
+		context: CanvasRenderingContext2D
+	) {
+		context.strokeStyle = lineColor;
+		context.stroke();
+		drawHandles(polygon, context);
+	}
 </script>
 
 <div {id}>
@@ -128,10 +134,10 @@
 			}
 		}}
 		use:touchStart={{
-			onStart: handleStart
+			onStart: handleTouchStart
 		}}
 		use:touchEnd={{
-			onEnd: handleEnd
+			onEnd: handleTouchEnd
 		}}
 		bind:this={canvas}
 		{width}
