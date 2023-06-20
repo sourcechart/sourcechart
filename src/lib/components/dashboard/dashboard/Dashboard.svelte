@@ -7,5 +7,9 @@
 	import { DarkMode } from '$lib/components/ui';
 </script>
 
-<DarkMode />
+<div class="flex-row items-center">
+	<DarkMode />
+	<NavBar />
+</div>
+
 <Draw />

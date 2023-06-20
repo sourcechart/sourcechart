@@ -5,7 +5,7 @@ import { Query } from '$lib/io/queryBuilder';
 export const globalMouseState = writable<boolean>(false);
 
 export const navBarState = writable<NavBar>('');
-export const drawInteraction = writable<DrawBehavior>();
+export const mouseInteraction = writable<DrawBehavior>();
 export const mostRecentChartID = writable<string>('');
 export const chosenFile = writable<string>('');
 export const newChartID = writable<string>();

@@ -15,7 +15,7 @@
 		clearChartOptions,
 		mostRecentChartID,
 		navBarState,
-		drawInteraction
+		mouseInteraction
 	} from '$lib/io/stores';
 
 	import { generateID } from '$lib/io/generateID';
@@ -32,7 +32,7 @@
 	let polygons: Polygon[] = [];
 	let start: Point;
 
-	$: mode = $navBarState;
+	$: navBarMode = $navBarState;
 
 	if (browser) {
 		onMount(() => {
@@ -63,9 +63,13 @@
 		}
 	}
 
-	const handleDrawingStart = (x: number, y: number) => {
-		console.log('TouchStart');
-		console.log(x, y);
+	const handleStart = (x: number, y: number) => {
+		//check if the user is not currently drawing.
+		if (navBarMode === 'drawRectangle' && $mouseInteraction !== 'isDrawing') {
+			console.log('starting');
+			mouseInteraction.set('isDrawing');
+			start = { x, y };
+		}
 	};
 
 	const onMouseMove = (x: number, y: number) => {
@@ -91,7 +95,7 @@
 		}
 	}}
 	use:touchStart={{
-		onStart: handleDrawingStart
+		onStart: handleStart
 	}}
 	class="container"
 />
