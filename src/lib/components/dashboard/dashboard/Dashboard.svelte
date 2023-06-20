@@ -1,21 +1,11 @@
 <!-- I only put this here so it would be easier to navigate to in the file tree. Could definitely be in /dashboard/+page.svelte-->
-<script>
+<script lang="ts">
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
-	import Draw from '$lib/components/ui/draw/Foo.svelte';
+	import Draw from '$lib/components/ui/draw/Draw.svelte';
+
+	import { mouseTracker } from '$lib/actions/clickActions';
 	import { DarkMode } from '$lib/components/ui';
 </script>
 
 <Draw />
-<div class="absolute top-0 right-0 mt-4">
-	<DarkMode />
-</div>
-<div class="relative">
-	<div class="flex justify-center justify-items-center">
-		<NavBar />
-	</div>
-
-	<div class="fixed top-1/2 left-0 transform -translate-y-1/2">
-		<Sidebar />
-	</div>
-</div>
