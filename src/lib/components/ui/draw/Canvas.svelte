@@ -87,7 +87,7 @@
 
 	const handleEnd = (x: number, y: number) => {
 		if ($mouseEventState === 'isDrawing' && start) {
-			polygons.push({
+			const polygon = {
 				id: id,
 				vertices: [
 					{ x: start.x, y: start.y },
@@ -95,7 +95,12 @@
 					{ x: x, y: y },
 					{ x: start.x, y: y }
 				]
-			});
+			};
+			polygons.push(polygon);
+			if (context) {
+				context.strokeStyle = 'red';
+				context.stroke();
+			}
 		}
 		mouseEventState.set('isHovering');
 	};
