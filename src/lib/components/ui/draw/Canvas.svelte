@@ -18,6 +18,8 @@
 		drawInteraction
 	} from '$lib/io/stores';
 
+	import { generateID } from '$lib/io/generateID';
+	import { addChartMetaData } from '$lib/io/chartMetaDataManagement';
 	import { redraw, drawRectangle } from './draw';
 
 	import { onMount } from 'svelte';

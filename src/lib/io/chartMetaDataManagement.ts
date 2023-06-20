@@ -1,9 +1,7 @@
 import { mostRecentChartID, allCharts } from '$lib/io/stores';
 
-const generateID = () => '_' + Math.random().toString(36).substr(2, 9);
-
-const addMetadataToChart = (): void => {
-	let id = generateID();
+const addChartMetaData = (id: string): void => {
+	//	let id = generateID();
 
 	let chartMetaData: Chart = {
 		chartID: id,
@@ -28,4 +26,4 @@ const addMetadataToChart = (): void => {
 	mostRecentChartID.set(id);
 };
 
-export { addMetadataToChart };
+export { addChartMetaData };
