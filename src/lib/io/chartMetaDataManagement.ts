@@ -1,10 +1,11 @@
 import { mostRecentChartID, allCharts } from '$lib/io/stores';
 
-const addChartMetaData = (id: string): void => {
+const addChartMetaData = (id: string, shape: string): void => {
 	//	let id = generateID();
 
 	let chartMetaData: Chart = {
 		chartID: id,
+		shape: shape,
 		filename: null,
 		chartType: null,
 		aggregator: null,

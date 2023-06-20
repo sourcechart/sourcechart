@@ -24,15 +24,17 @@
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
+
+	let id: string;
 	let width: number;
 	let height: number;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let selectedPolygonIndex: number | null = null;
 	let polygons: Polygon[] = [];
-	let start: Point;
 
-	$: navBarMode = $navBarState;
+	let start: Point;
+	let dragOffset: Point = { x: 0, y: 0 };
 
 	if (browser) {
 		onMount(() => {
@@ -63,10 +65,33 @@
 		}
 	}
 
+	const handleTouchMove = (x: number, y: number) => {
+		console.log('touch move: ', x, ' ', y);
+		if ($mouseInteraction === 'isDrawing' && context) {
+			if ($navBarState === 'drawRectangle') {
+				redraw(polygons, context, width, height);
+				drawRectangle(
+					{
+						id: id,
+						vertices: [
+							{ x: start.x, y: start.y },
+							{ x: x, y: start.y },
+							{ x: x, y: y },
+							{ x: start.x, y: y }
+						]
+					},
+					context
+				);
+			}
+		}
+	};
+
 	const handleStart = (x: number, y: number) => {
 		//check if the user is not currently drawing.
-		if (navBarMode === 'drawRectangle' && $mouseInteraction !== 'isDrawing') {
-			console.log('starting');
+		let id = generateID();
+		if ($navBarState === 'drawRectangle' && $mouseInteraction !== 'isDrawing') {
+			addChartMetaData(id, $navBarState);
+
 			mouseInteraction.set('isDrawing');
 			start = { x, y };
 		}
@@ -84,7 +109,7 @@
 <canvas
 	use:trackMouseState
 	use:touchMove={{
-		onMove: onTouchMove
+		onMove: handleTouchMove
 	}}
 	use:mouseMove={{
 		onMove: onMouseMove

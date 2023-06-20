@@ -6,6 +6,7 @@
  *****************************/
 
 type Chart = {
+	shape: string;
 	chartID: string;
 	chartType: string | null;
 	filename: string | null;
