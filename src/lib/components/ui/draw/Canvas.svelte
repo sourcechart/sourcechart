@@ -62,11 +62,8 @@
 	}
 
 	const handleDrawingStart = (x: number, y: number) => {
-		console.log('foo');
-		if (context && $drawInteraction !== 'isDrawing') {
-			drawInteraction.set('isDragging');
-			start = { x, y };
-		}
+		console.log('TouchStart');
+		console.log(x, y);
 	};
 
 	const onMouseMove = (x: number, y: number) => {
@@ -88,8 +85,11 @@
 	}}
 	use:onMouseLeave={{
 		onLeave: () => {
-			console.log('foo');
+			console.log('leave');
 		}
+	}}
+	use:touchStart={{
+		onStart: handleDrawingStart
 	}}
 	class="container"
 />
