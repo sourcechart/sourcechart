@@ -17,6 +17,7 @@
 		navBarState,
 		drawInteraction
 	} from '$lib/io/stores';
+
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	let width: number;
@@ -62,13 +63,6 @@
 		if (context && navBarMode === 'drawRectangle') {
 			drawInteraction.set('isDragging');
 			start = { x, y };
-		}
-	};
-
-	const redraw = (): void => {
-		if (context) {
-			context.clearRect(0, 0, width, height);
-			polygons.forEach(drawRectangle);
 		}
 	};
 </script>
