@@ -40,6 +40,7 @@
 	let start: Point;
 	let dragOffset: Point = { x: 0, y: 0 };
 
+	$: if (context) context.strokeStyle = 'red';
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -138,6 +139,9 @@
 	}}
 	use:touchStart={{
 		onStart: handleStart
+	}}
+	use:touchEnd={{
+		onEnd: handleEnd
 	}}
 	class="container"
 />
