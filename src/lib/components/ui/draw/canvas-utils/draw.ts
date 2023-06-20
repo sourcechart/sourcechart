@@ -1,3 +1,4 @@
+import type { Polygon, Point } from './types';
 const drawRectangle = (polygon: Polygon, context: CanvasRenderingContext2D): void => {
 	context.beginPath();
 	polygon.vertices.forEach((point, idx) => {
