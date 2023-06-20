@@ -84,11 +84,10 @@ interface Point {
  *        isMoving: when you are moving a rectangle to a different position withough changing the dimensions                  *
  *        isResizing: when you change the width, height or radius, of a polygon that already exists by manipulating and edge  *
  *        isDrawing: When you are creating a rectangle or polygon via the draw button(s)                                      *
- *        isErasing: When you are erasing a polygon with onTouch with your mouse                                              *
  *        isHovering: default state of the mouse where you can move it but it is not clicked                                                                                                                  *
  *****************************************************************************************************************************/
 
-type MouseEvents = 'isMoving' | 'isResizing ' | 'isDrawing' | 'isErasing' | 'isHovering';
+type MouseEvents = 'isHovering' | 'isTouching';
 
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
 

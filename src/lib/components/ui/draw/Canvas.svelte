@@ -25,6 +25,7 @@
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import { getContainingPolygon } from './canvas-utils/polygonOperations';
 
 	let id: string;
 	let width: number;
@@ -66,36 +67,58 @@
 		}
 	}
 
-	const handleTouchStart = (x: number, y: number) => {
+	const handleTouchStart = (x: number, y: number): void => {
 		//check if the user is not currently drawing.
 		id = generateID();
-		if ($navBarState && $mouseEventState !== 'isDrawing') {
+		if ($navBarState in ['drawCircle', 'drawRectangle'] && $mouseEventState !== 'isTouching') {
 			addChartMetaData(id, $navBarState);
-			mouseEventState.set('isDrawing');
+			mouseEventState.set('isTouching');
 			start = { x, y };
 		}
 	};
 
 	const handleTouchMove = (x: number, y: number): void => {
-		if ($mouseEventState === 'isDrawing' && context) {
+		if (context && $mouseEventState === 'isTouching') {
 			if ($navBarState === 'drawRectangle') {
-				redraw(polygons, context, width, height);
-				const polygon = {
-					id: id,
-					vertices: [
-						{ x: start.x, y: start.y },
-						{ x: x, y: start.y },
-						{ x: x, y: y },
-						{ x: start.x, y: y }
-					]
-				};
-				drawRectangle(polygon, context);
+				handleTouchCreateShapes(x, y, context);
+			} else if ($navBarState === 'eraser') {
+				handleTouchErase(x, y, context);
 			}
 		}
 	};
 
+	const handleTouchCreateShapes = (
+		x: number,
+		y: number,
+		context: CanvasRenderingContext2D
+	): void => {
+		if ($navBarState === 'drawRectangle') {
+			redraw(polygons, context, width, height);
+			const polygon = {
+				id: id,
+				vertices: [
+					{ x: start.x, y: start.y },
+					{ x: x, y: start.y },
+					{ x: x, y: y },
+					{ x: start.x, y: y }
+				]
+			};
+			drawRectangle(polygon, context);
+		}
+	};
+
+	const handleTouchErase = (x: number, y: number, context: CanvasRenderingContext2D): void => {
+		const currentTouchPoint: Point = { x, y };
+		const polygon = getContainingPolygon(currentTouchPoint, polygons);
+		const index = polygon ? polygons.indexOf(polygon) : -1;
+		if (index > -1) {
+			polygons.splice(index, 1);
+			redraw(polygons, context, width, height);
+		}
+	};
+
 	const handleTouchEnd = (x: number, y: number) => {
-		if ($mouseEventState === 'isDrawing' && start) {
+		if ($mouseEventState === 'isTouching' && start) {
 			const polygon = {
 				id: id,
 				vertices: [
