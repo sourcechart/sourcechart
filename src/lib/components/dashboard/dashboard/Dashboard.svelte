@@ -4,7 +4,6 @@
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import Draw from '$lib/components/ui/draw/Draw.svelte';
 
-	import { mouseTracker } from '$lib/actions/clickActions';
 	import { DarkMode } from '$lib/components/ui';
 </script>
 
