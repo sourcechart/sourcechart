@@ -5,7 +5,7 @@ const addChartMetaData = (id: string, shape: string): void => {
 
 	let chartMetaData: Chart = {
 		chartID: id,
-		shape: shape,
+		chartShape: shape,
 		filename: null,
 		chartType: null,
 		aggregator: null,

@@ -6,7 +6,8 @@
 		touchStart,
 		touchMove,
 		trackMouseState,
-		onMouseLeave
+		onMouseLeave,
+		touchEnd
 	} from '$lib/actions/mouseActions';
 
 	import {
@@ -28,9 +29,12 @@
 	let id: string;
 	let width: number;
 	let height: number;
+
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let selectedPolygonIndex: number | null = null;
+	$: console.log($mouseEventState, id, $navBarState);
+	//let dragOffset: Point = { x: 0, y: 0 };
 	let polygons: Polygon[] = [];
 
 	let start: Point;
@@ -61,10 +65,8 @@
 			$activeSidebar = false;
 			polygons.splice(selectedPolygonIndex, 1);
 			selectedPolygonIndex = null;
-			if (context) redraw(polygons, context, width, height);
 		}
 	}
-
 	const handleTouchMove = (x: number, y: number) => {
 		console.log('touch move: ', x, ' ', y);
 		if ($mouseEventState === 'isDrawing' && context) {
@@ -89,12 +91,22 @@
 	const handleEnd = (x: number, y: number) => {
 		if ($mouseEventState === 'isDrawing' && start) {
 			mouseEventState.set('isHovering');
+			polygons.push({
+				id: id,
+				vertices: [
+					{ x: start.x, y: start.y },
+					{ x: x, y: start.y },
+					{ x: x, y: y },
+					{ x: start.x, y: y }
+				]
+			});
 		}
+		console.log('it is finished');
 	};
 
 	const handleStart = (x: number, y: number) => {
 		//check if the user is not currently drawing.
-		let id = generateID();
+
 		if ($navBarState && $mouseEventState !== 'isDrawing') {
 			addChartMetaData(id, $navBarState);
 			mouseEventState.set('isDrawing');
