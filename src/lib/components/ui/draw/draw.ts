@@ -1,6 +1,7 @@
 import type { Polygon } from './types';
 
 function drawRectangle(polygon: Polygon, context: CanvasRenderingContext2D): void {
+	console.log('drawing rectanlge');
 	context.beginPath();
 	polygon.vertices.forEach((point, idx) => {
 		if (idx === 0) {
@@ -20,6 +21,8 @@ function redraw(
 	width: number,
 	height: number
 ): void {
+	console.log('redraw');
+
 	context.clearRect(0, 0, width, height);
 	polygons.forEach((polygon) => {
 		drawRectangle(polygon, context);

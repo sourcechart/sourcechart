@@ -33,21 +33,18 @@
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let selectedPolygonIndex: number | null = null;
-	$: console.log($mouseEventState, id, $navBarState);
-	//let dragOffset: Point = { x: 0, y: 0 };
 	let polygons: Polygon[] = [];
-
 	let start: Point;
 	let dragOffset: Point = { x: 0, y: 0 };
 
-	$: if (context) context.strokeStyle = 'red';
-	if (browser) {
-		onMount(() => {
-			context = canvas.getContext('2d');
-			width = window.innerWidth;
-			height = window.innerHeight;
-		});
-	}
+	onMount(() => {
+		context = canvas.getContext('2d');
+		if (context) context.strokeStyle = 'red';
+
+		width = window.innerWidth;
+		height = window.innerHeight;
+	});
+
 	function removeChart() {
 		$clearChartOptions = true;
 		setTimeout(() => {
@@ -69,7 +66,6 @@
 		}
 	}
 	const handleTouchMove = (x: number, y: number) => {
-		console.log('touch move: ', x, ' ', y);
 		if ($mouseEventState === 'isDrawing' && context) {
 			if ($navBarState === 'drawRectangle') {
 				redraw(polygons, context, width, height);
@@ -91,7 +87,6 @@
 
 	const handleEnd = (x: number, y: number) => {
 		if ($mouseEventState === 'isDrawing' && start) {
-			mouseEventState.set('isHovering');
 			polygons.push({
 				id: id,
 				vertices: [
@@ -102,7 +97,7 @@
 				]
 			});
 		}
-		console.log('it is finished');
+		mouseEventState.set('isHovering');
 	};
 
 	const handleStart = (x: number, y: number) => {
@@ -114,10 +109,6 @@
 			start = { x, y };
 		}
 	};
-
-	const onMouseMove = (x: number, y: number) => {
-		console.log('hovering: ', x, y);
-	};
 </script>
 
 <div {id}>
@@ -125,9 +116,6 @@
 		use:trackMouseState
 		use:touchMove={{
 			onMove: handleTouchMove
-		}}
-		use:mouseMove={{
-			onMove: onMouseMove
 		}}
 		use:onMouseLeave={{
 			onLeave: () => {
@@ -140,7 +128,9 @@
 		use:touchEnd={{
 			onEnd: handleEnd
 		}}
-		class="container"
+		bind:this={canvas}
+		{width}
+		{height}
 	/>
 </div>
 
@@ -152,10 +142,3 @@
 		}
 	}}
 />
-
-<style>
-	.container {
-		height: 100vh;
-		width: 100vw;
-	}
-</style>
