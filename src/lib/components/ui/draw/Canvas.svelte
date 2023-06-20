@@ -21,7 +21,7 @@
 
 	import { generateID } from '$lib/io/generateID';
 	import { addChartMetaData } from '$lib/io/chartMetaDataManagement';
-	import { redraw, drawRectangle } from './draw';
+	import { redraw, drawRectangle } from './canvas-utils/draw';
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
