@@ -8,28 +8,6 @@
 		trackMouseState,
 		onMouseLeave
 	} from '$lib/actions/mouseActions';
-
-	function trackState(x, y) {
-		console.log('track state happening ', x, y);
-	}
-
-	function handleDrag(x, y) {
-		console.log('drag happening ', x, y);
-	}
-
-	function handleTouch(x, y) {
-		console.log('drag started ', x, y);
-	}
-
-	function handleMove(x, y) {
-		console.log('Mouse moved');
-
-		console.log(x, y);
-		// do something with the mouse coordinates
-	}
-	function handleLeave() {
-		console.log('left');
-	}
 </script>
 
 <div

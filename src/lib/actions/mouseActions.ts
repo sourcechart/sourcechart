@@ -3,6 +3,7 @@
  *  In the future, there will be a need to
  *  attach a mouse Id to each of these
  *
+ *  This will also have to be explored on cell phones.
  */
 import { onDestroy } from 'svelte';
 import { writable } from 'svelte/store';
