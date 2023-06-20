@@ -3,7 +3,7 @@ export interface Polygon {
 	vertices: Point[];
 }
 
-interface Point {
+export interface Point {
 	x: number;
 	y: number;
 }
