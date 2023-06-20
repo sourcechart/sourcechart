@@ -18,6 +18,8 @@
 		drawInteraction
 	} from '$lib/io/stores';
 
+	import { redraw, drawRectangle } from './draw';
+
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	let width: number;
@@ -28,7 +30,7 @@
 	let polygons: Polygon[] = [];
 	let start: Point;
 
-	$: navBarMode = $navBarState;
+	$: mode = $navBarState;
 
 	if (browser) {
 		onMount(() => {
@@ -55,12 +57,13 @@
 			$activeSidebar = false;
 			polygons.splice(selectedPolygonIndex, 1);
 			selectedPolygonIndex = null;
-			redraw();
+			if (context) redraw(polygons, context, width, height);
 		}
 	}
 
-	const handleDrawingStart = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
-		if (context && navBarMode === 'drawRectangle') {
+	const handleDrawingStart = (x: number, y: number) => {
+		console.log('foo');
+		if (context && $drawInteraction !== 'isDrawing') {
 			drawInteraction.set('isDragging');
 			start = { x, y };
 		}
@@ -74,11 +77,7 @@
 			console.log('foo');
 		}
 	}}
-	use:touchStart={{
-		onStart: () => {
-			console.log('foo');
-		}
-	}}
+	use:touchStart={{ onStart: handleDrawingStart }}
 	use:mouseMove={{
 		onMove: () => {
 			console.log('foo');

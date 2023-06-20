@@ -1,9 +1,9 @@
 <!-- Eraser icon by Arthur Shlain from Usefulicons.com -->
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import { navBarMode } from '$lib/io/stores';
+	import { navBarState } from '$lib/io/stores';
 
-	$: mode = $navBarMode;
+	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
 
 	function clickBoundary() {

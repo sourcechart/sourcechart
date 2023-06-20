@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Cursor, Draw, Eraser } from './navbar-icons';
 	import NavBarWrapper from '$lib/components/dashboard/navbar/NavBarWrapper.svelte';
-	import { navBarMode, activeSidebar } from '$lib/io/stores';
+	import { navBarState, activeSidebar } from '$lib/io/stores';
 
 	let icons = [
 		{
@@ -20,7 +20,7 @@
 
 	const setMode = (event: any) => {
 		activeSidebar.set(true);
-		navBarMode.set(event.detail);
+		navBarState.set(event.detail);
 	};
 </script>
 
