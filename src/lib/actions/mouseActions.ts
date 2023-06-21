@@ -6,8 +6,9 @@
  *  This will also have to be explored on cell phones.
  */
 import { onDestroy } from 'svelte';
-import { mouseEventState } from '$lib/io/stores';
 import { writable } from 'svelte/store';
+
+let isMouseDown = writable<boolean>(false);
 
 export function clickOutside(node: HTMLElement, options: any = {}) {
 	const handleClick = (event: MouseEvent) => {
@@ -47,18 +48,19 @@ export function clickInside(node: HTMLElement, options: any = {}) {
 }
 
 export function mouseMove(node: Node, { onMove }: { onMove: (x: number, y: number) => void }) {
-	let mouseStateValue: string;
+	let mouseDownValue: boolean;
+
 	//@ts-ignore
 	const handleMouseMove = (e) => {
-		if (mouseStateValue === 'isHovering') {
+		if (!mouseDownValue) {
 			onMove(e.clientX, e.clientY);
 		}
 	};
 
 	node.addEventListener('mousemove', handleMouseMove);
 
-	const unsubscribe = mouseEventState.subscribe((value) => {
-		mouseStateValue = value;
+	const unsubscribe = isMouseDown.subscribe((value) => {
+		mouseDownValue = value;
 	});
 
 	onDestroy(unsubscribe);
@@ -72,41 +74,56 @@ export function mouseMove(node: Node, { onMove }: { onMove: (x: number, y: numbe
 
 export function touchStart(node: Node, { onStart }: { onStart: (x: number, y: number) => void }) {
 	//@ts-ignore
+	const handleMouseDown = (e) => {
+		onStart(e.clientX, e.clientY);
+	};
+	//@ts-ignore
 	const handleTouchStart = (e) => {
 		const touch = e.touches[0];
 		onStart(touch.clientX, touch.clientY);
-		mouseEventState.set('isTouching');
 	};
 
+	node.addEventListener('mousedown', handleMouseDown);
 	node.addEventListener('touchstart', handleTouchStart);
 
 	return {
 		destroy() {
+			node.removeEventListener('mousedown', handleMouseDown);
 			node.removeEventListener('touchstart', handleTouchStart);
 		}
 	};
 }
 
 export function touchMove(node: Node, { onMove }: { onMove: (x: number, y: number) => void }) {
-	let mouseStateValue: string;
+	let mouseDownValue: boolean;
+
+	//@ts-ignore
+	const handleMouseMove = (e) => {
+		if (mouseDownValue) {
+			onMove(e.clientX, e.clientY);
+		}
+	};
+
 	//@ts-ignore
 	const handleTouchMove = (e) => {
-		if (mouseStateValue === 'isTouching') {
+		if (mouseDownValue) {
 			const touch = e.touches[0];
 			onMove(touch.clientX, touch.clientY);
 		}
 	};
 
+	node.addEventListener('mousemove', handleMouseMove);
 	node.addEventListener('touchmove', handleTouchMove);
 
-	const unsubscribe = mouseEventState.subscribe((value) => {
-		mouseStateValue = value;
+	const unsubscribe = isMouseDown.subscribe((value) => {
+		mouseDownValue = value;
 	});
 
 	onDestroy(unsubscribe);
 
 	return {
 		destroy() {
+			node.removeEventListener('mousemove', handleMouseMove);
 			node.removeEventListener('touchmove', handleTouchMove);
 		}
 	};
@@ -114,11 +131,11 @@ export function touchMove(node: Node, { onMove }: { onMove: (x: number, y: numbe
 
 export function trackMouseState(node: Node) {
 	const handleMouseDown = () => {
-		mouseEventState.set('isTouching');
+		isMouseDown.set(true);
 	};
 
 	const handleMouseUp = () => {
-		mouseEventState.set('isHovering');
+		isMouseDown.set(false);
 	};
 
 	node.addEventListener('mousedown', handleMouseDown);
@@ -131,21 +148,27 @@ export function trackMouseState(node: Node) {
 		}
 	};
 }
-
 export function touchEnd(node: Node, { onEnd }: { onEnd: (x: number, y: number) => void }) {
+	//@ts-ignore
+	const handleMouseUp = (e) => {
+		onEnd(e.clientX, e.clientY);
+	};
+	isMouseDown.set(false);
+
 	//@ts-ignore
 	const handleTouchEnd = (e) => {
 		if (e.changedTouches && e.changedTouches[0]) {
 			const touch = e.changedTouches[0];
 			onEnd(touch.clientX, touch.clientY);
 		}
-		mouseEventState.set('isHovering');
 	};
 
+	node.addEventListener('mouseup', handleMouseUp);
 	node.addEventListener('touchend', handleTouchEnd);
 
 	return {
 		destroy() {
+			node.removeEventListener('mouseup', handleMouseUp);
 			node.removeEventListener('touchend', handleTouchEnd);
 		}
 	};
@@ -154,7 +177,7 @@ export function touchEnd(node: Node, { onEnd }: { onEnd: (x: number, y: number) 
 export function onMouseLeave(node: Node, { onLeave }: { onLeave: () => void }) {
 	const handleMouseLeave = () => {
 		onLeave();
-		mouseEventState.set('isHovering');
+		isMouseDown.set(false); // Add this line
 	};
 
 	node.addEventListener('mouseleave', handleMouseLeave);

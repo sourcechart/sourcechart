@@ -24,9 +24,9 @@
 	import { redraw, drawRectangle, drawHandles } from './canvas-utils/draw';
 
 	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
 	import { getContainingPolygon } from './canvas-utils/polygonOperations';
 
+	$: console.log($mouseEventState);
 	type handleEndTypes = 'eraser' | 'select';
 	let id: string;
 	let width: number;
@@ -83,8 +83,6 @@
 				handleTouchCreateShapes(x, y, context);
 			} else if ($navBarState === 'eraser') {
 				handleTouchErase(x, y, context);
-			} else if ($navBarState === 'select') {
-				handleTouchEnd(x, y);
 			}
 		}
 	};
@@ -115,8 +113,8 @@
 		const index = polygon ? polygons.indexOf(polygon) : -1;
 		if (index > -1) {
 			polygons.splice(index, 1);
-			redraw(polygons, context, width, height);
 		}
+		redraw(polygons, context, width, height);
 	};
 
 	const handleTouchEnd = (x: number, y: number) => {
