@@ -38,8 +38,11 @@
 	let polygons: Polygon[] = [];
 	let start: Point;
 	let cursorStyle: string;
+	let highlightLineColor: string;
 
 	let dragOffset: Point = { x: 0, y: 0 };
+
+	$: if (context) highlightLineColor = 'red';
 
 	$: cursorClass = $isMouseDown ? cursorStyle : '';
 	const handleMouseMove = (x: number, y: number): void => {
@@ -123,7 +126,7 @@
 					{ x: start.x, y: y }
 				]
 			};
-			drawRectangle(polygon, context, 'red');
+			drawRectangle(polygon, context, highlightLineColor);
 		}
 	};
 
@@ -153,7 +156,10 @@
 				]
 			};
 			polygons.push(polygon);
-			if (context) addHandleToShape(polygon, 'red', context);
+			if (context) {
+				context.strokeStyle = highlightLineColor;
+				drawHandles(polygon, context);
+			}
 		}
 		mouseEventState.set('isHovering');
 	};
@@ -166,17 +172,17 @@
 		}
 		if (context && polygon) {
 			redraw(polygons, context, width, height, selectedPolygonIndex);
-			addHandleToShape(polygon, 'red', context);
+
+			context.strokeStyle = highlightLineColor;
+			drawHandles(polygon, context);
 		}
 	};
+
 	function addHandleToShape(
 		polygon: Polygon,
 		lineColor: string,
 		context: CanvasRenderingContext2D
-	) {
-		context.strokeStyle = lineColor;
-		drawHandles(polygon, context);
-	}
+	) {}
 </script>
 
 <div {id}>
