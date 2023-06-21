@@ -262,6 +262,10 @@
 		mouseEventState.set('isHovering');
 	};
 
+	/**
+	 *
+	 * @param Mouse Event
+	 */
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		const point: Point = { x, y };
 		const polygon = getContainingPolygon(point, polygons);
