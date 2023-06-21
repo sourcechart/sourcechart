@@ -27,6 +27,7 @@
 	import { browser } from '$app/environment';
 	import { getContainingPolygon } from './canvas-utils/polygonOperations';
 
+	type handleEndTypes = 'eraser' | 'select';
 	let id: string;
 	let width: number;
 	let height: number;
@@ -119,7 +120,11 @@
 	};
 
 	const handleTouchEnd = (x: number, y: number) => {
-		if ($mouseEventState === 'isTouching' && $navBarState !== 'select') {
+		if (
+			$mouseEventState === 'isTouching' &&
+			$navBarState !== 'eraser' &&
+			$navBarState !== 'select'
+		) {
 			const polygon = {
 				id: id,
 				vertices: [
