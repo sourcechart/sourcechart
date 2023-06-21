@@ -1,4 +1,12 @@
-export function isPointInPolygon(point: Point, polygon: Polygon): boolean {
+/**
+ * Checks is a point is in any created polygon or shape.
+ *
+ * @param point
+ * @param polygon
+ * @returns boolean
+ */
+
+function isPointInPolygon(point: Point, polygon: Polygon): boolean {
 	const x = point.x;
 	const y = point.y;
 	let inside = false;
@@ -23,7 +31,7 @@ export function isPointInPolygon(point: Point, polygon: Polygon): boolean {
  *  @param polygons all the polygons that are on the canvas
 
 */
-export function getContainingPolygon(point: Point, polygons: Polygon[]): Polygon | null {
+function getContainingPolygon(point: Point, polygons: Polygon[]): Polygon | null {
 	let containedPolygon: Polygon | null = null;
 	polygons.forEach((polygon) => {
 		if (isPointInPolygon(point, polygon)) {
@@ -34,3 +42,5 @@ export function getContainingPolygon(point: Point, polygons: Polygon[]): Polygon
 	});
 	return containedPolygon;
 }
+
+export { getContainingPolygon, isPointInPolygon };

@@ -32,7 +32,12 @@ const redraw = (
 	});
 };
 
-const drawHandles = (polygon: Polygon, context: CanvasRenderingContext2D, color: string) => {
+const drawHandles = (
+	polygon: Polygon,
+	context: CanvasRenderingContext2D,
+	color: string,
+	radius: number
+) => {
 	let handlePositions: Point[];
 	handlePositions = calculateHandles(polygon);
 	context.strokeStyle = color;
@@ -40,7 +45,7 @@ const drawHandles = (polygon: Polygon, context: CanvasRenderingContext2D, color:
 	handlePositions.forEach((point) => {
 		if (context) {
 			context.beginPath();
-			context.arc(point.x, point.y, 5, 0, 2 * Math.PI); // Change the 3rd argument to adjust the size of the circle
+			context.arc(point.x, point.y, 5, 0.1, 2 * Math.PI); // Change the 3rd argument to adjust the size of the circle
 			context.stroke();
 		}
 	});

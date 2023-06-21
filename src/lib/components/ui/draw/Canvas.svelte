@@ -40,12 +40,13 @@
 
 	let selectedPolygonIndex: number | null = null;
 	let scalingHandleIndex: number | null = null;
-
 	let polygons: Polygon[] = [];
 	let start: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
 	let hoverIntersection: boolean = false;
+
+	const handleRadius: number = 0.01;
 
 	$: if (context) highlightColor = 'red';
 	$: cursorClass = hoverIntersection ? 'grabbable' : '';
@@ -182,7 +183,7 @@
 		redraw(polygons, context, width, height, selectedPolygonIndex);
 		context.strokeStyle = highlightColor;
 
-		drawHandles(polygon, context, highlightColor);
+		drawHandles(polygon, context, highlightColor, handleRadius);
 	};
 
 	/**
@@ -266,7 +267,7 @@
 			polygons.push(polygon);
 			if (context) {
 				context.strokeStyle = highlightColor;
-				drawHandles(polygon, context, highlightColor);
+				drawHandles(polygon, context, highlightColor, handleRadius);
 			}
 		}
 		mouseEventState.set('isHovering');
@@ -280,12 +281,16 @@
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		const point: Point = { x, y };
 		const polygon = getContainingPolygon(point, polygons);
-		if (polygon) selectedPolygonIndex = polygons.indexOf(polygon);
-
+		let handlePositions: Point[] = [];
+		if (polygon) {
+			selectedPolygonIndex = polygons.indexOf(polygon);
+			handlePositions = calculateHandles(polygon);
+			getScalingHandleIndex(handlePositions, point, handleRadius);
+		}
 		if (context && polygon) {
 			redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = highlightColor;
-			drawHandles(polygon, context, highlightColor);
+			drawHandles(polygon, context, highlightColor, handleRadius);
 		}
 	};
 </script>

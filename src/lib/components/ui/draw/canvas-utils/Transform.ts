@@ -1,5 +1,11 @@
 import { mouseEventState } from '$lib/io/Stores';
 
+/**
+ * Get the 4 positions that are in the mid points of the polygon and add that to the vertices
+ *
+ * @param polygon
+ * @returns
+ */
 const calculateHandles = (polygon: Polygon) => {
 	let handlePositions: Point[] = [...polygon.vertices];
 
@@ -14,11 +20,21 @@ const calculateHandles = (polygon: Polygon) => {
 	return handlePositions;
 };
 
+/**
+ *If it is, switch to the "isScaling" state and store the index of the handle being dragged.
+ *
+ * @param handlePositions
+ * @param currentMousePosition
+ * @param handleRadius
+ *
+ * @returns index
+ */
+
 const getScalingHandleIndex = (
 	handlePositions: Point[],
-	currentMousePosition: MouseEventExtended,
+	currentMousePosition: MouseEventExtended | Point,
 	handleRadius: number
-) => {
+): number | null => {
 	let scalingHandleIndex: number | null = null; // Assign default value as null
 	for (let i = 0; i < handlePositions.length; i++) {
 		const dx = currentMousePosition.x - handlePositions[i].x;
