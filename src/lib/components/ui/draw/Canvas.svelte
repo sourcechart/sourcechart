@@ -131,7 +131,7 @@
 			} else if ($navBarState === 'eraser') {
 				handleTouchErase(x, y, context);
 			} else if ($navBarState === 'select' && selectedPolygonIndex !== null) {
-				handleTouchTranslate(x, y, context, selectedPolygonIndex);
+				handleTouchTranslate(x, y, context, selectedPolygonIndex, highlightColor);
 			}
 		}
 	};
@@ -149,7 +149,8 @@
 		x: number,
 		y: number,
 		context: CanvasRenderingContext2D,
-		selectedPolygonIndex: number
+		selectedPolygonIndex: number,
+		highlightColor: string
 	) => {
 		const dx = x - dragOffset.x;
 		const dy = y - dragOffset.y;
@@ -160,7 +161,9 @@
 		}));
 		dragOffset = { x, y };
 		redraw(polygons, context, width, height, selectedPolygonIndex);
-		drawHandles(polygon, context);
+		context.strokeStyle = highlightColor;
+
+		drawHandles(polygon, context, highlightColor);
 	};
 
 	const handleTouchScale = (x: number, y: number) => {};
@@ -213,7 +216,7 @@
 			polygons.push(polygon);
 			if (context) {
 				context.strokeStyle = highlightColor;
-				drawHandles(polygon, context);
+				drawHandles(polygon, context, highlightColor);
 			}
 		}
 		mouseEventState.set('isHovering');
@@ -228,7 +231,7 @@
 		if (context && polygon) {
 			redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = highlightColor;
-			drawHandles(polygon, context);
+			drawHandles(polygon, context, highlightColor);
 		}
 	};
 </script>
