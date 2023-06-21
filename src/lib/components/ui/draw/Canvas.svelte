@@ -187,7 +187,7 @@
 	};
 
 	/**
-	 * Handle the scaling of a rectangle to different heights and widths
+	 * ### Handle the scaling of a rectangle to different heights and widths
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
