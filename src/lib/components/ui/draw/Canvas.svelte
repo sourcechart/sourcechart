@@ -77,6 +77,12 @@
 		}
 	};
 
+	/**
+	 * Handle the touch start event.
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
 	const handleTouchStart = (x: number, y: number): void => {
 		//check if the user is not currently drawing.
 		id = generateID();
@@ -110,10 +116,10 @@
 	};
 
 	/**
-	 * Handlers
+	 * Handle the movement of the mouse when it is not clicked.
 	 *
-	 * @param x
-	 * @param y
+	 * @param x x position on the screen
+	 * @param y y position on the screen
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
 		let currentMousePosition = { x, y };
@@ -128,6 +134,12 @@
 		}
 	};
 
+	/**
+	 * Handle all touch movements
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
 	const handleTouchMove = (x: number, y: number): void => {
 		if (context && $mouseEventState === 'isTouching') {
 			if ($navBarState === 'drawRectangle') {
@@ -143,12 +155,11 @@
 	/**
 	 * Translate (Drag) the polygon element to a different position on the screen.
 	 *
-	 * @param x x posistion on the screen
+	 * @param x x position on the screen
 	 * @param y y position on the screen
-	 * @param context 2d Canvas context
+	 * @param context Canvas Rendering context
 	 * @param selectedPolygonIndex the polygon we clicked on
 	 */
-
 	const handleTouchTranslate = (
 		x: number,
 		y: number,
@@ -170,8 +181,21 @@
 		drawHandles(polygon, context, highlightColor);
 	};
 
+	/**
+	 * Handle the movement of the mouse when it is not clicked.
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
 	const handleTouchScale = (x: number, y: number) => {};
 
+	/**
+	 * Create the shapes where charts will be put.
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 * @param context Canvas Rendering context
+	 */
 	const handleTouchCreateShapes = (
 		x: number,
 		y: number,
@@ -192,6 +216,12 @@
 		}
 	};
 
+	/**
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 * @param context Canvas Rendering context
+	 */
 	const handleTouchErase = (x: number, y: number, context: CanvasRenderingContext2D): void => {
 		const currentTouchPoint: Point = { x, y };
 		const polygon = getContainingPolygon(currentTouchPoint, polygons);
@@ -202,6 +232,12 @@
 		redraw(polygons, context, width, height, selectedPolygonIndex);
 	};
 
+	/**
+	 * Handle the end of touching movement
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
 	const handleTouchEnd = (x: number, y: number) => {
 		if (
 			$mouseEventState === 'isTouching' &&
@@ -226,7 +262,7 @@
 		mouseEventState.set('isHovering');
 	};
 
-	const handleClick = ({ offsetX: x, offsetY: y }: MouseEvent) => {
+	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		const point: Point = { x, y };
 		const polygon = getContainingPolygon(point, polygons);
 		if (polygon) {
