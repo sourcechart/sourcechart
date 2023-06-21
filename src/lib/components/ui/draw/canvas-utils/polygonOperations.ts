@@ -1,4 +1,4 @@
-import type { Point, Polygon } from './types';
+import type { Point, Polygon } from './Types';
 
 export function isPointInPolygon(point: Point, polygon: Polygon): boolean {
 	const x = point.x;

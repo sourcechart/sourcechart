@@ -18,12 +18,12 @@
 		navBarState,
 		mouseEventState,
 		isMouseDown
-	} from '$lib/io/stores';
+	} from '$lib/io/Stores';
 	import { generateID } from '$lib/io/generateID';
-	import { addChartMetaData } from '$lib/io/chartMetaDataManagement';
+	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
-	import { redraw, drawRectangle, drawHandles } from './canvas-utils/draw';
-	import { getContainingPolygon, isPointInPolygon } from './canvas-utils/polygonOperations';
+	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
+	import { getContainingPolygon, isPointInPolygon } from './canvas-utils/PolygonOperations';
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -185,7 +185,7 @@
 	};
 
 	/**
-	 * Handle the movement of the mouse when it is not clicked.
+	 * Handle the scaling of a rectangle to different heights and widths
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen

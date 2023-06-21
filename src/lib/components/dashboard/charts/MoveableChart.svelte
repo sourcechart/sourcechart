@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Moveable from 'svelte-moveable';
 	import EChart from './eChart.svelte';
-	import { clickEscapeKey } from '$lib/actions/clickActions';
-	import { mostRecentChartID, allCharts, activeSidebar, clearChartOptions } from '$lib/io/stores';
+	import { clickEscapeKey } from '$lib/actions/ClickActions';
+	import { mostRecentChartID, allCharts, activeSidebar, clearChartOptions } from '$lib/io/Stores';
 
 	export let chartOptions: object;
 	export let id: string;

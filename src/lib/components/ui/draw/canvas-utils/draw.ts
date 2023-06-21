@@ -1,4 +1,4 @@
-import type { Polygon, Point } from './types';
+import type { Polygon, Point } from './Types';
 
 const drawRectangle = (
 	polygon: Polygon,

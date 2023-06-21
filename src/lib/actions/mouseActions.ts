@@ -6,7 +6,7 @@
  *  This will also have to be explored on cell phones.
  */
 import { onDestroy } from 'svelte';
-import { isMouseDown } from '$lib/io/stores';
+import { isMouseDown } from '$lib/io/Stores';
 
 export function clickOutside(node: HTMLElement, options: any = {}) {
 	const handleClick = (event: MouseEvent) => {

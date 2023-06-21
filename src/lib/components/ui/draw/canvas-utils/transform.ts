@@ -1,1 +1,1 @@
-const twoDimensionTranlate = () => {};
+const CalculateMidPoints = () => {};

@@ -1,5 +1,3 @@
-
-
 export class Query {
 	// Builder Class for constructing DuckDB Queries. If you want to add a feature, add a new method and call it in new Query(queryObject).build
 	queryObject: QueryObject;
