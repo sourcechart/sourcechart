@@ -46,6 +46,7 @@
 	let dragOffset: Point = { x: 0, y: 0 };
 	let hoverIntersection: boolean = false;
 
+	const tolerance: number = 10;
 	const handleRadius: number = 0.01;
 
 	$: if (context) highlightColor = 'red';
@@ -60,7 +61,7 @@
 	}
 
 	/**
-	 * Remove Chart from the $allCharts stores
+	 * ### Remove Chart from the $allCharts stores
 	 */
 	const removeChart = () => {
 		$clearChartOptions = true;
@@ -72,7 +73,7 @@
 	};
 
 	/**
-	 * Remove chart from dashboard on BackSpace/Delete/Escape.
+	 * ### Remove chart from dashboard on BackSpace/Delete/Escape.
 	 * @param e Keyboard event to delete items.
 	 *
 	 */
@@ -89,7 +90,7 @@
 	};
 
 	/**
-	 * Handle the touch start event.
+	 * ### Handle the touch start event.
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
@@ -121,7 +122,7 @@
 	};
 
 	/**
-	 * Handle the movement of the mouse when it is not clicked.
+	 * ### Handle the movement of the mouse when it is not clicked.
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
@@ -136,7 +137,7 @@
 	};
 
 	/**
-	 * Handle all touch movements
+	 * ### Handle all touch movements
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
@@ -160,7 +161,7 @@
 	};
 
 	/**
-	 * Translate (Drag) the polygon element to a different position on the screen.
+	 * ### Translate (Drag) the polygon element to a different position on the screen.
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
@@ -216,7 +217,7 @@
 	};
 
 	/**
-	 * Create the shapes where charts will be put.
+	 * ### Create the shapes where charts will be put.
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
@@ -243,7 +244,7 @@
 	};
 
 	/**
-	 * On intersection of a polygon while your mouse is touching erase
+	 * ### On intersection of a polygon while your mouse is touching erase
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
@@ -258,6 +259,38 @@
 		}
 		redraw(polygons, context, width, height, selectedPolygonIndex);
 	};
+
+	const getHandlesHovered = (polygon: Polygon, edges: Point[]) => {
+		const { x, y } = currentMousePosition;
+
+		if (Math.abs(y - polygon.vertices[0].y) < tolerance) {
+			return 'top';
+		} else if (Math.abs(x - polygon.vertices[1].x) < tolerance) {
+			return 'right';
+		} else if (Math.abs(y - polygon.vertices[2].y) < tolerance) {
+			return 'bottom';
+		} else if (Math.abs(x - polygon.vertices[3].x) < tolerance) {
+			return 'left';
+		}
+	};
+
+	const scaleEdges = (polygon: Polygon, scaleEdge: string, x: number, y: number) => {
+		if (scaleEdge === 'top') {
+			polygon.vertices[0].y = y;
+			polygon.vertices[1].y = y;
+		} else if (scaleEdge === 'right') {
+			polygon.vertices[1].x = x;
+			polygon.vertices[2].x = x;
+		} else if (scaleEdge === 'bottom') {
+			polygon.vertices[2].y = y;
+			polygon.vertices[3].y = y;
+		} else if (scaleEdge === 'left') {
+			polygon.vertices[3].x = x;
+			polygon.vertices[0].x = x;
+		}
+	};
+
+	const scaleCorners = (polygon: Polygon, scaleCorner: string, x: number, y: number) => {};
 
 	/**
 	 * Handle the end of touching movement
@@ -286,6 +319,11 @@
 				drawHandles(polygon, context, highlightColor, handleRadius);
 			}
 		}
+		if ($mouseEventState === 'isScaling' && scalingHandleIndex !== null) {
+			handleTouchScale(x, y);
+			scalingHandleIndex = null;
+		}
+
 		mouseEventState.set('isHovering');
 	};
 

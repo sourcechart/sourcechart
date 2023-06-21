@@ -12,7 +12,6 @@
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, mostRecentChartID } from '$lib/io/Stores';
 
-	$: console.log($mostRecentChartID);
 	function handleInside(event: Event) {
 		//@ts-ignore
 		$mostRecentChartID = event.target.id;
