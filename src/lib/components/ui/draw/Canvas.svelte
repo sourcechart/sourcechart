@@ -45,13 +45,10 @@
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
 
-	let t: number;
-	let l: number;
-	$: console.log($navBarState, ' ', $isMouseDown, ' ', $mouseEventState);
-
+	let hoverIntersection: boolean = false;
 	$: if (context) highlightColor = 'red';
-	$: cursorClass = $isMouseDown ? cursorStyle : '';
-
+	$: cursorClass = hoverIntersection ? 'grabbable' : '';
+	$: console.log(cursorClass);
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -61,7 +58,7 @@
 	}
 
 	/**
-	 * Remove Chart from the $allCharts
+	 * Remove Chart from the $allCharts stores
 	 */
 	const removeChart = () => {
 		$clearChartOptions = true;
@@ -74,7 +71,8 @@
 
 	/**
 	 * Remove chart from dashboard.
-	 * @param e
+	 * @param e Keyboard event to delete items.
+	 *
 	 */
 	const handleKeyDown = (e: KeyboardEvent) => {
 		if (
@@ -97,7 +95,6 @@
 	const handleTouchStart = (x: number, y: number): void => {
 		//check if the user is not currently drawing.
 		id = generateID();
-
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
 			if (polygon && isPointInPolygon({ x, y }, polygon)) {
@@ -130,11 +127,9 @@
 	const handleMouseMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		for (let i = 0; i < polygons.length; i++) {
-			const polygon = polygons[i];
-			if (isPointInPolygon(currentMousePosition, polygon)) {
-				cursorStyle = 'grabbable';
-				break;
-			}
+			const poly = polygons[i];
+			let checkGrabbable = isPointInPolygon(currentMousePosition, poly) && $navBarState == 'select';
+			hoverIntersection = checkGrabbable ? true : false;
 		}
 	};
 
