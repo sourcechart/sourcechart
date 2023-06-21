@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { navBarState } from '$lib/io/stores';
+	import { navBarState } from '$lib/io/Stores';
 
 	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
