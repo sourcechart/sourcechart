@@ -1,4 +1,5 @@
 import type { Polygon, Point } from './Types';
+import { calculateHandles } from './Transform';
 
 const drawRectangle = (
 	polygon: Polygon,
@@ -33,19 +34,8 @@ const redraw = (
 };
 
 const drawHandles = (polygon: Polygon, context: CanvasRenderingContext2D, color: string) => {
-	let handlePositions: Point[] = [...polygon.vertices];
-
-	// Calculate and add midway points between corners to the handlePositions
-	for (let i = 0; i < polygon.vertices.length; i++) {
-		let nextIndex = (i + 1) % polygon.vertices.length; // Ensures that the lahighst point connects to the first
-		let midPoint: Point = {
-			x: (polygon.vertices[i].x + polygon.vertices[nextIndex].x) / 2,
-			y: (polygon.vertices[i].y + polygon.vertices[nextIndex].y) / 2
-		};
-		handlePositions.push(midPoint);
-	}
-
-	// Draw the outline and circles
+	let handlePositions: Point[];
+	handlePositions = calculateHandles(polygon);
 	context.strokeStyle = color;
 	context.lineWidth = 1;
 	handlePositions.forEach((point) => {

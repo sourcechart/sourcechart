@@ -19,7 +19,7 @@
 		mouseEventState,
 		isMouseDown
 	} from '$lib/io/Stores';
-	import { generateID } from '$lib/io/generateID';
+	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
 	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
@@ -49,7 +49,8 @@
 	let hoverIntersection: boolean = false;
 	$: if (context) highlightColor = 'red';
 	$: cursorClass = hoverIntersection ? 'grabbable' : '';
-	$: console.log(cursorClass);
+	//$: console.log(cursorClass);
+
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
