@@ -60,6 +60,9 @@
 		});
 	}
 
+	/**
+	 * Remove Chart from the $allCharts
+	 */
 	const removeChart = () => {
 		$clearChartOptions = true;
 		setTimeout(() => {
@@ -69,6 +72,10 @@
 		$activeSidebar = false;
 	};
 
+	/**
+	 * Remove chart from dashboard.
+	 * @param e
+	 */
 	const handleKeyDown = (e: KeyboardEvent) => {
 		if (
 			(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
@@ -218,6 +225,7 @@
 	};
 
 	/**
+	 * On intersection of a polygon while your mouse is touching erase
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
@@ -264,6 +272,7 @@
 	};
 
 	/**
+	 * Handles the click functionality of the dashboard
 	 *
 	 * @param Mouse Event
 	 */
