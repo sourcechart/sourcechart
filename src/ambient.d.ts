@@ -87,7 +87,7 @@ interface Point {
  *        isHovering: default state of the mouse where you can move it but it is not clicked                                                                                                                  *
  *****************************************************************************************************************************/
 
-type MouseEvents = 'isHovering' | 'isTouching';
+type MouseEvents = 'isHovering' | 'isTouching' | 'isMoving' | 'isResizing';
 
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
 

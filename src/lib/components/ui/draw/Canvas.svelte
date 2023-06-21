@@ -18,16 +18,15 @@
 		navBarState,
 		mouseEventState
 	} from '$lib/io/stores';
-
 	import { generateID } from '$lib/io/generateID';
 	import { addChartMetaData } from '$lib/io/chartMetaDataManagement';
-	import { redraw, drawRectangle, drawHandles } from './canvas-utils/draw';
 
-	import { onMount } from 'svelte';
+	import { redraw, drawRectangle, drawHandles } from './canvas-utils/draw';
 	import { getContainingPolygon } from './canvas-utils/polygonOperations';
 
-	$: console.log($mouseEventState);
-	type handleEndTypes = 'eraser' | 'select';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+
 	let id: string;
 	let width: number;
 	let height: number;
@@ -37,14 +36,15 @@
 	let selectedPolygonIndex: number | null = null;
 	let polygons: Polygon[] = [];
 	let start: Point;
+	let dragOffset: Point = { x: 0, y: 0 };
 
-	onMount(() => {
-		context = canvas.getContext('2d');
-		if (context) context.strokeStyle = 'red';
-
-		width = window.innerWidth;
-		height = window.innerHeight;
-	});
+	if (browser) {
+		onMount(() => {
+			context = canvas.getContext('2d');
+			width = window.innerWidth;
+			height = window.innerHeight;
+		});
+	}
 
 	function removeChart() {
 		$clearChartOptions = true;
@@ -66,6 +66,7 @@
 			selectedPolygonIndex = null;
 		}
 	}
+	const onMOuseMove = (x: number, y: number): void => {};
 
 	const handleTouchStart = (x: number, y: number): void => {
 		//check if the user is not currently drawing.
@@ -83,6 +84,8 @@
 				handleTouchCreateShapes(x, y, context);
 			} else if ($navBarState === 'eraser') {
 				handleTouchErase(x, y, context);
+			} else if ($navBarState === 'select') {
+				console.log('foo');
 			}
 		}
 	};
