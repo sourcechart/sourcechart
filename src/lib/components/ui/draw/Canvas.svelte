@@ -16,13 +16,14 @@
 		clearChartOptions,
 		mostRecentChartID,
 		navBarState,
-		mouseEventState
+		mouseEventState,
+		isMouseDown
 	} from '$lib/io/stores';
 	import { generateID } from '$lib/io/generateID';
 	import { addChartMetaData } from '$lib/io/chartMetaDataManagement';
 
 	import { redraw, drawRectangle, drawHandles } from './canvas-utils/draw';
-	import { getContainingPolygon } from './canvas-utils/polygonOperations';
+	import { getContainingPolygon, isPointInPolygon } from './canvas-utils/polygonOperations';
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -36,7 +37,10 @@
 	let selectedPolygonIndex: number | null = null;
 	let polygons: Polygon[] = [];
 	let start: Point;
+	let cursorStyle: string;
+
 	let dragOffset: Point = { x: 0, y: 0 };
+	$: cursorClass = $isMouseDown ? cursorStyle : '';
 
 	if (browser) {
 		onMount(() => {
@@ -66,7 +70,18 @@
 			selectedPolygonIndex = null;
 		}
 	}
-	const onMOuseMove = (x: number, y: number): void => {};
+	const onMouseMove = (x: number, y: number): void => {
+		let currentMousePosition = { x, y };
+		for (let i = 0; i < polygons.length; i++) {
+			const polygon = polygons[i];
+			//		const edgeHovered = getEdgeHovered(polygon);
+			//isPointInPolygon(currentMousePosition );
+			if (isPointInPolygon(currentMousePosition, polygon)) {
+				cursorStyle = 'grabbable';
+				break;
+			}
+		}
+	};
 
 	const handleTouchStart = (x: number, y: number): void => {
 		//check if the user is not currently drawing.
@@ -154,6 +169,10 @@
 
 <div {id}>
 	<canvas
+		{width}
+		{height}
+		class={cursorClass}
+		bind:this={canvas}
 		use:trackMouseState
 		use:touchMove={{
 			onMove: handleTouchMove
@@ -169,9 +188,6 @@
 		use:touchEnd={{
 			onEnd: handleTouchEnd
 		}}
-		bind:this={canvas}
-		{width}
-		{height}
 	/>
 </div>
 
