@@ -153,6 +153,8 @@
 				selectedPolygonIndex !== null
 			) {
 				handleTouchTranslate(x, y, context, selectedPolygonIndex, highlightColor);
+			} else if ($mouseEventState === 'isScaling' && scalingHandleIndex !== null) {
+				handleTouchScale(x, y);
 			}
 		}
 	};
