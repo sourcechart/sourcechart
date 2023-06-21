@@ -1,5 +1,3 @@
-import type { Point, Polygon } from './Types';
-
 export function isPointInPolygon(point: Point, polygon: Polygon): boolean {
 	const x = point.x;
 	const y = point.y;
@@ -17,8 +15,6 @@ export function isPointInPolygon(point: Point, polygon: Polygon): boolean {
 	}
 	return inside;
 }
-
-// get the polygon which the point is inside, if any
 
 /**
  * Get the nearest surrounding polygon that a point that is in `x` and `y`.

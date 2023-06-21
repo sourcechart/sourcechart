@@ -8,7 +8,7 @@
 		trackMouseState,
 		onMouseLeave,
 		touchEnd
-	} from '$lib/actions/mouseActions';
+	} from '$lib/actions/MouseActions';
 
 	import {
 		activeSidebar,
@@ -22,6 +22,7 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
+	import { calculateHandles } from './canvas-utils/Transform';
 	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
 	import { getContainingPolygon, isPointInPolygon } from './canvas-utils/PolygonOperations';
 
@@ -29,24 +30,23 @@
 	import { browser } from '$app/environment';
 
 	let id: string;
+	let highlightColor: string;
+
 	let width: number = 0;
 	let height: number = 0;
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
-	let selectedPolygonIndex: number | null = null;
 
-	let cursorStyle: string;
-	let highlightColor: string;
+	let selectedPolygonIndex: number | null = null;
+	let scalingHandleIndex: number | null = null;
 
 	let polygons: Polygon[] = [];
-
-	$: console.log($navBarState);
 	let start: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
-
 	let hoverIntersection: boolean = false;
+
 	$: if (context) highlightColor = 'red';
 	$: cursorClass = hoverIntersection ? 'grabbable' : '';
 	//$: console.log(cursorClass);
@@ -101,7 +101,7 @@
 			const polygon = polygons[selectedPolygonIndex];
 			if (polygon && isPointInPolygon({ x, y }, polygon)) {
 				dragOffset = { x, y };
-				mouseEventState.set('isMoving');
+				mouseEventState.set('isTranslating');
 				return;
 			}
 		}
@@ -114,7 +114,7 @@
 			$navBarState === 'select' &&
 			selectedPolygonIndex !== null
 		) {
-			mouseEventState.set('isMoving');
+			mouseEventState.set('isTranslating');
 			dragOffset = { x, y };
 			return;
 		}
@@ -149,7 +149,7 @@
 				handleTouchErase(x, y, context);
 			} else if (
 				$navBarState === 'select' &&
-				$mouseEventState === 'isMoving' &&
+				$mouseEventState === 'isTranslating' &&
 				selectedPolygonIndex !== null
 			) {
 				handleTouchTranslate(x, y, context, selectedPolygonIndex, highlightColor);
@@ -192,7 +192,12 @@
 	 * @param x x position on the screen
 	 * @param y y position on the screen
 	 */
-	const handleTouchScale = (x: number, y: number) => {};
+	const handleTouchScale = (x: number, y: number) => {
+		if (selectedPolygonIndex !== null) {
+			const polygon = polygons[selectedPolygonIndex];
+			let handlePositions: Point[] = [...polygon.vertices];
+		}
+	};
 
 	/**
 	 * Create the shapes where charts will be put.

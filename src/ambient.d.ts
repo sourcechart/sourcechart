@@ -81,13 +81,13 @@ interface Point {
 
 /**
  *  DEFINITIONS
- *  @param isMoving when you are moving a rectangle to a different position withough changing the dimensions
- *  @param isResizing when you change the width, height or radius, of a polygon that already exists by manipulating and edge
+ *  @param isTranslating when you are moving a rectangle to a different position withough changing the dimensions
+ *  @param isScaling when you change the width, height or radius, of a polygon that already exists by manipulating and edge
  *  @param isHovering default state of the mouse where you can move it but it is not clicked
  *  @param isTouching when you are move your mouse and it is clicked
  */
 
-type MouseEvents = 'isHovering' | 'isTouching' | 'isMoving' | 'isResizing';
+type MouseEvents = 'isHovering' | 'isTouching' | 'isTranslating' | 'isScaling';
 
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
 
