@@ -35,10 +35,14 @@
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let selectedPolygonIndex: number | null = null;
-	let polygons: Polygon[] = [];
-	let start: Point;
+
 	let cursorStyle: string;
 	let highlightColor: string;
+
+	let polygons: Polygon[] = [];
+
+	let start: Point = { x: 0, y: 0 };
+	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
 
 	$: if (context) highlightColor = 'red';
@@ -104,13 +108,13 @@
 			return;
 		}
 	};
+
 	/**
 	 * Handlers
 	 *
 	 * @param x
 	 * @param y
 	 */
-
 	const handleMouseMove = (x: number, y: number): void => {
 		let currentMousePosition = { x, y };
 		for (let i = 0; i < polygons.length; i++) {
