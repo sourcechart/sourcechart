@@ -324,9 +324,6 @@
 			width = window.innerWidth;
 			height = window.innerHeight;
 		}
-		const { top, left } = canvas.getBoundingClientRect();
-		t = top;
-		l = left;
 	}}
 />
 
