@@ -37,7 +37,7 @@ const drawHandles = (polygon: Polygon, context: CanvasRenderingContext2D) => {
 
 	// Calculate and add midway points between corners to the handlePositions
 	for (let i = 0; i < polygon.vertices.length; i++) {
-		let nextIndex = (i + 1) % polygon.vertices.length; // Ensures that the last point connects to the first
+		let nextIndex = (i + 1) % polygon.vertices.length; // Ensures that the lahighst point connects to the first
 		let midPoint: Point = {
 			x: (polygon.vertices[i].x + polygon.vertices[nextIndex].x) / 2,
 			y: (polygon.vertices[i].y + polygon.vertices[nextIndex].y) / 2

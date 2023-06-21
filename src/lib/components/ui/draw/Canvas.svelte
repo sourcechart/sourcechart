@@ -38,15 +38,80 @@
 	let polygons: Polygon[] = [];
 	let start: Point;
 	let cursorStyle: string;
-	let highlightLineColor: string;
-
+	let highlightColor: string;
 	let dragOffset: Point = { x: 0, y: 0 };
 
-	$: if (context) highlightLineColor = 'red';
-
+	$: if (context) highlightColor = 'red';
 	$: cursorClass = $isMouseDown ? cursorStyle : '';
+
+	if (browser) {
+		onMount(() => {
+			context = canvas.getContext('2d');
+			width = window.innerWidth;
+			height = window.innerHeight;
+		});
+	}
+
+	const removeChart = () => {
+		$clearChartOptions = true;
+		setTimeout(() => {
+			$clearChartOptions = false;
+		}, 10);
+		$allCharts = $allCharts.filter((item) => item.chartID !== $mostRecentChartID);
+		$activeSidebar = false;
+	};
+
+	const handleKeyDown = (e: KeyboardEvent) => {
+		if (
+			(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
+			selectedPolygonIndex !== null
+		) {
+			removeChart();
+			$activeSidebar = false;
+			polygons.splice(selectedPolygonIndex, 1);
+			selectedPolygonIndex = null;
+		}
+	};
+
+	const handleTouchStart = (x: number, y: number): void => {
+		//check if the user is not currently drawing.
+		id = generateID();
+
+		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
+			const polygon = polygons[selectedPolygonIndex];
+			if (
+				//I might need this
+				$mouseEventState === 'isTouching' &&
+				polygon &&
+				isPointInPolygon({ x, y }, polygon)
+			) {
+				mouseEventState.set('isMoving');
+				dragOffset = { x, y };
+				return;
+			}
+		}
+		if ($mouseEventState !== 'isTouching') {
+			addChartMetaData(id, $navBarState);
+			mouseEventState.set('isTouching');
+			start = { x, y };
+		} else if (
+			$mouseEventState === 'isTouching' &&
+			$navBarState === 'select' &&
+			selectedPolygonIndex !== null
+		) {
+			mouseEventState.set('isMoving');
+			dragOffset = { x, y };
+			return;
+		}
+	};
+	/**
+	 * Handlers
+	 *
+	 * @param x
+	 * @param y
+	 */
+
 	const handleMouseMove = (x: number, y: number): void => {
-		console.log('foo');
 		let currentMousePosition = { x, y };
 		for (let i = 0; i < polygons.length; i++) {
 			const polygon = polygons[i];
@@ -59,56 +124,43 @@
 		}
 	};
 
-	if (browser) {
-		onMount(() => {
-			context = canvas.getContext('2d');
-			width = window.innerWidth;
-			height = window.innerHeight;
-		});
-	}
-
-	function removeChart() {
-		$clearChartOptions = true;
-		setTimeout(() => {
-			$clearChartOptions = false;
-		}, 10);
-		$allCharts = $allCharts.filter((item) => item.chartID !== $mostRecentChartID);
-		$activeSidebar = false;
-	}
-
-	function handleKeyDown(e: KeyboardEvent) {
-		if (
-			(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
-			selectedPolygonIndex !== null
-		) {
-			removeChart();
-			$activeSidebar = false;
-			polygons.splice(selectedPolygonIndex, 1);
-			selectedPolygonIndex = null;
-		}
-	}
-
-	const handleTouchStart = (x: number, y: number): void => {
-		//check if the user is not currently drawing.
-		id = generateID();
-		if ($mouseEventState !== 'isTouching') {
-			addChartMetaData(id, $navBarState);
-			mouseEventState.set('isTouching');
-			start = { x, y };
-		}
-	};
-
 	const handleTouchMove = (x: number, y: number): void => {
 		if (context && $mouseEventState === 'isTouching') {
 			if ($navBarState === 'drawRectangle') {
 				handleTouchCreateShapes(x, y, context);
 			} else if ($navBarState === 'eraser') {
 				handleTouchErase(x, y, context);
-			} else if ($navBarState === 'select') {
-				console.log('foo');
+			} else if ($navBarState === 'select' && selectedPolygonIndex !== null) {
+				handleTouchTranslate(x, y, context, selectedPolygonIndex);
 			}
 		}
 	};
+
+	/**
+	 * Translate (Drag) the polygon element to a different position on the screen.
+	 *
+	 * @param x x posistion on the screen
+	 * @param y y position on the screen
+	 * @param context 2d Canvas context
+	 * @param selectedPolygonIndex the polygon we clicked on
+	 */
+
+	const handleTouchTranslate = (
+		x: number,
+		y: number,
+		context: CanvasRenderingContext2D,
+		selectedPolygonIndex: number
+	) => {
+		const dx = x - dragOffset.x;
+		const dy = y - dragOffset.y;
+		polygons[selectedPolygonIndex].vertices = polygons[selectedPolygonIndex].vertices.map(
+			(vertex) => ({ x: vertex.x + dx, y: vertex.y + dy })
+		);
+		dragOffset = { x, y };
+		redraw(polygons, context, width, height, selectedPolygonIndex);
+	};
+
+	const handleTouchScale = (x: number, y: number) => {};
 
 	const handleTouchCreateShapes = (
 		x: number,
@@ -126,7 +178,7 @@
 					{ x: start.x, y: y }
 				]
 			};
-			drawRectangle(polygon, context, highlightLineColor);
+			drawRectangle(polygon, context, highlightColor);
 		}
 	};
 
@@ -157,7 +209,7 @@
 			};
 			polygons.push(polygon);
 			if (context) {
-				context.strokeStyle = highlightLineColor;
+				context.strokeStyle = highlightColor;
 				drawHandles(polygon, context);
 			}
 		}
@@ -172,17 +224,10 @@
 		}
 		if (context && polygon) {
 			redraw(polygons, context, width, height, selectedPolygonIndex);
-
-			context.strokeStyle = highlightLineColor;
+			context.strokeStyle = highlightColor;
 			drawHandles(polygon, context);
 		}
 	};
-
-	function addHandleToShape(
-		polygon: Polygon,
-		lineColor: string,
-		context: CanvasRenderingContext2D
-	) {}
 </script>
 
 <div {id}>
