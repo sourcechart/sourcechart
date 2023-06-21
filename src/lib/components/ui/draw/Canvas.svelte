@@ -195,7 +195,21 @@
 	const handleTouchScale = (x: number, y: number) => {
 		if (selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
-			let handlePositions: Point[] = [...polygon.vertices];
+			//let handlePositions: Point[] = [...polygon.vertices];
+			if (scalingHandleIndex) {
+				if (scalingHandleIndex < polygon.vertices.length) {
+					polygon.vertices[scalingHandleIndex] = { x, y };
+				} else {
+					let vertexIndex = scalingHandleIndex - polygon.vertices.length;
+					let nextVertexIndex = (scalingHandleIndex + 1) % polygon.vertices.length;
+					polygon.vertices[vertexIndex].x = x;
+					polygon.vertices[nextVertexIndex].x = x;
+				}
+			}
+			if (context) {
+				redraw(polygons, context, width, height, selectedPolygonIndex);
+				drawHandles(polygon, context, highlightColor, handleRadius);
+			}
 		}
 	};
 
@@ -284,8 +298,8 @@
 		let handlePositions: Point[] = [];
 		if (polygon) {
 			selectedPolygonIndex = polygons.indexOf(polygon);
-			handlePositions = calculateHandles(polygon);
-			getScalingHandleIndex(handlePositions, point, handleRadius);
+			handlePositions = calculateHandles(polygon); //This might have to be on the onMovePart
+			scalingHandleIndex = getScalingHandleIndex(handlePositions, point, handleRadius);
 		}
 		if (context && polygon) {
 			redraw(polygons, context, width, height, selectedPolygonIndex);
