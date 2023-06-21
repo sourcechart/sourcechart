@@ -41,6 +41,7 @@
 
 	let polygons: Polygon[] = [];
 
+	$: console.log($navBarState);
 	let start: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };

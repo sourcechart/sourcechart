@@ -1,20 +1,17 @@
 <!-- Eraser icon by Arthur Shlain from Usefulicons.com -->
-<script>
+<script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { navBarState } from '$lib/io/Stores';
 
 	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
 
-	function clickBoundary() {
+	const handleClick = (e: MouseEvent) => {
 		dispatch('mode', 'eraser');
-	}
+	};
 </script>
 
-<button
-	on:click={clickBoundary}
-	class={mode === 'eraser' ? 'dark:bg-gray-600' : 'dark:bg-gray-700'}
->
+<button on:click={handleClick} class={mode === 'eraser' ? 'dark:bg-gray-600' : 'dark:bg-gray-700'}>
 	<svg xmlns="http://www.w3.org/2000/svg" width="17" height="19" viewBox="0 0 17 19" fill="none">
 		<rect width="17" height="19" fill="rgba(0,0,0,0)" />
 		<rect

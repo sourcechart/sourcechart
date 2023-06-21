@@ -5,13 +5,14 @@
 	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
 
-	function clickBoundary() {
+	function clickButton(e: MouseEvent) {
+		console.log('draw rectangle');
 		dispatch('mode', 'drawRectangle');
 	}
 </script>
 
 <button
-	on:click={clickBoundary}
+	on:click={clickButton}
 	class={mode === 'drawRectangle' ? 'dark:bg-gray-600' : 'dark:bg-gray-700'}
 >
 	<svg x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30">
