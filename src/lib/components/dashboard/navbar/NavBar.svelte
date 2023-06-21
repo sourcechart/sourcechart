@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Cursor, Draw, Eraser } from './navbar-icons';
 	import NavBarWrapper from '$lib/components/dashboard/navbar/NavBarWrapper.svelte';
-	import { navBarState, activeSidebar } from '$lib/io/stores';
+	import { navBarState, activeSidebar } from '$lib/io/Stores';
 
 	let icons = [
 		{

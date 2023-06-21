@@ -10,7 +10,7 @@
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
 	import { clickInside } from '$lib/actions/mouseActions';
-	import { activeSidebar, mostRecentChartID } from '$lib/io/stores';
+	import { activeSidebar, mostRecentChartID } from '$lib/io/Stores';
 
 	$: console.log($mostRecentChartID);
 	function handleInside(event: Event) {

@@ -1,6 +1,6 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
-import { Query } from '$lib/io/queryBuilder';
+import { Query } from '$lib/io/QueryBuilder';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);

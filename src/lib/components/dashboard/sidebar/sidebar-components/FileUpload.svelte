@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Fileupload, Label, Listgroup, ListgroupItem } from 'flowbite-svelte';
 	import { DuckDBClient } from '$lib/io/duckdbcli';
-	import { generateID } from '$lib/io/generateID';
-	import { fileUploadStore } from '$lib/io/stores';
+	import { generateID } from '$lib/io/GenerateID';
+	import { fileUploadStore } from '$lib/io/Stores';
 
 	let files: ListGroupItemType | null;
 

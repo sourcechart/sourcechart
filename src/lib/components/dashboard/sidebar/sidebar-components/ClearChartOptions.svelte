@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { clearChartOptions } from '$lib/io/stores';
+	import { clearChartOptions } from '$lib/io/Stores';
 	import { Button } from 'flowbite-svelte';
 
 	function clearUpdatedChartObject() {
