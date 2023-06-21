@@ -9,7 +9,7 @@
 		PlotDropdown
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
-	import { clickInside } from '$lib/actions/mouseActions';
+	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, mostRecentChartID } from '$lib/io/Stores';
 
 	$: console.log($mostRecentChartID);

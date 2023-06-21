@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DuckDBClient } from '$lib/io/duckdbcli';
+	import type { DuckDBClient } from '$lib/io/DuckDBCLI';
 	import {
 		getQuery,
 		getColumnsFromFile,
