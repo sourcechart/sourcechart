@@ -49,7 +49,6 @@
 
 	$: if (context) highlightColor = 'red';
 	$: cursorClass = hoverIntersection ? 'grabbable' : '';
-	//$: console.log(cursorClass);
 
 	if (browser) {
 		onMount(() => {
@@ -72,7 +71,7 @@
 	};
 
 	/**
-	 * Remove chart from dashboard.
+	 * Remove chart from dashboard on BackSpace/Delete/Escape.
 	 * @param e Keyboard event to delete items.
 	 *
 	 */
