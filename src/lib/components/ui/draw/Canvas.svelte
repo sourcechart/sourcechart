@@ -29,8 +29,8 @@
 	import { browser } from '$app/environment';
 
 	let id: string;
-	let width: number;
-	let height: number;
+	let width: number = 0;
+	let height: number = 0;
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -44,6 +44,10 @@
 	let start: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
+
+	let t: number;
+	let l: number;
+	$: console.log($navBarState, ' ', $isMouseDown, ' ', $mouseEventState);
 
 	$: if (context) highlightColor = 'red';
 	$: cursorClass = $isMouseDown ? cursorStyle : '';
@@ -89,14 +93,9 @@
 
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
-			if (
-				//I might need this
-				$mouseEventState === 'isTouching' &&
-				polygon &&
-				isPointInPolygon({ x, y }, polygon)
-			) {
-				mouseEventState.set('isMoving');
+			if (polygon && isPointInPolygon({ x, y }, polygon)) {
 				dragOffset = { x, y };
+				mouseEventState.set('isMoving');
 				return;
 			}
 		}
@@ -122,11 +121,9 @@
 	 * @param y y position on the screen
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
-		let currentMousePosition = { x, y };
+		currentMousePosition = { x: x, y: y };
 		for (let i = 0; i < polygons.length; i++) {
 			const polygon = polygons[i];
-			//		const edgeHovered = getEdgeHovered(polygon);
-			//isPointInPolygon(currentMousePosition );
 			if (isPointInPolygon(currentMousePosition, polygon)) {
 				cursorStyle = 'grabbable';
 				break;
@@ -141,12 +138,16 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchMove = (x: number, y: number): void => {
-		if (context && $mouseEventState === 'isTouching') {
-			if ($navBarState === 'drawRectangle') {
+		if (context) {
+			if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 				handleTouchCreateShapes(x, y, context);
-			} else if ($navBarState === 'eraser') {
+			} else if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
 				handleTouchErase(x, y, context);
-			} else if ($navBarState === 'select' && selectedPolygonIndex !== null) {
+			} else if (
+				$navBarState === 'select' &&
+				$mouseEventState === 'isMoving' &&
+				selectedPolygonIndex !== null
+			) {
 				handleTouchTranslate(x, y, context, selectedPolygonIndex, highlightColor);
 			}
 		}
@@ -314,6 +315,9 @@
 			width = window.innerWidth;
 			height = window.innerHeight;
 		}
+		const { top, left } = canvas.getBoundingClientRect();
+		t = top;
+		l = left;
 	}}
 />
 
