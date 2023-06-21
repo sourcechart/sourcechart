@@ -32,7 +32,7 @@ const redraw = (
 	});
 };
 
-const drawHandles = (polygon: Polygon, context: CanvasRenderingContext2D) => {
+const drawHandles = (polygon: Polygon, context: CanvasRenderingContext2D, color: string) => {
 	let handlePositions: Point[] = [...polygon.vertices];
 
 	// Calculate and add midway points between corners to the handlePositions
@@ -46,7 +46,8 @@ const drawHandles = (polygon: Polygon, context: CanvasRenderingContext2D) => {
 	}
 
 	// Draw the outline and circles
-	context.lineWidth = 1; // Change this to your preferred line width
+	context.strokeStyle = color;
+	context.lineWidth = 1;
 	handlePositions.forEach((point) => {
 		if (context) {
 			context.beginPath();

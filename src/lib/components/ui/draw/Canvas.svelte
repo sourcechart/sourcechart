@@ -153,11 +153,14 @@
 	) => {
 		const dx = x - dragOffset.x;
 		const dy = y - dragOffset.y;
-		polygons[selectedPolygonIndex].vertices = polygons[selectedPolygonIndex].vertices.map(
-			(vertex) => ({ x: vertex.x + dx, y: vertex.y + dy })
-		);
+		const polygon = polygons[selectedPolygonIndex];
+		polygon.vertices = polygon.vertices.map((vertex) => ({
+			x: vertex.x + dx,
+			y: vertex.y + dy
+		}));
 		dragOffset = { x, y };
 		redraw(polygons, context, width, height, selectedPolygonIndex);
+		drawHandles(polygon, context);
 	};
 
 	const handleTouchScale = (x: number, y: number) => {};
