@@ -40,7 +40,21 @@
 	let cursorStyle: string;
 
 	let dragOffset: Point = { x: 0, y: 0 };
+
 	$: cursorClass = $isMouseDown ? cursorStyle : '';
+	const handleMouseMove = (x: number, y: number): void => {
+		console.log('foo');
+		let currentMousePosition = { x, y };
+		for (let i = 0; i < polygons.length; i++) {
+			const polygon = polygons[i];
+			//		const edgeHovered = getEdgeHovered(polygon);
+			//isPointInPolygon(currentMousePosition );
+			if (isPointInPolygon(currentMousePosition, polygon)) {
+				cursorStyle = 'grabbable';
+				break;
+			}
+		}
+	};
 
 	if (browser) {
 		onMount(() => {
@@ -70,18 +84,6 @@
 			selectedPolygonIndex = null;
 		}
 	}
-	const onMouseMove = (x: number, y: number): void => {
-		let currentMousePosition = { x, y };
-		for (let i = 0; i < polygons.length; i++) {
-			const polygon = polygons[i];
-			//		const edgeHovered = getEdgeHovered(polygon);
-			//isPointInPolygon(currentMousePosition );
-			if (isPointInPolygon(currentMousePosition, polygon)) {
-				cursorStyle = 'grabbable';
-				break;
-			}
-		}
-	};
 
 	const handleTouchStart = (x: number, y: number): void => {
 		//check if the user is not currently drawing.
@@ -111,7 +113,7 @@
 		context: CanvasRenderingContext2D
 	): void => {
 		if ($navBarState === 'drawRectangle') {
-			redraw(polygons, context, width, height);
+			redraw(polygons, context, width, height, selectedPolygonIndex);
 			const polygon = {
 				id: id,
 				vertices: [
@@ -121,7 +123,7 @@
 					{ x: start.x, y: y }
 				]
 			};
-			drawRectangle(polygon, context);
+			drawRectangle(polygon, context, 'red');
 		}
 	};
 
@@ -132,7 +134,7 @@
 		if (index > -1) {
 			polygons.splice(index, 1);
 		}
-		redraw(polygons, context, width, height);
+		redraw(polygons, context, width, height, selectedPolygonIndex);
 	};
 
 	const handleTouchEnd = (x: number, y: number) => {
@@ -156,13 +158,23 @@
 		mouseEventState.set('isHovering');
 	};
 
+	const handleClick = ({ offsetX: x, offsetY: y }: MouseEvent) => {
+		const point: Point = { x, y };
+		const polygon = getContainingPolygon(point, polygons);
+		if (polygon) {
+			selectedPolygonIndex = polygons.indexOf(polygon);
+		}
+		if (context && polygon) {
+			redraw(polygons, context, width, height, selectedPolygonIndex);
+			addHandleToShape(polygon, 'red', context);
+		}
+	};
 	function addHandleToShape(
 		polygon: Polygon,
 		lineColor: string,
 		context: CanvasRenderingContext2D
 	) {
 		context.strokeStyle = lineColor;
-		context.stroke();
 		drawHandles(polygon, context);
 	}
 </script>
@@ -173,20 +185,24 @@
 		{height}
 		class={cursorClass}
 		bind:this={canvas}
+		on:click={handleClick}
 		use:trackMouseState
+		use:touchStart={{
+			onStart: handleTouchStart
+		}}
+		use:mouseMove={{
+			onMove: handleMouseMove
+		}}
 		use:touchMove={{
 			onMove: handleTouchMove
+		}}
+		use:touchEnd={{
+			onEnd: handleTouchEnd
 		}}
 		use:onMouseLeave={{
 			onLeave: () => {
 				console.log('leave');
 			}
-		}}
-		use:touchStart={{
-			onStart: handleTouchStart
-		}}
-		use:touchEnd={{
-			onEnd: handleTouchEnd
 		}}
 	/>
 </div>
@@ -199,3 +215,31 @@
 		}
 	}}
 />
+
+<style>
+	.grabbable {
+		cursor: grab;
+	}
+	.ns-resize,
+	.ew-resize {
+		cursor: move; /* fallback if grab cursor is unsupported */
+		cursor: -moz-grab;
+		cursor: -webkit-grab;
+	}
+
+	.grabbable:active,
+	.ns-resize:active,
+	.ew-resize:active {
+		cursor: grabbing;
+		cursor: -moz-grabbing;
+		cursor: -webkit-grabbing;
+	}
+
+	.ns-resize {
+		cursor: ns-resize;
+	}
+
+	.ew-resize {
+		cursor: ew-resize;
+	}
+</style>

@@ -1,5 +1,10 @@
 import type { Polygon, Point } from './types';
-const drawRectangle = (polygon: Polygon, context: CanvasRenderingContext2D): void => {
+
+const drawRectangle = (
+	polygon: Polygon,
+	context: CanvasRenderingContext2D,
+	lineColor: string
+): void => {
 	context.beginPath();
 	polygon.vertices.forEach((point, idx) => {
 		if (idx === 0) {
@@ -9,7 +14,7 @@ const drawRectangle = (polygon: Polygon, context: CanvasRenderingContext2D): voi
 		}
 	});
 	context.closePath();
-	context.strokeStyle = 'black';
+	context.strokeStyle = lineColor;
 	context.stroke();
 };
 
@@ -17,11 +22,13 @@ const redraw = (
 	polygons: Polygon[],
 	context: CanvasRenderingContext2D,
 	width: number,
-	height: number
+	height: number,
+	selectedPolygonIndex: number | null
 ): void => {
 	context.clearRect(0, 0, width, height);
-	polygons.forEach((polygon) => {
-		drawRectangle(polygon, context);
+	polygons.forEach((polygon, i) => {
+		let lineColor = i === selectedPolygonIndex ? 'red' : 'black';
+		drawRectangle(polygon, context, lineColor);
 	});
 };
 
@@ -39,7 +46,6 @@ const drawHandles = (polygon: Polygon, context: CanvasRenderingContext2D) => {
 	}
 
 	// Draw the outline and circles
-	context.strokeStyle = 'lime'; // Change this to your preferred color
 	context.lineWidth = 1; // Change this to your preferred line width
 	handlePositions.forEach((point) => {
 		if (context) {
@@ -49,5 +55,4 @@ const drawHandles = (polygon: Polygon, context: CanvasRenderingContext2D) => {
 		}
 	});
 };
-
 export { drawRectangle, redraw, drawHandles };
