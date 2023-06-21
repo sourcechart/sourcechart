@@ -1,4 +1,3 @@
-import type { Polygon, Point } from './Types';
 import { calculateHandles } from './Transform';
 
 const drawRectangle = (
