@@ -36,7 +36,6 @@
 	let selectedPolygonIndex: number | null = null;
 	let polygons: Polygon[] = [];
 	let start: Point;
-	let dragOffset: Point = { x: 0, y: 0 };
 
 	onMount(() => {
 		context = canvas.getContext('2d');
@@ -70,7 +69,7 @@
 	const handleTouchStart = (x: number, y: number): void => {
 		//check if the user is not currently drawing.
 		id = generateID();
-		if ($navBarState in ['drawCircle', 'drawRectangle'] && $mouseEventState !== 'isTouching') {
+		if ($mouseEventState !== 'isTouching') {
 			addChartMetaData(id, $navBarState);
 			mouseEventState.set('isTouching');
 			start = { x, y };
@@ -83,6 +82,8 @@
 				handleTouchCreateShapes(x, y, context);
 			} else if ($navBarState === 'eraser') {
 				handleTouchErase(x, y, context);
+			} else if ($navBarState === 'select') {
+				handleTouchEnd(x, y);
 			}
 		}
 	};
@@ -118,7 +119,7 @@
 	};
 
 	const handleTouchEnd = (x: number, y: number) => {
-		if ($mouseEventState === 'isTouching' && start) {
+		if ($mouseEventState === 'isTouching' && $navBarState !== 'select') {
 			const polygon = {
 				id: id,
 				vertices: [
@@ -130,8 +131,8 @@
 			};
 			polygons.push(polygon);
 			if (context) addHandleToShape(polygon, 'red', context);
-			mouseEventState.set('isHovering');
 		}
+		mouseEventState.set('isHovering');
 	};
 
 	function addHandleToShape(
