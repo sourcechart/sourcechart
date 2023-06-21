@@ -22,7 +22,7 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
-	import { calculateHandles } from './canvas-utils/Transform';
+	import { calculateHandles, getScalingHandleIndex } from './canvas-utils/Transform';
 	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
 	import { getContainingPolygon, isPointInPolygon } from './canvas-utils/PolygonOperations';
 
@@ -280,9 +280,8 @@
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		const point: Point = { x, y };
 		const polygon = getContainingPolygon(point, polygons);
-		if (polygon) {
-			selectedPolygonIndex = polygons.indexOf(polygon);
-		}
+		if (polygon) selectedPolygonIndex = polygons.indexOf(polygon);
+
 		if (context && polygon) {
 			redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = highlightColor;

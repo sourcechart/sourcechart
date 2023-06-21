@@ -1,3 +1,5 @@
+import { mouseEventState } from '$lib/io/Stores';
+
 const calculateHandles = (polygon: Polygon) => {
 	let handlePositions: Point[] = [...polygon.vertices];
 
@@ -12,4 +14,23 @@ const calculateHandles = (polygon: Polygon) => {
 	return handlePositions;
 };
 
-export { calculateHandles };
+const getScalingHandleIndex = (
+	handlePositions: Point[],
+	currentMousePosition: MouseEventExtended,
+	handleRadius: number
+) => {
+	let scalingHandleIndex: number | null = null; // Assign default value as null
+	for (let i = 0; i < handlePositions.length; i++) {
+		const dx = currentMousePosition.x - handlePositions[i].x;
+		const dy = currentMousePosition.y - handlePositions[i].y;
+		const distanceSquared = dx * dx + dy * dy;
+		if (distanceSquared < handleRadius * handleRadius) {
+			// handleRadius is the size of your handle
+			scalingHandleIndex = i;
+			mouseEventState.set('isScaling');
+			break;
+		}
+	}
+	return scalingHandleIndex;
+};
+export { calculateHandles, getScalingHandleIndex };
