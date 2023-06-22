@@ -6,7 +6,6 @@
 	const dispatch = createEventDispatcher();
 
 	function clickButton(e: MouseEvent) {
-		console.log('draw rectangle');
 		dispatch('mode', 'drawRectangle');
 	}
 </script>

@@ -90,14 +90,13 @@ const getScalingHandleIndex = (
 
 const getHandles = (polygon: Polygon, point: Point, tolerance: number): string | null => {
 	const handlePositions = calculateHandles(polygon);
-	const verticesLength = polygon.vertices.length;
 
 	for (let i = 0; i < handlePositions.length; i++) {
 		if (
 			Math.abs(point.x - handlePositions[i].x) < tolerance &&
 			Math.abs(point.y - handlePositions[i].y) < tolerance
 		) {
-			if (i < verticesLength) {
+			if (i < handlePositions.length) {
 				// Change this based on the vertex (corner)
 				switch (i) {
 					case 0:
@@ -108,20 +107,13 @@ const getHandles = (polygon: Polygon, point: Point, tolerance: number): string |
 						return 'nwse-resize';
 					case 3:
 						return 'nesw-resize';
-					default:
-						return 'move'; // Fallback cursor
-				}
-			} else {
-				// Change this based on the midpoint (edge)
-				const edgeIndex = i - verticesLength;
-				switch (edgeIndex) {
-					case 0:
+					case 4:
 						return 'ns-resize';
-					case 1:
+					case 5:
 						return 'ew-resize';
-					case 2:
+					case 6:
 						return 'ns-resize';
-					case 3:
+					case 7:
 						return 'ew-resize';
 					default:
 						return 'move'; // Fallback cursor

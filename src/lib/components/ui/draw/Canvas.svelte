@@ -16,8 +16,7 @@
 		clearChartOptions,
 		mostRecentChartID,
 		navBarState,
-		mouseEventState,
-		isMouseDown
+		mouseEventState
 	} from '$lib/io/Stores';
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
@@ -26,9 +25,7 @@
 	import {
 		getHandles,
 		getContainingPolygon,
-		isPointInPolygon,
-		calculateHandles,
-		getScalingHandleIndex
+		isPointInPolygon
 	} from './canvas-utils/PolygonOperations';
 
 	import { onMount } from 'svelte';
@@ -51,11 +48,13 @@
 	let dragOffset: Point = { x: 0, y: 0 };
 	let hoverIntersection: boolean = false;
 
-	const tolerance: number = 10;
-	const handleRadius: number = 0.01;
+	let cursorClass: string = 'grabbable';
+	$: console.log(cursorClass);
+
+	const tolerance: number = 1;
+	const handleRadius: number = 1;
 
 	$: if (context) highlightColor = 'red';
-	$: cursorClass = hoverIntersection ? 'grabbable' : '';
 
 	if (browser) {
 		onMount(() => {
@@ -134,15 +133,26 @@
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
-		for (let i = 0; i < polygons.length; i++) {
-			const poly = polygons[i];
-			let checkGrabbable = isPointInPolygon(currentMousePosition, poly) && $navBarState == 'select';
-			hoverIntersection = checkGrabbable ? true : false;
 
-			let checkHandles = getHandles(poly, currentMousePosition, tolerance);
-			if (checkHandles) cursorClass = hoverIntersection ? checkHandles : '';
-			console.log(cursorClass);
+		const polygon = polygons.find((polygon) => {
+			let insidePolygon =
+				isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
+			hoverIntersection = insidePolygon ? true : false;
+			cursorClass = 'move';
+			let checkHandles = getHandles(polygon, currentMousePosition, tolerance);
+			if (checkHandles) {
+				cursorClass = hoverIntersection ? checkHandles : '';
+				return true; // This will break the .find() loop
+			}
+
+			return false; // This will continue to the next item in the .find() loop
+		});
+
+		if (!polygon) {
+			cursorClass = ''; // Reset the cursorClass if not found any polygon
 		}
+
+		//console.log(cursorClass);
 	};
 
 	/**
@@ -359,7 +369,7 @@
 	<canvas
 		{width}
 		{height}
-		class={cursorClass}
+		style="cursor: {cursorClass};"
 		bind:this={canvas}
 		on:click={handleClick}
 		use:trackMouseState
@@ -394,28 +404,6 @@
 
 <style>
 	.grabbable {
-		cursor: grab;
-	}
-	.ns-resize,
-	.ew-resize {
-		cursor: move; /* fallback if grab cursor is unsupported */
-		cursor: -moz-grab;
-		cursor: -webkit-grab;
-	}
-
-	.grabbable:active,
-	.ns-resize:active,
-	.ew-resize:active {
-		cursor: grabbing;
-		cursor: -moz-grabbing;
-		cursor: -webkit-grabbing;
-	}
-
-	.ns-resize {
-		cursor: ns-resize;
-	}
-
-	.ew-resize {
-		cursor: ew-resize;
+		cursor: move;
 	}
 </style>
