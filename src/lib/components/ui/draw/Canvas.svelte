@@ -16,6 +16,8 @@
 	import * as Draw from './canvas-utils/Draw';
 	import * as PolygonOps from './canvas-utils/PolygonOperations';
 
+	import Handle from './Handle.svelte';
+
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
@@ -35,10 +37,8 @@
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
 	let hoverIntersection: boolean = false;
-
 	let cursorClass: string = 'grabbable';
-
-	$: console.log(cursorClass);
+	let handles: any[] = [];
 
 	const tolerance: number = 1;
 	const handleRadius: number = 1;
@@ -209,8 +209,8 @@
 		dragOffset = { x, y };
 		Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
 		context.strokeStyle = highlightColor;
-
-		Draw.drawHandles(polygon, context, highlightColor, handleRadius);
+		handles = Draw.drawHTMLHandles(polygon, tolerance);
+		//Draw.drawHandles(polygon, context, highlightColor, handleRadius);
 	};
 
 	/**
@@ -235,7 +235,7 @@
 			}
 			if (context) {
 				Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
-				Draw.drawHandles(polygon, context, highlightColor, handleRadius);
+				handles = Draw.drawHTMLHandles(polygon, tolerance);
 			}
 		}
 	};
@@ -308,7 +308,8 @@
 			polygons.push(polygon);
 			if (context) {
 				context.strokeStyle = highlightColor;
-				Draw.drawHandles(polygon, context, highlightColor, handleRadius);
+				handles = Draw.drawHTMLHandles(polygon, tolerance);
+				//Draw.drawHandles(polygon, context, highlightColor, handleRadius);
 			}
 		}
 		if ($mouseEventState === 'isScaling' && scalingHandleIndex !== null) {
@@ -333,7 +334,8 @@
 		if (context && polygon) {
 			Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = highlightColor;
-			Draw.drawHandles(polygon, context, highlightColor, handleRadius);
+			handles = Draw.drawHTMLHandles(polygon, tolerance);
+			//Draw.drawHandles(polygon, context, highlightColor, handleRadius);
 		}
 	};
 </script>
@@ -364,6 +366,9 @@
 			}
 		}}
 	/>
+	{#each handles as handle}
+		<Handle cursor={handle.cursor} position={handle.position()} />
+	{/each}
 </div>
 
 <svelte:window
