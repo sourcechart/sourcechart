@@ -1,3 +1,5 @@
+import { mouseEventState } from '$lib/io/Stores';
+
 /**
  * Checks is a point is in any created polygon or shape.
  *
@@ -43,4 +45,87 @@ function getContainingPolygon(point: Point, polygons: Polygon[]): Polygon | null
 	return containedPolygon;
 }
 
-export { getContainingPolygon, isPointInPolygon };
+/*
+const calculateHandles = (polygon: Polygon): Point[] => {
+	let handlePositions: Point[] = [...polygon.vertices];
+
+	for (let i = 0; i < polygon.vertices.length; i++) {
+		let nextIndex = (i + 1) % polygon.vertices.length; // Ensures that the last point connects to the first
+		let midPoint: Point = {
+			x: (polygon.vertices[i].x + polygon.vertices[nextIndex].x) / 2,
+			y: (polygon.vertices[i].y + polygon.vertices[nextIndex].y) / 2
+		};
+		handlePositions.push(midPoint);
+	}
+	return handlePositions;
+};
+ */
+
+/**
+ *If it is, switch to the "isScaling" state and store the index of the handle being dragged.
+ *
+ * @param handlePositions
+ * @param currentMousePosition
+ * @param handleRadius
+ *
+ * @returns index
+ */
+
+const getScalingHandleIndex = (
+	handlePositions: Point[],
+	currentMousePosition: MouseEventExtended | Point,
+	handleRadius: number
+): number | null => {
+	let scalingHandleIndex: number | null = null; // Assign default value as null
+	for (let i = 0; i < handlePositions.length; i++) {
+		const dx = currentMousePosition.x - handlePositions[i].x;
+		const dy = currentMousePosition.y - handlePositions[i].y;
+		const distanceSquared = dx * dx + dy * dy;
+		if (distanceSquared < handleRadius * handleRadius) {
+			// handleRadius is the size of your handle
+			scalingHandleIndex = i;
+			mouseEventState.set('isScaling');
+			break;
+		}
+	}
+	return scalingHandleIndex;
+};
+
+const getHandles = (polygon: Polygon, point: Point, tolerance: number): string | null => {
+	// Define cursors for vertices and midpoints
+	const vertexCursors = ['nw-resize', 'ne-resize', 'se-resize', 'sw-resize', 'move'];
+	const midpointCursors = ['n-resize', 'e-resize', 's-resize', 'w-resize', 'move'];
+
+	const verticesLength = polygon.vertices.length;
+	let handlePositions: Point[] = [...polygon.vertices];
+
+	// Calculate midpoints
+	for (let i = 0; i < verticesLength; i++) {
+		let nextIndex = (i + 1) % verticesLength; // Ensures that the last point connects to the first
+		let midPoint: Point = {
+			x: (polygon.vertices[i].x + polygon.vertices[nextIndex].x) / 2,
+			y: (polygon.vertices[i].y + polygon.vertices[nextIndex].y) / 2
+		};
+		handlePositions.push(midPoint);
+	}
+
+	for (let i = 0; i < handlePositions.length; i++) {
+		if (
+			Math.abs(point.x - handlePositions[i].x) < tolerance &&
+			Math.abs(point.y - handlePositions[i].y) < tolerance
+		) {
+			if (i < verticesLength) {
+				// Change this based on the vertex (corner)
+				return vertexCursors[i] || vertexCursors[vertexCursors.length - 1];
+			} else {
+				// Change this based on the midpoint (edge)
+				let edgeIndex = i - verticesLength;
+				return midpointCursors[edgeIndex] || midpointCursors[midpointCursors.length - 1];
+			}
+		}
+	}
+
+	return null;
+};
+
+export { getHandles, isPointInPolygon, getContainingPolygon, getScalingHandleIndex };

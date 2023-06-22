@@ -22,9 +22,13 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
-	import { calculateHandles, getScalingHandleIndex } from './canvas-utils/Transform';
 	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
-	import { getContainingPolygon, isPointInPolygon } from './canvas-utils/PolygonOperations';
+	import {
+		getHandles,
+		getContainingPolygon,
+		isPointInPolygon,
+		getScalingHandleIndex
+	} from './canvas-utils/PolygonOperations';
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -133,6 +137,9 @@
 			const poly = polygons[i];
 			let checkGrabbable = isPointInPolygon(currentMousePosition, poly) && $navBarState == 'select';
 			hoverIntersection = checkGrabbable ? true : false;
+
+			let checkHandles = getHandles(poly, currentMousePosition, tolerance);
+			cursorClass = checkHandles ? checkHandles : hoverIntersection ? 'grabbable' : '';
 		}
 	};
 
@@ -335,11 +342,8 @@
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		const point: Point = { x, y };
 		const polygon = getContainingPolygon(point, polygons);
-		let handlePositions: Point[] = [];
 		if (polygon) {
 			selectedPolygonIndex = polygons.indexOf(polygon);
-			handlePositions = calculateHandles(polygon); //This might have to be on the onMovePart
-			scalingHandleIndex = getScalingHandleIndex(handlePositions, point, handleRadius);
 		}
 		if (context && polygon) {
 			redraw(polygons, context, width, height, selectedPolygonIndex);

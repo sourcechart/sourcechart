@@ -1,4 +1,4 @@
-import { calculateHandles } from './Transform';
+import { calculateHandles } from './PolygonOperations';
 
 const drawRectangle = (
 	polygon: Polygon,
