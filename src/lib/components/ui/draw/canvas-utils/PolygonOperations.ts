@@ -43,6 +43,7 @@ const getContainingPolygon = (point: Point, polygons: Polygon[]): Polygon | null
 	});
 	return containedPolygon;
 };
+
 /**
  * Create the dynamamic rectangles.
  *
@@ -94,56 +95,4 @@ const getScalingHandleIndex = (
 	return scalingHandleIndex;
 };
 
-/**
- * Get the handles for a rectangles
- *
- * @param polygon
- * @param point
- * @param tolerance
- * @returns
- */
-const getRectangleHandles = (polygon: Polygon): string | null => {
-	const handlePositions = calculateRectangleHandles(polygon);
-
-	for (let i = 0; i < handlePositions.length; i++) {
-		// Change this based on the vertex (corner)
-		switch (i) {
-			case 0:
-				return 'nwse-resize';
-			case 1:
-				return 'nesw-resize';
-			case 2:
-				return 'nwse-resize';
-			case 3:
-				return 'nesw-resize';
-			case 4:
-				return 'ns-resize';
-			case 5:
-				return 'ew-resize';
-			case 6:
-				return 'ns-resize';
-			case 7:
-				return 'ew-resize';
-			default:
-				return 'move'; // Fallback cursor
-		}
-	}
-
-	return null;
-};
-
-/**
- * Create the Rectangle Handles for Each Plot
- *
- * @param polygon
- * @param tolerance
- * @returns
- */
-
-export {
-	getRectangleHandles,
-	calculateRectangleHandles,
-	isPointInPolygon,
-	getContainingPolygon,
-	getScalingHandleIndex
-};
+export { calculateRectangleHandles, isPointInPolygon, getContainingPolygon, getScalingHandleIndex };
