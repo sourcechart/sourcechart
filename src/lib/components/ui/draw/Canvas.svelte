@@ -126,12 +126,11 @@
 				PolygonOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
 			cursorClass = 'move';
-			let checkHandles = Draw.(polygon);
+			let checkHandles = Draw.getRectangleHandles(polygon); //Draw.createRectangleHandles(polygon);
 			if (checkHandles) {
 				cursorClass = hoverIntersection ? checkHandles : '';
 				return true; // This will break the .find() loop
 			}
-
 			return false; // This will continue to the next item in the .find() loop
 		});
 
@@ -205,9 +204,9 @@
 			y: vertex.y + dy
 		}));
 		dragOffset = { x, y };
-		DrawUtils.reDrawUtils(polygons, context, width, height, selectedPolygonIndex);
+		Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
 		context.strokeStyle = highlightColor;
-		handles = DrawUtils.createRectangleHandles(polygon);
+		handles = Draw.createRectangleHandles(polygon);
 		//DrawUtils.DrawUtilsHandles(polygon, context, highlightColor, handleRadius);
 	};
 
@@ -232,8 +231,8 @@
 				}
 			}
 			if (context) {
-				DrawUtils.reDrawUtils(polygons, context, width, height, selectedPolygonIndex);
-				handles = DrawUtils.createRectangleHandles(polygon);
+				Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
+				handles = Draw.createRectangleHandles(polygon);
 			}
 		}
 	};
@@ -251,7 +250,7 @@
 		context: CanvasRenderingContext2D
 	): void => {
 		if ($navBarState === 'drawRectangle') {
-			DrawUtils.reDrawUtils(polygons, context, width, height, selectedPolygonIndex);
+			Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
 			const polygon = {
 				id: id,
 				vertices: [
@@ -261,7 +260,7 @@
 					{ x: start.x, y: y }
 				]
 			};
-			DrawUtils.DrawUtilsRectangle(polygon, context, highlightColor);
+			//Draw(polygon, context, highlightColor);
 		}
 	};
 
@@ -279,7 +278,7 @@
 		if (index > -1) {
 			polygons.splice(index, 1);
 		}
-		DrawUtils.reDrawUtils(polygons, context, width, height, selectedPolygonIndex);
+		Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
 	};
 
 	/**
@@ -306,7 +305,7 @@
 			polygons.push(polygon);
 			if (context) {
 				context.strokeStyle = highlightColor;
-				handles = DrawUtils.createRectangleHandles(polygon);
+				handles = Draw.createRectangleHandles(polygon);
 				//DrawUtils.DrawUtilsHandles(polygon, context, highlightColor, handleRadius);
 			}
 		}
@@ -330,9 +329,9 @@
 			selectedPolygonIndex = polygons.indexOf(polygon);
 		}
 		if (context && polygon) {
-			DrawUtils.reDrawUtils(polygons, context, width, height, selectedPolygonIndex);
+			Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = highlightColor;
-			handles = DrawUtils.createRectangleHandles(polygon);
+			handles = Draw.createRectangleHandles(polygon);
 			//DrawUtils.DrawUtilsHandles(polygon, context, highlightColor, handleRadius);
 		}
 	};

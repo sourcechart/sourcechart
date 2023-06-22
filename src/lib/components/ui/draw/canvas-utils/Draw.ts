@@ -188,4 +188,4 @@ const createRectangleHandles = (polygon: Polygon): any[] => {
 
 	return handles;
 };
-export { drawRectangle, redraw, drawHandles, createRectangleHandles };
+export { drawRectangle, redraw, drawHandles, createRectangleHandles, getRectangleHandles };
