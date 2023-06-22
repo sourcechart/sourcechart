@@ -140,8 +140,8 @@
 			hoverIntersection = checkGrabbable ? true : false;
 
 			let checkHandles = getHandles(poly, currentMousePosition, tolerance);
-			console.log(checkHandles);
-			cursorClass = checkHandles ? checkHandles : hoverIntersection ? 'grabbable' : '';
+			if (checkHandles) cursorClass = hoverIntersection ? checkHandles : '';
+			console.log(cursorClass);
 		}
 	};
 

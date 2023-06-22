@@ -68,7 +68,6 @@ const calculateHandles = (polygon: Polygon): Point[] => {
  *
  * @returns index
  */
-
 const getScalingHandleIndex = (
 	handlePositions: Point[],
 	currentMousePosition: MouseEventExtended | Point,
@@ -102,13 +101,13 @@ const getHandles = (polygon: Polygon, point: Point, tolerance: number): string |
 				// Change this based on the vertex (corner)
 				switch (i) {
 					case 0:
-						return 'nw-resize';
+						return 'nwse-resize';
 					case 1:
-						return 'ne-resize';
+						return 'nesw-resize';
 					case 2:
-						return 'se-resize';
+						return 'nwse-resize';
 					case 3:
-						return 'sw-resize';
+						return 'nesw-resize';
 					default:
 						return 'move'; // Fallback cursor
 				}
@@ -117,13 +116,13 @@ const getHandles = (polygon: Polygon, point: Point, tolerance: number): string |
 				const edgeIndex = i - verticesLength;
 				switch (edgeIndex) {
 					case 0:
-						return 'n-resize';
+						return 'ns-resize';
 					case 1:
-						return 'e-resize';
+						return 'ew-resize';
 					case 2:
-						return 's-resize';
+						return 'ns-resize';
 					case 3:
-						return 'w-resize';
+						return 'ew-resize';
 					default:
 						return 'move'; // Fallback cursor
 				}
