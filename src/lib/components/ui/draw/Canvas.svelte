@@ -27,6 +27,7 @@
 		getHandles,
 		getContainingPolygon,
 		isPointInPolygon,
+		calculateHandles,
 		getScalingHandleIndex
 	} from './canvas-utils/PolygonOperations';
 
@@ -139,6 +140,7 @@
 			hoverIntersection = checkGrabbable ? true : false;
 
 			let checkHandles = getHandles(poly, currentMousePosition, tolerance);
+			console.log(checkHandles);
 			cursorClass = checkHandles ? checkHandles : hoverIntersection ? 'grabbable' : '';
 		}
 	};

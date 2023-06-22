@@ -45,7 +45,6 @@ function getContainingPolygon(point: Point, polygons: Polygon[]): Polygon | null
 	return containedPolygon;
 }
 
-/*
 const calculateHandles = (polygon: Polygon): Point[] => {
 	let handlePositions: Point[] = [...polygon.vertices];
 
@@ -59,7 +58,6 @@ const calculateHandles = (polygon: Polygon): Point[] => {
 	}
 	return handlePositions;
 };
- */
 
 /**
  *If it is, switch to the "isScaling" state and store the index of the handle being dragged.
@@ -92,22 +90,8 @@ const getScalingHandleIndex = (
 };
 
 const getHandles = (polygon: Polygon, point: Point, tolerance: number): string | null => {
-	// Define cursors for vertices and midpoints
-	const vertexCursors = ['nw-resize', 'ne-resize', 'se-resize', 'sw-resize', 'move'];
-	const midpointCursors = ['n-resize', 'e-resize', 's-resize', 'w-resize', 'move'];
-
+	const handlePositions = calculateHandles(polygon);
 	const verticesLength = polygon.vertices.length;
-	let handlePositions: Point[] = [...polygon.vertices];
-
-	// Calculate midpoints
-	for (let i = 0; i < verticesLength; i++) {
-		let nextIndex = (i + 1) % verticesLength; // Ensures that the last point connects to the first
-		let midPoint: Point = {
-			x: (polygon.vertices[i].x + polygon.vertices[nextIndex].x) / 2,
-			y: (polygon.vertices[i].y + polygon.vertices[nextIndex].y) / 2
-		};
-		handlePositions.push(midPoint);
-	}
 
 	for (let i = 0; i < handlePositions.length; i++) {
 		if (
@@ -116,16 +100,43 @@ const getHandles = (polygon: Polygon, point: Point, tolerance: number): string |
 		) {
 			if (i < verticesLength) {
 				// Change this based on the vertex (corner)
-				return vertexCursors[i] || vertexCursors[vertexCursors.length - 1];
+				switch (i) {
+					case 0:
+						return 'nw-resize';
+					case 1:
+						return 'ne-resize';
+					case 2:
+						return 'se-resize';
+					case 3:
+						return 'sw-resize';
+					default:
+						return 'move'; // Fallback cursor
+				}
 			} else {
 				// Change this based on the midpoint (edge)
-				let edgeIndex = i - verticesLength;
-				return midpointCursors[edgeIndex] || midpointCursors[midpointCursors.length - 1];
+				const edgeIndex = i - verticesLength;
+				switch (edgeIndex) {
+					case 0:
+						return 'n-resize';
+					case 1:
+						return 'e-resize';
+					case 2:
+						return 's-resize';
+					case 3:
+						return 'w-resize';
+					default:
+						return 'move'; // Fallback cursor
+				}
 			}
 		}
 	}
 
 	return null;
 };
-
-export { getHandles, isPointInPolygon, getContainingPolygon, getScalingHandleIndex };
+export {
+	getHandles,
+	calculateHandles,
+	isPointInPolygon,
+	getContainingPolygon,
+	getScalingHandleIndex
+};
