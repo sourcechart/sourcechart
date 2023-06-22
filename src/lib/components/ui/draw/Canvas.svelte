@@ -13,8 +13,8 @@
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
 	import * as MouseActions from '$lib/actions/MouseActions';
-	import * as Draw from './canvas-utils/Draw'; //{ reDraw, DrawRectangle, DrawHandles } from './canvas-utils/Draw';
-	import * as polygonops from './canvas-utils/PolygonOperations';
+	import * as Draw from './canvas-utils/Draw';
+	import * as PolygonOps from './canvas-utils/PolygonOperations';
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -93,7 +93,7 @@
 		id = generateID();
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
-			if (polygon && polygonops.isPointInPolygon({ x, y }, polygon)) {
+			if (polygon && PolygonOps.isPointInPolygon({ x, y }, polygon)) {
 				dragOffset = { x, y };
 				mouseEventState.set('isTranslating');
 				return;
@@ -125,10 +125,10 @@
 		let handlePositions;
 		const polygon = polygons.find((polygon) => {
 			let insidePolygon =
-				polygonops.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
+				PolygonOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
 			cursorClass = 'move';
-			let checkHandles = polygonops.getRectangleHandles(polygon, currentMousePosition, tolerance);
+			let checkHandles = PolygonOps.getRectangleHandles(polygon, currentMousePosition, tolerance);
 			if (checkHandles) {
 				cursorClass = hoverIntersection ? checkHandles : '';
 				return true; // This will break the .find() loop
@@ -141,7 +141,7 @@
 			cursorClass = ''; // Reset the cursorClass if not found any polygon
 		}
 
-		if (polygon) handlePositions = polygonops.calculateRectangleHandles(polygon);
+		if (polygon) handlePositions = PolygonOps.calculateRectangleHandles(polygon);
 		let overHandle = false;
 		if (handlePositions)
 			handlePositions.forEach((handle) => {
@@ -276,7 +276,7 @@
 	 */
 	const handleTouchErase = (x: number, y: number, context: CanvasRenderingContext2D): void => {
 		const currentTouchPoint: Point = { x, y };
-		const polygon = polygonops.getContainingPolygon(currentTouchPoint, polygons);
+		const polygon = PolygonOps.getContainingPolygon(currentTouchPoint, polygons);
 		const index = polygon ? polygons.indexOf(polygon) : -1;
 		if (index > -1) {
 			polygons.splice(index, 1);
@@ -326,7 +326,7 @@
 	 */
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		const point: Point = { x, y };
-		const polygon = polygonops.getContainingPolygon(point, polygons);
+		const polygon = PolygonOps.getContainingPolygon(point, polygons);
 		if (polygon) {
 			selectedPolygonIndex = polygons.indexOf(polygon);
 		}
@@ -374,9 +374,3 @@
 		}
 	}}
 />
-
-<style>
-	.grabbable {
-		cursor: move;
-	}
-</style>

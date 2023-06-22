@@ -1,4 +1,4 @@
-import { calculateRectangleHandles } from './PolygonOperations';
+import { calculateRectangleHandles, createRectangleHandles } from './PolygonOperations';
 
 const drawRectangle = (
 	polygon: Polygon,
@@ -32,9 +32,19 @@ const redraw = (
 	});
 };
 
-const handle = () => {
-	console.log('foo');
+const drawHTMLHandles = (polygon: Polygon, tolerance: number) => {
+	let handles = createRectangleHandles(polygon, tolerance);
+	return handles;
 };
+
+/**
+ * Maybe I should delete this function later
+ *
+ * @param polygon
+ * @param context
+ * @param color
+ * @param radius
+ */
 const drawHandles = (
 	polygon: Polygon,
 	context: CanvasRenderingContext2D,
@@ -55,4 +65,4 @@ const drawHandles = (
 		}
 	});
 };
-export { drawRectangle, redraw, drawHandles };
+export { drawRectangle, redraw, drawHandles, drawHTMLHandles };

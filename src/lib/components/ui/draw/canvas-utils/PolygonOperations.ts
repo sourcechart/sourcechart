@@ -43,7 +43,12 @@ const getContainingPolygon = (point: Point, polygons: Polygon[]): Polygon | null
 	});
 	return containedPolygon;
 };
-
+/**
+ * Create the dynamamic rectangles.
+ *
+ * @param polygon
+ * @returns
+ */
 const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 	let handlePositions: Point[] = [...polygon.vertices];
 
@@ -57,7 +62,13 @@ const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 	}
 	return handlePositions;
 };
-
+/**
+ * Create the Rectangle Handles for Each Plot
+ *
+ * @param polygon
+ * @param tolerance
+ * @returns
+ */
 const createRectangleHandles = (polygon: Polygon, tolerance: number): any[] => {
 	const handlePositions = calculateRectangleHandles(polygon);
 	const cursorMappings = getRectangleHandles(polygon, handlePositions[0], tolerance);
@@ -160,7 +171,6 @@ const getScalingHandleIndex = (
  * @param tolerance
  * @returns
  */
-
 const getRectangleHandles = (polygon: Polygon, point: Point, tolerance: number): string | null => {
 	const handlePositions = calculateRectangleHandles(polygon);
 
