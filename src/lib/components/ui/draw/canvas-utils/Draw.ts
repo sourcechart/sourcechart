@@ -1,4 +1,4 @@
-import { calculateRectangleHandles, createRectangleHandles } from './PolygonOperations';
+import { calculateRectangleHandles, getRectangleHandles } from './PolygonOperations';
 
 /**
  * Draw Rectangle edges.
@@ -56,10 +56,6 @@ const redraw = (
  * @param tolerance
  * @returns
  */
-const drawHTMLHandles = (polygon: Polygon, tolerance: number) => {
-	let handles = createRectangleHandles(polygon, tolerance);
-	return handles;
-};
 
 /**
  * Maybe I should delete this function later
@@ -89,4 +85,68 @@ const drawHandles = (
 		}
 	});
 };
-export { drawRectangle, redraw, drawHandles, drawHTMLHandles };
+const createRectangleHandles = (polygon: Polygon): any[] => {
+	const handlePositions = calculateRectangleHandles(polygon);
+	const cursorMappings = getRectangleHandles(polygon);
+
+	const rectangle: Rectangle = {
+		x: Math.min(...handlePositions.map((point) => point.x)),
+		y: Math.min(...handlePositions.map((point) => point.y)),
+		width:
+			Math.max(...handlePositions.map((point) => point.x)) -
+			Math.min(...handlePositions.map((point) => point.x)),
+		height:
+			Math.max(...handlePositions.map((point) => point.y)) -
+			Math.min(...handlePositions.map((point) => point.y))
+	};
+
+	const handles = [
+		{
+			position: () => ({ left: `${rectangle.x}px`, top: `${rectangle.y}px` }),
+			cursor: cursorMappings
+		}, // Top-left
+		{
+			position: () => ({ left: `${rectangle.x + rectangle.width / 2}px`, top: `${rectangle.y}px` }),
+			cursor: cursorMappings
+		}, // Top-middle
+		{
+			position: () => ({ left: `${rectangle.x + rectangle.width}px`, top: `${rectangle.y}px` }),
+			cursor: cursorMappings
+		}, // Top-right
+		{
+			position: () => ({
+				left: `${rectangle.x + rectangle.width}px`,
+				top: `${rectangle.y + rectangle.height / 2}px`
+			}),
+			cursor: cursorMappings
+		}, // Middle-right
+		{
+			position: () => ({
+				left: `${rectangle.x + rectangle.width}px`,
+				top: `${rectangle.y + rectangle.height}px`
+			}),
+			cursor: cursorMappings
+		}, // Bottom-right
+		{
+			position: () => ({
+				left: `${rectangle.x + rectangle.width / 2}px`,
+				top: `${rectangle.y + rectangle.height}px`
+			}),
+			cursor: cursorMappings
+		}, // Bottom-middle
+		{
+			position: () => ({ left: `${rectangle.x}px`, top: `${rectangle.y + rectangle.height}px` }),
+			cursor: cursorMappings
+		}, // Bottom-left
+		{
+			position: () => ({
+				left: `${rectangle.x}px`,
+				top: `${rectangle.y + rectangle.height / 2}px`
+			}),
+			cursor: cursorMappings
+		} // Middle-left
+	];
+
+	return handles;
+};
+export { drawRectangle, redraw, drawHandles, createRectangleHandles };

@@ -1,5 +1,3 @@
-<!-- This module contains the canvas elements for each rectangle-->
-
 <script lang="ts">
 	import {
 		activeSidebar,
@@ -23,24 +21,24 @@
 
 	let id: string;
 	let highlightColor: string;
-
 	let width: number = 0;
 	let height: number = 0;
+
+	let cursorClass: string = 'grabbable';
+	let hoverIntersection: boolean = false;
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 
 	let selectedPolygonIndex: number | null = null;
 	let scalingHandleIndex: number | null = null;
+
 	let polygons: Polygon[] = [];
 	let start: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
-	let hoverIntersection: boolean = false;
-	let cursorClass: string = 'grabbable';
 	let handles: any[] = [];
 
-	const tolerance: number = 1;
 	const handleRadius: number = 1;
 
 	$: if (context) highlightColor = 'red';
@@ -128,7 +126,7 @@
 				PolygonOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
 			cursorClass = 'move';
-			let checkHandles = PolygonOps.getRectangleHandles(polygon, currentMousePosition, tolerance);
+			let checkHandles = PolygonOps.getRectangleHandles(polygon);
 			if (checkHandles) {
 				cursorClass = hoverIntersection ? checkHandles : '';
 				return true; // This will break the .find() loop
@@ -209,7 +207,7 @@
 		dragOffset = { x, y };
 		Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
 		context.strokeStyle = highlightColor;
-		handles = Draw.drawHTMLHandles(polygon, tolerance);
+		handles = Draw.createRectangleHandles(polygon);
 		//Draw.drawHandles(polygon, context, highlightColor, handleRadius);
 	};
 
@@ -235,7 +233,7 @@
 			}
 			if (context) {
 				Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
-				handles = Draw.drawHTMLHandles(polygon, tolerance);
+				handles = Draw.createRectangleHandles(polygon);
 			}
 		}
 	};
@@ -308,7 +306,7 @@
 			polygons.push(polygon);
 			if (context) {
 				context.strokeStyle = highlightColor;
-				handles = Draw.drawHTMLHandles(polygon, tolerance);
+				handles = Draw.createRectangleHandles(polygon);
 				//Draw.drawHandles(polygon, context, highlightColor, handleRadius);
 			}
 		}
@@ -334,13 +332,13 @@
 		if (context && polygon) {
 			Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = highlightColor;
-			handles = Draw.drawHTMLHandles(polygon, tolerance);
+			handles = Draw.createRectangleHandles(polygon);
 			//Draw.drawHandles(polygon, context, highlightColor, handleRadius);
 		}
 	};
 </script>
 
-<div {id}>
+<div style="position: relative;" {id}>
 	<canvas
 		{width}
 		{height}
