@@ -68,11 +68,6 @@ type Field = {
 	databaseType: string;
 };
 
-interface Point {
-	x: number;
-	y: number;
-}
-
 /****************************
  *                          *
  *       Canvas Types       *
@@ -90,6 +85,13 @@ interface Point {
 type MouseEvents = 'isHovering' | 'isTouching' | 'isTranslating' | 'isScaling';
 
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
+
+type Rectangle = {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+};
 
 interface Point {
 	x: number;

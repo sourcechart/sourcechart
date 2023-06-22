@@ -7,8 +7,7 @@ import { mouseEventState } from '$lib/io/Stores';
  * @param polygon
  * @returns boolean
  */
-
-function isPointInPolygon(point: Point, polygon: Polygon): boolean {
+const isPointInPolygon = (point: Point, polygon: Polygon): boolean => {
 	const x = point.x;
 	const y = point.y;
 	let inside = false;
@@ -24,7 +23,7 @@ function isPointInPolygon(point: Point, polygon: Polygon): boolean {
 		}
 	}
 	return inside;
-}
+};
 
 /**
  * Get the nearest surrounding polygon that a point that is in `x` and `y`.
@@ -33,7 +32,7 @@ function isPointInPolygon(point: Point, polygon: Polygon): boolean {
  *  @param polygons all the polygons that are on the canvas
 
 */
-function getContainingPolygon(point: Point, polygons: Polygon[]): Polygon | null {
+const getContainingPolygon = (point: Point, polygons: Polygon[]): Polygon | null => {
 	let containedPolygon: Polygon | null = null;
 	polygons.forEach((polygon) => {
 		if (isPointInPolygon(point, polygon)) {
@@ -43,9 +42,9 @@ function getContainingPolygon(point: Point, polygons: Polygon[]): Polygon | null
 		}
 	});
 	return containedPolygon;
-}
+};
 
-const calculateHandles = (polygon: Polygon): Point[] => {
+const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 	let handlePositions: Point[] = [...polygon.vertices];
 
 	for (let i = 0; i < polygon.vertices.length; i++) {
@@ -57,6 +56,71 @@ const calculateHandles = (polygon: Polygon): Point[] => {
 		handlePositions.push(midPoint);
 	}
 	return handlePositions;
+};
+
+const createRectangleHandles = (polygon: Polygon, tolerance: number): any[] => {
+	const handlePositions = calculateRectangleHandles(polygon);
+	const cursorMappings = getRectangleHandles(polygon, handlePositions[0], tolerance);
+
+	const rectangle: Rectangle = {
+		x: Math.min(...handlePositions.map((point) => point.x)),
+		y: Math.min(...handlePositions.map((point) => point.y)),
+		width:
+			Math.max(...handlePositions.map((point) => point.x)) -
+			Math.min(...handlePositions.map((point) => point.x)),
+		height:
+			Math.max(...handlePositions.map((point) => point.y)) -
+			Math.min(...handlePositions.map((point) => point.y))
+	};
+
+	const handles = [
+		{
+			position: () => ({ left: `${rectangle.x}px`, top: `${rectangle.y}px` }),
+			cursor: cursorMappings
+		}, // Top-left
+		{
+			position: () => ({ left: `${rectangle.x + rectangle.width / 2}px`, top: `${rectangle.y}px` }),
+			cursor: cursorMappings
+		}, // Top-middle
+		{
+			position: () => ({ left: `${rectangle.x + rectangle.width}px`, top: `${rectangle.y}px` }),
+			cursor: cursorMappings
+		}, // Top-right
+		{
+			position: () => ({
+				left: `${rectangle.x + rectangle.width}px`,
+				top: `${rectangle.y + rectangle.height / 2}px`
+			}),
+			cursor: cursorMappings
+		}, // Middle-right
+		{
+			position: () => ({
+				left: `${rectangle.x + rectangle.width}px`,
+				top: `${rectangle.y + rectangle.height}px`
+			}),
+			cursor: cursorMappings
+		}, // Bottom-right
+		{
+			position: () => ({
+				left: `${rectangle.x + rectangle.width / 2}px`,
+				top: `${rectangle.y + rectangle.height}px`
+			}),
+			cursor: cursorMappings
+		}, // Bottom-middle
+		{
+			position: () => ({ left: `${rectangle.x}px`, top: `${rectangle.y + rectangle.height}px` }),
+			cursor: cursorMappings
+		}, // Bottom-left
+		{
+			position: () => ({
+				left: `${rectangle.x}px`,
+				top: `${rectangle.y + rectangle.height / 2}px`
+			}),
+			cursor: cursorMappings
+		} // Middle-left
+	];
+
+	return handles;
 };
 
 /**
@@ -88,8 +152,17 @@ const getScalingHandleIndex = (
 	return scalingHandleIndex;
 };
 
-const getHandles = (polygon: Polygon, point: Point, tolerance: number): string | null => {
-	const handlePositions = calculateHandles(polygon);
+/**
+ * Get the handles for a rectangles
+ *
+ * @param polygon
+ * @param point
+ * @param tolerance
+ * @returns
+ */
+
+const getRectangleHandles = (polygon: Polygon, point: Point, tolerance: number): string | null => {
+	const handlePositions = calculateRectangleHandles(polygon);
 
 	for (let i = 0; i < handlePositions.length; i++) {
 		if (
@@ -125,8 +198,9 @@ const getHandles = (polygon: Polygon, point: Point, tolerance: number): string |
 	return null;
 };
 export {
-	getHandles,
-	calculateHandles,
+	getRectangleHandles,
+	createRectangleHandles,
+	calculateRectangleHandles,
 	isPointInPolygon,
 	getContainingPolygon,
 	getScalingHandleIndex

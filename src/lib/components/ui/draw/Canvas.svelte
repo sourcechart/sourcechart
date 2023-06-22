@@ -1,14 +1,7 @@
 <!-- This module contains the canvas elements for each rectangle-->
 
 <script lang="ts">
-	import {
-		mouseMove,
-		touchStart,
-		touchMove,
-		trackMouseState,
-		onMouseLeave,
-		touchEnd
-	} from '$lib/actions/MouseActions';
+	import * as MouseActions from '$lib/actions/MouseActions';
 
 	import {
 		activeSidebar,
@@ -23,9 +16,10 @@
 
 	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
 	import {
-		getHandles,
+		getRectangleHandles,
 		getContainingPolygon,
-		isPointInPolygon
+		isPointInPolygon,
+		calculateRectangleHandles
 	} from './canvas-utils/PolygonOperations';
 
 	import { onMount } from 'svelte';
@@ -49,6 +43,7 @@
 	let hoverIntersection: boolean = false;
 
 	let cursorClass: string = 'grabbable';
+
 	$: console.log(cursorClass);
 
 	const tolerance: number = 1;
@@ -133,13 +128,13 @@
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
-
+		let handlePositions;
 		const polygon = polygons.find((polygon) => {
 			let insidePolygon =
 				isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
 			cursorClass = 'move';
-			let checkHandles = getHandles(polygon, currentMousePosition, tolerance);
+			let checkHandles = getRectangleHandles(polygon, currentMousePosition, tolerance);
 			if (checkHandles) {
 				cursorClass = hoverIntersection ? checkHandles : '';
 				return true; // This will break the .find() loop
@@ -152,7 +147,23 @@
 			cursorClass = ''; // Reset the cursorClass if not found any polygon
 		}
 
-		//console.log(cursorClass);
+		if (polygon) handlePositions = calculateRectangleHandles(polygon);
+		let overHandle = false;
+		if (handlePositions)
+			handlePositions.forEach((handle) => {
+				const dx = x - handle.x;
+				const dy = y - handle.y;
+				const distanceSquared = dx * dx + dy * dy;
+				if (distanceSquared < handleRadius * handleRadius) {
+					overHandle = true;
+				}
+			});
+
+		if (overHandle) {
+			cursorClass = 'pointer'; // Change cursor to pointer when over handle
+		} else {
+			cursorClass = 'default'; // Change cursor back to default when not over handle
+		}
 	};
 
 	/**
@@ -372,20 +383,20 @@
 		style="cursor: {cursorClass};"
 		bind:this={canvas}
 		on:click={handleClick}
-		use:trackMouseState
-		use:touchStart={{
+		use:MouseActions.trackMouseState
+		use:MouseActions.touchStart={{
 			onStart: handleTouchStart
 		}}
-		use:mouseMove={{
+		use:MouseActions.mouseMove={{
 			onMove: handleMouseMove
 		}}
-		use:touchMove={{
+		use:MouseActions.touchMove={{
 			onMove: handleTouchMove
 		}}
-		use:touchEnd={{
+		use:MouseActions.touchEnd={{
 			onEnd: handleTouchEnd
 		}}
-		use:onMouseLeave={{
+		use:MouseActions.onMouseLeave={{
 			onLeave: () => {
 				console.log('leave');
 			}

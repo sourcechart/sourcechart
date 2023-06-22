@@ -1,4 +1,4 @@
-import { calculateHandles } from './PolygonOperations';
+import { calculateRectangleHandles } from './PolygonOperations';
 
 const drawRectangle = (
 	polygon: Polygon,
@@ -32,6 +32,9 @@ const redraw = (
 	});
 };
 
+const handle = () => {
+	console.log('foo');
+};
 const drawHandles = (
 	polygon: Polygon,
 	context: CanvasRenderingContext2D,
@@ -39,7 +42,9 @@ const drawHandles = (
 	radius: number
 ) => {
 	let handlePositions: Point[];
-	handlePositions = calculateHandles(polygon);
+	handlePositions = calculateRectangleHandles(polygon);
+
+	console.log(handlePositions);
 	context.strokeStyle = color;
 	context.lineWidth = 1;
 	handlePositions.forEach((point) => {
