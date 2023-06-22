@@ -1,8 +1,6 @@
 <!-- This module contains the canvas elements for each rectangle-->
 
 <script lang="ts">
-	import * as MouseActions from '$lib/actions/MouseActions';
-
 	import {
 		activeSidebar,
 		allCharts,
@@ -13,6 +11,8 @@
 	} from '$lib/io/Stores';
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
+
+	import * as MouseActions from '$lib/actions/MouseActions';
 	import * as draw from './canvas-utils/Draw'; //{ redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
 	import * as polygonops from './canvas-utils/PolygonOperations';
 
