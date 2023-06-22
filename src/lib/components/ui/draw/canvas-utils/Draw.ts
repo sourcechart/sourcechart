@@ -1,5 +1,12 @@
 import { calculateRectangleHandles, createRectangleHandles } from './PolygonOperations';
 
+/**
+ * Draw Rectangle edges.
+ *
+ * @param polygon
+ * @param context
+ * @param lineColor
+ */
 const drawRectangle = (
 	polygon: Polygon,
 	context: CanvasRenderingContext2D,
@@ -18,6 +25,16 @@ const drawRectangle = (
 	context.stroke();
 };
 
+/**
+ * Redraw when you move the polygon
+ *
+ * @param polygons
+ * @param context
+ * @param width
+ * @param height
+ * @param selectedPolygonIndex
+ */
+
 const redraw = (
 	polygons: Polygon[],
 	context: CanvasRenderingContext2D,
@@ -32,6 +49,13 @@ const redraw = (
 	});
 };
 
+/**
+ * Draw HTML Files
+ *
+ * @param polygon
+ * @param tolerance
+ * @returns
+ */
 const drawHTMLHandles = (polygon: Polygon, tolerance: number) => {
 	let handles = createRectangleHandles(polygon, tolerance);
 	return handles;
