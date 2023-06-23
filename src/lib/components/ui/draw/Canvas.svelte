@@ -17,9 +17,8 @@
 	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
 	import * as PolyOps from './canvas-utils/PolygonOperations';
 
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import { offset } from '@popperjs/core';
 
 	let id: string;
 	let highlightColor: string;
@@ -45,7 +44,6 @@
 	let offsetX: number = 0;
 	let offsetY: number = 0;
 
-	$: console.log(offsetX, offsetY);
 	$: if (context) highlightColor = 'red';
 
 	if (browser) {
@@ -140,7 +138,6 @@
 			if (insidePolygon) {
 				hoverPolygon = polygon;
 				cursorClass = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
-				console.log(cursorClass);
 				if (cursorClass) return true; // This will break the .find() loop
 			}
 			return false; // This will continue to the next item in the .find() loop
@@ -203,8 +200,7 @@
 			x: vertex.x + dx,
 			y: vertex.y + dy
 		}));
-		//@ts-ignore
-		dragOffset = { xWithOffset, yWithOffset };
+		dragOffset = { x: xWithOffset, y: yWithOffset };
 		redraw(polygons, context, width, height, selectedPolygonIndex);
 		context.strokeStyle = highlightColor;
 
@@ -223,8 +219,7 @@
 			//let handlePositions: Point[] = [...polygon.vertices];
 			if (scalingHandleIndex) {
 				if (scalingHandleIndex < polygon.vertices.length) {
-					//@ts-ignore
-					polygon.vertices[scalingHandleIndex] = { xWithOffset, yWithOffset };
+					polygon.vertices[scalingHandleIndex] = { x: xWithOffset, y: yWithOffset };
 				} else {
 					let vertexIndex = scalingHandleIndex - polygon.vertices.length;
 					let nextVertexIndex = (scalingHandleIndex + 1) % polygon.vertices.length;
@@ -278,8 +273,7 @@
 		yWithOffset: number,
 		context: CanvasRenderingContext2D
 	): void => {
-		//@ts-ignore
-		const currentTouchPoint: Point = { xWithOffset, yWithOffset };
+		const currentTouchPoint: Point = { x: xWithOffset, y: yWithOffset };
 		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, polygons);
 		const index = polygon ? polygons.indexOf(polygon) : -1;
 		if (index > -1) {

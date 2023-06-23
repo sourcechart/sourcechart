@@ -71,11 +71,10 @@ function mouseMove(node: Node, { onMove }: { onMove: (x: number, y: number) => v
 }
 
 function touchStart(node: Node, { onStart }: { onStart: (x: number, y: number) => void }) {
-	//@ts-ignore
 	const handleMouseDown = (e) => {
 		onStart(e.clientX, e.clientY);
 	};
-	//@ts-ignore
+
 	const handleTouchStart = (e) => {
 		const touch = e.touches[0];
 		onStart(touch.clientX, touch.clientY);
@@ -147,13 +146,11 @@ function trackMouseState(node: Node) {
 	};
 }
 function touchEnd(node: Node, { onEnd }: { onEnd: (x: number, y: number) => void }) {
-	//@ts-ignore
 	const handleMouseUp = (e) => {
 		onEnd(e.clientX, e.clientY);
 	};
 	isMouseDown.set(false);
 
-	//@ts-ignore
 	const handleTouchEnd = (e) => {
 		if (e.changedTouches && e.changedTouches[0]) {
 			const touch = e.changedTouches[0];
