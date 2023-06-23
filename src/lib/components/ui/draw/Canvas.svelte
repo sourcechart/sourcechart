@@ -17,7 +17,7 @@
 	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
 	import * as PolyOps from './canvas-utils/PolygonOperations';
 
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
 	let id: string;
@@ -88,6 +88,7 @@
 	 */
 	const handleTouchStart = (x: number, y: number): void => {
 		//check if the user is not currently drawing.
+
 		id = generateID();
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];

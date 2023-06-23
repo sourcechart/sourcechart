@@ -8,7 +8,7 @@
 import { onDestroy } from 'svelte';
 import { isMouseDown } from '$lib/io/Stores';
 
-export function clickOutside(node: HTMLElement, options: any = {}) {
+function clickOutside(node: HTMLElement, options: any = {}) {
 	const handleClick = (event: MouseEvent) => {
 		if (options.exclude && options.exclude.contains(event.target)) {
 			return;
@@ -27,7 +27,7 @@ export function clickOutside(node: HTMLElement, options: any = {}) {
 	};
 }
 
-export function clickInside(node: HTMLElement, options: any = {}) {
+function clickInside(node: HTMLElement, options: any = {}) {
 	const handleClick = (event: MouseEvent) => {
 		if (options.exclude && options.exclude.contains(event.target)) {
 			return;
@@ -45,7 +45,7 @@ export function clickInside(node: HTMLElement, options: any = {}) {
 	};
 }
 
-export function mouseMove(node: Node, { onMove }: { onMove: (x: number, y: number) => void }) {
+function mouseMove(node: Node, { onMove }: { onMove: (x: number, y: number) => void }) {
 	let mouseDownValue: boolean;
 
 	//@ts-ignore
@@ -70,7 +70,7 @@ export function mouseMove(node: Node, { onMove }: { onMove: (x: number, y: numbe
 	};
 }
 
-export function touchStart(node: Node, { onStart }: { onStart: (x: number, y: number) => void }) {
+function touchStart(node: Node, { onStart }: { onStart: (x: number, y: number) => void }) {
 	//@ts-ignore
 	const handleMouseDown = (e) => {
 		onStart(e.clientX, e.clientY);
@@ -92,7 +92,7 @@ export function touchStart(node: Node, { onStart }: { onStart: (x: number, y: nu
 	};
 }
 
-export function touchMove(node: Node, { onMove }: { onMove: (x: number, y: number) => void }) {
+function touchMove(node: Node, { onMove }: { onMove: (x: number, y: number) => void }) {
 	let mouseDownValue: boolean;
 
 	//@ts-ignore
@@ -127,7 +127,7 @@ export function touchMove(node: Node, { onMove }: { onMove: (x: number, y: numbe
 	};
 }
 
-export function trackMouseState(node: Node) {
+function trackMouseState(node: Node) {
 	const handleMouseDown = () => {
 		isMouseDown.set(true);
 	};
@@ -146,7 +146,7 @@ export function trackMouseState(node: Node) {
 		}
 	};
 }
-export function touchEnd(node: Node, { onEnd }: { onEnd: (x: number, y: number) => void }) {
+function touchEnd(node: Node, { onEnd }: { onEnd: (x: number, y: number) => void }) {
 	//@ts-ignore
 	const handleMouseUp = (e) => {
 		onEnd(e.clientX, e.clientY);
@@ -172,7 +172,7 @@ export function touchEnd(node: Node, { onEnd }: { onEnd: (x: number, y: number) 
 	};
 }
 
-export function onMouseLeave(node: Node, { onLeave }: { onLeave: () => void }) {
+function onMouseLeave(node: Node, { onLeave }: { onLeave: () => void }) {
 	const handleMouseLeave = () => {
 		onLeave();
 		isMouseDown.set(false); // Add this line
@@ -186,3 +186,21 @@ export function onMouseLeave(node: Node, { onLeave }: { onLeave: () => void }) {
 		}
 	};
 }
+
+const getClientPos = (e: MouseEvent | TouchEvent) => {
+	if ('touches' in e && e.touches.length) {
+		return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+	}
+	return { x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY };
+};
+
+export {
+	onMouseLeave,
+	touchEnd,
+	touchMove,
+	touchStart,
+	mouseMove,
+	trackMouseState,
+	clickInside,
+	clickOutside
+};

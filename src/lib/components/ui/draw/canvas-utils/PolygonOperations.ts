@@ -67,10 +67,19 @@ const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 	return vertices.concat(midPoints);
 };
 
+/**
+ * ### Get the cursor for this position
+ *
+ * @param currentMousePosition
+ * @param polygon
+ * @param tolerance
+ * @returns
+ */
 const getHandlesHovered = (currentMousePosition: Point, polygon: Polygon, tolerance: number) => {
 	const { x, y } = currentMousePosition;
 	let handles = calculateRectangleHandles(polygon);
-
+	console.log(x, y);
+	console.log(handles[0], handles[7]);
 	for (let i = 0; i < handles.length; i++) {
 		let dx = x - handles[i].x;
 		let dy = y - handles[i].y;
