@@ -288,20 +288,6 @@
 		redraw(polygons, context, width, height, selectedPolygonIndex);
 	};
 
-	const getHandlesHovered = (polygon: Polygon, edges: Point[]) => {
-		const { x, y } = currentMousePosition;
-
-		if (Math.abs(y - polygon.vertices[0].y) < tolerance) {
-			return 'top';
-		} else if (Math.abs(x - polygon.vertices[1].x) < tolerance) {
-			return 'right';
-		} else if (Math.abs(y - polygon.vertices[2].y) < tolerance) {
-			return 'bottom';
-		} else if (Math.abs(x - polygon.vertices[3].x) < tolerance) {
-			return 'left';
-		}
-	};
-
 	const scaleEdges = (polygon: Polygon, scaleEdge: string, x: number, y: number) => {
 		if (scaleEdge === 'top') {
 			polygon.vertices[0].y = y;
@@ -318,14 +304,6 @@
 		}
 	};
 
-	const scaleCorners = (polygon: Polygon, scaleCorner: string, x: number, y: number) => {};
-
-	/**
-	 * Handle the end of touching movement
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleTouchEnd = (x: number, y: number) => {
 		if (
 			$mouseEventState === 'isTouching' &&

@@ -26,25 +26,6 @@ const isPointInPolygon = (point: Point, polygon: Polygon): boolean => {
 };
 
 /**
- * Near Point
- *
- * @param currentMousePosition
- * @param handlePosition
- * @param name
- * @returns
- */
-const nearPoint = (
-	currentMousePosition: MouseEventExtended,
-	handlePosition: Point,
-	name: string
-) => {
-	return Math.abs(currentMousePosition.x - handlePosition.x) < 5 &&
-		Math.abs(currentMousePosition.y - handlePosition.y) < 5
-		? name
-		: null;
-};
-
-/**
  * Get the nearest surrounding polygon that a point that is in `x` and `y`.
 
  *  @param point the current point (mouse position, or other)
@@ -86,7 +67,40 @@ const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 	return vertices.concat(midPoints);
 };
 
-const getHandles = () => {};
+const getHandlesHovered = (
+	currentMousePosition: MouseEventExtended,
+	polygon: Polygon,
+	tolerance: number
+) => {
+	const { x, y } = currentMousePosition;
+	let handles = calculateRectangleHandles(polygon);
+
+	for (let i = 0; i < handles.length; i++) {
+		let dx = x - handles[i].x;
+		let dy = y - handles[i].y;
+		if (Math.sqrt(dx * dx + dy * dy) < tolerance) {
+			switch (i) {
+				case 0:
+					return 'nw'; // top left
+				case 1:
+					return 'ne'; // top right
+				case 2:
+					return 'se'; // bottom right
+				case 3:
+					return 'sw'; // bottom left
+				case 4:
+					return 'n'; // middle top
+				case 5:
+					return 'e'; // middle right
+				case 6:
+					return 's'; // middle bottom
+				case 7:
+					return 'w'; // middle left
+			}
+		}
+	}
+	return null; // No handle is being hovered over.
+};
 
 /**
  *If it is, switch to the "isScaling" state and store the index of the handle being dragged.
@@ -118,7 +132,7 @@ const getScalingHandleIndex = (
 
 export {
 	calculateRectangleHandles,
-	nearPoint,
+	getHandlesHovered,
 	isPointInPolygon,
 	getContainingPolygon,
 	getScalingHandleIndex
