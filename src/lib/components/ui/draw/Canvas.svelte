@@ -43,8 +43,6 @@
 	const tolerance: number = 5;
 	const handleRadius: number = 5;
 
-	$: console.log($mouseEventState, handlePosition, $navBarState);
-
 	$: if (context) HIGHLIGHTCOLOR = 'red';
 
 	if (browser) {
@@ -163,7 +161,6 @@
 	const handleTouchMove = (x: number, y: number): void => {
 		x = x - offsetX;
 		y = y - offsetY;
-		console.log(cursorClass, $mouseEventState, $navBarState);
 		if (context) {
 			if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 				handleTouchCreateShapes(x, y, context);
@@ -401,7 +398,10 @@
 			drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 		}
 		if (!polygon && $navBarState === 'select') {
-			console.log('click outside');
+			selectedPolygonIndex = null;
+			if (context) {
+				redraw(polygons, context, width, height, selectedPolygonIndex);
+			}
 		}
 	};
 </script>
@@ -425,11 +425,6 @@
 		}}
 		use:MouseActions.touchEnd={{
 			onEnd: handleTouchEnd
-		}}
-		use:MouseActions.onMouseLeave={{
-			onLeave: () => {
-				console.log('leave');
-			}
 		}}
 	/>
 </div>
