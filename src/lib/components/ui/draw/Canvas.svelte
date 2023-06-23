@@ -394,13 +394,14 @@
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		const point: Point = { x, y };
 		const polygon = PolyOps.getContainingPolygon(point, polygons);
-		if (polygon) {
-			selectedPolygonIndex = polygons.indexOf(polygon);
-		}
 		if (context && polygon) {
+			selectedPolygonIndex = polygons.indexOf(polygon);
 			redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = HIGHLIGHTCOLOR;
 			drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
+		}
+		if (!polygon && $navBarState === 'select') {
+			console.log('click outside');
 		}
 	};
 </script>
