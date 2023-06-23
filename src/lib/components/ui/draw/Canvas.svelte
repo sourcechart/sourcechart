@@ -14,18 +14,18 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
-	import { redraw, drawRectangle, drawHandles, getRectangleHandles } from './canvas-utils/Draw';
-	import {
-		getContainingPolygon,
-		isPointInPolygon,
-		calculateRectangleHandles
-	} from './canvas-utils/PolygonOperations';
+	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
+	import * as PolyOps from './canvas-utils/PolygonOperations';
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
 	let id: string;
 	let highlightColor: string;
+	let cursorClass: string | null;
+
+	const tolerance: number = 5;
+	const handleRadius: number = 1;
 
 	let width: number = 0;
 	let height: number = 0;
@@ -40,11 +40,6 @@
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
 	let hoverIntersection: boolean = false;
-
-	let cursorClass: string = 'grabbable';
-
-	const tolerance: number = 1;
-	const handleRadius: number = 1;
 
 	$: if (context) highlightColor = 'red';
 
@@ -96,7 +91,7 @@
 		id = generateID();
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
-			if (polygon && isPointInPolygon({ x, y }, polygon)) {
+			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
 				dragOffset = { x, y };
 				mouseEventState.set('isTranslating');
 				return;
@@ -125,41 +120,26 @@
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
-		let handlePositions;
+		let hoverPolygon = null;
 		const polygon = polygons.find((polygon) => {
 			let insidePolygon =
-				isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
+				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
-			cursorClass = 'move';
-			let checkHandles = getRectangleHandles(polygon);
-			if (checkHandles) {
-				cursorClass = hoverIntersection ? checkHandles : '';
-				return true; // This will break the .find() loop
+			if (insidePolygon) {
+				hoverPolygon = polygon;
+				cursorClass = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
+				console.log(cursorClass);
+				if (cursorClass) return true; // This will break the .find() loop
 			}
-
 			return false; // This will continue to the next item in the .find() loop
 		});
 
 		if (!polygon) {
 			cursorClass = ''; // Reset the cursorClass if not found any polygon
-		}
-
-		if (polygon) handlePositions = calculateRectangleHandles(polygon);
-		let overHandle = false;
-		if (handlePositions)
-			handlePositions.forEach((handle) => {
-				const dx = x - handle.x;
-				const dy = y - handle.y;
-				const distanceSquared = dx * dx + dy * dy;
-				if (distanceSquared < handleRadius * handleRadius) {
-					overHandle = true;
-				}
-			});
-
-		if (overHandle) {
-			cursorClass = 'pointer'; // Change cursor to pointer when over handle
+		} else if (hoverPolygon && !cursorClass) {
+			cursorClass = 'move'; // If we found a polygon but not hovering over any handles, set to 'move'
 		} else {
-			cursorClass = 'default'; // Change cursor back to default when not over handle
+			cursorClass = cursorClass || 'default'; // Change cursor back to default when not over handle
 		}
 	};
 
@@ -280,7 +260,7 @@
 	 */
 	const handleTouchErase = (x: number, y: number, context: CanvasRenderingContext2D): void => {
 		const currentTouchPoint: Point = { x, y };
-		const polygon = getContainingPolygon(currentTouchPoint, polygons);
+		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, polygons);
 		const index = polygon ? polygons.indexOf(polygon) : -1;
 		if (index > -1) {
 			polygons.splice(index, 1);
@@ -340,7 +320,7 @@
 	 */
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		const point: Point = { x, y };
-		const polygon = getContainingPolygon(point, polygons);
+		const polygon = PolyOps.getContainingPolygon(point, polygons);
 		if (polygon) {
 			selectedPolygonIndex = polygons.indexOf(polygon);
 		}

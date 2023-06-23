@@ -67,11 +67,7 @@ const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 	return vertices.concat(midPoints);
 };
 
-const getHandlesHovered = (
-	currentMousePosition: MouseEventExtended,
-	polygon: Polygon,
-	tolerance: number
-) => {
+const getHandlesHovered = (currentMousePosition: Point, polygon: Polygon, tolerance: number) => {
 	const { x, y } = currentMousePosition;
 	let handles = calculateRectangleHandles(polygon);
 
@@ -81,25 +77,27 @@ const getHandlesHovered = (
 		if (Math.sqrt(dx * dx + dy * dy) < tolerance) {
 			switch (i) {
 				case 0:
-					return 'nw'; // top left
+					return 'nwse-resize'; // top left
 				case 1:
-					return 'ne'; // top right
+					return 'nesw-resize'; // top right
 				case 2:
-					return 'se'; // bottom right
+					return 'nwse-resize'; // bottom right
 				case 3:
-					return 'sw'; // bottom left
+					return 'nesw-resize'; // bottom left
 				case 4:
-					return 'n'; // middle top
+					return 'ns-resize'; // middle top
 				case 5:
-					return 'e'; // middle right
+					return 'ew-resize'; // middle right
 				case 6:
-					return 's'; // middle bottom
+					return 'ns-resize'; // middle bottom
 				case 7:
-					return 'w'; // middle left
+					return 'ew-resize'; // middle left
+				default:
+					return 'move';
 			}
 		}
 	}
-	return null; // No handle is being hovered over.
+	return 'move'; // No handle is being hovered over.
 };
 
 /**

@@ -1,4 +1,4 @@
-import type { Polygon, Point, Rectangle } from './Types';
+import type { Polygon, Point } from './Types';
 import { calculateRectangleHandles } from './PolygonOperations';
 
 /**
@@ -79,51 +79,4 @@ const drawHandles = (
 	});
 };
 
-/**
- * Get the handles for a rectangles
- *
- * @param polygon
- * @param point
- * @param tolerance
- * @returns
- */
-const getRectangleHandles = (polygon: Polygon): string | null => {
-	const handlePositions = calculateRectangleHandles(polygon);
-
-	for (let i = 0; i < handlePositions.length; i++) {
-		// Change this based on the vertex (corner)
-		switch (i) {
-			case 0:
-				return 'nwse-resize';
-			case 1:
-				return 'nesw-resize';
-			case 2:
-				return 'nwse-resize';
-			case 3:
-				return 'nesw-resize';
-			case 4:
-				return 'ns-resize';
-			case 5:
-				return 'ew-resize';
-			case 6:
-				return 'ns-resize';
-			case 7:
-				return 'ew-resize';
-			default:
-				return 'move'; // Fallback cursor
-		}
-	}
-	return null;
-};
-
-const createRectangleHandles = (rectangle: Polygon) => {
-	return rectangle.vertices.map((vertex, i) => {
-		return {
-			position: () => vertex,
-			cursor:
-				i % 2 === 0 ? (i === 0 ? 'nw-resize' : 'ne-resize') : i === 1 ? 'sw-resize' : 'se-resize'
-		};
-	});
-};
-
-export { drawRectangle, redraw, drawHandles, createRectangleHandles, getRectangleHandles };
+export { drawRectangle, redraw, drawHandles };
