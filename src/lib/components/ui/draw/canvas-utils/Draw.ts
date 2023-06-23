@@ -73,7 +73,7 @@ const drawHandles = (
 	handlePositions.forEach((point) => {
 		if (context) {
 			context.beginPath();
-			context.arc(point.x, point.y, 5, radius, 2 * Math.PI); // Change the 3rd argument to adjust the size of the circle
+			context.arc(point.x, point.y, radius, 0 * Math.PI, 2 * Math.PI); // Change the 3rd argument to adjust the size of the circle
 			context.stroke();
 		}
 	});

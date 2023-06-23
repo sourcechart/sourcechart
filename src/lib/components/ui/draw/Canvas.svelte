@@ -21,11 +21,7 @@
 	import { browser } from '$app/environment';
 
 	let id: string;
-	let highlightColor: string;
 	let cursorClass: string | null;
-
-	const tolerance: number = 5;
-	const handleRadius: number = 1;
 
 	let width: number = 0;
 	let height: number = 0;
@@ -41,10 +37,14 @@
 	let dragOffset: Point = { x: 0, y: 0 };
 	let hoverIntersection: boolean = false;
 
+	let HIGHLIGHTCOLOR: string;
+
 	let offsetX: number = 0;
 	let offsetY: number = 0;
+	const tolerance: number = 5;
+	const handleRadius: number = 5;
 
-	$: if (context) highlightColor = 'red';
+	$: if (context) HIGHLIGHTCOLOR = 'red';
 
 	if (browser) {
 		onMount(() => {
@@ -52,8 +52,8 @@
 			width = window.innerWidth;
 			height = window.innerHeight;
 			const rect = canvas.getBoundingClientRect();
-			offsetX = rect.left;
-			offsetY = rect.top;
+			offsetX = rect.left - handleRadius;
+			offsetY = rect.top - handleRadius;
 		});
 	}
 
@@ -171,7 +171,7 @@
 				$mouseEventState === 'isTranslating' &&
 				selectedPolygonIndex !== null
 			) {
-				handleTouchTranslate(x, y, context, selectedPolygonIndex, highlightColor);
+				handleTouchTranslate(x, y, context, selectedPolygonIndex, HIGHLIGHTCOLOR);
 			} else if ($mouseEventState === 'isScaling' && scalingHandleIndex !== null) {
 				handleTouchScale(x, y);
 			}
@@ -191,7 +191,7 @@
 		yWithOffset: number,
 		context: CanvasRenderingContext2D,
 		selectedPolygonIndex: number,
-		highlightColor: string
+		HIGHLIGHTCOLOR: string
 	) => {
 		const dx = xWithOffset - dragOffset.x;
 		const dy = yWithOffset - dragOffset.y;
@@ -202,9 +202,9 @@
 		}));
 		dragOffset = { x: xWithOffset, y: yWithOffset };
 		redraw(polygons, context, width, height, selectedPolygonIndex);
-		context.strokeStyle = highlightColor;
+		context.strokeStyle = HIGHLIGHTCOLOR;
 
-		drawHandles(polygon, context, highlightColor, handleRadius);
+		drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 	};
 
 	/**
@@ -229,7 +229,7 @@
 			}
 			if (context) {
 				redraw(polygons, context, width, height, selectedPolygonIndex);
-				drawHandles(polygon, context, highlightColor, handleRadius);
+				drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 			}
 		}
 	};
@@ -257,7 +257,7 @@
 					{ x: start.x, y: yWithOffset }
 				]
 			};
-			drawRectangle(polygon, context, highlightColor);
+			drawRectangle(polygon, context, HIGHLIGHTCOLOR);
 		}
 	};
 
@@ -317,8 +317,8 @@
 			};
 			polygons.push(polygon);
 			if (context) {
-				context.strokeStyle = highlightColor;
-				drawHandles(polygon, context, highlightColor, handleRadius);
+				context.strokeStyle = HIGHLIGHTCOLOR;
+				drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 			}
 		}
 		if ($mouseEventState === 'isScaling' && scalingHandleIndex !== null) {
@@ -342,8 +342,8 @@
 		}
 		if (context && polygon) {
 			redraw(polygons, context, width, height, selectedPolygonIndex);
-			context.strokeStyle = highlightColor;
-			drawHandles(polygon, context, highlightColor, handleRadius);
+			context.strokeStyle = HIGHLIGHTCOLOR;
+			drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 		}
 	};
 </script>
