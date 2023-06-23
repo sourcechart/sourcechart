@@ -16,12 +16,10 @@
 
 	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
 	import * as PolyOps from './canvas-utils/PolygonOperations';
-
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
 	let id: string;
-	let cursorClass: string | null;
 
 	let width: number = 0;
 	let height: number = 0;
@@ -38,9 +36,11 @@
 	let hoverIntersection: boolean = false;
 
 	let HIGHLIGHTCOLOR: string;
-
+	let cursorClass: string | null;
 	let offsetX: number = 0;
 	let offsetY: number = 0;
+	let handlePosition: HandlePosition;
+
 	const tolerance: number = 5;
 	const handleRadius: number = 5;
 
@@ -137,8 +137,9 @@
 			hoverIntersection = insidePolygon ? true : false;
 			if (insidePolygon) {
 				hoverPolygon = polygon;
-				cursorClass = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
-				if (cursorClass) return true; // This will break the .find() loop
+				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
+				cursorClass = getCursorStyleFromDirection(handlePosition);
+				if (handlePosition) return true; // This will break the .find() loop
 			}
 			return false; // This will continue to the next item in the .find() loop
 		});
@@ -172,8 +173,8 @@
 				selectedPolygonIndex !== null
 			) {
 				handleTouchTranslate(x, y, context, selectedPolygonIndex, HIGHLIGHTCOLOR);
-			} else if ($mouseEventState === 'isScaling' && scalingHandleIndex !== null) {
-				handleTouchScale(x, y);
+			} else if ($mouseEventState === 'isResizing' && scalingHandleIndex !== null) {
+				handleTouchResize(x, y);
 			}
 		}
 	};
@@ -208,32 +209,42 @@
 	};
 
 	/**
+	 *Get Cursor from Direction
+	 *
+	 * @param direction
+	 */
+	const getCursorStyleFromDirection = (direction: string): string | null => {
+		const cursorMap: { [key: string]: string } = {
+			n: 'ns-resize',
+			ne: 'nesw-resize',
+			e: 'ew-resize',
+			se: 'nwse-resize',
+			s: 'ns-resize',
+			sw: 'nesw-resize',
+			w: 'ew-resize',
+			nw: 'nwse-resize',
+			center: 'move'
+		};
+		return cursorMap[direction] || null;
+	};
+
+	/**
 	 * ### Handle the scaling of a rectangle to different heights and widths
 	 *
 	 * @param xWithOffset
 	 * @param yWithOffset
 	 */
-	const handleTouchScale = (xWithOffset: number, yWithOffset: number) => {
+
+	const handleTouchResize = (xWithOffset: number, yWithOffset: number) => {
 		if (selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
-			//let handlePositions: Point[] = [...polygon.vertices];
-			if (scalingHandleIndex) {
-				if (scalingHandleIndex < polygon.vertices.length) {
-					polygon.vertices[scalingHandleIndex] = { x: xWithOffset, y: yWithOffset };
-				} else {
-					let vertexIndex = scalingHandleIndex - polygon.vertices.length;
-					let nextVertexIndex = (scalingHandleIndex + 1) % polygon.vertices.length;
-					polygon.vertices[vertexIndex].x = xWithOffset;
-					polygon.vertices[nextVertexIndex].x = xWithOffset;
-				}
-			}
+			if (handlePosition) resizeRectangle(xWithOffset, yWithOffset, polygon, handlePosition);
 			if (context) {
 				redraw(polygons, context, width, height, selectedPolygonIndex);
 				drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 			}
 		}
 	};
-
 	/**
 	 * ### Create the shapes where charts will be put.
 	 *
@@ -282,19 +293,36 @@
 		redraw(polygons, context, width, height, selectedPolygonIndex);
 	};
 
-	const scaleEdges = (polygon: Polygon, scaleEdge: string, x: number, y: number) => {
-		if (scaleEdge === 'top') {
+	const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: string) => {
+		if (resizeEdge === 'n') {
 			polygon.vertices[0].y = y;
 			polygon.vertices[1].y = y;
-		} else if (scaleEdge === 'right') {
+		} else if (resizeEdge === 'e') {
 			polygon.vertices[1].x = x;
 			polygon.vertices[2].x = x;
-		} else if (scaleEdge === 'bottom') {
+		} else if (resizeEdge === 's') {
 			polygon.vertices[2].y = y;
 			polygon.vertices[3].y = y;
-		} else if (scaleEdge === 'left') {
+		} else if (resizeEdge === 'w') {
 			polygon.vertices[3].x = x;
 			polygon.vertices[0].x = x;
+		} else if (resizeEdge === 'ne') {
+			polygon.vertices[0].y = y;
+			polygon.vertices[1].x = x;
+			polygon.vertices[1].y = y;
+		} else if (resizeEdge === 'se') {
+			polygon.vertices[2].x = x;
+			polygon.vertices[1].x = x;
+			polygon.vertices[2].y = y;
+		} else if (resizeEdge === 'sw') {
+			polygon.vertices[3].x = x;
+			polygon.vertices[2].x = x;
+			polygon.vertices[2].y = y;
+			polygon.vertices[3].y = y;
+		} else if (resizeEdge === 'nw') {
+			polygon.vertices[0].x = x;
+			polygon.vertices[0].y = y;
+			polygon.vertices[3].x = x;
 		}
 	};
 
@@ -321,8 +349,8 @@
 				drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 			}
 		}
-		if ($mouseEventState === 'isScaling' && scalingHandleIndex !== null) {
-			handleTouchScale(x, y);
+		if ($mouseEventState === 'isResizing' && scalingHandleIndex !== null) {
+			handleTouchResize(x, y);
 			scalingHandleIndex = null;
 		}
 

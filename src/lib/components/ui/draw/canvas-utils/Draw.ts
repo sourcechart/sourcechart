@@ -67,7 +67,6 @@ const drawHandles = (
 	let handlePositions: Point[];
 	handlePositions = calculateRectangleHandles(polygon);
 
-	console.log(handlePositions);
 	context.strokeStyle = color;
 	context.lineWidth = 1;
 	handlePositions.forEach((point) => {

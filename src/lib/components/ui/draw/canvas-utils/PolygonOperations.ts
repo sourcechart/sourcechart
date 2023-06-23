@@ -75,10 +75,13 @@ const calculateRectangleHandles = (polygon: Polygon): Point[] => {
  * @param tolerance
  * @returns
  */
-const getHandlesHovered = (currentMousePosition: Point, polygon: Polygon, tolerance: number) => {
+const getHandlesHovered = (
+	currentMousePosition: Point,
+	polygon: Polygon,
+	tolerance: number
+): HandlePosition => {
 	const { x, y } = currentMousePosition;
 	let handles = calculateRectangleHandles(polygon);
-	console.log(x, handles[0].x, y, handles[0].y);
 
 	for (let i = 0; i < handles.length; i++) {
 		let dx = x - handles[i].x;
@@ -86,61 +89,27 @@ const getHandlesHovered = (currentMousePosition: Point, polygon: Polygon, tolera
 		if (Math.sqrt(dx * dx + dy * dy) < tolerance) {
 			switch (i) {
 				case 0:
-					return 'nwse-resize'; // top left
+					return 'nw'; // top left
 				case 1:
-					return 'nesw-resize'; // top right
+					return 'ne'; // top right
 				case 2:
-					return 'nwse-resize'; // bottom right
+					return 'se'; // bottom right
 				case 3:
-					return 'nesw-resize'; // bottom left
+					return 'sw'; // bottom left
 				case 4:
-					return 'ns-resize'; // middle top
+					return 'n'; // middle top
 				case 5:
-					return 'ew-resize'; // middle right
+					return 'e'; // middle right
 				case 6:
-					return 'ns-resize'; // middle bottom
+					return 's'; // middle bottom
 				case 7:
-					return 'ew-resize'; // middle left
+					return 'w'; // middle left
 				default:
-					return 'move';
+					return 'center';
 			}
 		}
 	}
-	return 'move'; // No handle is being hovered over.
+	return 'center'; // No handle is being hovered over.
 };
 
-/**
- *If it is, switch to the "isScaling" state and store the index of the handle being dragged.
- *
- * @param handlePositions
- * @param currentMousePosition
- * @param handleRadius
- *
- * @returns index
- */
-const getScalingHandleIndex = (
-	handlePositions: Point[],
-	currentMousePosition: MouseEventExtended | Point,
-	handleRadius: number
-): number | null => {
-	let scalingHandleIndex: number | null = null; // Assign default value as null
-	for (let i = 0; i < handlePositions.length; i++) {
-		const dx = currentMousePosition.x - handlePositions[i].x;
-		const dy = currentMousePosition.y - handlePositions[i].y;
-		const distanceSquared = dx * dx + dy * dy;
-		if (distanceSquared < handleRadius * handleRadius) {
-			scalingHandleIndex = i;
-			mouseEventState.set('isScaling');
-			break;
-		}
-	}
-	return scalingHandleIndex;
-};
-
-export {
-	calculateRectangleHandles,
-	getHandlesHovered,
-	isPointInPolygon,
-	getContainingPolygon,
-	getScalingHandleIndex
-};
+export { calculateRectangleHandles, getHandlesHovered, isPointInPolygon, getContainingPolygon };
