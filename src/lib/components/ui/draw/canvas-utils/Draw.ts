@@ -124,68 +124,14 @@ const getRectangleHandles = (polygon: Polygon): string | null => {
 	return null;
 };
 
-const createRectangleHandles = (polygon: Polygon): any[] => {
-	const handlePositions = calculateRectangleHandles(polygon);
-	const cursorMappings = getRectangleHandles(polygon);
+function createRectangleHandles(rectangle: Polygon) {
+	return rectangle.vertices.map((vertex, i) => {
+		return {
+			position: () => vertex,
+			cursor:
+				i % 2 === 0 ? (i === 0 ? 'nw-resize' : 'ne-resize') : i === 1 ? 'sw-resize' : 'se-resize'
+		};
+	});
+}
 
-	const rectangle: Rectangle = {
-		x: Math.min(...handlePositions.map((point) => point.x)),
-		y: Math.min(...handlePositions.map((point) => point.y)),
-		width:
-			Math.max(...handlePositions.map((point) => point.x)) -
-			Math.min(...handlePositions.map((point) => point.x)),
-		height:
-			Math.max(...handlePositions.map((point) => point.y)) -
-			Math.min(...handlePositions.map((point) => point.y))
-	};
-
-	const handles = [
-		{
-			position: () => ({ left: `${rectangle.x}px`, top: `${rectangle.y}px` }),
-			cursor: cursorMappings
-		}, // Top-left
-		{
-			position: () => ({ left: `${rectangle.x + rectangle.width / 2}px`, top: `${rectangle.y}px` }),
-			cursor: cursorMappings
-		}, // Top-middle
-		{
-			position: () => ({ left: `${rectangle.x + rectangle.width}px`, top: `${rectangle.y}px` }),
-			cursor: cursorMappings
-		}, // Top-right
-		{
-			position: () => ({
-				left: `${rectangle.x + rectangle.width}px`,
-				top: `${rectangle.y + rectangle.height / 2}px`
-			}),
-			cursor: cursorMappings
-		}, // Middle-right
-		{
-			position: () => ({
-				left: `${rectangle.x + rectangle.width}px`,
-				top: `${rectangle.y + rectangle.height}px`
-			}),
-			cursor: cursorMappings
-		}, // Bottom-right
-		{
-			position: () => ({
-				left: `${rectangle.x + rectangle.width / 2}px`,
-				top: `${rectangle.y + rectangle.height}px`
-			}),
-			cursor: cursorMappings
-		}, // Bottom-middle
-		{
-			position: () => ({ left: `${rectangle.x}px`, top: `${rectangle.y + rectangle.height}px` }),
-			cursor: cursorMappings
-		}, // Bottom-left
-		{
-			position: () => ({
-				left: `${rectangle.x}px`,
-				top: `${rectangle.y + rectangle.height / 2}px`
-			}),
-			cursor: cursorMappings
-		} // Middle-left
-	];
-
-	return handles;
-};
 export { drawRectangle, redraw, drawHandles, createRectangleHandles, getRectangleHandles };

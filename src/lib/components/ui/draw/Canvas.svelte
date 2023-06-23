@@ -1,4 +1,8 @@
+<!-- This module contains the canvas elements for each rectangle-->
+
 <script lang="ts">
+	import * as MouseActions from '$lib/actions/MouseActions';
+
 	import {
 		activeSidebar,
 		allCharts,
@@ -10,35 +14,38 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
-	import * as MouseActions from '$lib/actions/MouseActions';
-	import * as Draw from './canvas-utils/Draw';
-	import * as PolygonOps from './canvas-utils/PolygonOperations';
-
-	import Handle from './Handle.svelte';
+	import { redraw, drawRectangle, drawHandles, getRectangleHandles } from './canvas-utils/Draw';
+	import {
+		getContainingPolygon,
+		isPointInPolygon,
+		calculateRectangleHandles
+	} from './canvas-utils/PolygonOperations';
 
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
 	let id: string;
 	let highlightColor: string;
+
 	let width: number = 0;
 	let height: number = 0;
-
-	let cursorClass: string = 'grabbable';
-	let hoverIntersection: boolean = false;
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 
 	let selectedPolygonIndex: number | null = null;
 	let scalingHandleIndex: number | null = null;
-
 	let polygons: Polygon[] = [];
 	let start: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
-	let handles: any[] = [];
+	let hoverIntersection: boolean = false;
 
+	let cursorClass: string = 'grabbable';
+
+	$: console.log(cursorClass);
+
+	const tolerance: number = 1;
 	const handleRadius: number = 1;
 
 	$: if (context) highlightColor = 'red';
@@ -87,11 +94,11 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchStart = (x: number, y: number): void => {
-		//check if the user is not currently DrawUtilsing.
+		//check if the user is not currently drawing.
 		id = generateID();
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
-			if (polygon && PolygonOps.isPointInPolygon({ x, y }, polygon)) {
+			if (polygon && isPointInPolygon({ x, y }, polygon)) {
 				dragOffset = { x, y };
 				mouseEventState.set('isTranslating');
 				return;
@@ -123,14 +130,15 @@
 		let handlePositions;
 		const polygon = polygons.find((polygon) => {
 			let insidePolygon =
-				PolygonOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
+				isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
 			cursorClass = 'move';
-			let checkHandles = Draw.getRectangleHandles(polygon); //Draw.createRectangleHandles(polygon);
+			let checkHandles = getRectangleHandles(polygon);
 			if (checkHandles) {
 				cursorClass = hoverIntersection ? checkHandles : '';
 				return true; // This will break the .find() loop
 			}
+
 			return false; // This will continue to the next item in the .find() loop
 		});
 
@@ -138,7 +146,7 @@
 			cursorClass = ''; // Reset the cursorClass if not found any polygon
 		}
 
-		if (polygon) handlePositions = PolygonOps.calculateRectangleHandles(polygon);
+		if (polygon) handlePositions = calculateRectangleHandles(polygon);
 		let overHandle = false;
 		if (handlePositions)
 			handlePositions.forEach((handle) => {
@@ -204,10 +212,10 @@
 			y: vertex.y + dy
 		}));
 		dragOffset = { x, y };
-		Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
+		redraw(polygons, context, width, height, selectedPolygonIndex);
 		context.strokeStyle = highlightColor;
-		handles = Draw.createRectangleHandles(polygon);
-		//DrawUtils.DrawUtilsHandles(polygon, context, highlightColor, handleRadius);
+
+		drawHandles(polygon, context, highlightColor, handleRadius);
 	};
 
 	/**
@@ -231,8 +239,8 @@
 				}
 			}
 			if (context) {
-				Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
-				handles = Draw.createRectangleHandles(polygon);
+				redraw(polygons, context, width, height, selectedPolygonIndex);
+				drawHandles(polygon, context, highlightColor, handleRadius);
 			}
 		}
 	};
@@ -250,7 +258,7 @@
 		context: CanvasRenderingContext2D
 	): void => {
 		if ($navBarState === 'drawRectangle') {
-			Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
+			redraw(polygons, context, width, height, selectedPolygonIndex);
 			const polygon = {
 				id: id,
 				vertices: [
@@ -260,7 +268,7 @@
 					{ x: start.x, y: y }
 				]
 			};
-			//Draw(polygon, context, highlightColor);
+			drawRectangle(polygon, context, highlightColor);
 		}
 	};
 
@@ -273,13 +281,45 @@
 	 */
 	const handleTouchErase = (x: number, y: number, context: CanvasRenderingContext2D): void => {
 		const currentTouchPoint: Point = { x, y };
-		const polygon = PolygonOps.getContainingPolygon(currentTouchPoint, polygons);
+		const polygon = getContainingPolygon(currentTouchPoint, polygons);
 		const index = polygon ? polygons.indexOf(polygon) : -1;
 		if (index > -1) {
 			polygons.splice(index, 1);
 		}
-		Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
+		redraw(polygons, context, width, height, selectedPolygonIndex);
 	};
+
+	const getHandlesHovered = (polygon: Polygon, edges: Point[]) => {
+		const { x, y } = currentMousePosition;
+
+		if (Math.abs(y - polygon.vertices[0].y) < tolerance) {
+			return 'top';
+		} else if (Math.abs(x - polygon.vertices[1].x) < tolerance) {
+			return 'right';
+		} else if (Math.abs(y - polygon.vertices[2].y) < tolerance) {
+			return 'bottom';
+		} else if (Math.abs(x - polygon.vertices[3].x) < tolerance) {
+			return 'left';
+		}
+	};
+
+	const scaleEdges = (polygon: Polygon, scaleEdge: string, x: number, y: number) => {
+		if (scaleEdge === 'top') {
+			polygon.vertices[0].y = y;
+			polygon.vertices[1].y = y;
+		} else if (scaleEdge === 'right') {
+			polygon.vertices[1].x = x;
+			polygon.vertices[2].x = x;
+		} else if (scaleEdge === 'bottom') {
+			polygon.vertices[2].y = y;
+			polygon.vertices[3].y = y;
+		} else if (scaleEdge === 'left') {
+			polygon.vertices[3].x = x;
+			polygon.vertices[0].x = x;
+		}
+	};
+
+	const scaleCorners = (polygon: Polygon, scaleCorner: string, x: number, y: number) => {};
 
 	/**
 	 * Handle the end of touching movement
@@ -305,8 +345,7 @@
 			polygons.push(polygon);
 			if (context) {
 				context.strokeStyle = highlightColor;
-				handles = Draw.createRectangleHandles(polygon);
-				//DrawUtils.DrawUtilsHandles(polygon, context, highlightColor, handleRadius);
+				drawHandles(polygon, context, highlightColor, handleRadius);
 			}
 		}
 		if ($mouseEventState === 'isScaling' && scalingHandleIndex !== null) {
@@ -324,20 +363,19 @@
 	 */
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
 		const point: Point = { x, y };
-		const polygon = PolygonOps.getContainingPolygon(point, polygons);
+		const polygon = getContainingPolygon(point, polygons);
 		if (polygon) {
 			selectedPolygonIndex = polygons.indexOf(polygon);
 		}
 		if (context && polygon) {
-			Draw.redraw(polygons, context, width, height, selectedPolygonIndex);
+			redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = highlightColor;
-			handles = Draw.createRectangleHandles(polygon);
-			//DrawUtils.DrawUtilsHandles(polygon, context, highlightColor, handleRadius);
+			drawHandles(polygon, context, highlightColor, handleRadius);
 		}
 	};
 </script>
 
-<div style="position: relative;" {id}>
+<div {id}>
 	<canvas
 		{width}
 		{height}
@@ -363,9 +401,6 @@
 			}
 		}}
 	/>
-	{#each handles as handle}
-		<Handle cursor={handle.cursor} position={handle.position()} />
-	{/each}
 </div>
 
 <svelte:window
@@ -376,3 +411,9 @@
 		}
 	}}
 />
+
+<style>
+	.grabbable {
+		cursor: move;
+	}
+</style>
