@@ -184,7 +184,6 @@
 				cursorClass === 'move' &&
 				selectedPolygonIndex !== null
 			) {
-				console.log('translating');
 				handleTouchTranslate(x, y, context, selectedPolygonIndex, HIGHLIGHTCOLOR);
 			}
 			if (
@@ -227,7 +226,7 @@
 	};
 
 	/**
-	 *Get Cursor from Direction
+	 * ### Get Cursor from Direction
 	 *
 	 * @param direction
 	 */
@@ -247,7 +246,7 @@
 	};
 
 	/**
-	 * ### Handle the scaling of a rectangle to different heights and widths
+	 * ### Handle the resizing of a rectangle to different heights and widths
 	 *
 	 * @param xWithOffset
 	 * @param yWithOffset
@@ -312,7 +311,7 @@
 	};
 
 	/**
-	 * Handle Touch End
+	 * ### Handle Touch End
 	 *
 	 * @param x
 	 * @param y
@@ -343,8 +342,8 @@
 		if ($mouseEventState === 'isResizing') {
 			handleTouchResize(x, y);
 		}
-
 		mouseEventState.set('isHovering');
+		navBarState.set('select');
 	};
 
 	/**
@@ -366,6 +365,7 @@
 			if (context) {
 				redraw(polygons, context, width, height, selectedPolygonIndex);
 			}
+			activeSidebar.set(false);
 		}
 	};
 </script>
