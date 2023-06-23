@@ -14,7 +14,7 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
-	import { redraw, drawRectangle, drawHandles } from './canvas-utils/Draw';
+	import { redraw, drawRectangle, drawHandles, resizeRectangle } from './canvas-utils/Draw';
 	import * as PolyOps from './canvas-utils/PolygonOperations';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -53,6 +53,12 @@
 			const rect = canvas.getBoundingClientRect();
 			offsetX = rect.left - handleRadius;
 			offsetY = rect.top - handleRadius;
+			window.addEventListener('keydown', handleKeyDown);
+			return {
+				destroy() {
+					window.removeEventListener('keydown', handleKeyDown);
+				}
+			};
 		});
 	}
 
@@ -81,6 +87,10 @@
 			removeChart();
 			$activeSidebar = false;
 			polygons.splice(selectedPolygonIndex, 1);
+			if (selectedPolygonIndex > -1) {
+				polygons.splice(selectedPolygonIndex, 1);
+			}
+			if (context) redraw(polygons, context, width, height, selectedPolygonIndex);
 			selectedPolygonIndex = null;
 		}
 	};
@@ -299,52 +309,6 @@
 			polygons.splice(index, 1);
 		}
 		redraw(polygons, context, width, height, selectedPolygonIndex);
-	};
-
-	/**
-	 * Resizie te
-	 *
-	 * @param x
-	 * @param y
-	 * @param polygon
-	 * @param resizeEdge
-	 */
-
-	const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: string) => {
-		//0:nw 1:ne 2:se 3:sw
-		if (resizeEdge === 'n') {
-			polygon.vertices[0].y = y;
-			polygon.vertices[1].y = y;
-		} else if (resizeEdge === 'e') {
-			polygon.vertices[1].x = x;
-			polygon.vertices[2].x = x;
-		} else if (resizeEdge === 's') {
-			polygon.vertices[2].y = y;
-			polygon.vertices[3].y = y;
-		} else if (resizeEdge === 'w') {
-			polygon.vertices[3].x = x;
-			polygon.vertices[0].x = x;
-		} else if (resizeEdge === 'ne') {
-			polygon.vertices[0].y = y;
-			polygon.vertices[1].y = y;
-			polygon.vertices[1].x = x;
-			polygon.vertices[2].x = x;
-		} else if (resizeEdge === 'se') {
-			polygon.vertices[2].x = x;
-			polygon.vertices[1].x = x;
-			polygon.vertices[2].y = y;
-			polygon.vertices[3].y = y;
-		} else if (resizeEdge === 'sw') {
-			polygon.vertices[3].x = x;
-			polygon.vertices[0].x = x;
-			polygon.vertices[2].y = y;
-			polygon.vertices[3].y = y;
-		} else if (resizeEdge === 'nw') {
-			polygon.vertices[0].x = x;
-			polygon.vertices[3].x = x;
-			polygon.vertices[0].y = y;
-			polygon.vertices[1].y = y;
-		}
 	};
 
 	/**
