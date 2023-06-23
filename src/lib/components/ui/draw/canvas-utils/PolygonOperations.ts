@@ -78,8 +78,8 @@ const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 const getHandlesHovered = (currentMousePosition: Point, polygon: Polygon, tolerance: number) => {
 	const { x, y } = currentMousePosition;
 	let handles = calculateRectangleHandles(polygon);
-	console.log(x, y);
-	console.log(handles[0], handles[7]);
+	console.log(x, handles[0].x, y, handles[0].y);
+
 	for (let i = 0; i < handles.length; i++) {
 		let dx = x - handles[i].x;
 		let dy = y - handles[i].y;

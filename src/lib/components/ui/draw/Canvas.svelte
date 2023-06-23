@@ -19,6 +19,7 @@
 
 	import { onDestroy, onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import { offset } from '@popperjs/core';
 
 	let id: string;
 	let highlightColor: string;
@@ -41,6 +42,10 @@
 	let dragOffset: Point = { x: 0, y: 0 };
 	let hoverIntersection: boolean = false;
 
+	let offsetX: number = 0;
+	let offsetY: number = 0;
+
+	$: console.log(offsetX, offsetY);
 	$: if (context) highlightColor = 'red';
 
 	if (browser) {
@@ -48,6 +53,9 @@
 			context = canvas.getContext('2d');
 			width = window.innerWidth;
 			height = window.innerHeight;
+			const rect = canvas.getBoundingClientRect();
+			offsetX = rect.left;
+			offsetY = rect.top;
 		});
 	}
 
@@ -88,7 +96,8 @@
 	 */
 	const handleTouchStart = (x: number, y: number): void => {
 		//check if the user is not currently drawing.
-
+		x = x - offsetX;
+		y = y - offsetY;
 		id = generateID();
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
@@ -120,6 +129,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
+		x = x - offsetX;
+		y = y - offsetY;
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 		const polygon = polygons.find((polygon) => {
@@ -151,6 +162,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchMove = (x: number, y: number): void => {
+		x = x - offsetX;
+		y = y - offsetY;
 		if (context) {
 			if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 				handleTouchCreateShapes(x, y, context);
@@ -162,7 +175,6 @@
 				selectedPolygonIndex !== null
 			) {
 				handleTouchTranslate(x, y, context, selectedPolygonIndex, highlightColor);
-				console.log(x, y);
 			} else if ($mouseEventState === 'isScaling' && scalingHandleIndex !== null) {
 				handleTouchScale(x, y);
 			}
@@ -172,26 +184,27 @@
 	/**
 	 * ### Translate (Drag) the polygon element to a different position on the screen.
 	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
+	 * @param xWithOffset
+	 * @param yWithOffset
 	 * @param context Canvas Rendering context
 	 * @param selectedPolygonIndex the polygon we clicked on
 	 */
 	const handleTouchTranslate = (
-		x: number,
-		y: number,
+		xWithOffset: number,
+		yWithOffset: number,
 		context: CanvasRenderingContext2D,
 		selectedPolygonIndex: number,
 		highlightColor: string
 	) => {
-		const dx = x - dragOffset.x;
-		const dy = y - dragOffset.y;
+		const dx = xWithOffset - dragOffset.x;
+		const dy = yWithOffset - dragOffset.y;
 		const polygon = polygons[selectedPolygonIndex];
 		polygon.vertices = polygon.vertices.map((vertex) => ({
 			x: vertex.x + dx,
 			y: vertex.y + dy
 		}));
-		dragOffset = { x, y };
+		//@ts-ignore
+		dragOffset = { xWithOffset, yWithOffset };
 		redraw(polygons, context, width, height, selectedPolygonIndex);
 		context.strokeStyle = highlightColor;
 
@@ -201,21 +214,22 @@
 	/**
 	 * ### Handle the scaling of a rectangle to different heights and widths
 	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
+	 * @param xWithOffset
+	 * @param yWithOffset
 	 */
-	const handleTouchScale = (x: number, y: number) => {
+	const handleTouchScale = (xWithOffset: number, yWithOffset: number) => {
 		if (selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
 			//let handlePositions: Point[] = [...polygon.vertices];
 			if (scalingHandleIndex) {
 				if (scalingHandleIndex < polygon.vertices.length) {
-					polygon.vertices[scalingHandleIndex] = { x, y };
+					//@ts-ignore
+					polygon.vertices[scalingHandleIndex] = { xWithOffset, yWithOffset };
 				} else {
 					let vertexIndex = scalingHandleIndex - polygon.vertices.length;
 					let nextVertexIndex = (scalingHandleIndex + 1) % polygon.vertices.length;
-					polygon.vertices[vertexIndex].x = x;
-					polygon.vertices[nextVertexIndex].x = x;
+					polygon.vertices[vertexIndex].x = xWithOffset;
+					polygon.vertices[nextVertexIndex].x = xWithOffset;
 				}
 			}
 			if (context) {
@@ -228,13 +242,13 @@
 	/**
 	 * ### Create the shapes where charts will be put.
 	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
+	 * @param xWithOffset x position on the screen
+	 * @param yWithOffset y position on the screen
 	 * @param context Canvas Rendering context
 	 */
 	const handleTouchCreateShapes = (
-		x: number,
-		y: number,
+		xWithOffset: number,
+		yWithOffset: number,
 		context: CanvasRenderingContext2D
 	): void => {
 		if ($navBarState === 'drawRectangle') {
@@ -243,9 +257,9 @@
 				id: id,
 				vertices: [
 					{ x: start.x, y: start.y },
-					{ x: x, y: start.y },
-					{ x: x, y: y },
-					{ x: start.x, y: y }
+					{ x: xWithOffset, y: start.y },
+					{ x: xWithOffset, y: yWithOffset },
+					{ x: start.x, y: yWithOffset }
 				]
 			};
 			drawRectangle(polygon, context, highlightColor);
@@ -255,12 +269,17 @@
 	/**
 	 * ### On intersection of a polygon while your mouse is touching erase
 	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 * @param context Canvas Rendering context
+	 * @param xWithOffset
+	 * @param yWithOffset
+	 * @param context
 	 */
-	const handleTouchErase = (x: number, y: number, context: CanvasRenderingContext2D): void => {
-		const currentTouchPoint: Point = { x, y };
+	const handleTouchErase = (
+		xWithOffset: number,
+		yWithOffset: number,
+		context: CanvasRenderingContext2D
+	): void => {
+		//@ts-ignore
+		const currentTouchPoint: Point = { xWithOffset, yWithOffset };
 		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, polygons);
 		const index = polygon ? polygons.indexOf(polygon) : -1;
 		if (index > -1) {
@@ -286,6 +305,8 @@
 	};
 
 	const handleTouchEnd = (x: number, y: number) => {
+		x = x - offsetX;
+		y = y - offsetY;
 		if (
 			$mouseEventState === 'isTouching' &&
 			$navBarState !== 'eraser' &&
