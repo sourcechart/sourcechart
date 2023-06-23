@@ -28,7 +28,6 @@
 	let context: CanvasRenderingContext2D | null;
 
 	let selectedPolygonIndex: number | null = null;
-	let scalingHandleIndex: number | null = null;
 	let polygons: Polygon[] = [];
 	let start: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
@@ -173,7 +172,7 @@
 				selectedPolygonIndex !== null
 			) {
 				handleTouchTranslate(x, y, context, selectedPolygonIndex, HIGHLIGHTCOLOR);
-			} else if ($mouseEventState === 'isResizing' && scalingHandleIndex !== null) {
+			} else if ($mouseEventState === 'isResizing') {
 				handleTouchResize(x, y);
 			}
 		}
@@ -234,7 +233,6 @@
 	 * @param xWithOffset
 	 * @param yWithOffset
 	 */
-
 	const handleTouchResize = (xWithOffset: number, yWithOffset: number) => {
 		if (selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
@@ -245,6 +243,7 @@
 			}
 		}
 	};
+
 	/**
 	 * ### Create the shapes where charts will be put.
 	 *
@@ -349,9 +348,8 @@
 				drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 			}
 		}
-		if ($mouseEventState === 'isResizing' && scalingHandleIndex !== null) {
+		if ($mouseEventState === 'isResizing') {
 			handleTouchResize(x, y);
-			scalingHandleIndex = null;
 		}
 
 		mouseEventState.set('isHovering');
