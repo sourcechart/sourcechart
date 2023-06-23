@@ -43,6 +43,8 @@
 	const tolerance: number = 5;
 	const handleRadius: number = 5;
 
+	$: console.log($mouseEventState, handlePosition, $navBarState);
+
 	$: if (context) HIGHLIGHTCOLOR = 'red';
 
 	if (browser) {
@@ -161,18 +163,29 @@
 	const handleTouchMove = (x: number, y: number): void => {
 		x = x - offsetX;
 		y = y - offsetY;
+		console.log(cursorClass, $mouseEventState, $navBarState);
 		if (context) {
 			if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 				handleTouchCreateShapes(x, y, context);
-			} else if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
+			}
+			if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
 				handleTouchErase(x, y, context);
-			} else if (
+			}
+			if (
 				$navBarState === 'select' &&
 				$mouseEventState === 'isTranslating' &&
+				cursorClass === 'move' &&
 				selectedPolygonIndex !== null
 			) {
+				console.log('translating');
 				handleTouchTranslate(x, y, context, selectedPolygonIndex, HIGHLIGHTCOLOR);
-			} else if ($mouseEventState === 'isResizing') {
+			}
+			if (
+				$navBarState === 'select' &&
+				$mouseEventState === 'isTranslating' &&
+				cursorClass !== 'move' &&
+				selectedPolygonIndex !== null
+			) {
 				handleTouchResize(x, y);
 			}
 		}
@@ -203,7 +216,6 @@
 		dragOffset = { x: xWithOffset, y: yWithOffset };
 		redraw(polygons, context, width, height, selectedPolygonIndex);
 		context.strokeStyle = HIGHLIGHTCOLOR;
-
 		drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 	};
 
@@ -221,8 +233,8 @@
 			s: 'ns-resize',
 			sw: 'nesw-resize',
 			w: 'ew-resize',
-			nw: 'nwse-resize',
-			center: 'move'
+			nw: 'nwse-resize'
+			//center: 'move'
 		};
 		return cursorMap[direction] || null;
 	};
