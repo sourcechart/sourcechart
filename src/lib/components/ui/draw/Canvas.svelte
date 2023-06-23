@@ -43,8 +43,6 @@
 
 	let cursorClass: string = 'grabbable';
 
-	$: console.log(cursorClass);
-
 	const tolerance: number = 1;
 	const handleRadius: number = 1;
 
@@ -183,6 +181,7 @@
 				selectedPolygonIndex !== null
 			) {
 				handleTouchTranslate(x, y, context, selectedPolygonIndex, highlightColor);
+				console.log(x, y);
 			} else if ($mouseEventState === 'isScaling' && scalingHandleIndex !== null) {
 				handleTouchScale(x, y);
 			}
@@ -411,9 +410,3 @@
 		}
 	}}
 />
-
-<style>
-	.grabbable {
-		cursor: move;
-	}
-</style>

@@ -26,6 +26,25 @@ const isPointInPolygon = (point: Point, polygon: Polygon): boolean => {
 };
 
 /**
+ * Near Point
+ *
+ * @param currentMousePosition
+ * @param handlePosition
+ * @param name
+ * @returns
+ */
+const nearPoint = (
+	currentMousePosition: MouseEventExtended,
+	handlePosition: Point,
+	name: string
+) => {
+	return Math.abs(currentMousePosition.x - handlePosition.x) < 5 &&
+		Math.abs(currentMousePosition.y - handlePosition.y) < 5
+		? name
+		: null;
+};
+
+/**
  * Get the nearest surrounding polygon that a point that is in `x` and `y`.
 
  *  @param point the current point (mouse position, or other)
@@ -67,6 +86,8 @@ const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 	return vertices.concat(midPoints);
 };
 
+const getHandles = () => {};
+
 /**
  *If it is, switch to the "isScaling" state and store the index of the handle being dragged.
  *
@@ -95,4 +116,10 @@ const getScalingHandleIndex = (
 	return scalingHandleIndex;
 };
 
-export { calculateRectangleHandles, isPointInPolygon, getContainingPolygon, getScalingHandleIndex };
+export {
+	calculateRectangleHandles,
+	nearPoint,
+	isPointInPolygon,
+	getContainingPolygon,
+	getScalingHandleIndex
+};

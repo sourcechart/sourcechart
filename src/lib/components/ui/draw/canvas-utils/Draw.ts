@@ -51,14 +51,6 @@ const redraw = (
 };
 
 /**
- * Draw HTML Files
- *
- * @param polygon
- * @param tolerance
- * @returns
- */
-
-/**
  * Maybe I should delete this function later
  *
  * @param polygon
@@ -124,7 +116,7 @@ const getRectangleHandles = (polygon: Polygon): string | null => {
 	return null;
 };
 
-function createRectangleHandles(rectangle: Polygon) {
+const createRectangleHandles = (rectangle: Polygon) => {
 	return rectangle.vertices.map((vertex, i) => {
 		return {
 			position: () => vertex,
@@ -132,6 +124,6 @@ function createRectangleHandles(rectangle: Polygon) {
 				i % 2 === 0 ? (i === 0 ? 'nw-resize' : 'ne-resize') : i === 1 ? 'sw-resize' : 'se-resize'
 		};
 	});
-}
+};
 
 export { drawRectangle, redraw, drawHandles, createRectangleHandles, getRectangleHandles };
