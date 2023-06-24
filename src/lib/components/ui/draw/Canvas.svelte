@@ -20,7 +20,7 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
-	let id: string;
+	let targetId: string = '';
 
 	let width: number = 0;
 	let height: number = 0;
@@ -46,7 +46,7 @@
 
 	const tolerance: number = 5;
 	const handleRadius: number = 5;
-
+	$: i = clickedChartIndex();
 	$: if (context) HIGHLIGHTCOLOR = 'red';
 
 	if (browser) {
@@ -118,8 +118,10 @@
 			}
 		}
 		if ($mouseEventState !== 'isTouching') {
-			id = generateID();
-			if (checkNewRectangle(polygons)) addChartMetaData(id, $navBarState);
+			if (checkNewRectangle(polygons)) {
+				targetId = generateID();
+				addChartMetaData(targetId, $navBarState);
+			}
 			mouseEventState.set('isTouching');
 			start = { x, y };
 		} else if (
@@ -298,7 +300,7 @@
 		if ($navBarState === 'drawRectangle') {
 			redraw(polygons, context, width, height, selectedPolygonIndex);
 			const polygon = {
-				id: id,
+				id: targetId,
 				vertices: [
 					{ x: start.x, y: start.y },
 					{ x: xWithOffset, y: start.y },
@@ -346,7 +348,7 @@
 			$navBarState !== 'select'
 		) {
 			const polygon = {
-				id: id,
+				id: targetId,
 				vertices: [
 					{ x: start.x, y: start.y },
 					{ x: x, y: start.y },
@@ -373,23 +375,36 @@
 	 * @param Mouse Event
 	 */
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
+		let targetId: string | null = null;
+
 		const point: Point = { x, y };
 		const polygon = PolyOps.getContainingPolygon(point, polygons);
+
 		if (context && polygon) {
 			selectedPolygonIndex = polygons.indexOf(polygon);
+			if (polygon.id) {
+				targetId = polygon.id;
+				mostRecentChartID.set(targetId);
+			} // Here we get the target id
 			redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = HIGHLIGHTCOLOR;
 			drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
+			$activeSidebar = true;
+			console.log(targetId);
 		}
 		if (!polygon && $navBarState === 'select') {
 			selectedPolygonIndex = null;
 			if (context) redraw(polygons, context, width, height, selectedPolygonIndex);
 			activeSidebar.set(false);
 		}
+
+		return targetId;
 	};
+
+	$: console.log($allCharts);
 </script>
 
-<div {id}>
+<div id={targetId}>
 	<canvas
 		{width}
 		{height}

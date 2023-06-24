@@ -11,6 +11,15 @@
 	const keepRatio = true;
 	const throttleScale = 0;
 	const renderDirections = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'];
+
+	function removeChart() {
+		$clearChartOptions = true;
+		setTimeout(() => {
+			$clearChartOptions = false;
+		}, 10);
+		$allCharts = $allCharts.filter((item) => item.chartID !== $mostRecentChartID);
+		$activeSidebar = false;
+	}
 </script>
 
 <div class="container" bind:this={moveable} use:clickEscapeKey on:escapeKeyPress={removeChart}>
