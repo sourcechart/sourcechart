@@ -9,8 +9,7 @@
 		clearChartOptions,
 		mostRecentChartID,
 		navBarState,
-		mouseEventState,
-		clickedChartIndex
+		mouseEventState
 	} from '$lib/io/Stores';
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
