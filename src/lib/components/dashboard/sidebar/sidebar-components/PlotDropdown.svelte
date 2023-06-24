@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import { ChartOptions } from '$lib/io/eChartBuilder';
-	import { allCharts, mostRecentChartID } from '$lib/io/stores';
+	import { allCharts, mostRecentChartID } from '$lib/io/Stores';
 	import {
 		AreaPlotButton,
 		BarPlotButton,

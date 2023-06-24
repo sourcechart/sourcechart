@@ -9,7 +9,7 @@
 		clickedChart,
 		clickedChartIndex,
 		groupbyColumns
-	} from '$lib/io/stores';
+	} from '$lib/io/Stores';
 
 	let tags: Array<string> = [];
 

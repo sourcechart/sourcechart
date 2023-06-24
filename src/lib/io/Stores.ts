@@ -1,10 +1,11 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
-import { Query } from '$lib/io/queryBuilder';
+import { Query } from '$lib/io/QueryBuilder';
 
-
-export const navBarMode= writable<NavBar>("")
-export const drawInteraction = writable<DrawBehavior>()
+export const globalMouseState = writable<boolean>(false);
+export const isMouseDown = writable<boolean>(false);
+export const navBarState = writable<NavBar>('select');
+export const mouseEventState = writable<MouseEvents>();
 export const mostRecentChartID = writable<string>('');
 export const chosenFile = writable<string>('');
 export const newChartID = writable<string>();
@@ -16,18 +17,17 @@ export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<Array<string>>([]);
 
 const createDropdownStore = () => {
-  const { subscribe, set, update } = writable(null);
+	const { subscribe, set, update } = writable(null);
 
-  return {
-    subscribe,
-    open: (id:any) => set(id),
-    close: () => set(null),
-    toggle: (id:any) => update(currentId => currentId !== id ? id : null),
-  };
-}
+	return {
+		subscribe,
+		open: (id: any) => set(id),
+		close: () => set(null),
+		toggle: (id: any) => update((currentId) => (currentId !== id ? id : null))
+	};
+};
 
 export const dropdownStore = createDropdownStore();
-
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
@@ -73,8 +73,8 @@ export const getQuery = () =>
 			const chart = $allCharts.find(
 				(item: { chartID: string }) => item.chartID === $mostRecentChartID
 			);
-			//let groupbyColumns = chart?.groupbyColumns ? chart.groupbyColumns: [] 
-			const getQueryObject = ():QueryObject => {
+			//let groupbyColumns = chart?.groupbyColumns ? chart.groupbyColumns: []
+			const getQueryObject = (): QueryObject => {
 				return {
 					chartID: chart?.chartID,
 					queries: {
@@ -83,7 +83,7 @@ export const getQuery = () =>
 							yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
 							from: chart?.filename
 						},
-						groupbyColumns: [...chart?.groupbyColumns ? chart.groupbyColumns: [] ]
+						groupbyColumns: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])]
 						//on: { column1: null, column2: null, HOW: null }
 						//filters: [
 						//	{ column: null, filter: null },

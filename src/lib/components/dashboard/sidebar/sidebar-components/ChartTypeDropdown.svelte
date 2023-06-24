@@ -5,7 +5,6 @@
 		BarPlotButton,
 		LinePlotButton,
 		ScatterPlotButton,
-		FileUploadButton,
 		PiePlotButton
 	} from './chart-components';
 
@@ -19,8 +18,7 @@
 		{ componentType: 'line', component: LinePlotButton },
 		{ componentType: 'area', component: AreaPlotButton },
 		{ componentType: 'scatter', component: ScatterPlotButton },
-		{ componentType: 'pie', component: PiePlotButton },
-		{ componentType: 'file-upload', component: FileUploadButton }
+		{ componentType: 'pie', component: PiePlotButton }
 	];
 </script>
 

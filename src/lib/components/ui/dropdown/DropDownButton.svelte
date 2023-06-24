@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dropdownStore } from '$lib/io/stores';
+	import { dropdownStore } from '$lib/io/Stores';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 

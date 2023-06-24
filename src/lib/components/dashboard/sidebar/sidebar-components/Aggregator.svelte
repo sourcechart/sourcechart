@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { allCharts, clickedChartIndex, clickedChart, clearChartOptions } from '$lib/io/stores';
+	import { allCharts, clickedChartIndex, clickedChart, clearChartOptions } from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
 	let aggs = ['avg', 'max', 'min', 'sum', 'count'];

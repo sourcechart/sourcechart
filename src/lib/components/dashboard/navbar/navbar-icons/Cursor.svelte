@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { navBarMode } from '$lib/io/stores';
+	import { navBarState } from '$lib/io/Stores';
 
-	$: mode = $navBarMode;
+	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
 
-	function handleClick() {
+	function handleClick(e: MouseEvent) {
 		dispatch('mode', 'select');
 	}
 </script>
