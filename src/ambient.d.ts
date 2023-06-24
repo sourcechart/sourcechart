@@ -68,18 +68,35 @@ type Field = {
 	databaseType: string;
 };
 
-interface Point {
-	x: number;
-	y: number;
-}
-
 /****************************
  *                          *
  *       Canvas Types       *
  *                          *
  ***************************/
-type DrawBehavior = 'isDragging' | 'isResizing ' | 'isDrawing' | 'isErasing' | null;
 
+/**
+ *  DEFINITIONS
+ *  @param isTranslating when you are moving a rectangle to a different position withough changing the dimensions
+ *  @param isResizing when you change the width, height or radius, of a polygon that already exists by manipulating and edge
+ *  @param isHovering default state of the mouse where you can move it but it is not clicked
+ *  @param isTouching when you are move your mouse and it is clicked
+ */
+
+type MouseEvents = 'isHovering' | 'isTouching' | 'isTranslating' | 'isResizing';
+type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
+type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
+
+type Rectangle = {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+};
+
+interface Point {
+	x: number;
+	y: number;
+}
 interface Polygon {
 	id?: string;
 	vertices: Point[];
@@ -89,17 +106,6 @@ interface MouseEventExtended extends MouseEvent {
 	offsetX: number;
 	offsetY: number;
 }
-
-interface Point {
-	x: number;
-	y: number;
-}
-interface Polygon {
-	id?: string;
-	vertices: Point[];
-}
-
-type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'textbox' | '';
 
 /****************************
  *                          *

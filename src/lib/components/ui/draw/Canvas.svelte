@@ -382,10 +382,6 @@
 
 		if (context && polygon) {
 			selectedPolygonIndex = polygons.indexOf(polygon);
-			if (polygon.id) {
-				targetId = polygon.id;
-				mostRecentChartID.set(targetId);
-			} // Here we get the target id
 			redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = HIGHLIGHTCOLOR;
 			drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
@@ -393,7 +389,6 @@
 			console.log(targetId);
 		}
 		if (!polygon && $navBarState === 'select') {
-			selectedPolygonIndex = null;
 			if (context) redraw(polygons, context, width, height, selectedPolygonIndex);
 			activeSidebar.set(false);
 		}
