@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DuckDBClient } from '$lib/io/duckdbcli';
+	import type { DuckDBClient } from '$lib/io/DuckDBCLI';
 	import {
 		getQuery,
 		getColumnsFromFile,
@@ -7,7 +7,7 @@
 		clickedChartIndex,
 		chartOptions,
 		allCharts
-	} from '$lib/io/stores';
+	} from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
 	export let axis = '';
@@ -60,7 +60,7 @@
 			chart.yColumn = null;
 			chart.filename = null;
 			chart.groupbyColumns = [];
-			chart.chartOptions.xAxis = { data: [] };
+			chart.chartOptions.xAxis = { data: [] }; //@ts-ignore
 			chart.chartOptions.series[0] = { data: [], type: chart.chartType };
 			chart.database = null;
 

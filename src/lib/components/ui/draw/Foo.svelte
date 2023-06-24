@@ -1,3 +1,4 @@
+<!-- 
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
@@ -9,7 +10,7 @@
 		mostRecentChartID,
 		clearChartOptions
 	} from '$lib/io/stores';
-	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
+	import { isPointInPolygon, getContainingPolygon } from './polygonOperations';
 
 	let id: string;
 
@@ -351,15 +352,6 @@
 	};
 </script>
 
-<svelte:window
-	on:resize={() => {
-		if (typeof window !== 'undefined') {
-			width = window.innerWidth;
-			height = window.innerHeight;
-		}
-	}}
-/>
-
 <div {id}>
 	<canvas
 		class={cursorClass}
@@ -399,3 +391,4 @@
 		cursor: ew-resize;
 	}
 </style>
+-->
