@@ -20,8 +20,6 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
-	let targetId: string = '';
-
 	let width: number = 0;
 	let height: number = 0;
 
@@ -46,7 +44,6 @@
 
 	const tolerance: number = 5;
 	const handleRadius: number = 5;
-	$: i = clickedChartIndex();
 	$: if (context) HIGHLIGHTCOLOR = 'red';
 
 	if (browser) {
@@ -118,10 +115,6 @@
 			}
 		}
 		if ($mouseEventState !== 'isTouching') {
-			if (checkNewRectangle(polygons)) {
-				targetId = generateID();
-				addChartMetaData(targetId, $navBarState);
-			}
 			mouseEventState.set('isTouching');
 			start = { x, y };
 		} else if (
@@ -300,13 +293,7 @@
 		if ($navBarState === 'drawRectangle') {
 			redraw(polygons, context, width, height, selectedPolygonIndex);
 			const polygon = {
-				id: targetId,
-				vertices: [
-					{ x: start.x, y: start.y },
-					{ x: xWithOffset, y: start.y },
-					{ x: xWithOffset, y: yWithOffset },
-					{ x: start.x, y: yWithOffset }
-				]
+				vertices: getVertices(xWithOffset, yWithOffset)
 			};
 			drawRectangle(polygon, context, HIGHLIGHTCOLOR);
 		}
@@ -333,6 +320,16 @@
 		redraw(polygons, context, width, height, selectedPolygonIndex);
 	};
 
+	const getVertices = (x: number, y: number) => {
+		let vertices = [
+			{ x: start.x, y: start.y },
+			{ x: x, y: start.y },
+			{ x: x, y: y },
+			{ x: start.x, y: y }
+		];
+		return vertices;
+	};
+
 	/**
 	 * ### Handle Touch End
 	 *
@@ -347,18 +344,16 @@
 			$navBarState !== 'eraser' &&
 			$navBarState !== 'select'
 		) {
+			let id = generateID();
 			const polygon = {
-				id: targetId,
-				vertices: [
-					{ x: start.x, y: start.y },
-					{ x: x, y: start.y },
-					{ x: x, y: y },
-					{ x: start.x, y: y }
-				]
+				id: id,
+				vertices: getVertices(x, y)
 			};
+			addChartMetaData(id, $navBarState);
 			polygons.push(polygon);
 			if (context) {
 				context.strokeStyle = HIGHLIGHTCOLOR;
+				redraw(polygons, context, width, height, selectedPolygonIndex);
 				drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 			}
 		}
@@ -368,59 +363,53 @@
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
 	};
-
 	/**
 	 * Handles the click functionality of the dashboard
 	 *
 	 * @param Mouse Event
 	 */
 	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
-		let targetId: string | null = null;
+		//let polygonID: string;
 
 		const point: Point = { x, y };
 		const polygon = PolyOps.getContainingPolygon(point, polygons);
 
 		if (context && polygon) {
+			var targetID = polygon.id;
+			console.log(targetID);
 			selectedPolygonIndex = polygons.indexOf(polygon);
 			redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = HIGHLIGHTCOLOR;
 			drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
-			$activeSidebar = true;
-			console.log(targetId);
 		}
 		if (!polygon && $navBarState === 'select') {
+			selectedPolygonIndex = null;
 			if (context) redraw(polygons, context, width, height, selectedPolygonIndex);
 			activeSidebar.set(false);
 		}
-
-		return targetId;
 	};
-
-	$: console.log($allCharts);
 </script>
 
-<div id={targetId}>
-	<canvas
-		{width}
-		{height}
-		style="cursor: {cursorClass};"
-		bind:this={canvas}
-		on:click={handleClick}
-		use:MouseActions.trackMouseState
-		use:MouseActions.touchStart={{
-			onStart: handleTouchStart
-		}}
-		use:MouseActions.mouseMove={{
-			onMove: handleMouseMove
-		}}
-		use:MouseActions.touchMove={{
-			onMove: handleTouchMove
-		}}
-		use:MouseActions.touchEnd={{
-			onEnd: handleTouchEnd
-		}}
-	/>
-</div>
+<canvas
+	{width}
+	{height}
+	style="cursor: {cursorClass};"
+	bind:this={canvas}
+	on:click={handleClick}
+	use:MouseActions.trackMouseState
+	use:MouseActions.touchStart={{
+		onStart: handleTouchStart
+	}}
+	use:MouseActions.mouseMove={{
+		onMove: handleMouseMove
+	}}
+	use:MouseActions.touchMove={{
+		onMove: handleTouchMove
+	}}
+	use:MouseActions.touchEnd={{
+		onEnd: handleTouchEnd
+	}}
+/>
 
 <svelte:window
 	on:resize={() => {

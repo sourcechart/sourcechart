@@ -1,6 +1,7 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
 import { Query } from '$lib/io/QueryBuilder';
+import { generateID } from '$lib/io/GenerateID';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
@@ -11,10 +12,11 @@ export const chosenFile = writable<string>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
-export const allCharts = writable<Array<Chart>>([]);
-export const fileUploadStore = writable<Array<fileUpload>>([]);
+export const allCharts = writable<Chart[]>([]);
+export const fileUploadStore = writable<fileUpload[]>([]);
 export const timesVisitedDashboard = writable<number>(0);
-export const groupbyColumns = writable<Array<string>>([]);
+export const groupbyColumns = writable<string[]>([]);
+export const polygons = writable<Polygon[]>([]);
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -125,3 +127,20 @@ export const clickedChartIndex = () =>
 		);
 		return i;
 	});
+
+let prevPolygonsLength = 0;
+export const getPolygonID = () => {
+	// if it is a new rectangle then return a new id, if it is not a new rectangle, then return the id that already exists.
+	const checkNewRectangle = (polygons: Polygon[]): boolean => {
+		let isNewRectangle = false;
+		if (polygons.length > prevPolygonsLength) {
+			isNewRectangle = true;
+		}
+		prevPolygonsLength = polygons.length;
+		return isNewRectangle;
+	};
+	derived(polygons, ($polygons) => {
+		let id = checkNewRectangle($polygons) ? generateID() : $polygons.pop()?.id;
+		return id;
+	});
+};
