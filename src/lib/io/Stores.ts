@@ -9,10 +9,11 @@ export const chosenFile = writable<string>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
-export const allCharts = writable<Array<Chart>>([]);
-export const fileUploadStore = writable<Array<fileUpload>>([]);
+export const allCharts = writable<Chart[]>([]);
+export const fileUploadStore = writable<fileUpload[]>([]);
 export const timesVisitedDashboard = writable<number>(0);
-export const groupbyColumns = writable<Array<string>>([]);
+export const groupbyColumns = writable<string[]>([]);
+export const polygons = writable<Polygon[]>([]);
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
