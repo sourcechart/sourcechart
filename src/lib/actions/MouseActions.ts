@@ -188,13 +188,6 @@ function onMouseLeave(node: Node, { onLeave }: { onLeave: () => void }) {
 	};
 }
 
-const getClientPos = (e: MouseEvent | TouchEvent) => {
-	if ('touches' in e && e.touches.length) {
-		return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-	}
-	return { x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY };
-};
-
 export {
 	onMouseLeave,
 	touchEnd,

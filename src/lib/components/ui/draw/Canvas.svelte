@@ -200,8 +200,8 @@
 	/**
 	 * ### Translate (Drag) the polygon element to a different position on the screen.
 	 *
-	 * @param xWithOffset
-	 * @param yWithOffset
+	 * @param xWithOffset x position on the screen
+	 * @param yWithOffset y position on the screen
 	 * @param context Canvas Rendering context
 	 * @param selectedPolygonIndex the polygon we clicked on
 	 */
@@ -248,8 +248,8 @@
 	/**
 	 * ### Handle the resizing of a rectangle to different heights and widths
 	 *
-	 * @param xWithOffset
-	 * @param yWithOffset
+	 * @param xWithOffset x position on the screen
+	 * @param yWithOffset y position on the screen
 	 */
 	const handleTouchResize = (xWithOffset: number, yWithOffset: number) => {
 		if (selectedPolygonIndex !== null) {
@@ -292,8 +292,8 @@
 	/**
 	 * ### On intersection of a polygon while your mouse is touching erase
 	 *
-	 * @param xWithOffset
-	 * @param yWithOffset
+	 * @param xWithOffset x position on the screen
+	 * @param yWithOffset y position on the screen
 	 * @param context
 	 */
 	const handleTouchErase = (
