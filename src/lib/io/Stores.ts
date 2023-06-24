@@ -1,7 +1,6 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
 import { Query } from '$lib/io/QueryBuilder';
-import { generateID } from '$lib/io/GenerateID';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
@@ -127,20 +126,3 @@ export const clickedChartIndex = () =>
 		);
 		return i;
 	});
-
-let prevPolygonsLength = 0;
-export const getPolygonID = () => {
-	// if it is a new rectangle then return a new id, if it is not a new rectangle, then return the id that already exists.
-	const checkNewRectangle = (polygons: Polygon[]): boolean => {
-		let isNewRectangle = false;
-		if (polygons.length > prevPolygonsLength) {
-			isNewRectangle = true;
-		}
-		prevPolygonsLength = polygons.length;
-		return isNewRectangle;
-	};
-	derived(polygons, ($polygons) => {
-		let id = checkNewRectangle($polygons) ? generateID() : $polygons.pop()?.id;
-		return id;
-	});
-};
