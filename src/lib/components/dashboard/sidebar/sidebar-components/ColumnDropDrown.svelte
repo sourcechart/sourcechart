@@ -7,7 +7,7 @@
 		clickedChartIndex,
 		chartOptions,
 		allCharts
-	} from '$lib/io/stores';
+	} from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
 	export let axis = '';
