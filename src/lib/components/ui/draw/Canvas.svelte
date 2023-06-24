@@ -9,7 +9,8 @@
 		clearChartOptions,
 		mostRecentChartID,
 		navBarState,
-		mouseEventState
+		mouseEventState,
+		clickedChartIndex
 	} from '$lib/io/Stores';
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
@@ -29,6 +30,7 @@
 
 	let selectedPolygonIndex: number | null = null;
 	let polygons: Polygon[] = [];
+
 	let start: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
@@ -39,6 +41,8 @@
 	let offsetX: number = 0;
 	let offsetY: number = 0;
 	let handlePosition: HandlePosition;
+
+	let prevPolygonsLength = 0;
 
 	const tolerance: number = 5;
 	const handleRadius: number = 5;
@@ -105,7 +109,6 @@
 		//check if the user is not currently drawing.
 		x = x - offsetX;
 		y = y - offsetY;
-		id = generateID();
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
@@ -115,7 +118,8 @@
 			}
 		}
 		if ($mouseEventState !== 'isTouching') {
-			addChartMetaData(id, $navBarState);
+			id = generateID();
+			if (checkNewRectangle(polygons)) addChartMetaData(id, $navBarState);
 			mouseEventState.set('isTouching');
 			start = { x, y };
 		} else if (
@@ -129,6 +133,9 @@
 		}
 	};
 
+	const checkMetaDataInStore = (id: string): boolean => {
+		return $allCharts.some((item) => item.chartID === id);
+	};
 	/**
 	 * ### Handle the movement of the mouse when it is not clicked.
 	 *
@@ -226,6 +233,20 @@
 	};
 
 	/**
+	 * Check if new Rectangle so I can add an ID to metadata
+	 *
+	 * @param polygons
+	 */
+	const checkNewRectangle = (polygons: Polygon[]): boolean => {
+		let isNewRectangle = false;
+		if (polygons.length > prevPolygonsLength) {
+			isNewRectangle = true;
+		}
+		prevPolygonsLength = polygons.length;
+		return isNewRectangle;
+	};
+
+	/**
 	 * ### Get Cursor from Direction
 	 *
 	 * @param direction
@@ -313,8 +334,8 @@
 	/**
 	 * ### Handle Touch End
 	 *
-	 * @param x
-	 * @param y
+	 * @param x X position on the screen
+	 * @param y Y position on the screen
 	 */
 	const handleTouchEnd = (x: number, y: number) => {
 		x = x - offsetX;
@@ -362,9 +383,7 @@
 		}
 		if (!polygon && $navBarState === 'select') {
 			selectedPolygonIndex = null;
-			if (context) {
-				redraw(polygons, context, width, height, selectedPolygonIndex);
-			}
+			if (context) redraw(polygons, context, width, height, selectedPolygonIndex);
 			activeSidebar.set(false);
 		}
 	};
