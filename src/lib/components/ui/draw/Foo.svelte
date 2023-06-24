@@ -1,9 +1,16 @@
+<!-- 
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { generateID } from '$lib/io/fileUtils';
-	import { navBarMode, activeSidebar, allCharts, mostRecentChartID } from '$lib/io/stores';
-	import { isPointInPolygon, getContainingPolygon } from './PointInPolygon';
+	import {
+		navBarMode,
+		activeSidebar,
+		allCharts,
+		mostRecentChartID,
+		clearChartOptions
+	} from '$lib/io/stores';
+	import { isPointInPolygon, getContainingPolygon } from './polygonOperations';
 
 	let id: string;
 
@@ -33,6 +40,15 @@
 	$: mode = $navBarMode;
 	$: cursorClass = hoverStatus ? cursorStyle : '';
 
+	const removeChart = () => {
+		$clearChartOptions = true;
+		setTimeout(() => {
+			$clearChartOptions = false;
+		}, 10);
+		$allCharts = $allCharts.filter((item) => item.chartID !== $mostRecentChartID);
+		$activeSidebar = false;
+	};
+
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -44,9 +60,10 @@
 					(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
 					selectedPolygonIndex !== null
 				) {
+					removeChart();
+					$activeSidebar = false;
 					polygons.splice(selectedPolygonIndex, 1);
 					selectedPolygonIndex = null;
-					$activeSidebar = false;
 					redraw();
 				}
 			};
@@ -182,7 +199,6 @@
 	};
 
 	const handleStart = ({ offsetX: x, offsetY: y }: MouseEvent) => {
-		addMetadataToChart();
 		if (mode === 'select' && selectedPolygonIndex !== null) {
 			const polygon = polygons[selectedPolygonIndex];
 			if (polygon && isPointInPolygon({ x, y }, polygon)) {
@@ -237,6 +253,7 @@
 					{ x: start.x, y: y }
 				]
 			});
+			addMetadataToChart();
 			navBarMode.set('select');
 			redraw();
 		}
@@ -326,6 +343,7 @@
 				editingTextIndex = null;
 			}
 		} else {
+			$mostRecentChartID = '';
 			$activeSidebar = false;
 			selectedPolygonIndex = null;
 			editingTextIndex = null;
@@ -333,15 +351,6 @@
 		redraw();
 	};
 </script>
-
-<svelte:window
-	on:resize={() => {
-		if (typeof window !== 'undefined') {
-			width = window.innerWidth;
-			height = window.innerHeight;
-		}
-	}}
-/>
 
 <div {id}>
 	<canvas
@@ -353,9 +362,8 @@
 		on:mouseup={handleEnd}
 		on:mousemove={handleMove}
 		on:click={handleClick}
-	>
-		<slot />
-	</canvas>
+	/>
+	<slot />
 </div>
 
 <style>
@@ -383,3 +391,4 @@
 		cursor: ew-resize;
 	}
 </style>
+-->

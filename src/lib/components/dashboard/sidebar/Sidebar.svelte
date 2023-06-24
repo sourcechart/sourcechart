@@ -9,16 +9,17 @@
 		PlotDropdown
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
-	import { clickInside } from '$lib/actions/clickUtils';
-	import { activeSidebar, allCharts } from '$lib/io/stores';
-
-	$: console.log($allCharts);
-	function handleInside() {
-		$activeSidebar = true;
-	}
+	import { clickInside } from '$lib/actions/MouseActions';
+	import { activeSidebar } from '$lib/io/Stores';
 </script>
 
-<div use:clickInside={{}} on:click_inside={handleInside} class="space-y-4">
+<div
+	use:clickInside
+	on:click_inside={() => {
+		$activeSidebar = true;
+	}}
+	class="space-y-4"
+>
 	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
 		<div class="space-y-3">
 			<div class="text-xs space-y-1">

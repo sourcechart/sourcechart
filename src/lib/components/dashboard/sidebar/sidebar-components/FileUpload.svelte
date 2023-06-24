@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Fileupload, Label, Listgroup, ListgroupItem } from 'flowbite-svelte';
-	import { DuckDBClient } from '$lib/io/duckdbcli';
-	import { generateID } from '$lib/io/fileUtils';
-	import { fileUploadStore } from '$lib/io/stores';
+	import { DuckDBClient } from '$lib/io/DuckDBCLI';
+	import { generateID } from '$lib/io/GenerateID';
+	import { fileUploadStore } from '$lib/io/Stores';
 
 	let files: ListGroupItemType | null;
 
@@ -29,7 +29,7 @@
 		const db = await DuckDBClient.of([f]);
 
 		const resp = await db.query(`SELECT * FROM "${f.name}"`);
-		var id = generateID();
+		var id = generateID(); //@ts-ignore
 		var columns = resp.schema.map((item) => item['name']);
 		createFileStore(f.name, columns, f.size, id, db);
 	};
@@ -37,7 +37,7 @@
 
 <Label class="pb-2" for="multiple_files">Upload multiple files</Label>
 <Fileupload id="multiple_files" multiple bind:files on:change={uploadFiles} />
-<Listgroup items={files} let:item class="mt-2">
+<Listgroup {files} let:item class="mt-2">
 	{#if item}
 		{item.name}
 	{:else}
