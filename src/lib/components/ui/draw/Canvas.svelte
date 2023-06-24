@@ -375,8 +375,9 @@
 		const polygon = PolyOps.getContainingPolygon(point, polygons);
 
 		if (context && polygon) {
-			var targetID = polygon.id;
-			console.log(targetID);
+			if (polygon?.id) {
+				mostRecentChartID.set(polygon.id);
+			}
 			selectedPolygonIndex = polygons.indexOf(polygon);
 			redraw(polygons, context, width, height, selectedPolygonIndex);
 			context.strokeStyle = HIGHLIGHTCOLOR;
