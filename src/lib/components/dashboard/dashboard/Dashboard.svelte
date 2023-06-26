@@ -2,7 +2,7 @@
 <script lang="ts">
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
-	import Draw from '$lib/components/ui/draw/Canvas.svelte';
+	import Draw from '$lib/components/ui/draw/DrawChart.svelte';
 
 	import { DarkMode } from '$lib/components/ui';
 </script>
