@@ -12,8 +12,11 @@
 		mouseEventState,
 		clickedChartIndex
 	} from '$lib/io/Stores';
+
+	import { writable } from 'svelte/store';
 	import { generateID } from '$lib/io/GenerateID';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
+	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
 
 	import { redraw, drawRectangle, drawHandles, resizeRectangle } from './canvas-utils/Draw';
 	import * as PolyOps from './canvas-utils/PolygonOperations';
@@ -29,7 +32,8 @@
 	let context: CanvasRenderingContext2D | null;
 
 	let selectedPolygonIndex: number | null = null;
-	let polygons: Polygon[] = [];
+	const polygons = writable<Polygon[]>([]);
+	//let polygons: Polygon[] = [];
 
 	let start: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
@@ -46,12 +50,13 @@
 
 	const tolerance: number = 5;
 	const handleRadius: number = 5;
-	$: i = clickedChartIndex();
-	$: if (context) HIGHLIGHTCOLOR = 'red';
 
+	//	$: if (context) HIGHLIGHTCOLOR = 'red';
+
+	$: console.log($polygons);
 	if (browser) {
 		onMount(() => {
-			context = canvas.getContext('2d');
+			//context = canvas.getContext('2d');
 			width = window.innerWidth;
 			height = window.innerHeight;
 			const rect = canvas.getBoundingClientRect();
@@ -90,11 +95,11 @@
 		) {
 			removeChart();
 			$activeSidebar = false;
-			polygons.splice(selectedPolygonIndex, 1);
+			$polygons.splice(selectedPolygonIndex, 1);
 			if (selectedPolygonIndex > -1) {
-				polygons.splice(selectedPolygonIndex, 1);
+				$polygons.splice(selectedPolygonIndex, 1);
 			}
-			if (context) redraw(polygons, context, width, height, selectedPolygonIndex);
+			if (context) redraw($polygons, context, width, height, selectedPolygonIndex);
 			selectedPolygonIndex = null;
 		}
 	};
@@ -109,8 +114,9 @@
 		//check if the user is not currently drawing.
 		x = x - offsetX;
 		y = y - offsetY;
+		console.log('touch start: ', x, y);
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
-			const polygon = polygons[selectedPolygonIndex];
+			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
 				dragOffset = { x, y };
 				mouseEventState.set('isTranslating');
@@ -118,7 +124,7 @@
 			}
 		}
 		if ($mouseEventState !== 'isTouching') {
-			if (checkNewRectangle(polygons)) {
+			if (checkNewRectangle($polygons)) {
 				targetId = generateID();
 				addChartMetaData(targetId, $navBarState);
 			}
@@ -149,7 +155,7 @@
 		y = y - offsetY;
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
-		const polygon = polygons.find((polygon) => {
+		const polygon = $polygons.find((polygon) => {
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
@@ -180,6 +186,8 @@
 	const handleTouchMove = (x: number, y: number): void => {
 		x = x - offsetX;
 		y = y - offsetY;
+		/*
+		console.log('touch move: ', x, y);
 		if (context) {
 			if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 				handleTouchCreateShapes(x, y, context);
@@ -193,7 +201,8 @@
 				cursorClass === 'move' &&
 				selectedPolygonIndex !== null
 			) {
-				handleTouchTranslate(x, y, context, selectedPolygonIndex, HIGHLIGHTCOLOR);
+				console.log('foo');
+				//	handleTouchTranslate(x, y); // context);, selectedPolygonIndex, HIGHLIGHTCOLOR);
 			}
 			if (
 				$navBarState === 'select' &&
@@ -202,8 +211,11 @@
 				selectedPolygonIndex !== null
 			) {
 				handleTouchResize(x, y);
-			}
+		
 		}
+		
+		}
+				*/
 	};
 
 	/**
@@ -217,21 +229,20 @@
 	const handleTouchTranslate = (
 		xWithOffset: number,
 		yWithOffset: number,
-		context: CanvasRenderingContext2D,
-		selectedPolygonIndex: number,
-		HIGHLIGHTCOLOR: string
+		selectedPolygonIndex: number
 	) => {
 		const dx = xWithOffset - dragOffset.x;
 		const dy = yWithOffset - dragOffset.y;
-		const polygon = polygons[selectedPolygonIndex];
+		const polygon = $polygons[selectedPolygonIndex];
 		polygon.vertices = polygon.vertices.map((vertex) => ({
 			x: vertex.x + dx,
 			y: vertex.y + dy
 		}));
 		dragOffset = { x: xWithOffset, y: yWithOffset };
-		redraw(polygons, context, width, height, selectedPolygonIndex);
-		context.strokeStyle = HIGHLIGHTCOLOR;
-		drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
+
+		//redraw(polygons, context, width, height, selectedPolygonIndex);
+		//context.strokeStyle = HIGHLIGHTCOLOR;
+		//drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
 	};
 
 	/**
@@ -276,12 +287,12 @@
 	 */
 	const handleTouchResize = (xWithOffset: number, yWithOffset: number) => {
 		if (selectedPolygonIndex !== null) {
-			const polygon = polygons[selectedPolygonIndex];
-			if (handlePosition) resizeRectangle(xWithOffset, yWithOffset, polygon, handlePosition);
-			if (context) {
-				redraw(polygons, context, width, height, selectedPolygonIndex);
-				drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
-			}
+			const polygon = $polygons[selectedPolygonIndex];
+			//if (handlePosition) resizeRectangle(xWithOffset, yWithOffset, polygon, handlePosition);
+			//if (context) {
+			//	redraw(polygons, context, width, height, selectedPolygonIndex);
+			//	drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
+			//	}
 		}
 	};
 
@@ -294,11 +305,11 @@
 	 */
 	const handleTouchCreateShapes = (
 		xWithOffset: number,
-		yWithOffset: number,
-		context: CanvasRenderingContext2D
+		yWithOffset: number
+		//context: CanvasRenderingContext2D
 	): void => {
 		if ($navBarState === 'drawRectangle') {
-			redraw(polygons, context, width, height, selectedPolygonIndex);
+			//redraw(polygons, context, width, height, selectedPolygonIndex);
 			const polygon = {
 				id: targetId,
 				vertices: [
@@ -308,7 +319,7 @@
 					{ x: start.x, y: yWithOffset }
 				]
 			};
-			drawRectangle(polygon, context, HIGHLIGHTCOLOR);
+			//drawRectangle(polygon, context, HIGHLIGHTCOLOR);
 		}
 	};
 
@@ -319,18 +330,14 @@
 	 * @param yWithOffset y position on the screen
 	 * @param context
 	 */
-	const handleTouchErase = (
-		xWithOffset: number,
-		yWithOffset: number,
-		context: CanvasRenderingContext2D
-	): void => {
+	const handleTouchErase = (xWithOffset: number, yWithOffset: number): void => {
 		const currentTouchPoint: Point = { x: xWithOffset, y: yWithOffset };
-		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, polygons);
-		const index = polygon ? polygons.indexOf(polygon) : -1;
+		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, $polygons);
+		const index = polygon ? $polygons.indexOf(polygon) : -1;
 		if (index > -1) {
-			polygons.splice(index, 1);
+			$polygons.splice(index, 1);
 		}
-		redraw(polygons, context, width, height, selectedPolygonIndex);
+		//	redraw(polygons, context, width, height, selectedPolygonIndex);
 	};
 
 	/**
@@ -342,6 +349,7 @@
 	const handleTouchEnd = (x: number, y: number) => {
 		x = x - offsetX;
 		y = y - offsetY;
+
 		if (
 			$mouseEventState === 'isTouching' &&
 			$navBarState !== 'eraser' &&
@@ -356,14 +364,7 @@
 					{ x: start.x, y: y }
 				]
 			};
-			polygons.push(polygon);
-			if (context) {
-				context.strokeStyle = HIGHLIGHTCOLOR;
-				drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
-			}
-		}
-		if ($mouseEventState === 'isResizing') {
-			handleTouchResize(x, y);
+			$polygons.push(polygon);
 		}
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
@@ -378,25 +379,25 @@
 		let targetId: string | null = null;
 
 		const point: Point = { x, y };
-		const polygon = PolyOps.getContainingPolygon(point, polygons);
+		const polygon = PolyOps.getContainingPolygon(point, $polygons);
 
-		if (context && polygon) {
-			selectedPolygonIndex = polygons.indexOf(polygon);
-			if (polygon.id) {
-				targetId = polygon.id;
-				mostRecentChartID.set(targetId);
-			} // Here we get the target id
-			redraw(polygons, context, width, height, selectedPolygonIndex);
-			context.strokeStyle = HIGHLIGHTCOLOR;
-			drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
-			$activeSidebar = true;
-			console.log(targetId);
-		}
-		if (!polygon && $navBarState === 'select') {
-			selectedPolygonIndex = null;
-			if (context) redraw(polygons, context, width, height, selectedPolygonIndex);
-			activeSidebar.set(false);
-		}
+		//if (context && polygon) {
+		//selectedPolygonIndex = $polygons.indexOf(polygon);
+		//	if (polygon.id) {
+		//		targetId = polygon.id;
+		//		mostRecentChartID.set(targetId);
+		//	} // Here we get the target id
+		//redraw(polygons, context, width, height, selectedPolygonIndex);
+		//context.strokeStyle = HIGHLIGHTCOLOR;
+		//drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
+		$activeSidebar = true;
+		console.log(targetId);
+
+		//if (!polygon && $navBarState === 'select') {
+		//	selectedPolygonIndex = null;
+		//	if (context) redraw(polygons, context, width, height, selectedPolygonIndex);
+		//	activeSidebar.set(false);
+		//}
 
 		return targetId;
 	};
@@ -404,28 +405,32 @@
 	$: console.log($allCharts);
 </script>
 
-<div id={targetId}>
-	<canvas
-		{width}
-		{height}
-		style="cursor: {cursorClass};"
-		bind:this={canvas}
-		on:click={handleClick}
-		use:MouseActions.trackMouseState
-		use:MouseActions.touchStart={{
-			onStart: handleTouchStart
-		}}
-		use:MouseActions.mouseMove={{
-			onMove: handleMouseMove
-		}}
-		use:MouseActions.touchMove={{
-			onMove: handleTouchMove
-		}}
-		use:MouseActions.touchEnd={{
-			onEnd: handleTouchEnd
-		}}
-	/>
+<div
+	class="h-full w-full"
+	id={targetId}
+	on:click={handleClick}
+	on:keydown={() => {
+		null;
+	}}
+	use:MouseActions.trackMouseState
+	use:MouseActions.touchStart={{
+		onStart: handleTouchStart
+	}}
+	use:MouseActions.mouseMove={{
+		onMove: handleMouseMove
+	}}
+	use:MouseActions.touchMove={{
+		onMove: handleTouchMove
+	}}
+	use:MouseActions.touchEnd={{
+		onEnd: handleTouchEnd
+	}}
+>
+	{#each $polygons as polygon}
+		<DrawRectangleCanvas {polygon} />
+	{/each}
 </div>
+<canvas bind:this={canvas} />
 
 <svelte:window
 	on:resize={() => {
