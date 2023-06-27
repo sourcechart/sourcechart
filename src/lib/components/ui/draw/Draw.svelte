@@ -72,6 +72,7 @@
 		{/each}
 	</Layer>
 </Stage>
+
 <svelte:window
 	on:resize={() => {
 		if (typeof window !== undefined) {
