@@ -40,6 +40,14 @@
 		stroke = 'red';
 	};
 
+	const handleClick = (e: Event) => {
+		stroke = 'red';
+	};
+
+	const transformStart = (e: Event) => {};
+
+	const transformEnd = (e: Event) => {};
+
 	const handleMouseMove = (e: Event & { detail: { target: any } }) => {
 		if (newRectangle.length === 1) {
 			const sx = newRectangle[0].x;
@@ -72,7 +80,7 @@
 			<Rect config={rectangle} />
 		{/each}
 		{#each newRectangle as rectangle}
-			<Rect config={rectangle} />
+			<Rect config={rectangle} on:click={handleClick} />
 		{/each}
 	</Layer>
 </Stage>
