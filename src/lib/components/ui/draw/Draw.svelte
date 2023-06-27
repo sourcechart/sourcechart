@@ -11,9 +11,10 @@
 	let newRectangle: Rectangle[] = [];
 
 	const handleMouseDown = (e: Event & { detail: { target: any } }) => {
+		stroke = 'black';
 		if (newRectangle.length === 0) {
 			const { x, y } = e.detail.target.getStage().getPointerPosition();
-			newRectangle = [{ x, y, width: 0, height: 0, fill: fill, stroke: stroke }];
+			newRectangle = [{ x, y, width: 0, height: 0, fill: fill, stroke: stroke, draggable: true }];
 		}
 	};
 
@@ -29,12 +30,14 @@
 				width: x - sx,
 				height: y - sy,
 				fill: fill,
-				stroke: stroke
+				stroke: stroke,
+				draggable: true
 			};
 
 			rectangles.update((oldRectangles) => [...oldRectangles, rectangleToAdd]);
 			newRectangle = [];
 		}
+		stroke = 'red';
 	};
 
 	const handleMouseMove = (e: Event & { detail: { target: any } }) => {
@@ -50,7 +53,8 @@
 					width: x - sx,
 					height: y - sy,
 					fill: fill,
-					stroke: stroke
+					stroke: stroke,
+					draggable: true
 				}
 			];
 		}
