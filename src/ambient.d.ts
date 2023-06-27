@@ -86,12 +86,15 @@ type MouseEvents = 'isHovering' | 'isTouching' | 'isTranslating' | 'isResizing';
 type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
 
-type Rectangle = {
+interface Rectangle {
 	x: number;
 	y: number;
 	width: number;
 	height: number;
-};
+	fill: string;
+	stroke: string;
+	id?: string;
+}
 
 interface Point {
 	x: number;

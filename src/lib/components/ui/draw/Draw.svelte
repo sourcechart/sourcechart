@@ -1,29 +1,72 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
 	import { Stage, Layer, Rect } from 'svelte-konva';
+	import { writable } from 'svelte/store';
 
 	let width: number;
 	let height: number;
-	let rectangles = [
-		{ x: 20, y: 20, width: 100, height: 100 },
-		{ x: 150, y: 20, width: 100, height: 100 }
-		// Add more rectangle specifications here...
-	];
+
+	let rectangles = writable<Rectangle[]>([]);
+	let newRectangle: Rectangle[] = [];
+
+	const handleMouseDown = (e: Event & { detail: { target: any } }) => {
+		if (newRectangle.length === 0) {
+			const { x, y } = e.detail.target.getStage().getPointerPosition();
+			newRectangle = [{ x, y, width: 0, height: 0, fill: 'transparent', stroke: 'black' }];
+		}
+	};
+
+	const handleMouseUp = (e: Event & { detail: { target: any } }) => {
+		if (newRectangle.length === 1) {
+			const sx = newRectangle[0].x;
+			const sy = newRectangle[0].y;
+			const { x, y } = e.detail.target.getStage().getPointerPosition();
+
+			const rectangleToAdd: Rectangle = {
+				x: sx,
+				y: sy,
+				width: x - sx,
+				height: y - sy,
+				fill: 'transparent',
+				stroke: 'black'
+			};
+
+			rectangles.update((oldRectangles) => [...oldRectangles, rectangleToAdd]);
+			newRectangle = [];
+		}
+	};
+
+	const handleMouseMove = (e: Event & { detail: { target: any } }) => {
+		if (newRectangle.length === 1) {
+			const sx = newRectangle[0].x;
+			const sy = newRectangle[0].y;
+			const { x, y } = e.detail.target.getStage().getPointerPosition();
+
+			newRectangle = [
+				{
+					x: sx,
+					y: sy,
+					width: x - sx,
+					height: y - sy,
+					fill: 'transparent',
+					stroke: 'black'
+				}
+			];
+		}
+	};
 </script>
 
-<Stage config={{ width: width, height: height }}>
+<Stage
+	on:mousedown={handleMouseDown}
+	on:mouseup={handleMouseUp}
+	on:mousemove={handleMouseMove}
+	config={{ width: width, height: height }}
+>
 	<Layer>
-		{#each rectangles as rect}
-			<Rect
-				config={{
-					draggable: true,
-					x: rect.x,
-					y: rect.y,
-					width: rect.width,
-					height: rect.height,
-					stroke: 'red'
-				}}
-			/>
+		{#each $rectangles as rectangle}
+			<Rect config={rectangle} />
+		{/each}
+		{#each newRectangle as rectangle}
+			<Rect config={rectangle} />
 		{/each}
 	</Layer>
 </Stage>
