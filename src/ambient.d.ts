@@ -94,6 +94,7 @@ interface Rectangle {
 	fill: string;
 	stroke: string;
 	id?: string;
+	draggable: boolean;
 }
 
 interface Point {
