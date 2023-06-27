@@ -4,6 +4,8 @@
 
 	let width: number;
 	let height: number;
+	let fill: string = 'transparent';
+	let stroke: string = 'black';
 
 	let rectangles = writable<Rectangle[]>([]);
 	let newRectangle: Rectangle[] = [];
@@ -11,7 +13,7 @@
 	const handleMouseDown = (e: Event & { detail: { target: any } }) => {
 		if (newRectangle.length === 0) {
 			const { x, y } = e.detail.target.getStage().getPointerPosition();
-			newRectangle = [{ x, y, width: 0, height: 0, fill: 'transparent', stroke: 'black' }];
+			newRectangle = [{ x, y, width: 0, height: 0, fill: fill, stroke: stroke }];
 		}
 	};
 
@@ -26,8 +28,8 @@
 				y: sy,
 				width: x - sx,
 				height: y - sy,
-				fill: 'transparent',
-				stroke: 'black'
+				fill: fill,
+				stroke: stroke
 			};
 
 			rectangles.update((oldRectangles) => [...oldRectangles, rectangleToAdd]);
@@ -47,8 +49,8 @@
 					y: sy,
 					width: x - sx,
 					height: y - sy,
-					fill: 'transparent',
-					stroke: 'black'
+					fill: fill,
+					stroke: stroke
 				}
 			];
 		}
