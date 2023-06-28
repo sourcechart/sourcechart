@@ -19,12 +19,27 @@
 	let selectedPolygonIndex: number | null = null;
 	let start: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
+	let currentMousePosition: Point = { x: 0, y: 0 };
+
 	let prevPolygonsLength = 0;
+	let canvas: HTMLCanvasElement;
+	let context: CanvasRenderingContext2D | null;
+	let offsetX: number = 0;
+	let offsetY: number = 0;
+
+	let hoverIntersection: boolean = false;
+	let handlePosition: HandlePosition;
+	let cursorClass: string | null;
+	const tolerance: number = 5;
 
 	if (browser) {
 		onMount(() => {
+			context = canvas.getContext('2d');
 			width = window.innerWidth;
 			height = window.innerHeight;
+			const rect = canvas.getBoundingClientRect();
+			offsetX = rect.left; // - handleRadius;
+			offsetY = rect.top; //- handleRadius;
 		});
 	}
 
@@ -183,14 +198,44 @@
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
 	};
+
+	const handleMouseMove = (x: number, y: number): void => {
+		x = x - offsetX;
+		y = y - offsetY;
+		currentMousePosition = { x: x, y: y };
+		let hoverPolygon = null;
+		const polygon = $polygons.find((polygon) => {
+			let insidePolygon =
+				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
+			hoverIntersection = insidePolygon ? true : false;
+			if (insidePolygon) {
+				hoverPolygon = polygon;
+				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
+				cursorClass = getCursorStyleFromDirection(handlePosition);
+				if (handlePosition) return true; // This will break the .find() loop
+			}
+			return false; // This will continue to the next item in the .find() loop
+		});
+
+		if (!polygon) {
+			cursorClass = ''; // Reset the cursorClass if not found any polygon
+		} else if (hoverPolygon && !cursorClass) {
+			cursorClass = 'move'; // If we found a polygon but not hovering over any handles, set to 'move'
+		} else {
+			cursorClass = cursorClass || 'default'; // Change cursor back to default when not over handle
+		}
+	};
 </script>
 
 <div
 	class="h-full w-full"
+	use:MouseActions.trackMouseState
 	on:keydown={() => {
 		null;
 	}}
-	use:MouseActions.trackMouseState
+	use:MouseActions.mouseMove={{
+		onMove: handleMouseMove
+	}}
 	use:MouseActions.touchStart={{
 		onStart: handleTouchStart
 	}}
@@ -210,7 +255,7 @@
 		{/each}
 	</div>
 </div>
-
+<canvas bind:this={canvas} />
 <svelte:window
 	on:resize={() => {
 		if (typeof window !== undefined) {

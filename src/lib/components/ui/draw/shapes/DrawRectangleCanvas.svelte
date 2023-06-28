@@ -1,10 +1,35 @@
 <script lang="ts">
 	import { afterUpdate } from 'svelte';
+	import { mouseEventState } from '$lib/io/Stores';
 
 	export let polygon: Polygon;
 	export let isDrawing: boolean;
+
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
+	let offsetX = 0;
+	let offsetY = 0;
+
+	const handleMouseDown = (e: MouseEvent) => {
+		offsetX = e.clientX - polygon.vertices[0].x;
+		offsetY = e.clientY - polygon.vertices[0].y;
+	};
+
+	const handleMouseMove = (e: MouseEvent) => {
+		console.log($mouseEventState);
+		if ($mouseEventState === 'isTouching') {
+			polygon.vertices[0].x = e.clientX - offsetX;
+			polygon.vertices[0].y = e.clientY - offsetY;
+			polygon.vertices[2].x = e.clientX - offsetX + canvas.width;
+			polygon.vertices[2].y = e.clientY - offsetY + canvas.height;
+
+			console.log(e.clientX - offsetX);
+		}
+	};
+
+	const handleMouseUp = () => {
+		mouseEventState.set('isHovering');
+	};
 
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
@@ -31,10 +56,11 @@
 <div
 	id={polygon.id}
 	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0].y}px;"
-	on:click={(e) => {
-		console.log('foo');
-	}}
-	on:keypress={() => null}
 >
-	<canvas bind:this={canvas} />
+	<canvas
+		bind:this={canvas}
+		on:mousedown={handleMouseDown}
+		on:mousemove={handleMouseMove}
+		on:mouseup={handleMouseUp}
+	/>
 </div>
