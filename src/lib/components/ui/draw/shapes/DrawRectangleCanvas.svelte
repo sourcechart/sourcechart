@@ -31,6 +31,10 @@
 <div
 	id={polygon.id}
 	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0].y}px;"
+	on:click={() => {
+		console.log('foo');
+	}}
+	on:keypress={() => null}
 >
 	<canvas bind:this={canvas} />
 </div>

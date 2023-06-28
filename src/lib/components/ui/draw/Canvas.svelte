@@ -206,24 +206,6 @@
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
 	};
-	const resizeCanvas = (node) => {
-		const updateSize = () => {
-			node.width = node.offsetWidth;
-			node.height = node.offsetHeight;
-		};
-		updateSize();
-		window.addEventListener('resize', updateSize);
-		return {
-			destroy() {
-				window.removeEventListener('resize', updateSize);
-			}
-		};
-	};
-
-	const bindOffset = (node) => {
-		offsetX = node.offsetLeft;
-		offsetY = node.offsetTop;
-	};
 </script>
 
 <div
@@ -244,6 +226,9 @@
 >
 	<div id="canvasParent">
 		{#each $polygons as polygon}
+			<DrawRectangleCanvas {polygon} />
+		{/each}
+		{#each newPolygon as polygon}
 			<DrawRectangleCanvas {polygon} />
 		{/each}
 	</div>
