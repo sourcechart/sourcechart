@@ -73,6 +73,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchStart = (x: number, y: number): void => {
+		mouseEventState.set('isTouching');
+		start = { x, y };
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
@@ -80,15 +82,7 @@
 				mouseEventState.set('isTranslating');
 				return;
 			}
-		}
-		if ($mouseEventState !== 'isTouching') {
-			mouseEventState.set('isTouching');
-			start = { x, y };
-		} else if (
-			$mouseEventState === 'isTouching' &&
-			$navBarState === 'select' &&
-			selectedPolygonIndex !== null
-		) {
+		} else if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			mouseEventState.set('isTranslating');
 			dragOffset = { x, y };
 			return;
@@ -109,20 +103,6 @@
 		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
 			handleTouchErase(x, y);
 		}
-	};
-
-	/**
-	 * Check if new Rectangle so I can add an ID to metadata
-	 *
-	 * @param polygons
-	 */
-	const checkNewRectangle = (polygons: Polygon[]): boolean => {
-		let isNewRectangle = false;
-		if (polygons.length > prevPolygonsLength) {
-			isNewRectangle = true;
-		}
-		prevPolygonsLength = polygons.length;
-		return isNewRectangle;
 	};
 
 	/**
