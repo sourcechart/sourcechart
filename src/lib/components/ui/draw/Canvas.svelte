@@ -32,6 +32,9 @@
 	let cursorClass: string | null;
 	const tolerance: number = 5;
 
+	const DEFAULTCOLOR: string = 'black';
+	const HIGHLIGHTCOLOR: string = 'red';
+
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -78,19 +81,11 @@
 				return;
 			}
 		}
-		if ($mouseEventState !== 'isTouching') {
-			if (checkNewRectangle($polygons)) {
-			}
-			mouseEventState.set('isTouching');
+		if ($navBarState === 'drawRectangle') {
 			start = { x, y };
-		} else if (
-			$mouseEventState === 'isTouching' &&
-			$navBarState === 'select' &&
-			selectedPolygonIndex !== null
-		) {
-			mouseEventState.set('isTranslating');
-			dragOffset = { x, y };
-			return;
+		}
+
+		if ($mouseEventState !== 'isTouching') {
 		}
 	};
 
@@ -106,6 +101,7 @@
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
+	 *
 	 */
 	const handleTouchMove = (x: number, y: number): void => {
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
@@ -249,10 +245,20 @@
 >
 	<div id="canvasParent">
 		{#each $polygons as polygon}
-			<DrawRectangleCanvas {polygon} isDrawing={false} />
+			<DrawRectangleCanvas
+				{polygon}
+				isDrawing={false}
+				highlightcolor={HIGHLIGHTCOLOR}
+				defaultcolor={DEFAULTCOLOR}
+			/>
 		{/each}
 		{#each newPolygon as polygon}
-			<DrawRectangleCanvas {polygon} isDrawing={true} />
+			<DrawRectangleCanvas
+				{polygon}
+				isDrawing={true}
+				highlightcolor={HIGHLIGHTCOLOR}
+				defaultcolor={DEFAULTCOLOR}
+			/>
 		{/each}
 	</div>
 </div>

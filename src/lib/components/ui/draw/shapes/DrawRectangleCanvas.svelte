@@ -5,6 +5,9 @@
 	export let polygon: Polygon;
 	export let isDrawing: boolean;
 
+	export let highlightcolor: string;
+	export let defaultcolor: string;
+
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let offsetX = 0;
@@ -43,7 +46,7 @@
 		if (context) {
 			let rectWidth = Math.abs(endX - startX);
 			let rectHeight = Math.abs(endY - startY);
-			context.strokeStyle = isDrawing ? 'black' : 'red';
+			context.strokeStyle = isDrawing ? 'black' : highlightcolor;
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 			context.strokeRect(0, 0, rectWidth, rectHeight); // Now rectangle starts from (0,0) as it's drawn on its own canvas
 		}
