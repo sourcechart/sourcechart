@@ -225,16 +225,10 @@
 	}}
 >
 	{#each $polygons as polygon}
-		<DrawRectangleCanvas {polygon} />
+		<DrawRectangleCanvas {polygon} {width} {height} />
 	{/each}
-	<!--	
-
-	{#each newPolygon as polygon}
-		<DrawRectangleCanvas {polygon} {width} {height} {offsetX} {offsetY} />
-	{/each}
-	-->
 </div>
-<canvas bind:this={canvas} />
+<canvas bind:this={canvas} {width} {height} />
 
 <svelte:window
 	on:resize={() => {
