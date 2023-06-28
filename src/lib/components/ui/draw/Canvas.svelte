@@ -13,27 +13,13 @@
 	let width: number = 0;
 	let height: number = 0;
 
-	//let context: CanvasRenderingContext2D | null;
-	let canvas: HTMLCanvasElement;
-
 	const polygons = writable<Polygon[]>([]);
 	let newPolygon: Polygon[] = [];
 
 	let selectedPolygonIndex: number | null = null;
 	let start: Point = { x: 0, y: 0 };
-	let currentMousePosition: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
-	let hoverIntersection: boolean = false;
-
-	let cursorClass: string | null;
-
-	let handlePosition: HandlePosition;
-
 	let prevPolygonsLength = 0;
-
-	const tolerance: number = 5;
-	const handleRadius: number = 5;
-	$: console.log($polygons);
 
 	if (browser) {
 		onMount(() => {

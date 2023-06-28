@@ -8,10 +8,10 @@
 
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
-		let startX = polygon.vertices[0].x;
-		let startY = polygon.vertices[0].y;
-		let endX = polygon.vertices[2].x;
-		let endY = polygon.vertices[2].y;
+		let startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
+		let startY = Math.min(polygon.vertices[0].y, polygon.vertices[2].y);
+		let endX = Math.max(polygon.vertices[0].x, polygon.vertices[2].x);
+		let endY = Math.max(polygon.vertices[0].y, polygon.vertices[2].y);
 
 		canvas.width = Math.abs(endX - startX);
 		canvas.height = Math.abs(endY - startY);
@@ -31,7 +31,7 @@
 <div
 	id={polygon.id}
 	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0].y}px;"
-	on:click={() => {
+	on:click={(e) => {
 		console.log('foo');
 	}}
 	on:keypress={() => null}
