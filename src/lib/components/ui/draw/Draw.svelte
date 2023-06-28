@@ -40,7 +40,7 @@
 	let dragOffset: Point = { x: 0, y: 0 };
 	let hoverIntersection: boolean = false;
 
-	let HIGHLIGHTCOLOR: string;
+	//let HIGHLIGHTCOLOR: string;
 	let cursorClass: string | null;
 	let offsetX: number = 0;
 	let offsetY: number = 0;
