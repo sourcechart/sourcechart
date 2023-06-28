@@ -16,14 +16,11 @@
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
-		console.log($mouseEventState);
 		if ($mouseEventState === 'isTouching') {
 			polygon.vertices[0].x = e.clientX - offsetX;
 			polygon.vertices[0].y = e.clientY - offsetY;
 			polygon.vertices[2].x = e.clientX - offsetX + canvas.width;
 			polygon.vertices[2].y = e.clientY - offsetY + canvas.height;
-
-			console.log(e.clientX - offsetX);
 		}
 	};
 

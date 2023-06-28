@@ -193,6 +193,7 @@
 					{ x: start.x, y: y }
 				]
 			};
+			newPolygon = [];
 			$polygons = [...$polygons, polygon];
 		}
 		mouseEventState.set('isHovering');
