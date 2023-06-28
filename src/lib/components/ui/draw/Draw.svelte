@@ -40,9 +40,6 @@
 		onMount(() => {
 			width = window.innerWidth;
 			height = window.innerHeight;
-			const rect = canvas.getBoundingClientRect();
-			offsetX = rect.left - handleRadius;
-			offsetY = rect.top - handleRadius;
 		});
 	}
 

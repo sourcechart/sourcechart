@@ -13,4 +13,4 @@
 	<DarkMode />
 	<NavBar />
 </div>
-<Sidebar />
+<!--<Sidebar />-->

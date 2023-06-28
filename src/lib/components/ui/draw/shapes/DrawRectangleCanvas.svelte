@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { clearChartOptions, allCharts, mostRecentChartID, activeSidebar } from '$lib/io/Stores';
 	import { redraw, drawRectangle, drawHandles, resizeRectangle } from '../canvas-utils/Draw';
-	import { start } from '@popperjs/core';
 
 	export let polygon: Polygon;
 
@@ -12,11 +11,17 @@
 	let context: CanvasRenderingContext2D | null;
 	let selectedPolygonIndex: number | null = null;
 	let cursorClass: string | null = null;
+	let offsetX: number = 0;
+	let offsetY: number = 0;
 
 	onMount(() => {
 		context = canvas.getContext('2d');
 
 		if (context) {
+			console.log(width, height);
+			const rect = canvas.getBoundingClientRect();
+			offsetX = rect.left; //- handleRadius;
+			offsetY = rect.top; //- handleRadius;
 			let startX = polygon.vertices[0].x;
 			let startY = polygon.vertices[0].y;
 			let rectWidth = Math.abs(polygon.vertices[2].x - startX);
@@ -31,8 +36,8 @@
 			//		if (context) context.lineTo(point.x, point.y);
 			//	}
 			//});
-			console.log(startX, startY, rectWidth, rectHeight);
-			context.strokeRect(10, startY, rectWidth, rectHeight);
+			//console.log(startX, startY, rectWidth, rectHeight);
+			context.strokeRect(startX, startY, rectWidth, rectHeight);
 			//context.rect(startX, startY, rectWidth, rectHeight);
 			//context.closePath();
 			//context.stroke();
