@@ -32,8 +32,8 @@
 	let cursorClass: string | null;
 	const tolerance: number = 5;
 
-	const DEFAULTCOLOR: string = 'black';
-	const HIGHLIGHTCOLOR: string = 'red';
+	const highlightcolor: string = 'red';
+	const defaultcolor: string = 'black';
 
 	if (browser) {
 		onMount(() => {
@@ -72,9 +72,7 @@
 	 * @param x x position on the screen
 	 * @param y y position on the screen
 	 */
-	const handleMouseDown = (e: MouseEvent): void => {
-		let x = e.clientX - offsetX;
-		let y = e.clientY - offsetY;
+	const handleTouchStart = (x: number, y: number): void => {
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
@@ -83,9 +81,19 @@
 				return;
 			}
 		}
-		if ($navBarState === 'drawRectangle') {
-			console.log(x, y);
+		if ($mouseEventState !== 'isTouching') {
+			if (checkNewRectangle($polygons)) {
+			}
+			mouseEventState.set('isTouching');
 			start = { x, y };
+		} else if (
+			$mouseEventState === 'isTouching' &&
+			$navBarState === 'select' &&
+			selectedPolygonIndex !== null
+		) {
+			mouseEventState.set('isTranslating');
+			dragOffset = { x, y };
+			return;
 		}
 	};
 
@@ -94,7 +102,6 @@
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
-	 *
 	 */
 	const handleTouchMove = (x: number, y: number): void => {
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
@@ -161,9 +168,7 @@
 	 * @param x X position on the screen
 	 * @param y Y position on the screen
 	 */
-	const handleTouchEnd = (e: MouseEvent): void => {
-		let x = e.clientX - offsetX;
-		let y = e.clientY - offsetY;
+	const handleTouchEnd = (x: number, y: number) => {
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 			let targetId = generateID();
 			const polygon = {
@@ -182,9 +187,9 @@
 		navBarState.set('select');
 	};
 
-	const handleMouseMove = (e: MouseEvent): void => {
-		let x = e.clientX - offsetX;
-		let y = e.clientY - offsetY;
+	const handleMouseMove = (x: number, y: number): void => {
+		x = x - offsetX;
+		y = y - offsetY;
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 		const polygon = $polygons.find((polygon) => {
@@ -212,26 +217,29 @@
 
 <div
 	class="h-full w-full"
-	on:mousemove={handleMouseMove}
-	on:mousedown={handleMouseDown}
-	on:mouseup={handleTouchEnd}
+	use:MouseActions.trackMouseState
+	on:keydown={() => {
+		null;
+	}}
+	use:MouseActions.mouseMove={{
+		onMove: handleMouseMove
+	}}
+	use:MouseActions.touchStart={{
+		onStart: handleTouchStart
+	}}
+	use:MouseActions.touchMove={{
+		onMove: handleTouchMove
+	}}
+	use:MouseActions.touchEnd={{
+		onEnd: handleTouchEnd
+	}}
 >
 	<div id="canvasParent">
 		{#each $polygons as polygon}
-			<DrawRectangleCanvas
-				{polygon}
-				isDrawing={false}
-				highlightcolor={HIGHLIGHTCOLOR}
-				defaultcolor={DEFAULTCOLOR}
-			/>
+			<DrawRectangleCanvas {polygon} {highlightcolor} {defaultcolor} />
 		{/each}
 		{#each newPolygon as polygon}
-			<DrawRectangleCanvas
-				{polygon}
-				isDrawing={true}
-				highlightcolor={HIGHLIGHTCOLOR}
-				defaultcolor={DEFAULTCOLOR}
-			/>
+			<DrawRectangleCanvas {polygon} {highlightcolor} {defaultcolor} />
 		{/each}
 	</div>
 </div>
