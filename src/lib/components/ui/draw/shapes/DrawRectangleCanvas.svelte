@@ -1,34 +1,36 @@
 <script lang="ts">
-	import { onMount, afterUpdate } from 'svelte';
-	import { clearChartOptions, allCharts, mostRecentChartID, activeSidebar } from '$lib/io/Stores';
-	import { redraw, drawRectangle, drawHandles, resizeRectangle } from '../canvas-utils/Draw';
+	import { afterUpdate } from 'svelte';
 
 	export let polygon: Polygon;
 
-	export let width: number;
-	export let height: number;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
-	let offsetX: number = 0;
-	let offsetY: number = 0;
 
-	onMount(() => {
+	afterUpdate(() => {
+		// Set canvas width and height based on the polygon dimensions
+		let startX = polygon.vertices[0].x;
+		let startY = polygon.vertices[0].y;
+		let endX = polygon.vertices[2].x;
+		let endY = polygon.vertices[2].y;
+
+		canvas.width = Math.abs(endX - startX);
+		canvas.height = Math.abs(endY - startY);
+
 		context = canvas.getContext('2d');
 
 		if (context) {
-			const rect = canvas.getBoundingClientRect();
-			offsetX = rect.left; //- handleRadius;
-			offsetY = rect.top; //- handleRadius;
-			let startX = polygon.vertices[0].x - offsetX;
-			let startY = polygon.vertices[0].y - offsetY;
-			let rectWidth = polygon.vertices[2].x - startX;
-			let rectHeight = polygon.vertices[2].y - startY;
+			let rectWidth = Math.abs(endX - startX);
+			let rectHeight = Math.abs(endY - startY);
 			context.strokeStyle = 'red';
-			context.strokeRect(startX, startY, rectWidth, rectHeight);
+			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
+			context.strokeRect(0, 0, rectWidth, rectHeight); // Now rectangle starts from (0,0) as it's drawn on its own canvas
 		}
 	});
 </script>
 
-<div id={polygon.id}>
-	<canvas bind:this={canvas} {width} {height} />
+<div
+	id={polygon.id}
+	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0].y}px;"
+>
+	<canvas bind:this={canvas} />
 </div>

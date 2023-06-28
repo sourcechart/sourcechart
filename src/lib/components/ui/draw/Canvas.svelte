@@ -206,6 +206,24 @@
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
 	};
+	const resizeCanvas = (node) => {
+		const updateSize = () => {
+			node.width = node.offsetWidth;
+			node.height = node.offsetHeight;
+		};
+		updateSize();
+		window.addEventListener('resize', updateSize);
+		return {
+			destroy() {
+				window.removeEventListener('resize', updateSize);
+			}
+		};
+	};
+
+	const bindOffset = (node) => {
+		offsetX = node.offsetLeft;
+		offsetY = node.offsetTop;
+	};
 </script>
 
 <div
@@ -224,11 +242,12 @@
 		onEnd: handleTouchEnd
 	}}
 >
-	{#each $polygons as polygon}
-		<DrawRectangleCanvas {polygon} {width} {height} />
-	{/each}
+	<div id="canvasParent">
+		{#each $polygons as polygon}
+			<DrawRectangleCanvas {polygon} />
+		{/each}
+	</div>
 </div>
-<canvas bind:this={canvas} {width} {height} />
 
 <svelte:window
 	on:resize={() => {
@@ -238,3 +257,10 @@
 		}
 	}}
 />
+
+<style>
+	#canvasParent {
+		width: 100%;
+		height: 100%;
+	}
+</style>
