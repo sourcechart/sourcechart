@@ -26,8 +26,7 @@
 	let hoverIntersection: boolean = false;
 
 	let cursorClass: string | null;
-	let offsetX: number = 0;
-	let offsetY: number = 0;
+
 	let handlePosition: HandlePosition;
 
 	let prevPolygonsLength = 0;
@@ -70,8 +69,6 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchStart = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
@@ -110,9 +107,6 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchMove = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
-
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 			handleTouchCreateShapes(x, y);
 		}
@@ -187,9 +181,6 @@
 	 * @param y Y position on the screen
 	 */
 	const handleTouchEnd = (x: number, y: number) => {
-		x = x - offsetX;
-		y = y - offsetY;
-
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 			let targetId = generateID();
 			const polygon = {
@@ -226,10 +217,10 @@
 >
 	<div id="canvasParent">
 		{#each $polygons as polygon}
-			<DrawRectangleCanvas {polygon} />
+			<DrawRectangleCanvas {polygon} isDrawing={false} />
 		{/each}
 		{#each newPolygon as polygon}
-			<DrawRectangleCanvas {polygon} />
+			<DrawRectangleCanvas {polygon} isDrawing={true} />
 		{/each}
 	</div>
 </div>

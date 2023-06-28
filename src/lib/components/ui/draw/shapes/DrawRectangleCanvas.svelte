@@ -2,7 +2,7 @@
 	import { afterUpdate } from 'svelte';
 
 	export let polygon: Polygon;
-
+	export let isDrawing: boolean;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 
@@ -21,7 +21,7 @@
 		if (context) {
 			let rectWidth = Math.abs(endX - startX);
 			let rectHeight = Math.abs(endY - startY);
-			context.strokeStyle = 'red';
+			context.strokeStyle = isDrawing ? 'black' : 'red';
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 			context.strokeRect(0, 0, rectWidth, rectHeight); // Now rectangle starts from (0,0) as it's drawn on its own canvas
 		}
