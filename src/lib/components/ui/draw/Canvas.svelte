@@ -72,7 +72,9 @@
 	 * @param x x position on the screen
 	 * @param y y position on the screen
 	 */
-	const handleTouchStart = (x: number, y: number): void => {
+	const handleMouseDown = (e: MouseEvent): void => {
+		let x = e.clientX - offsetX;
+		let y = e.clientY - offsetY;
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
@@ -82,19 +84,10 @@
 			}
 		}
 		if ($navBarState === 'drawRectangle') {
+			console.log(x, y);
 			start = { x, y };
 		}
-
-		if ($mouseEventState !== 'isTouching') {
-		}
 	};
-
-	/**
-	 * ### Handle the movement of the mouse when it is not clicked.
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 
 	/**
 	 * ### Handle all touch movements
@@ -111,15 +104,6 @@
 		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
 			handleTouchErase(x, y);
 		}
-
-		/*if (
-			$navBarState === 'select' &&
-			$mouseEventState === 'isTranslating' &&
-			cursorClass === 'move' &&
-			selectedPolygonIndex !== null
-		) {
-			handleTouchTranslate(x, y); // context);, selectedPolygonIndex, HIGHLIGHTCOLOR);
-		} */
 	};
 
 	/**
@@ -177,7 +161,9 @@
 	 * @param x X position on the screen
 	 * @param y Y position on the screen
 	 */
-	const handleTouchEnd = (x: number, y: number) => {
+	const handleTouchEnd = (e: MouseEvent): void => {
+		let x = e.clientX - offsetX;
+		let y = e.clientY - offsetY;
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 			let targetId = generateID();
 			const polygon = {
@@ -196,9 +182,9 @@
 		navBarState.set('select');
 	};
 
-	const handleMouseMove = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
+	const handleMouseMove = (e: MouseEvent): void => {
+		let x = e.clientX - offsetX;
+		let y = e.clientY - offsetY;
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 		const polygon = $polygons.find((polygon) => {
@@ -226,22 +212,9 @@
 
 <div
 	class="h-full w-full"
-	use:MouseActions.trackMouseState
-	on:keydown={() => {
-		null;
-	}}
-	use:MouseActions.mouseMove={{
-		onMove: handleMouseMove
-	}}
-	use:MouseActions.touchStart={{
-		onStart: handleTouchStart
-	}}
-	use:MouseActions.touchMove={{
-		onMove: handleTouchMove
-	}}
-	use:MouseActions.touchEnd={{
-		onEnd: handleTouchEnd
-	}}
+	on:mousemove={handleMouseMove}
+	on:mousedown={handleMouseDown}
+	on:mouseup={handleTouchEnd}
 >
 	<div id="canvasParent">
 		{#each $polygons as polygon}
