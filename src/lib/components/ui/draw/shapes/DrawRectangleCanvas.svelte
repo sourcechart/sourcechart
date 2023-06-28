@@ -1,42 +1,28 @@
 <script lang="ts">
 	import { afterUpdate } from 'svelte';
-	import { mouseEventState, navBarState } from '$lib/io/Stores';
+	import { mouseEventState } from '$lib/io/Stores';
 
 	export let polygon: Polygon;
+	export let isDrawing: boolean;
 
 	export let highlightcolor: string;
-	export let defaultcolor: string;
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let offsetX = 0;
 	let offsetY = 0;
 
-	$: console.log($mouseEventState);
-
 	const handleMouseDown = (e: MouseEvent) => {
-		if ($mouseEventState === 'isTranslating' && $navBarState === 'select') {
-			offsetX = e.clientX - polygon.vertices[0].x;
-			offsetY = e.clientY - polygon.vertices[0].y;
-		}
+		offsetX = e.clientX - polygon.vertices[0].x;
+		offsetY = e.clientY - polygon.vertices[0].y;
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
-		if ($mouseEventState === 'isTranslating' && $navBarState === 'select') {
-			let newX = e.clientX - offsetX;
-			let newY = e.clientY - offsetY;
-			let width = polygon.vertices[2].x - polygon.vertices[0].x;
-			let height = polygon.vertices[2].y - polygon.vertices[0].y;
-
-			polygon = {
-				...polygon,
-				vertices: [
-					{ x: newX, y: newY },
-					{ x: newX + width, y: newY },
-					{ x: newX + width, y: newY + height },
-					{ x: newX, y: newY + height }
-				]
-			};
+		if ($mouseEventState === 'isTouching') {
+			polygon.vertices[0].x = e.clientX - offsetX;
+			polygon.vertices[0].y = e.clientY - offsetY;
+			polygon.vertices[2].x = e.clientX - offsetX + canvas.width;
+			polygon.vertices[2].y = e.clientY - offsetY + canvas.height;
 		}
 	};
 
@@ -59,11 +45,9 @@
 		if (context) {
 			let rectWidth = Math.abs(endX - startX);
 			let rectHeight = Math.abs(endY - startY);
-			context.strokeStyle = 'red';
+			context.strokeStyle = isDrawing ? 'black' : highlightcolor;
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
-			context.strokeRect(0, 0, 10, 10); // Now rectangle starts from (0,0) as it's drawn on its own canvas
-
-			console.log(canvas.width, canvas.height, rectHeight, rectWidth);
+			context.strokeRect(0, 0, rectWidth, rectHeight); // Now rectangle starts from (0,0) as it's drawn on its own canvas
 		}
 	});
 </script>

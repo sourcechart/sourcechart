@@ -32,8 +32,7 @@
 	let cursorClass: string | null;
 	const tolerance: number = 5;
 
-	const highlightcolor: string = 'red';
-	const defaultcolor: string = 'black';
+	const HIGHLIGHTCOLOR: string = 'red';
 
 	if (browser) {
 		onMount(() => {
@@ -98,6 +97,13 @@
 	};
 
 	/**
+	 * ### Handle the movement of the mouse when it is not clicked.
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
+
+	/**
 	 * ### Handle all touch movements
 	 *
 	 * @param x x position on the screen
@@ -111,6 +117,15 @@
 		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
 			handleTouchErase(x, y);
 		}
+
+		/*if (
+			$navBarState === 'select' &&
+			$mouseEventState === 'isTranslating' &&
+			cursorClass === 'move' &&
+			selectedPolygonIndex !== null
+		) {
+			handleTouchTranslate(x, y); // context);, selectedPolygonIndex, HIGHLIGHTCOLOR);
+		} */
 	};
 
 	/**
@@ -236,10 +251,10 @@
 >
 	<div id="canvasParent">
 		{#each $polygons as polygon}
-			<DrawRectangleCanvas {polygon} {highlightcolor} {defaultcolor} />
+			<DrawRectangleCanvas {polygon} defaultcolor={'black'} highlightcolor={HIGHLIGHTCOLOR} />
 		{/each}
 		{#each newPolygon as polygon}
-			<DrawRectangleCanvas {polygon} {highlightcolor} {defaultcolor} />
+			<DrawRectangleCanvas {polygon} defaultcolor={'black'} highlightcolor={HIGHLIGHTCOLOR} />
 		{/each}
 	</div>
 </div>
@@ -252,10 +267,3 @@
 		}
 	}}
 />
-
-<style>
-	#canvasParent {
-		width: 100%;
-		height: 100%;
-	}
-</style>
