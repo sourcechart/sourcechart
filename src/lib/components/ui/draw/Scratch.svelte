@@ -1,4 +1,6 @@
+<!-- 
 <script>
+	
 	const handleKeyDown = (e: KeyboardEvent) => {
 		if (
 			(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
@@ -102,34 +104,9 @@
 		$activeSidebar = false;
 	};
 
-	const handleMouseMove = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
-		currentMousePosition = { x: x, y: y };
-		let hoverPolygon = null;
-		const polygon = $polygons.find((polygon) => {
-			let insidePolygon =
-				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
-			hoverIntersection = insidePolygon ? true : false;
-			if (insidePolygon) {
-				hoverPolygon = polygon;
-				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
-				cursorClass = getCursorStyleFromDirection(handlePosition);
-				if (handlePosition) return true; // This will break the .find() loop
-			}
-			return false; // This will continue to the next item in the .find() loop
-		});
-
-		if (!polygon) {
-			cursorClass = ''; // Reset the cursorClass if not found any polygon
-		} else if (hoverPolygon && !cursorClass) {
-			cursorClass = 'move'; // If we found a polygon but not hovering over any handles, set to 'move'
-		} else {
-			cursorClass = cursorClass || 'default'; // Change cursor back to default when not over handle
-		}
-	};
 	/**
 	 * ### Remove chart from dashboard on BackSpace/Delete/Escape.
 	 * @param e Keyboard event to delete items.
 	 */
 </script>
+-->

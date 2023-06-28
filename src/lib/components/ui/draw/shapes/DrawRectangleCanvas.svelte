@@ -46,7 +46,7 @@
 		if (context) {
 			let rectWidth = Math.abs(endX - startX);
 			let rectHeight = Math.abs(endY - startY);
-			context.strokeStyle = isDrawing ? 'black' : highlightcolor;
+			context.strokeStyle = isDrawing ? defaultcolor : highlightcolor;
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 			context.strokeRect(0, 0, rectWidth, rectHeight); // Now rectangle starts from (0,0) as it's drawn on its own canvas
 		}
