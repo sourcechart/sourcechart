@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
-	import * as PolyOps from './shapes/canvas-utils/PolygonOperations';
+	import * as PolyOps from './shapes/draw-utils/PolygonOperations';
 	import * as MouseActions from '$lib/actions/MouseActions';
 
 	import { navBarState, mouseEventState } from '$lib/io/Stores';
