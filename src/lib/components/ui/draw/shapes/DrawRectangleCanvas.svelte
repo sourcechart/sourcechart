@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { afterUpdate } from 'svelte';
+	import { calculateRectangleHandles } from './draw-utils/PolygonOperations';
+	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { mouseEventState, navBarState } from '$lib/io/Stores';
+	import { afterUpdate } from 'svelte';
 
 	export let polygon: Polygon;
 
@@ -11,6 +13,15 @@
 	let context: CanvasRenderingContext2D | null;
 	let offsetX = 0;
 	let offsetY = 0;
+
+	type Point = {
+		x: number;
+		y: number;
+	};
+
+	type LookupTable = {
+		[key: string]: Point;
+	};
 
 	// DrawRectangle.svelte
 	const handleMouseDown = (e: MouseEvent) => {
@@ -46,6 +57,32 @@
 		canvas.height = Math.abs(endY - startY);
 	};
 
+	const calculateVertices = (width: number, height: number): LookupTable => {
+		// Define the corners
+		let vertices: LookupTable = {
+			tl: { x: 0, y: 0 }, // top-left
+			tr: { x: width, y: 0 }, // top-right
+			br: { x: width, y: height }, // bottom-right
+			bl: { x: 0, y: height }, // bottom-left
+			mt: { x: width / 2, y: 0 }, // middle-top
+			mr: { x: width, y: height / 2 }, // middle-right
+			mb: { x: width / 2, y: height }, // middle-bottom
+			ml: { x: 0, y: height / 2 } // middle-left
+		};
+
+		return vertices;
+	};
+
+	const drawRectangleLines = (points: LookupTable, context: CanvasRenderingContext2D) => {
+		let rectangleVertices: string[] = ['tl', 'tr', 'br', 'bl'];
+		let vertices = [];
+		for (let i = 0; i < rectangleVertices.length; i++) {
+			vertices.push(points[rectangleVertices[i]]);
+		}
+		drawRectangle(vertices, context, 'red');
+		return vertices;
+	};
+
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
 		let startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
@@ -57,8 +94,8 @@
 		canvas.height = Math.abs(endY - startY);
 
 		context = canvas.getContext('2d');
-
 		if (context) {
+			//drawRectangle(polygon, context, 'red');
 			let rectWidth = Math.abs(endX - startX);
 			let rectHeight = Math.abs(endY - startY);
 			// changed the condition here
@@ -68,7 +105,14 @@
 					? defaultcolor
 					: highlightcolor;
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
-			context.strokeRect(0, 0, rectWidth, rectHeight); // Now rectangle starts from (0,0) as it's drawn on its own canvas
+
+			let points = calculateVertices(rectWidth, rectHeight);
+			let vertices = drawRectangleLines(points, context);
+
+			let handlePositions = ['mt', 'mr', 'mb', 'ml'];
+			for (let i = 0; i < handlePositions.length; i++) {
+				vertices.push(points[handlePositions[i]]);
+			}
 		}
 	});
 </script>

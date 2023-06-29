@@ -164,6 +164,12 @@
 		navBarState.set('select');
 	};
 
+	/**
+	 * ### Handle Mouse Move
+	 *
+	 * @param x
+	 * @param y
+	 */
 	const handleMouseMove = (x: number, y: number): void => {
 		x = x - offsetX;
 		y = y - offsetY;

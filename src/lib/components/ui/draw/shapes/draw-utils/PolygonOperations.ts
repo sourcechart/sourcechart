@@ -1,5 +1,4 @@
-import { mouseEventState } from '$lib/io/Stores';
-import type { Point, Polygon, HandlePosition } from './Types';
+import type { Point, Polygon } from './Types';
 
 /**
  * Checks is a point is in any created polygon or shape.
