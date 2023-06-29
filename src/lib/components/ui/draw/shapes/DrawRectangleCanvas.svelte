@@ -113,8 +113,9 @@
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 
 			let points = calculateVertices(rectWidth, rectHeight, 5);
-			drawRectangleCanvas(points, context);
 			drawRectangleHandles(points, context);
+
+			drawRectangleCanvas(points, context);
 		}
 	});
 </script>
