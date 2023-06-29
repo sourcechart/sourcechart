@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
-	import * as PolyOps from './canvas-utils/PolygonOperations';
+	import * as PolyOps from './shapes/canvas-utils/PolygonOperations';
 	import * as MouseActions from '$lib/actions/MouseActions';
 
 	import { navBarState, mouseEventState } from '$lib/io/Stores';
@@ -40,8 +40,8 @@
 			width = window.innerWidth;
 			height = window.innerHeight;
 			const rect = canvas.getBoundingClientRect();
-			offsetX = rect.left; // - handleRadius;
-			offsetY = rect.top; //- handleRadius;
+			offsetX = rect.left;
+			offsetY = rect.top;
 		});
 	}
 

@@ -34,6 +34,18 @@
 		polygon.isSelected = false; // set isSelected to false on mouse up
 	};
 
+	const updateCanvasDimensions = () => {
+		let startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
+		let startY = Math.min(polygon.vertices[0].y, polygon.vertices[2].y);
+		let endX = Math.max(polygon.vertices[0].x, polygon.vertices[2].x);
+		let endY = Math.max(polygon.vertices[0].y, polygon.vertices[2].y);
+
+		canvas.style.left = `${startX}px`;
+		canvas.style.top = `${startY}px`;
+		canvas.width = Math.abs(endX - startX);
+		canvas.height = Math.abs(endY - startY);
+	};
+
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
 		let startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
