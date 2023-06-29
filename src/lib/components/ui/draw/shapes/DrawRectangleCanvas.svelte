@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { calculateRectangleHandles } from './draw-utils/PolygonOperations';
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { mouseEventState, navBarState } from '$lib/io/Stores';
 	import { afterUpdate } from 'svelte';
@@ -57,17 +56,17 @@
 		canvas.height = Math.abs(endY - startY);
 	};
 
-	const calculateVertices = (width: number, height: number): LookupTable => {
+	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
 		// Define the corners
 		let vertices: LookupTable = {
-			tl: { x: 0, y: 0 }, // top-left
-			tr: { x: width, y: 0 }, // top-right
-			br: { x: width, y: height }, // bottom-right
-			bl: { x: 0, y: height }, // bottom-left
-			mt: { x: width / 2, y: 0 }, // middle-top
-			mr: { x: width, y: height / 2 }, // middle-right
-			mb: { x: width / 2, y: height }, // middle-bottom
-			ml: { x: 0, y: height / 2 } // middle-left
+			tl: { x: shrink, y: shrink }, // top-left
+			tr: { x: width - shrink, y: shrink }, // top-right
+			br: { x: width - shrink, y: height - shrink }, // bottom-right
+			bl: { x: shrink, y: height - shrink }, // bottom-left
+			mt: { x: width / 2, y: shrink }, // middle-top
+			mr: { x: width - shrink, y: height / 2 }, // middle-right
+			mb: { x: width / 2, y: height - shrink }, // middle-bottom
+			ml: { x: shrink, y: height / 2 } // middle-left
 		};
 
 		return vertices;
@@ -100,7 +99,6 @@
 
 		canvas.width = Math.abs(endX - startX);
 		canvas.height = Math.abs(endY - startY);
-
 		context = canvas.getContext('2d');
 		if (context) {
 			//drawRectangle(polygon, context, 'red');
@@ -114,7 +112,7 @@
 					: highlightcolor;
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 
-			let points = calculateVertices(rectWidth, rectHeight);
+			let points = calculateVertices(rectWidth, rectHeight, 5);
 			drawRectangleCanvas(points, context);
 			drawRectangleHandles(points, context);
 		}
