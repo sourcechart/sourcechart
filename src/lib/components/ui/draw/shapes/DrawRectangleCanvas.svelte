@@ -73,14 +73,22 @@
 		return vertices;
 	};
 
-	const drawRectangleLines = (points: LookupTable, context: CanvasRenderingContext2D) => {
+	const drawRectangleCanvas = (points: LookupTable, context: CanvasRenderingContext2D) => {
 		let rectangleVertices: string[] = ['tl', 'tr', 'br', 'bl'];
-		let vertices = [];
+		let vertices: Point[] = [];
 		for (let i = 0; i < rectangleVertices.length; i++) {
 			vertices.push(points[rectangleVertices[i]]);
 		}
 		drawRectangle(vertices, context, 'red');
-		return vertices;
+	};
+
+	const drawRectangleHandles = (points: LookupTable, context: CanvasRenderingContext2D) => {
+		let handlePositions = ['tl', 'tr', 'br', 'bl', 'mt', 'mr', 'mb', 'ml'];
+		let vertices: Point[] = [];
+		for (let i = 0; i < handlePositions.length; i++) {
+			vertices.push(points[handlePositions[i]]);
+		}
+		drawHandles(vertices, context, 'red', 5);
 	};
 
 	afterUpdate(() => {
@@ -107,12 +115,8 @@
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 
 			let points = calculateVertices(rectWidth, rectHeight);
-			let vertices = drawRectangleLines(points, context);
-
-			let handlePositions = ['mt', 'mr', 'mb', 'ml'];
-			for (let i = 0; i < handlePositions.length; i++) {
-				vertices.push(points[handlePositions[i]]);
-			}
+			drawRectangleCanvas(points, context);
+			drawRectangleHandles(points, context);
 		}
 	});
 </script>
