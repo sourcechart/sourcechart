@@ -104,6 +104,7 @@ interface Point {
 interface Polygon {
 	id?: string;
 	vertices: Point[];
+	isSelected?: boolean;
 }
 
 interface MouseEventExtended extends MouseEvent {

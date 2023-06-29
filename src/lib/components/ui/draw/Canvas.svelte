@@ -21,7 +21,6 @@
 	let dragOffset: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
 
-	let prevPolygonsLength = 0;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let offsetX: number = 0;
@@ -30,11 +29,11 @@
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
 	let cursorClass: string | null;
+
 	const tolerance: number = 5;
-
 	const highlightcolor: string = 'red';
-
 	const defaultcolor: string = 'black ';
+
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
