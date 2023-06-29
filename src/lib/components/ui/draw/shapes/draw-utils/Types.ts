@@ -14,3 +14,5 @@ export type Rectangle = {
 	width: number;
 	height: number;
 };
+
+type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
