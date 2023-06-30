@@ -1,4 +1,3 @@
-<!-- Handle.svelte -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	export let x: number;
@@ -9,6 +8,7 @@
 	let isDragging = false;
 	let lastX = 0;
 	let lastY = 0;
+	let handle: HTMLDivElement; // add this line
 
 	onMount(() => {
 		const handleMouseDown = (event: MouseEvent) => {
@@ -28,18 +28,22 @@
 				onDrag(dx, dy);
 			}
 		};
-		window.addEventListener('mousedown', handleMouseDown);
-		window.addEventListener('mouseup', handleMouseUp);
-		window.addEventListener('mousemove', handleMouseMove);
+		handle.addEventListener('mousedown', handleMouseDown); // update this line
+		handle.addEventListener('mouseup', handleMouseUp); // update this line
+		handle.addEventListener('mousemove', handleMouseMove); // update this line
 		return () => {
-			window.removeEventListener('mousedown', handleMouseDown);
-			window.removeEventListener('mouseup', handleMouseUp);
-			window.removeEventListener('mousemove', handleMouseMove);
+			handle.removeEventListener('mousedown', handleMouseDown); // update this line
+			handle.removeEventListener('mouseup', handleMouseUp); // update this line
+			handle.removeEventListener('mousemove', handleMouseMove); // update this line
 		};
 	});
 </script>
 
-<div class="handle" style="left: {x}px; top: {y}px; width: {size}px; height: 20px;" />
+<div
+	bind:this={handle}
+	class="handle"
+	style="left: {x}px; top: {y}px; width: {size}px; height: 20px;"
+/>
 
 <style>
 	.handle {

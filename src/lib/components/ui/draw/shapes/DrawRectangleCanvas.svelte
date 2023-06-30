@@ -129,23 +129,7 @@
 	});
 
 	const handleDrag = (dx: number, dy: number, corner: string) => {
-		if (corner === 'tl') {
-			console.log(corner);
-		} else if (corner === 'tm') {
-			console.log(corner);
-		} else if (corner === 'tr') {
-			console.log(corner);
-		} else if (corner === 'mr') {
-			console.log(corner);
-		} else if (corner === 'br') {
-			console.log(corner);
-		} else if (corner === 'bm') {
-			console.log(corner);
-		} else if (corner === 'bl') {
-			console.log(corner);
-		} else if (corner === 'ml') {
-			console.log(corner);
-		}
+		console.log(`Dragging ${corner} by dx=${dx}, dy=${dy}`);
 	};
 </script>
 
