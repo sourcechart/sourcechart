@@ -118,6 +118,7 @@
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 
 			points = calculateVertices(rectWidth, rectHeight, 5);
+			drawRectangleHandles(points, context);
 			drawRectangleCanvas(points, context);
 		}
 	});
@@ -175,8 +176,7 @@
 
 <div
 	id={polygon.id}
-	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0]
-		.y}px; cursor: move"
+	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0].y}px;"
 >
 	<canvas
 		bind:this={canvas}
@@ -184,16 +184,4 @@
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
 	/>
-	<div>
-		<div>
-			{#each Object.entries(points) as [corner, point]}
-				<Handle
-					x={point.x}
-					y={point.y}
-					onDrag={(dx, dy) => handleDrag(dx, dy, corner)}
-					handlePosition={corner}
-				/>
-			{/each}
-		</div>
-	</div>
 </div>

@@ -4,10 +4,12 @@
 	import * as MouseActions from '$lib/actions/MouseActions';
 
 	import { navBarState, mouseEventState, polygons } from '$lib/io/Stores';
+	import { resizeRectangle } from './shapes/draw-utils/Draw';
 	import { generateID } from '$lib/io/GenerateID';
 
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import { ConsoleLogger } from '@duckdb/duckdb-wasm';
 
 	let width: number = 0;
 	let height: number = 0;
@@ -97,6 +99,9 @@
 			handleTouchCreateShapes(x, y);
 		}
 
+		if ($navBarState === 'select' && $mouseEventState === 'isResizing') {
+			handleTouchResize(x, y);
+		}
 		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
 			handleTouchErase(x, y);
 		}
@@ -119,6 +124,13 @@
 				]
 			};
 			newPolygon = [polygon];
+		}
+	};
+
+	const handleTouchResize = (x: number, y: number) => {
+		if (selectedPolygonIndex !== null) {
+			const polygon = $polygons[selectedPolygonIndex];
+			if (handlePosition) resizeRectangle(x, y, polygon, handlePosition);
 		}
 	};
 
@@ -173,6 +185,7 @@
 		y = y - offsetY;
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
+		console.log($polygons);
 		const polygon = $polygons.find((polygon) => {
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
@@ -185,7 +198,7 @@
 			}
 			return false; // This will continue to the next item in the .find() loop
 		});
-
+		console.log(hoverPolygon);
 		if (!polygon) {
 			cursorClass = ''; // Reset the cursorClass if not found any polygon
 		} else if (hoverPolygon && !cursorClass) {
