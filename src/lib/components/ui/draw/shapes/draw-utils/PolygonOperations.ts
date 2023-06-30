@@ -25,6 +25,21 @@ const isPointInPolygon = (point: Point, polygon: Polygon): boolean => {
 	return inside;
 };
 
+const getCursorStyleFromDirection = (direction: string): string | null => {
+	const cursorMap: { [key: string]: string } = {
+		n: 'ns-resize',
+		ne: 'nesw-resize',
+		e: 'ew-resize',
+		se: 'nwse-resize',
+		s: 'ns-resize',
+		sw: 'nesw-resize',
+		w: 'ew-resize',
+		nw: 'nwse-resize'
+		//center: 'move'
+	};
+	return cursorMap[direction] || null;
+};
+
 /**
  * Manhatten Distance of two points with a tolerance
  *
@@ -140,5 +155,6 @@ export {
 	getHandlesHovered,
 	isPointInPolygon,
 	getContainingPolygon,
-	isNearPoint
+	isNearPoint,
+	getCursorStyleFromDirection
 };

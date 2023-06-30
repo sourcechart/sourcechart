@@ -49,20 +49,6 @@
 	 *
 	 * @param direction
 	 */
-	const getCursorStyleFromDirection = (direction: string): string | null => {
-		const cursorMap: { [key: string]: string } = {
-			n: 'ns-resize',
-			ne: 'nesw-resize',
-			e: 'ew-resize',
-			se: 'nwse-resize',
-			s: 'ns-resize',
-			sw: 'nesw-resize',
-			w: 'ew-resize',
-			nw: 'nwse-resize'
-			//center: 'move'
-		};
-		return cursorMap[direction] || null;
-	};
 
 	/**
 	 * ### Handle the touch start event.
@@ -191,7 +177,7 @@
 			if (insidePolygon) {
 				hoverPolygon = polygon;
 				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
-				cursorClass = getCursorStyleFromDirection(handlePosition);
+				cursorClass = PolyOps.getCursorStyleFromDirection(handlePosition);
 				if (handlePosition) return true; // This will break the .find() loop
 			}
 			return false; // This will continue to the next item in the .find() loop
@@ -203,6 +189,7 @@
 		} else {
 			cursorClass = cursorClass || 'default'; // Change cursor back to default when not over handle
 		}
+		console.log(cursorClass);
 	};
 
 	const handlePolygonChange = (e: CustomEvent) => {
@@ -218,6 +205,7 @@
 
 <div
 	class="h-full w-full"
+	style={`cursor: ${cursorClass};`}
 	use:MouseActions.trackMouseState
 	on:keydown={() => {
 		null;
