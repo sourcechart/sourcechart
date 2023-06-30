@@ -129,45 +129,47 @@
 	});
 
 	const handleDrag = (dx: number, dy: number, corner: string) => {
-		if (corner === 'tl') {
-			polygon.vertices[0].x += dx;
-			polygon.vertices[0].y += dy;
-			polygon.vertices[1].y += dy;
-			polygon.vertices[3].x += dx;
-		}
-		if (corner === 'tr') {
-			polygon.vertices[1].x += dx;
-			polygon.vertices[1].y += dy;
-			polygon.vertices[0].y += dy;
-			polygon.vertices[2].x += dx;
-		}
-		if (corner === 'br') {
-			polygon.vertices[2].x += dx;
-			polygon.vertices[2].y += dy;
-			polygon.vertices[3].y += dy;
-			polygon.vertices[1].x += dx;
-		}
-		if (corner === 'bl') {
-			polygon.vertices[3].x += dx;
-			polygon.vertices[3].y += dy;
-			polygon.vertices[2].y += dy;
-			polygon.vertices[0].x += dx;
-		}
-		if (corner === 'mt') {
-			polygon.vertices[0].y += dy;
-			polygon.vertices[1].y += dy;
-		}
-		if (corner === 'mr') {
-			polygon.vertices[1].x += dx;
-			polygon.vertices[2].x += dx;
-		}
-		if (corner === 'mb') {
-			polygon.vertices[2].y += dy;
-			polygon.vertices[3].y += dy;
-		}
-		if (corner === 'ml') {
-			polygon.vertices[0].x += dx;
-			polygon.vertices[3].x += dx;
+		if ($mouseEventState === 'isTouching') {
+			if (corner === 'tl') {
+				polygon.vertices[0].x += dx;
+				polygon.vertices[0].y += dy;
+				polygon.vertices[1].y += dy;
+				polygon.vertices[3].x += dx;
+			}
+			if (corner === 'tr') {
+				polygon.vertices[1].x += dx;
+				polygon.vertices[1].y += dy;
+				polygon.vertices[0].y += dy;
+				polygon.vertices[2].x += dx;
+			}
+			if (corner === 'br') {
+				polygon.vertices[2].x += dx;
+				polygon.vertices[2].y += dy;
+				polygon.vertices[3].y += dy;
+				polygon.vertices[1].x += dx;
+			}
+			if (corner === 'bl') {
+				polygon.vertices[3].x += dx;
+				polygon.vertices[3].y += dy;
+				polygon.vertices[2].y += dy;
+				polygon.vertices[0].x += dx;
+			}
+			if (corner === 'mt') {
+				polygon.vertices[0].y += dy;
+				polygon.vertices[1].y += dy;
+			}
+			if (corner === 'mr') {
+				polygon.vertices[1].x += dx;
+				polygon.vertices[2].x += dx;
+			}
+			if (corner === 'mb') {
+				polygon.vertices[2].y += dy;
+				polygon.vertices[3].y += dy;
+			}
+			if (corner === 'ml') {
+				polygon.vertices[0].x += dx;
+				polygon.vertices[3].x += dx;
+			}
 		}
 	};
 </script>
