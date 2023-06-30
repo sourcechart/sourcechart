@@ -1,46 +1,50 @@
+<!-- Handle.svelte -->
 <script lang="ts">
-	import { mouseEventState } from '$lib/io/Stores';
+	import { onMount } from 'svelte';
+	export let x: number;
+	export let y: number;
+	export let size: number = 10;
+	export let onDrag: (dx: number, dy: number) => void;
 
-	export let position: Point = { x: 0, y: 0 };
-	export let onDrag = (dx: number, dy: number) => {};
+	let isDragging = false;
+	let lastX = 0;
+	let lastY = 0;
 
-	let handle;
-
-	const getEventPosition = (e: MouseEvent | TouchEvent) => {
-		if (e instanceof TouchEvent) {
-			return {
-				movementX: e.touches[0].clientX - position.x,
-				movementY: e.touches[0].clientY - position.y
-			};
-		} else {
-			return { movementX: e.movementX, movementY: e.movementY };
-		}
-	};
-
-	const handleMouseDown = (e: MouseEvent | TouchEvent) => {
-		e.preventDefault();
-		mouseEventState.set('isResizing');
-	};
-
-	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
-		if (e instanceof MouseEvent ? e.buttons === 1 : e.touches.length === 1) {
-			const { movementX, movementY } = getEventPosition(e);
-			onDrag(movementX, movementY);
-		}
-	};
-
-	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
-		mouseEventState.set('isHovering');
-	};
+	onMount(() => {
+		const handleMouseDown = (event: MouseEvent) => {
+			isDragging = true;
+			lastX = event.clientX;
+			lastY = event.clientY;
+		};
+		const handleMouseUp = () => {
+			isDragging = false;
+		};
+		const handleMouseMove = (event: MouseEvent) => {
+			if (isDragging) {
+				let dx = event.clientX - lastX;
+				let dy = event.clientY - lastY;
+				lastX = event.clientX;
+				lastY = event.clientY;
+				onDrag(dx, dy);
+			}
+		};
+		window.addEventListener('mousedown', handleMouseDown);
+		window.addEventListener('mouseup', handleMouseUp);
+		window.addEventListener('mousemove', handleMouseMove);
+		return () => {
+			window.removeEventListener('mousedown', handleMouseDown);
+			window.removeEventListener('mouseup', handleMouseUp);
+			window.removeEventListener('mousemove', handleMouseMove);
+		};
+	});
 </script>
 
-<div
-	bind:this={handle}
-	on:mousedown={handleMouseDown}
-	on:mousemove={handleMouseMove}
-	on:mouseup={handleMouseUp}
-	on:touchstart={handleMouseDown}
-	on:touchmove={handleMouseMove}
-	on:touchend={handleMouseUp}
-	style="position: absolute; left: {position.x}px; top: {position.y}px; width: 10px; height: 10px; background: black; cursor: pointer"
-/>
+<div class="handle" style="left: {x}px; top: {y}px; width: {size}px; height: 20px;" />
+
+<style>
+	.handle {
+		position: absolute;
+		background-color: red;
+		cursor: pointer;
+	}
+</style>

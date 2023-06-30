@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { mouseEventState, navBarState } from '$lib/io/Stores';
-	import * as MouseActions from '$lib/actions/MouseActions';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
 	import { afterUpdate } from 'svelte';
+	import Handle from './Handle.svelte';
 
 	export let polygon: Polygon;
 
@@ -16,6 +16,7 @@
 	let offsetY = 0;
 	let rectWidth: number;
 	let rectHeight: number;
+	let handlePositions: Point[] = []; // new state variable for handle positions
 
 	// DrawRectangle.svelte
 	const handleMouseDown = (e: MouseEvent) => {
@@ -31,15 +32,6 @@
 		let x = e.clientX;
 		let y = e.clientY;
 		let inPolygon = isPointInPolygon({ x, y }, polygon);
-		let points = calculateVertices(rectWidth, rectHeight, 5);
-		for (let vertex in points) {
-			if (
-				isNearPoint(e.clientX - offsetX, e.clientY - offsetY, points[vertex].x, points[vertex].y)
-			) {
-				console.log('Near the ' + vertex + ' handle');
-				// handle logic when near a handle
-			}
-		}
 		if (inPolygon) {
 			if ($mouseEventState === 'isTouching') {
 				polygon.vertices[0].x = x - offsetX;
@@ -81,8 +73,6 @@
 		// Calculate the absolute differences
 		const diffX = Math.abs(mouseX - pointX);
 		const diffY = Math.abs(mouseY - pointY);
-
-		// Return true if both differences are within the tolerance
 		return diffX <= tolerance && diffY <= tolerance;
 	};
 
@@ -119,6 +109,7 @@
 		canvas.width = Math.abs(endX - startX);
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
+
 		if (context) {
 			//drawRectangle(polygon, context, 'red');
 			rectWidth = Math.abs(endX - startX);
@@ -132,6 +123,7 @@
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 
 			let points = calculateVertices(rectWidth, rectHeight, 5);
+			handlePositions = getAllHandlePositions(points); // update handlePositions
 
 			drawRectangleHandles(points, context);
 			drawRectangleCanvas(points, context);
@@ -139,13 +131,6 @@
 	});
 
 	const handleDrag = (dx: number, dy: number, corner: string) => {
-		if (corner === 'tl') {
-			polygon.vertices[0].x += dx;
-			polygon.vertices[0].y += dy;
-			polygon.vertices[2].x -= dx;
-			polygon.vertices[2].y -= dy;
-			// You may want to add a check to ensure vertices[0].x, vertices[0].y, vertices[2].x, vertices[2].y stay within reasonable bounds
-		}
 		// Further logic for other corners...
 	};
 </script>
@@ -161,4 +146,10 @@
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
 	/>
+
+	<div>
+		{#each handlePositions as point (point)}
+			<Handle x={point.x} y={point.y} onDrag={(dx, dy) => handleDrag(dx, dy, 'tl')} />
+		{/each}
+	</div>
 </div>
