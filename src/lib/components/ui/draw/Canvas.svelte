@@ -45,12 +45,6 @@
 	}
 
 	/**
-	 * ### Get Cursor from Direction
-	 *
-	 * @param direction
-	 */
-
-	/**
 	 * ### Handle the touch start event.
 	 *
 	 * @param x x position on the screen
@@ -80,11 +74,18 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchMove = (x: number, y: number): void => {
+		console.log($navBarState, $mouseEventState, cursorClass);
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 			handleTouchCreateShapes(x, y);
 		}
 
-		if ($navBarState === 'select' && $mouseEventState === 'isResizing') {
+		if (
+			$navBarState === 'select' &&
+			$mouseEventState === 'isTouching' &&
+			cursorClass !== 'move' &&
+			cursorClass
+		) {
+			console.log('foo');
 			handleTouchResize(x, y);
 		}
 		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
@@ -113,7 +114,9 @@
 	};
 
 	const handleTouchResize = (x: number, y: number) => {
+		console.log('resize');
 		if (selectedPolygonIndex !== null) {
+			console.log('foo');
 			const polygon = $polygons[selectedPolygonIndex];
 			console.log(polygon);
 			if (handlePosition) resizeRectangle(x, y, polygon, handlePosition);
@@ -168,7 +171,6 @@
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
-		console.log(currentMousePosition);
 		let hoverPolygon = null;
 		const polygon = $polygons.find((polygon) => {
 			let insidePolygon =
@@ -182,6 +184,7 @@
 			}
 			return false; // This will continue to the next item in the .find() loop
 		});
+		console.log(hoverPolygon);
 		if (!polygon) {
 			cursorClass = ''; // Reset the cursorClass if not found any polygon
 		} else if (hoverPolygon && !cursorClass) {
@@ -189,7 +192,6 @@
 		} else {
 			cursorClass = cursorClass || 'default'; // Change cursor back to default when not over handle
 		}
-		console.log(cursorClass);
 	};
 
 	const handlePolygonChange = (e: CustomEvent) => {
