@@ -2,6 +2,8 @@
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { mouseEventState, navBarState } from '$lib/io/Stores';
 	import * as MouseActions from '$lib/actions/MouseActions';
+	import { isPointInPolygon } from './draw-utils/PolygonOperations';
+	import Handle from './Handle.svelte';
 	import { afterUpdate } from 'svelte';
 
 	export let polygon: Polygon;
@@ -15,6 +17,7 @@
 	let offsetY = 0;
 	let rectWidth: number;
 	let rectHeight: number;
+	let cursorStyle: string = 'move';
 
 	// DrawRectangle.svelte
 	const handleMouseDown = (e: MouseEvent) => {
@@ -25,11 +28,14 @@
 		}
 	};
 	const handleMouseMove = (e: MouseEvent) => {
-		if ($mouseEventState === 'isTouching' && polygon.isSelected) {
-			polygon.vertices[0].x = e.clientX - offsetX;
-			polygon.vertices[0].y = e.clientY - offsetY;
-			polygon.vertices[2].x = e.clientX - offsetX + canvas.width;
-			polygon.vertices[2].y = e.clientY - offsetY + canvas.height;
+		let x = e.clientX;
+		let y = e.clientY;
+		let checkPolygon = isPointInPolygon({ x, y }, polygon);
+		if ($mouseEventState === 'isTouching' && checkPolygon) {
+			polygon.vertices[0].x = x - offsetX;
+			polygon.vertices[0].y = y - offsetY;
+			polygon.vertices[2].x = x - offsetX + canvas.width;
+			polygon.vertices[2].y = y - offsetY + canvas.height;
 		}
 	};
 
@@ -112,11 +118,23 @@
 			drawRectangleCanvas(points, context);
 		}
 	});
+
+	const handleDrag = (dx: number, dy: number, corner: string) => {
+		if (corner === 'tl') {
+			polygon.vertices[0].x += dx;
+			polygon.vertices[0].y += dy;
+			polygon.vertices[2].x -= dx;
+			polygon.vertices[2].y -= dy;
+			// You may want to add a check to ensure vertices[0].x, vertices[0].y, vertices[2].x, vertices[2].y stay within reasonable bounds
+		}
+		// Further logic for other corners...
+	};
 </script>
 
 <div
 	id={polygon.id}
-	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0].y}px;"
+	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0]
+		.y}px; cursor: move"
 >
 	<canvas
 		bind:this={canvas}
