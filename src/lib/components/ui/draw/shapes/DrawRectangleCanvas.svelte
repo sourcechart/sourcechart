@@ -16,7 +16,7 @@
 	let offsetY = 0;
 	let rectWidth: number;
 	let rectHeight: number;
-	let handlePositions: Point[] = []; // new state variable for handle positions
+	let points: LookupTable = {}; // new state variable for handle positions
 
 	// DrawRectangle.svelte
 	const handleMouseDown = (e: MouseEvent) => {
@@ -122,16 +122,30 @@
 					: highlightcolor;
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 
-			let points = calculateVertices(rectWidth, rectHeight, 5);
-			handlePositions = getAllHandlePositions(points); // update handlePositions
-
+			points = calculateVertices(rectWidth, rectHeight, 5);
 			drawRectangleHandles(points, context);
 			drawRectangleCanvas(points, context);
 		}
 	});
 
 	const handleDrag = (dx: number, dy: number, corner: string) => {
-		// Further logic for other corners...
+		if (corner === 'tl') {
+			console.log(corner);
+		} else if (corner === 'tm') {
+			console.log(corner);
+		} else if (corner === 'tr') {
+			console.log(corner);
+		} else if (corner === 'mr') {
+			console.log(corner);
+		} else if (corner === 'br') {
+			console.log(corner);
+		} else if (corner === 'bm') {
+			console.log(corner);
+		} else if (corner === 'bl') {
+			console.log(corner);
+		} else if (corner === 'ml') {
+			console.log(corner);
+		}
 	};
 </script>
 
@@ -148,8 +162,8 @@
 	/>
 
 	<div>
-		{#each handlePositions as point (point)}
-			<Handle x={point.x} y={point.y} onDrag={(dx, dy) => handleDrag(dx, dy, 'tl')} />
+		{#each Object.entries(points) as [corner, point]}
+			<Handle x={point.x} y={point.y} onDrag={(dx, dy) => handleDrag(dx, dy, corner)} />
 		{/each}
 	</div>
 </div>
