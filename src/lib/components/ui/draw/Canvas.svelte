@@ -9,7 +9,6 @@
 
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { ConsoleLogger } from '@duckdb/duckdb-wasm';
 
 	let width: number = 0;
 	let height: number = 0;
@@ -130,6 +129,7 @@
 	const handleTouchResize = (x: number, y: number) => {
 		if (selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
+			console.log(polygon);
 			if (handlePosition) resizeRectangle(x, y, polygon, handlePosition);
 		}
 	};
@@ -181,11 +181,9 @@
 	 * @param y
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
 		currentMousePosition = { x: x, y: y };
+		console.log(currentMousePosition);
 		let hoverPolygon = null;
-		console.log($polygons);
 		const polygon = $polygons.find((polygon) => {
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
@@ -198,7 +196,6 @@
 			}
 			return false; // This will continue to the next item in the .find() loop
 		});
-		console.log(hoverPolygon);
 		if (!polygon) {
 			cursorClass = ''; // Reset the cursorClass if not found any polygon
 		} else if (hoverPolygon && !cursorClass) {

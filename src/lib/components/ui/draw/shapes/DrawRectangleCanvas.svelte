@@ -50,7 +50,7 @@
 	const handleMouseUp = () => {
 		mouseEventState.set('isHovering');
 		polygon.isSelected = false; // set isSelected to false on mouse up
-
+		console.log(polygon.vertices);
 		window.removeEventListener('mousemove', handleMouseMove);
 		window.removeEventListener('mouseup', handleMouseUp);
 	};
