@@ -3,7 +3,6 @@
 	import { mouseEventState, navBarState } from '$lib/io/Stores';
 	import * as MouseActions from '$lib/actions/MouseActions';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
-	import Handle from './Handle.svelte';
 	import { afterUpdate } from 'svelte';
 
 	export let polygon: Polygon;
@@ -20,39 +19,40 @@
 
 	// DrawRectangle.svelte
 	const handleMouseDown = (e: MouseEvent) => {
-		polygon.isSelected = true; // set isSelected to true on mouse down
-		if (polygon.isSelected) {
-			offsetX = e.clientX - polygon.vertices[0].x;
-			offsetY = e.clientY - polygon.vertices[0].y;
+		let x = e.clientX;
+		let y = e.clientY;
+		let inPolygon = isPointInPolygon({ x, y }, polygon);
+		if (inPolygon) {
+			offsetX = x - polygon.vertices[0].x;
+			offsetY = y - polygon.vertices[0].y;
 		}
 	};
 	const handleMouseMove = (e: MouseEvent) => {
 		let x = e.clientX;
 		let y = e.clientY;
-		let checkPolygon = isPointInPolygon({ x, y }, polygon);
-		if ($mouseEventState === 'isTouching' && checkPolygon) {
-			polygon.vertices[0].x = x - offsetX;
-			polygon.vertices[0].y = y - offsetY;
-			polygon.vertices[2].x = x - offsetX + canvas.width;
-			polygon.vertices[2].y = y - offsetY + canvas.height;
+		let inPolygon = isPointInPolygon({ x, y }, polygon);
+		let points = calculateVertices(rectWidth, rectHeight, 5);
+		for (let vertex in points) {
+			if (
+				isNearPoint(e.clientX - offsetX, e.clientY - offsetY, points[vertex].x, points[vertex].y)
+			) {
+				console.log('Near the ' + vertex + ' handle');
+				// handle logic when near a handle
+			}
+		}
+		if (inPolygon) {
+			if ($mouseEventState === 'isTouching') {
+				polygon.vertices[0].x = x - offsetX;
+				polygon.vertices[0].y = y - offsetY;
+				polygon.vertices[2].x = x - offsetX + canvas.width;
+				polygon.vertices[2].y = y - offsetY + canvas.height;
+			}
 		}
 	};
 
 	const handleMouseUp = () => {
 		mouseEventState.set('isHovering');
 		polygon.isSelected = false; // set isSelected to false on mouse up
-	};
-
-	const updateCanvasDimensions = () => {
-		let startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
-		let startY = Math.min(polygon.vertices[0].y, polygon.vertices[2].y);
-		let endX = Math.max(polygon.vertices[0].x, polygon.vertices[2].x);
-		let endY = Math.max(polygon.vertices[0].y, polygon.vertices[2].y);
-
-		canvas.style.left = `${startX}px`;
-		canvas.style.top = `${startY}px`;
-		canvas.width = Math.abs(endX - startX);
-		canvas.height = Math.abs(endY - startY);
 	};
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
@@ -71,6 +71,21 @@
 		return vertices;
 	};
 
+	const isNearPoint = (
+		mouseX: number,
+		mouseY: number,
+		pointX: number,
+		pointY: number,
+		tolerance: number = 5
+	) => {
+		// Calculate the absolute differences
+		const diffX = Math.abs(mouseX - pointX);
+		const diffY = Math.abs(mouseY - pointY);
+
+		// Return true if both differences are within the tolerance
+		return diffX <= tolerance && diffY <= tolerance;
+	};
+
 	const drawRectangleCanvas = (points: LookupTable, context: CanvasRenderingContext2D) => {
 		let rectangleVertices: string[] = ['tl', 'tr', 'br', 'bl'];
 		let vertices: Point[] = [];
@@ -80,12 +95,17 @@
 		drawRectangle(vertices, context, 'red');
 	};
 
-	const drawRectangleHandles = (points: LookupTable, context: CanvasRenderingContext2D) => {
+	const getAllHandlePositions = (points: LookupTable): Point[] => {
 		let handlePositions = ['tl', 'tr', 'br', 'bl', 'mt', 'mr', 'mb', 'ml'];
 		let vertices: Point[] = [];
 		for (let i = 0; i < handlePositions.length; i++) {
 			vertices.push(points[handlePositions[i]]);
 		}
+		return vertices;
+	};
+
+	const drawRectangleHandles = (points: LookupTable, context: CanvasRenderingContext2D) => {
+		let vertices = getAllHandlePositions(points);
 		drawHandles(vertices, context, 'red', 5);
 	};
 
