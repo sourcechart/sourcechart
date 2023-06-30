@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { mouseEventState, navBarState, polygons } from '$lib/io/Stores';
-	import { isPointInPolygon } from './draw-utils/PolygonOperations';
-	import { afterUpdate } from 'svelte';
+	import { isPointInPolygon, isNearPoint } from './draw-utils/PolygonOperations';
+	import { afterUpdate, createEventDispatcher } from 'svelte';
 	import Handle from './Handle.svelte';
 
 	export let polygon: Polygon;
-
 	export let highlightcolor: string;
 	export let defaultcolor: string;
 
@@ -17,8 +16,11 @@
 	let rectWidth: number;
 	let rectHeight: number;
 	let points: LookupTable = {}; // new state variable for handle positions
+	let mouseMoveListener;
+	let mouseUpListener;
 
-	// DrawRectangle.svelte
+	const dispatch = createEventDispatcher();
+
 	const handleMouseDown = (e: MouseEvent) => {
 		let x = e.clientX;
 		let y = e.clientY;
@@ -27,24 +29,30 @@
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
 		}
+
+		mouseMoveListener = window.addEventListener('mousemove', handleMouseMove);
+		mouseUpListener = window.addEventListener('mouseup', handleMouseUp);
 	};
+
 	const handleMouseMove = (e: MouseEvent) => {
 		let x = e.clientX;
 		let y = e.clientY;
-		let inPolygon = isPointInPolygon({ x, y }, polygon);
-		if (inPolygon) {
-			if ($mouseEventState === 'isTouching') {
-				polygon.vertices[0].x = x - offsetX;
-				polygon.vertices[0].y = y - offsetY;
-				polygon.vertices[2].x = x - offsetX + canvas.width;
-				polygon.vertices[2].y = y - offsetY + canvas.height;
-			}
+		if ($mouseEventState === 'isTouching') {
+			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
+			newPolygon.vertices[0].x = x - offsetX;
+			newPolygon.vertices[0].y = y - offsetY;
+			newPolygon.vertices[2].x = x - offsetX + canvas.width;
+			newPolygon.vertices[2].y = y - offsetY + canvas.height;
+			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
 		}
 	};
 
 	const handleMouseUp = () => {
 		mouseEventState.set('isHovering');
 		polygon.isSelected = false; // set isSelected to false on mouse up
+
+		window.removeEventListener('mousemove', handleMouseMove);
+		window.removeEventListener('mouseup', handleMouseUp);
 	};
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
@@ -61,19 +69,6 @@
 		};
 
 		return vertices;
-	};
-
-	const isNearPoint = (
-		mouseX: number,
-		mouseY: number,
-		pointX: number,
-		pointY: number,
-		tolerance: number = 5
-	) => {
-		// Calculate the absolute differences
-		const diffX = Math.abs(mouseX - pointX);
-		const diffY = Math.abs(mouseY - pointY);
-		return diffX <= tolerance && diffY <= tolerance;
 	};
 
 	const drawRectangleCanvas = (points: LookupTable, context: CanvasRenderingContext2D) => {
@@ -123,53 +118,57 @@
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 
 			points = calculateVertices(rectWidth, rectHeight, 5);
-			drawRectangleHandles(points, context);
 			drawRectangleCanvas(points, context);
 		}
 	});
 
 	const handleDrag = (dx: number, dy: number, corner: string) => {
 		if ($mouseEventState === 'isTouching') {
+			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
+
 			if (corner === 'tl') {
-				polygon.vertices[0].x += dx;
-				polygon.vertices[0].y += dy;
-				polygon.vertices[1].y += dy;
-				polygon.vertices[3].x += dx;
+				newPolygon.vertices[0].x += dx;
+				newPolygon.vertices[0].y += dy;
+				newPolygon.vertices[1].y += dy;
+				newPolygon.vertices[3].x += dx;
 			}
 			if (corner === 'tr') {
-				polygon.vertices[1].x += dx;
-				polygon.vertices[1].y += dy;
-				polygon.vertices[0].y += dy;
-				polygon.vertices[2].x += dx;
+				newPolygon.vertices[1].x += dx;
+				newPolygon.vertices[1].y += dy;
+				newPolygon.vertices[0].y += dy;
+				newPolygon.vertices[2].x += dx;
 			}
 			if (corner === 'br') {
-				polygon.vertices[2].x += dx;
-				polygon.vertices[2].y += dy;
-				polygon.vertices[3].y += dy;
-				polygon.vertices[1].x += dx;
+				newPolygon.vertices[2].x += dx;
+				newPolygon.vertices[2].y += dy;
+				newPolygon.vertices[3].y += dy;
+				newPolygon.vertices[1].x += dx;
 			}
 			if (corner === 'bl') {
-				polygon.vertices[3].x += dx;
-				polygon.vertices[3].y += dy;
-				polygon.vertices[2].y += dy;
-				polygon.vertices[0].x += dx;
+				newPolygon.vertices[3].x += dx;
+				newPolygon.vertices[3].y += dy;
+				newPolygon.vertices[2].y += dy;
+				newPolygon.vertices[0].x += dx;
 			}
 			if (corner === 'mt') {
-				polygon.vertices[0].y += dy;
-				polygon.vertices[1].y += dy;
+				newPolygon.vertices[0].y += dy;
+				newPolygon.vertices[1].y += dy;
 			}
 			if (corner === 'mr') {
-				polygon.vertices[1].x += dx;
-				polygon.vertices[2].x += dx;
+				newPolygon.vertices[1].x += dx;
+				newPolygon.vertices[2].x += dx;
 			}
 			if (corner === 'mb') {
-				polygon.vertices[2].y += dy;
-				polygon.vertices[3].y += dy;
+				newPolygon.vertices[2].y += dy;
+				newPolygon.vertices[3].y += dy;
 			}
 			if (corner === 'ml') {
-				polygon.vertices[0].x += dx;
-				polygon.vertices[3].x += dx;
+				newPolygon.vertices[0].x += dx;
+				newPolygon.vertices[3].x += dx;
 			}
+
+			// emit the new polygon to the parent component
+			dispatch('polygonChange', { id: polygon.id, polygon: newPolygon });
 		}
 	};
 </script>
@@ -185,10 +184,16 @@
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
 	/>
-
 	<div>
-		{#each Object.entries(points) as [corner, point]}
-			<Handle x={point.x} y={point.y} onDrag={(dx, dy) => handleDrag(dx, dy, corner)} />
-		{/each}
+		<div>
+			{#each Object.entries(points) as [corner, point]}
+				<Handle
+					x={point.x}
+					y={point.y}
+					onDrag={(dx, dy) => handleDrag(dx, dy, corner)}
+					handlePosition={corner}
+				/>
+			{/each}
+		</div>
 	</div>
 </div>

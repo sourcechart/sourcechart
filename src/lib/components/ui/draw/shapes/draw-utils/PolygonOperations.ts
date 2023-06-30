@@ -26,6 +26,29 @@ const isPointInPolygon = (point: Point, polygon: Polygon): boolean => {
 };
 
 /**
+ * Manhatten Distance of two points with a tolerance
+ *
+ * @param mouseX
+ * @param mouseY
+ * @param pointX
+ * @param pointY
+ * @param tolerance
+ * @returns
+ */
+const isNearPoint = (
+	mouseX: number,
+	mouseY: number,
+	pointX: number,
+	pointY: number,
+	tolerance: number = 5
+): boolean => {
+	// Calculate the absolute differences
+	const diffX = Math.abs(mouseX - pointX);
+	const diffY = Math.abs(mouseY - pointY);
+	return diffX <= tolerance && diffY <= tolerance;
+};
+
+/**
  * Get the nearest surrounding polygon that a point that is in `x` and `y`.
 
  *  @param point the current point (mouse position, or other)
@@ -112,4 +135,10 @@ const getHandlesHovered = (
 	return 'center'; // No handle is being hovered over.
 };
 
-export { calculateRectangleHandles, getHandlesHovered, isPointInPolygon, getContainingPolygon };
+export {
+	calculateRectangleHandles,
+	getHandlesHovered,
+	isPointInPolygon,
+	getContainingPolygon,
+	isNearPoint
+};

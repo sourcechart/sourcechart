@@ -3,17 +3,15 @@
 	import * as PolyOps from './shapes/draw-utils/PolygonOperations';
 	import * as MouseActions from '$lib/actions/MouseActions';
 
-	import { navBarState, mouseEventState } from '$lib/io/Stores';
+	import { navBarState, mouseEventState, polygons } from '$lib/io/Stores';
 	import { generateID } from '$lib/io/GenerateID';
 
 	import { browser } from '$app/environment';
-	import { writable } from 'svelte/store';
 	import { onMount } from 'svelte';
 
 	let width: number = 0;
 	let height: number = 0;
 
-	const polygons = writable<Polygon[]>([]);
 	let newPolygon: Polygon[] = [];
 
 	let selectedPolygonIndex: number | null = null;
@@ -196,6 +194,16 @@
 			cursorClass = cursorClass || 'default'; // Change cursor back to default when not over handle
 		}
 	};
+
+	const handlePolygonChange = (e: CustomEvent) => {
+		// Find the polygon in the $polygons store that matches the ID of the changed polygon
+		let polygonIndex = $polygons.findIndex((polygon) => polygon.id === e.detail.id);
+
+		if (polygonIndex !== -1) {
+			// Update the polygon in the store
+			$polygons[polygonIndex] = e.detail.polygon;
+		}
+	};
 </script>
 
 <div
@@ -219,10 +227,20 @@
 >
 	<div id="canvasParent">
 		{#each $polygons as polygon}
-			<DrawRectangleCanvas {polygon} {defaultcolor} {highlightcolor} />
+			<DrawRectangleCanvas
+				{polygon}
+				{defaultcolor}
+				{highlightcolor}
+				on:polygonChange={handlePolygonChange}
+			/>
 		{/each}
 		{#each newPolygon as polygon}
-			<DrawRectangleCanvas {polygon} {defaultcolor} {highlightcolor} />
+			<DrawRectangleCanvas
+				{polygon}
+				{defaultcolor}
+				{highlightcolor}
+				on:polygonChange={handlePolygonChange}
+			/>
 		{/each}
 	</div>
 </div>
