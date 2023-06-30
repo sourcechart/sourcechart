@@ -17,7 +17,6 @@
 	let offsetY = 0;
 	let rectWidth: number;
 	let rectHeight: number;
-	let cursorStyle: string = 'move';
 
 	// DrawRectangle.svelte
 	const handleMouseDown = (e: MouseEvent) => {
