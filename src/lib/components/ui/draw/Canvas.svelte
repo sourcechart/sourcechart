@@ -3,13 +3,12 @@
 	import * as PolyOps from './shapes/draw-utils/PolygonOperations';
 	import * as MouseActions from '$lib/actions/MouseActions';
 
-	import { navBarState, mouseEventState, polygons } from '$lib/io/Stores';
+	import { navBarState, mouseEventState, polygons, mostRecentChartID } from '$lib/io/Stores';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
 	import { generateID } from '$lib/io/GenerateID';
 
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { ConsoleLogger } from '@duckdb/duckdb-wasm';
 
 	let width: number = 0;
 	let height: number = 0;
@@ -35,6 +34,9 @@
 	const highlightcolor: string = 'red';
 	const defaultcolor: string = 'black ';
 
+	$: selectedPolygonIndex = $polygons.findIndex((p) => p.id === $mostRecentChartID);
+	$: console.log(selectedPolygonIndex);
+
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -56,10 +58,15 @@
 		mouseEventState.set('isTouching');
 		start = { x, y };
 		const currentPoint: Point = { x, y };
-
 		const containingPolygon = PolyOps.getContainingPolygon(currentPoint, $polygons);
-		if (containingPolygon?.id) selectedPolygonID = containingPolygon?.id;
-		selectedPolygonIndex = $polygons.findIndex((polygon) => polygon.id === selectedPolygonID);
+
+		if (containingPolygon) {
+			mostRecentChartID.set(containingPolygon?.id);
+			// continue with the rest of the function...
+		} else {
+			// If touch is outside any rectangle (i.e., no containing polygon), set mostRecentChartID to null
+			mostRecentChartID.set('');
+		}
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
@@ -118,6 +125,12 @@
 		}
 	};
 
+	/**
+	 * Handle Touch Resize
+	 *
+	 * @param x
+	 * @param y
+	 */
 	const handleTouchResize = (x: number, y: number) => {
 		if (selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
@@ -164,7 +177,7 @@
 		}
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
-		selectedPolygonID = null;
+		mostRecentChartID.set('');
 	};
 
 	/**
@@ -198,10 +211,8 @@
 	};
 
 	const handlePolygonChange = (e: CustomEvent) => {
-		console.log(selectedPolygonID);
 		// Find the polygon in the $polygons store that matches the ID of the changed polygon
 		selectedPolygonIndex = $polygons.findIndex((polygon) => polygon.id === e.detail.id);
-		console.log(selectedPolygonIndex, $polygons[selectedPolygonIndex]);
 
 		if (selectedPolygonIndex !== -1) {
 			// Update the polygon in the store

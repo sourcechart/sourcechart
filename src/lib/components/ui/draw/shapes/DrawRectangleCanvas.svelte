@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
-	import { mouseEventState, navBarState, polygons } from '$lib/io/Stores';
+	import { mouseEventState, navBarState, polygons, mostRecentChartID } from '$lib/io/Stores';
 	import { isPointInPolygon, isNearPoint } from './draw-utils/PolygonOperations';
 	import { afterUpdate, createEventDispatcher } from 'svelte';
 	import Handle from './Handle.svelte';
@@ -16,13 +16,6 @@
 	let rectWidth: number;
 	let rectHeight: number;
 	let points: LookupTable = {}; // new state variable for handle positions
-
-	const dispatch = createEventDispatcher();
-	let newPolygon = { ...polygon };
-
-	const updatePolygon = () => {
-		dispatch('polygonChange', { id: newPolygon.id });
-	};
 
 	const handleMouseDown = (e: MouseEvent) => {
 		let x = e.clientX;
@@ -44,13 +37,13 @@
 			newPolygon.vertices[2].x = x - offsetX + canvas.width;
 			newPolygon.vertices[2].y = y - offsetY + canvas.height;
 			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
-			//updatePolygon(); // update the polygon when it changes
 		}
 	};
 
 	const handleMouseUp = () => {
 		mouseEventState.set('isHovering');
 		//	updatePolygon();
+		mostRecentChartID.set('');
 	};
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
