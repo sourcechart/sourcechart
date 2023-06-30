@@ -1,4 +1,3 @@
-<!-- Handle.svelte -->
 <script lang="ts">
 	import { mouseEventState } from '$lib/io/Stores';
 
@@ -7,21 +6,31 @@
 
 	let handle;
 
-	const handleMouseDown = (e: MouseEvent) => {
-		e.preventDefault();
-		mouseEventState.set('isResizing');
-		//e.target.setPointerCapture(e.pointerId);
-	};
-
-	const handleMouseMove = (e: MouseEvent) => {
-		if (e.buttons === 1) {
-			onDrag(e.movementX, e.movementY);
+	const getEventPosition = (e: MouseEvent | TouchEvent) => {
+		if (e instanceof TouchEvent) {
+			return {
+				movementX: e.touches[0].clientX - position.x,
+				movementY: e.touches[0].clientY - position.y
+			};
+		} else {
+			return { movementX: e.movementX, movementY: e.movementY };
 		}
 	};
 
-	const handleMouseUp = (e: MouseEvent) => {
+	const handleMouseDown = (e: MouseEvent | TouchEvent) => {
+		e.preventDefault();
+		mouseEventState.set('isResizing');
+	};
+
+	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+		if (e instanceof MouseEvent ? e.buttons === 1 : e.touches.length === 1) {
+			const { movementX, movementY } = getEventPosition(e);
+			onDrag(movementX, movementY);
+		}
+	};
+
+	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
 		mouseEventState.set('isHovering');
-		//e.target.releasePointerCapture(e.pointerId);
 	};
 </script>
 
@@ -30,5 +39,8 @@
 	on:mousedown={handleMouseDown}
 	on:mousemove={handleMouseMove}
 	on:mouseup={handleMouseUp}
+	on:touchstart={handleMouseDown}
+	on:touchmove={handleMouseMove}
+	on:touchend={handleMouseUp}
 	style="position: absolute; left: {position.x}px; top: {position.y}px; width: 10px; height: 10px; background: black; cursor: pointer"
 />

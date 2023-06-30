@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { mouseEventState, navBarState } from '$lib/io/Stores';
+	import * as MouseActions from '$lib/actions/MouseActions';
 	import { afterUpdate } from 'svelte';
 
 	export let polygon: Polygon;
@@ -12,15 +13,8 @@
 	let context: CanvasRenderingContext2D | null;
 	let offsetX = 0;
 	let offsetY = 0;
-
-	type Point = {
-		x: number;
-		y: number;
-	};
-
-	type LookupTable = {
-		[key: string]: Point;
-	};
+	let rectWidth: number;
+	let rectHeight: number;
 
 	// DrawRectangle.svelte
 	const handleMouseDown = (e: MouseEvent) => {
@@ -102,8 +96,8 @@
 		context = canvas.getContext('2d');
 		if (context) {
 			//drawRectangle(polygon, context, 'red');
-			let rectWidth = Math.abs(endX - startX);
-			let rectHeight = Math.abs(endY - startY);
+			rectWidth = Math.abs(endX - startX);
+			rectHeight = Math.abs(endY - startY);
 			// changed the condition here
 			context.strokeStyle =
 				($mouseEventState === 'isTouching' && $navBarState === 'drawRectangle') ||
@@ -113,8 +107,8 @@
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 
 			let points = calculateVertices(rectWidth, rectHeight, 5);
-			drawRectangleHandles(points, context);
 
+			drawRectangleHandles(points, context);
 			drawRectangleCanvas(points, context);
 		}
 	});

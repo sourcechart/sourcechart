@@ -107,6 +107,9 @@ interface Polygon {
 	isSelected?: boolean;
 }
 
+type LookupTable = {
+	[key: string]: Point;
+};
 interface MouseEventExtended extends MouseEvent {
 	offsetX: number;
 	offsetY: number;
