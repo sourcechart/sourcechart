@@ -9,6 +9,7 @@
 
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import { ConsoleLogger } from '@duckdb/duckdb-wasm';
 
 	let width: number = 0;
 	let height: number = 0;
@@ -16,6 +17,7 @@
 	let newPolygon: Polygon[] = [];
 
 	let selectedPolygonIndex: number | null = null;
+	let selectedPolygonID: string | null = null;
 	let start: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
@@ -53,6 +55,11 @@
 	const handleTouchStart = (x: number, y: number): void => {
 		mouseEventState.set('isTouching');
 		start = { x, y };
+		const currentPoint: Point = { x, y };
+
+		const containingPolygon = PolyOps.getContainingPolygon(currentPoint, $polygons);
+		if (containingPolygon?.id) selectedPolygonID = containingPolygon?.id;
+		selectedPolygonIndex = $polygons.findIndex((polygon) => polygon.id === selectedPolygonID);
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
@@ -74,7 +81,6 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchMove = (x: number, y: number): void => {
-		console.log($navBarState, $mouseEventState, cursorClass);
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 			handleTouchCreateShapes(x, y);
 		}
@@ -85,7 +91,6 @@
 			cursorClass !== 'move' &&
 			cursorClass
 		) {
-			console.log('foo');
 			handleTouchResize(x, y);
 		}
 		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
@@ -114,9 +119,7 @@
 	};
 
 	const handleTouchResize = (x: number, y: number) => {
-		console.log('resize');
 		if (selectedPolygonIndex !== null) {
-			console.log('foo');
 			const polygon = $polygons[selectedPolygonIndex];
 			console.log(polygon);
 			if (handlePosition) resizeRectangle(x, y, polygon, handlePosition);
@@ -161,6 +164,7 @@
 		}
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
+		selectedPolygonID = null;
 	};
 
 	/**
@@ -184,7 +188,6 @@
 			}
 			return false; // This will continue to the next item in the .find() loop
 		});
-		console.log(hoverPolygon);
 		if (!polygon) {
 			cursorClass = ''; // Reset the cursorClass if not found any polygon
 		} else if (hoverPolygon && !cursorClass) {
@@ -195,12 +198,14 @@
 	};
 
 	const handlePolygonChange = (e: CustomEvent) => {
+		console.log(selectedPolygonID);
 		// Find the polygon in the $polygons store that matches the ID of the changed polygon
-		let polygonIndex = $polygons.findIndex((polygon) => polygon.id === e.detail.id);
+		selectedPolygonIndex = $polygons.findIndex((polygon) => polygon.id === e.detail.id);
+		console.log(selectedPolygonIndex, $polygons[selectedPolygonIndex]);
 
-		if (polygonIndex !== -1) {
+		if (selectedPolygonIndex !== -1) {
 			// Update the polygon in the store
-			$polygons[polygonIndex] = e.detail.polygon;
+			$polygons[selectedPolygonIndex] = e.detail.polygon;
 		}
 	};
 </script>

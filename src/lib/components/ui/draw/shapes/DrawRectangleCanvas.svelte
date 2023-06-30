@@ -16,10 +16,13 @@
 	let rectWidth: number;
 	let rectHeight: number;
 	let points: LookupTable = {}; // new state variable for handle positions
-	let mouseMoveListener;
-	let mouseUpListener;
 
 	const dispatch = createEventDispatcher();
+	let newPolygon = { ...polygon };
+
+	const updatePolygon = () => {
+		dispatch('polygonChange', { id: newPolygon.id });
+	};
 
 	const handleMouseDown = (e: MouseEvent) => {
 		let x = e.clientX;
@@ -29,9 +32,6 @@
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
 		}
-
-		mouseMoveListener = window.addEventListener('mousemove', handleMouseMove);
-		mouseUpListener = window.addEventListener('mouseup', handleMouseUp);
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
@@ -44,14 +44,13 @@
 			newPolygon.vertices[2].x = x - offsetX + canvas.width;
 			newPolygon.vertices[2].y = y - offsetY + canvas.height;
 			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
+			//updatePolygon(); // update the polygon when it changes
 		}
 	};
 
 	const handleMouseUp = () => {
 		mouseEventState.set('isHovering');
-		polygon.isSelected = false; // set isSelected to false on mouse up
-		window.removeEventListener('mousemove', handleMouseMove);
-		window.removeEventListener('mouseup', handleMouseUp);
+		//	updatePolygon();
 	};
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
@@ -115,62 +114,11 @@
 					? defaultcolor
 					: highlightcolor;
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
-
 			points = calculateVertices(rectWidth, rectHeight, 5);
 			drawRectangleHandles(points, context);
 			drawRectangleCanvas(points, context);
 		}
 	});
-
-	const handleDrag = (dx: number, dy: number, corner: string) => {
-		if ($mouseEventState === 'isTouching') {
-			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
-
-			if (corner === 'tl') {
-				newPolygon.vertices[0].x += dx;
-				newPolygon.vertices[0].y += dy;
-				newPolygon.vertices[1].y += dy;
-				newPolygon.vertices[3].x += dx;
-			}
-			if (corner === 'tr') {
-				newPolygon.vertices[1].x += dx;
-				newPolygon.vertices[1].y += dy;
-				newPolygon.vertices[0].y += dy;
-				newPolygon.vertices[2].x += dx;
-			}
-			if (corner === 'br') {
-				newPolygon.vertices[2].x += dx;
-				newPolygon.vertices[2].y += dy;
-				newPolygon.vertices[3].y += dy;
-				newPolygon.vertices[1].x += dx;
-			}
-			if (corner === 'bl') {
-				newPolygon.vertices[3].x += dx;
-				newPolygon.vertices[3].y += dy;
-				newPolygon.vertices[2].y += dy;
-				newPolygon.vertices[0].x += dx;
-			}
-			if (corner === 'mt') {
-				newPolygon.vertices[0].y += dy;
-				newPolygon.vertices[1].y += dy;
-			}
-			if (corner === 'mr') {
-				newPolygon.vertices[1].x += dx;
-				newPolygon.vertices[2].x += dx;
-			}
-			if (corner === 'mb') {
-				newPolygon.vertices[2].y += dy;
-				newPolygon.vertices[3].y += dy;
-			}
-			if (corner === 'ml') {
-				newPolygon.vertices[0].x += dx;
-				newPolygon.vertices[3].x += dx;
-			}
-
-			// emit the new polygon to the parent component
-			dispatch('polygonChange', { id: polygon.id, polygon: newPolygon });
-		}
-	};
 </script>
 
 <div
