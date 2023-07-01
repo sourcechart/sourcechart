@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { mouseEventState, navBarState } from '$lib/io/Stores';
+	import { mouseEventState, navBarState, polygons } from '$lib/io/Stores';
+	import { isPointInPolygon } from './draw-utils/PolygonOperations';
+
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 
@@ -7,6 +9,8 @@
 	export let highlightcolor: string;
 	export let defaultcolor: string;
 
+	let offsetX = 0;
+	let offsetY = 0;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 
@@ -39,6 +43,16 @@
 		drawRectangle(vertices, context, 'red');
 	};
 
+	const handleMouseDown = (e: MouseEvent) => {
+		let x = e.clientX;
+		let y = e.clientY;
+		let inPolygon = isPointInPolygon({ x, y }, polygon);
+		if (inPolygon) {
+			offsetX = x - polygon.vertices[0].x;
+			offsetY = y - polygon.vertices[0].y;
+		}
+	};
+
 	const getAllHandlePositions = (points: LookupTable): Point[] => {
 		let handlePositions = ['tl', 'tr', 'br', 'bl', 'mt', 'mr', 'mb', 'ml'];
 		let vertices: Point[] = [];
@@ -51,6 +65,19 @@
 	const drawRectangleHandles = (points: LookupTable, context: CanvasRenderingContext2D) => {
 		let vertices = getAllHandlePositions(points);
 		drawHandles(vertices, context, 'red', 5);
+	};
+
+	const handleMouseMove = (e: MouseEvent) => {
+		let x = e.clientX;
+		let y = e.clientY;
+		if ($mouseEventState === 'isTouching') {
+			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
+			newPolygon.vertices[0].x = x - offsetX;
+			newPolygon.vertices[0].y = y - offsetY;
+			newPolygon.vertices[2].x = x - offsetX + canvas.width;
+			newPolygon.vertices[2].y = y - offsetY + canvas.height;
+			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
+		}
 	};
 
 	afterUpdate(() => {
@@ -89,5 +116,5 @@
 		polygon.vertices[2].x
 	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
 >
-	<canvas bind:this={canvas} />
+	<canvas bind:this={canvas} on:mousedown={handleMouseDown} on:mousemove={handleMouseMove} />
 </div>

@@ -85,7 +85,7 @@
 			handleTouchErase(x, y);
 		}
 		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && cursorClass === 'move') {
-			handleTranslate(x, y);
+			//handleTranslate(x, y);
 		}
 		if (
 			$navBarState === 'select' &&
