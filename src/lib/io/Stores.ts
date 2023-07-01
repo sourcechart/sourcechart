@@ -2,9 +2,11 @@
 import { writable, derived } from 'svelte/store';
 import { Query } from '$lib/io/QueryBuilder';
 
-export const navBarMode = writable<NavBar>('');
-export const drawInteraction = writable<DrawBehavior>();
-export const mostRecentChartID = writable<string>('');
+export const globalMouseState = writable<boolean>(false);
+export const isMouseDown = writable<boolean>(false);
+export const navBarState = writable<NavBar>('select');
+export const mouseEventState = writable<MouseEvents>();
+export const mostRecentChartID = writable<string>();
 export const chosenFile = writable<string>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();

@@ -1,0 +1,112 @@
+<!-- 
+<script>
+	
+	const handleKeyDown = (e: KeyboardEvent) => {
+		if (
+			(e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Escape') &&
+			selectedPolygonIndex !== null
+		) {
+			removeChart();
+			$activeSidebar = false;
+			$polygons.splice(selectedPolygonIndex, 1);
+			if (selectedPolygonIndex > -1) {
+				$polygons.splice(selectedPolygonIndex, 1);
+			}
+			if (context) redraw($polygons, context, width, height, selectedPolygonIndex);
+			selectedPolygonIndex = null;
+		}
+	};
+
+	/**
+	 * ### Handle the resizing of a rectangle to different heights and widths
+	 *
+	 * @param xWithOffset x position on the screen
+	 * @param yWithOffset y position on the screen
+	 */
+	const handleTouchResize = (xWithOffset: number, yWithOffset: number) => {
+		if (selectedPolygonIndex !== null) {
+			const polygon = $polygons[selectedPolygonIndex];
+			if (handlePosition) resizeRectangle(xWithOffset, yWithOffset, polygon, handlePosition);
+			if (context) {
+				redraw(polygons, context, width, height, selectedPolygonIndex);
+				drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
+			}
+		}
+	};
+
+	/**
+	 * ### Translate (Drag) the polygon element to a different position on the screen.
+	 *
+	 * @param xWithOffset x position on the screen
+	 * @param yWithOffset y position on the screen
+	 * @param context Canvas Rendering context
+	 * @param selectedPolygonIndex the polygon we clicked on
+	 */
+	const handleTouchTranslate = (
+		xWithOffset: number,
+		yWithOffset: number,
+		selectedPolygonIndex: number
+	) => {
+		const dx = xWithOffset - dragOffset.x;
+		const dy = yWithOffset - dragOffset.y;
+		const polygon = $polygons[selectedPolygonIndex];
+		polygon.vertices = polygon.vertices.map((vertex) => ({
+			x: vertex.x + dx,
+			y: vertex.y + dy
+		}));
+		dragOffset = { x: xWithOffset, y: yWithOffset };
+
+		//redraw(polygons, context, width, height, selectedPolygonIndex);
+		//context.strokeStyle = HIGHLIGHTCOLOR;
+		//drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
+	};
+
+	/**
+	 * Handles the click functionality of the dashboard
+	 *
+	 * @param Mouse Event
+	 *
+	 *
+	 */
+	const handleClick = ({ offsetX: x, offsetY: y }: MouseEventExtended) => {
+		let targetId: string | null = null;
+
+		const point: Point = { x, y };
+		const polygon = PolyOps.getContainingPolygon(point, $polygons);
+
+		if (context && polygon) {
+			selectedPolygonIndex = $polygons.indexOf(polygon);
+			if (polygon.id) {
+				targetId = polygon.id;
+				mostRecentChartID.set(targetId);
+			} // Here we get the target id
+			redraw(polygons, context, width, height, selectedPolygonIndex);
+			context.strokeStyle = HIGHLIGHTCOLOR;
+			drawHandles(polygon, context, HIGHLIGHTCOLOR, handleRadius);
+			$activeSidebar = true;
+
+			if (!polygon && $navBarState === 'select') {
+				selectedPolygonIndex = null;
+				if (context) redraw(polygons, context, width, height, selectedPolygonIndex);
+				activeSidebar.set(false);
+			}
+
+			return targetId;
+		}
+	};
+
+	const removeChart = () => {
+		$clearChartOptions = true;
+		setTimeout(() => {
+			$clearChartOptions = false;
+		}, 10);
+		$allCharts = $allCharts.filter((item) => item.chartID !== $mostRecentChartID);
+		$activeSidebar = false;
+	};
+
+	/**
+	 * ### Remove chart from dashboard on BackSpace/Delete/Escape.
+	 * @param e Keyboard event to delete items.
+	 */
+</script>
+-->

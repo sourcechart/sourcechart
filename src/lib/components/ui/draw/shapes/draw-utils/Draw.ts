@@ -9,12 +9,12 @@ import { calculateRectangleHandles } from './PolygonOperations';
  * @param lineColor
  */
 const drawRectangle = (
-	polygon: Polygon,
+	vertices: Point[],
 	context: CanvasRenderingContext2D,
 	lineColor: string
 ): void => {
 	context.beginPath();
-	polygon.vertices.forEach((point, idx) => {
+	vertices.forEach((point, idx) => {
 		if (idx === 0) {
 			if (context) context.moveTo(point.x, point.y);
 		} else {
@@ -46,7 +46,7 @@ const redraw = (
 	context.clearRect(0, 0, width, height);
 	polygons.forEach((polygon, i) => {
 		let lineColor = i === selectedPolygonIndex ? 'red' : 'black';
-		drawRectangle(polygon, context, lineColor);
+		drawRectangle(polygon.vertices, context, lineColor);
 	});
 };
 
@@ -59,21 +59,20 @@ const redraw = (
  * @param radius
  */
 const drawHandles = (
-	polygon: Polygon,
+	vertices: Point[],
 	context: CanvasRenderingContext2D,
 	color: string,
-	radius: number
+	side: number
 ) => {
-	let handlePositions: Point[];
-	handlePositions = calculateRectangleHandles(polygon);
-
 	context.strokeStyle = color;
 	context.lineWidth = 1;
-	handlePositions.forEach((point) => {
+	vertices.forEach((point) => {
 		if (context) {
+			context.globalAlpha = 0.5; // sets transparency to 50%
 			context.beginPath();
-			context.arc(point.x, point.y, radius, 0 * Math.PI, 2 * Math.PI); // Change the 3rd argument to adjust the size of the circle
+			context.rect(point.x - side / 2, point.y - side / 2, side, side);
 			context.stroke();
+			context.globalAlpha = 1.0; // reset the transparency to the original state
 		}
 	});
 };
@@ -121,6 +120,7 @@ const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: str
 		polygon.vertices[0].y = y;
 		polygon.vertices[1].y = y;
 	}
+	return polygon;
 };
 
 export { drawRectangle, redraw, drawHandles, resizeRectangle };

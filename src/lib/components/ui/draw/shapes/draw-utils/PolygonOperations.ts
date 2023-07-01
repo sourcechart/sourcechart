@@ -1,4 +1,4 @@
-import { mouseEventState } from '$lib/io/Stores';
+import type { Point, Polygon } from './Types';
 
 /**
  * Checks is a point is in any created polygon or shape.
@@ -23,6 +23,44 @@ const isPointInPolygon = (point: Point, polygon: Polygon): boolean => {
 		}
 	}
 	return inside;
+};
+
+const getCursorStyleFromDirection = (direction: string): string | null => {
+	const cursorMap: { [key: string]: string } = {
+		n: 'ns-resize',
+		ne: 'nesw-resize',
+		e: 'ew-resize',
+		se: 'nwse-resize',
+		s: 'ns-resize',
+		sw: 'nesw-resize',
+		w: 'ew-resize',
+		nw: 'nwse-resize'
+		//center: 'move'
+	};
+	return cursorMap[direction] || null;
+};
+
+/**
+ * Manhatten Distance of two points with a tolerance
+ *
+ * @param mouseX
+ * @param mouseY
+ * @param pointX
+ * @param pointY
+ * @param tolerance
+ * @returns
+ */
+const isNearPoint = (
+	mouseX: number,
+	mouseY: number,
+	pointX: number,
+	pointY: number,
+	tolerance: number = 5
+): boolean => {
+	// Calculate the absolute differences
+	const diffX = Math.abs(mouseX - pointX);
+	const diffY = Math.abs(mouseY - pointY);
+	return diffX <= tolerance && diffY <= tolerance;
 };
 
 /**
@@ -112,4 +150,11 @@ const getHandlesHovered = (
 	return 'center'; // No handle is being hovered over.
 };
 
-export { calculateRectangleHandles, getHandlesHovered, isPointInPolygon, getContainingPolygon };
+export {
+	calculateRectangleHandles,
+	getHandlesHovered,
+	isPointInPolygon,
+	getContainingPolygon,
+	isNearPoint,
+	getCursorStyleFromDirection
+};
