@@ -120,6 +120,7 @@ const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: str
 		polygon.vertices[0].y = y;
 		polygon.vertices[1].y = y;
 	}
+	return polygon;
 };
 
 export { drawRectangle, redraw, drawHandles, resizeRectangle };

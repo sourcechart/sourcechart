@@ -16,7 +16,6 @@
 	let newPolygon: Polygon[] = [];
 
 	let selectedPolygonIndex: number | null = null;
-	let selectedPolygonID: string | null = null;
 	let start: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
@@ -60,13 +59,8 @@
 		const currentPoint: Point = { x, y };
 		const containingPolygon = PolyOps.getContainingPolygon(currentPoint, $polygons);
 
-		if (containingPolygon) {
-			mostRecentChartID.set(containingPolygon?.id);
-			// continue with the rest of the function...
-		} else {
-			// If touch is outside any rectangle (i.e., no containing polygon), set mostRecentChartID to null
-			mostRecentChartID.set('');
-		}
+		containingPolygon?.id ? mostRecentChartID.set(containingPolygon.id) : mostRecentChartID.set('');
+
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
@@ -134,8 +128,7 @@
 	const handleTouchResize = (x: number, y: number) => {
 		if (selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
-			console.log(polygon);
-			if (handlePosition) resizeRectangle(x, y, polygon, handlePosition);
+			$polygons[selectedPolygonIndex] = resizeRectangle(x, y, polygon, handlePosition);
 		}
 	};
 

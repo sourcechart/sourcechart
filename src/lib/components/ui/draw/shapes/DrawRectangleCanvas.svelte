@@ -42,7 +42,6 @@
 
 	const handleMouseUp = () => {
 		mouseEventState.set('isHovering');
-		//	updatePolygon();
 		mostRecentChartID.set('');
 	};
 
