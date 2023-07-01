@@ -16,6 +16,7 @@ export const fileUploadStore = writable<fileUpload[]>([]);
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
 export const polygons = writable<Polygon[]>([]);
+export const mouseType = writable<string | null>();
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);

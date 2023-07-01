@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { mouseEventState, navBarState, polygons } from '$lib/io/Stores';
+	import { mouseEventState, navBarState, polygons, mouseType } from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
 
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
@@ -13,6 +13,7 @@
 	let offsetY = 0;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
+	let dragging = false;
 
 	let rectWidth: number;
 	let rectHeight: number;
@@ -50,6 +51,7 @@
 		if (inPolygon) {
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
+			dragging = true;
 		}
 	};
 
@@ -68,15 +70,33 @@
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
+		if (!dragging) return;
 		let x = e.clientX;
 		let y = e.clientY;
-		if ($mouseEventState === 'isTouching') {
+		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && $mouseType === 'move') {
 			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
 			newPolygon.vertices[0].x = x - offsetX;
 			newPolygon.vertices[0].y = y - offsetY;
 			newPolygon.vertices[2].x = x - offsetX + canvas.width;
 			newPolygon.vertices[2].y = y - offsetY + canvas.height;
 			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
+
+			polygon = newPolygon; // update the local polygon without updating the store
+		}
+	};
+
+	const handleMouseUp = (e: MouseEvent) => {
+		if (!dragging) return;
+		let x = e.clientX;
+		let y = e.clientY;
+		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && $mouseType === 'move') {
+			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
+			newPolygon.vertices[0].x = x - offsetX;
+			newPolygon.vertices[0].y = y - offsetY;
+			newPolygon.vertices[2].x = x - offsetX + canvas.width;
+			newPolygon.vertices[2].y = y - offsetY + canvas.height;
+			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
+			dragging = false;
 		}
 	};
 
@@ -116,5 +136,10 @@
 		polygon.vertices[2].x
 	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
 >
-	<canvas bind:this={canvas} on:mousedown={handleMouseDown} on:mousemove={handleMouseMove} />
+	<canvas
+		bind:this={canvas}
+		on:mousedown={handleMouseDown}
+		on:mousemove={handleMouseMove}
+		on:mouseup={handleMouseUp}
+	/>
 </div>

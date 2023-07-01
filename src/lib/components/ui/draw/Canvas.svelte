@@ -2,8 +2,13 @@
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
 	import * as PolyOps from './shapes/draw-utils/PolygonOperations';
 	import * as MouseActions from '$lib/actions/MouseActions';
-
-	import { navBarState, mouseEventState, polygons, mostRecentChartID } from '$lib/io/Stores';
+	import {
+		navBarState,
+		mouseEventState,
+		polygons,
+		mostRecentChartID,
+		mouseType
+	} from '$lib/io/Stores';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
 	import { generateID } from '$lib/io/GenerateID';
 
@@ -27,7 +32,6 @@
 
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
-	let cursorClass: string | null;
 
 	const tolerance: number = 5;
 	const highlightcolor: string = 'red';
@@ -84,14 +88,14 @@
 		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
 			handleTouchErase(x, y);
 		}
-		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && cursorClass === 'move') {
-			//handleTranslate(x, y);
+		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && $mouseType === 'move') {
+			//Handled in DrawRectangel.svelte
 		}
 		if (
 			$navBarState === 'select' &&
 			$mouseEventState === 'isTouching' &&
-			cursorClass !== 'move' &&
-			cursorClass
+			$mouseType !== 'move' &&
+			$mouseType
 		) {
 			handleTouchResize(x, y);
 		}
@@ -127,25 +131,6 @@
 		if (selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			$polygons[selectedPolygonIndex] = resizeRectangle(x, y, polygon, handlePosition);
-		}
-	};
-
-	/**
-	 * ### Handle Touch Translate
-	 *
-	 * @param x
-	 * @param y
-	 */
-	const handleTranslate = (x: number, y: number) => {
-		if (selectedPolygonIndex !== null) {
-			const dx = x - dragOffset.x;
-			const dy = y - dragOffset.y;
-			const polygon = $polygons[selectedPolygonIndex];
-			polygon.vertices = polygon.vertices.map((vertex) => {
-				return { x: vertex.x + dx, y: vertex.y + dy };
-			});
-			dragOffset = { x: x, y: y };
-			$polygons[selectedPolygonIndex] = polygon;
 		}
 	};
 
@@ -206,24 +191,24 @@
 			if (insidePolygon) {
 				hoverPolygon = polygon;
 				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
-				cursorClass = PolyOps.getCursorStyleFromDirection(handlePosition);
+				$mouseType = PolyOps.getCursorStyleFromDirection(handlePosition);
 				if (handlePosition) return true; // This will break the .find() loop
 			}
 			return false; // This will continue to the next item in the .find() loop
 		});
 		if (!polygon) {
-			cursorClass = ''; // Reset the cursorClass if not found any polygon
-		} else if (hoverPolygon && !cursorClass) {
-			cursorClass = 'move'; // If we found a polygon but not hovering over any handles, set to 'move'
+			$mouseType = '';
+		} else if (hoverPolygon && !$mouseType) {
+			$mouseType = 'move';
 		} else {
-			cursorClass = cursorClass || 'default'; // Change cursor back to default when not over handle
+			$mouseType = $mouseType || 'default';
 		}
 	};
 </script>
 
 <div
 	class="h-full w-full"
-	style={`cursor: ${cursorClass};`}
+	style={`cursor: ${$mouseType};`}
 	use:MouseActions.trackMouseState
 	on:keydown={() => {
 		null;
