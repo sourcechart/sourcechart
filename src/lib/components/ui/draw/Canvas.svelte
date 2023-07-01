@@ -34,7 +34,6 @@
 	const defaultcolor: string = 'black ';
 
 	$: selectedPolygonIndex = $polygons.findIndex((p) => p.id === $mostRecentChartID);
-	$: console.log(selectedPolygonIndex);
 
 	if (browser) {
 		onMount(() => {
@@ -122,7 +121,7 @@
 	};
 
 	/**
-	 * Handle Touch Resize
+	 * ### Handle Touch Resize
 	 *
 	 * @param x
 	 * @param y
@@ -134,9 +133,13 @@
 		}
 	};
 
+	/**
+	 * ### Handle Touch Translate
+	 *
+	 * @param x
+	 * @param y
+	 */
 	const handleTranslate = (x: number, y: number) => {
-		//x = x - offsetX;
-		//y = y - offsetY;
 		if (selectedPolygonIndex !== null) {
 			const dx = x - dragOffset.x;
 			const dy = y - dragOffset.y;
@@ -152,8 +155,8 @@
 	/**
 	 * ### On intersection of a polygon while your mouse is touching erase
 	 *
-	 * @param xWithOffset x position on the screen
-	 * @param yWithOffset y position on the screen
+	 * @param x x position on the screen
+	 * @param y y position on the screen
 	 */
 	const handleTouchErase = (x: number, y: number): void => {
 		const currentTouchPoint: Point = { x: x, y: y };
@@ -219,16 +222,6 @@
 			cursorClass = cursorClass || 'default'; // Change cursor back to default when not over handle
 		}
 	};
-
-	const handlePolygonChange = (e: CustomEvent) => {
-		// Find the polygon in the $polygons store that matches the ID of the changed polygon
-		selectedPolygonIndex = $polygons.findIndex((polygon) => polygon.id === e.detail.id);
-
-		if (selectedPolygonIndex !== -1) {
-			// Update the polygon in the store
-			$polygons[selectedPolygonIndex] = e.detail.polygon;
-		}
-	};
 </script>
 
 <div
@@ -253,20 +246,10 @@
 >
 	<div id="canvasParent">
 		{#each $polygons as polygon}
-			<DrawRectangleCanvas
-				{polygon}
-				{defaultcolor}
-				{highlightcolor}
-				on:polygonChange={handlePolygonChange}
-			/>
+			<DrawRectangleCanvas {polygon} {defaultcolor} {highlightcolor} />
 		{/each}
 		{#each newPolygon as polygon}
-			<DrawRectangleCanvas
-				{polygon}
-				{defaultcolor}
-				{highlightcolor}
-				on:polygonChange={handlePolygonChange}
-			/>
+			<DrawRectangleCanvas {polygon} {defaultcolor} {highlightcolor} />
 		{/each}
 	</div>
 </div>

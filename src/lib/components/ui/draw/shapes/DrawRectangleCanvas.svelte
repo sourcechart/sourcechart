@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { mouseEventState, navBarState, polygons, mostRecentChartID } from '$lib/io/Stores';
+	import { mouseEventState, navBarState } from '$lib/io/Stores';
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
-	import { isPointInPolygon } from './draw-utils/PolygonOperations';
 	import { afterUpdate } from 'svelte';
 
 	export let polygon: Polygon;
