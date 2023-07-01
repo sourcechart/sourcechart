@@ -84,7 +84,10 @@
 
 <div
 	id={polygon.id}
-	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0].y}px;"
+	style="position: absolute; left: {Math.min(
+		polygon.vertices[0].x,
+		polygon.vertices[2].x
+	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
 >
 	<canvas bind:this={canvas} />
 </div>

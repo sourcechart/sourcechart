@@ -43,6 +43,7 @@
 			const rect = canvas.getBoundingClientRect();
 			offsetX = rect.left;
 			offsetY = rect.top;
+			console.log(offsetX, offsetY);
 		});
 	}
 
@@ -67,10 +68,6 @@
 				mouseEventState.set('isTranslating');
 				return;
 			}
-		} else if ($navBarState === 'select' && selectedPolygonIndex !== null) {
-			mouseEventState.set('isTranslating');
-			dragOffset = { x, y };
-			return;
 		}
 	};
 
@@ -147,7 +144,7 @@
 			polygon.vertices = polygon.vertices.map((vertex) => {
 				return { x: vertex.x + dx, y: vertex.y + dy };
 			});
-			dragOffset = { x, y };
+			dragOffset = { x: x, y: y };
 			$polygons[selectedPolygonIndex] = polygon;
 		}
 	};
