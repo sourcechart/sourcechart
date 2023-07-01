@@ -85,7 +85,16 @@
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 			handleTouchCreateShapes(x, y);
 		}
-
+		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
+			handleTouchErase(x, y);
+		}
+		if (
+			$navBarState === 'select' &&
+			$mouseEventState === 'isTranslating' &&
+			cursorClass === 'move'
+		) {
+			handleTranslate(x, y);
+		}
 		if (
 			$navBarState === 'select' &&
 			$mouseEventState === 'isTouching' &&
@@ -93,9 +102,6 @@
 			cursorClass
 		) {
 			handleTouchResize(x, y);
-		}
-		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
-			handleTouchErase(x, y);
 		}
 	};
 
@@ -129,6 +135,21 @@
 		if (selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			$polygons[selectedPolygonIndex] = resizeRectangle(x, y, polygon, handlePosition);
+		}
+	};
+
+	const translatePolygon = (x: number, y: number, polygon: Polygon) => {
+		polygon.vertices[0].x = x - offsetX;
+		polygon.vertices[0].y = y - offsetY;
+		polygon.vertices[2].x = x - offsetX + canvas.width;
+		polygon.vertices[2].y = y - offsetY + canvas.height;
+		return polygon;
+	};
+
+	const handleTranslate = (x: number, y: number) => {
+		if (selectedPolygonIndex !== null) {
+			const polygon = $polygons[selectedPolygonIndex];
+			$polygons[selectedPolygonIndex] = translatePolygon(x, y, polygon);
 		}
 	};
 

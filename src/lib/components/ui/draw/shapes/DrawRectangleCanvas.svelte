@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { mouseEventState, navBarState, polygons, mostRecentChartID } from '$lib/io/Stores';
-	import { isPointInPolygon, isNearPoint } from './draw-utils/PolygonOperations';
-	import { afterUpdate, createEventDispatcher } from 'svelte';
-	import Handle from './Handle.svelte';
+	import { drawHandles, drawRectangle } from './draw-utils/Draw';
+	import { isPointInPolygon } from './draw-utils/PolygonOperations';
+	import { afterUpdate } from 'svelte';
 
 	export let polygon: Polygon;
 	export let highlightcolor: string;
@@ -24,19 +23,6 @@
 		if (inPolygon) {
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
-		}
-	};
-
-	const handleMouseMove = (e: MouseEvent) => {
-		let x = e.clientX;
-		let y = e.clientY;
-		if ($mouseEventState === 'isTouching') {
-			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
-			newPolygon.vertices[0].x = x - offsetX;
-			newPolygon.vertices[0].y = y - offsetY;
-			newPolygon.vertices[2].x = x - offsetX + canvas.width;
-			newPolygon.vertices[2].y = y - offsetY + canvas.height;
-			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
 		}
 	};
 
@@ -117,10 +103,5 @@
 	id={polygon.id}
 	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0].y}px;"
 >
-	<canvas
-		bind:this={canvas}
-		on:mousedown={handleMouseDown}
-		on:mousemove={handleMouseMove}
-		on:mouseup={handleMouseUp}
-	/>
+	<canvas bind:this={canvas} on:mousedown={handleMouseDown} on:mouseup={handleMouseUp} />
 </div>
