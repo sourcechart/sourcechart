@@ -88,11 +88,7 @@
 		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
 			handleTouchErase(x, y);
 		}
-		if (
-			$navBarState === 'select' &&
-			$mouseEventState === 'isTranslating' &&
-			cursorClass === 'move'
-		) {
+		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && cursorClass === 'move') {
 			handleTranslate(x, y);
 		}
 		if (
@@ -138,18 +134,18 @@
 		}
 	};
 
-	const translatePolygon = (x: number, y: number, polygon: Polygon) => {
-		polygon.vertices[0].x = x - offsetX;
-		polygon.vertices[0].y = y - offsetY;
-		polygon.vertices[2].x = x - offsetX + canvas.width;
-		polygon.vertices[2].y = y - offsetY + canvas.height;
-		return polygon;
-	};
-
 	const handleTranslate = (x: number, y: number) => {
+		//x = x - offsetX;
+		//y = y - offsetY;
 		if (selectedPolygonIndex !== null) {
+			const dx = x - dragOffset.x;
+			const dy = y - dragOffset.y;
 			const polygon = $polygons[selectedPolygonIndex];
-			$polygons[selectedPolygonIndex] = translatePolygon(x, y, polygon);
+			polygon.vertices = polygon.vertices.map((vertex) => {
+				return { x: vertex.x + dx, y: vertex.y + dy };
+			});
+			dragOffset = { x, y };
+			$polygons[selectedPolygonIndex] = polygon;
 		}
 	};
 
@@ -159,8 +155,8 @@
 	 * @param xWithOffset x position on the screen
 	 * @param yWithOffset y position on the screen
 	 */
-	const handleTouchErase = (xWithOffset: number, yWithOffset: number): void => {
-		const currentTouchPoint: Point = { x: xWithOffset, y: yWithOffset };
+	const handleTouchErase = (x: number, y: number): void => {
+		const currentTouchPoint: Point = { x: x, y: y };
 		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, $polygons);
 		const index = polygon ? $polygons.indexOf(polygon) : -1;
 		if (index > -1) {

@@ -10,26 +10,10 @@
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
-	let offsetX = 0;
-	let offsetY = 0;
+
 	let rectWidth: number;
 	let rectHeight: number;
 	let points: LookupTable = {}; // new state variable for handle positions
-
-	const handleMouseDown = (e: MouseEvent) => {
-		let x = e.clientX;
-		let y = e.clientY;
-		let inPolygon = isPointInPolygon({ x, y }, polygon);
-		if (inPolygon) {
-			offsetX = x - polygon.vertices[0].x;
-			offsetY = y - polygon.vertices[0].y;
-		}
-	};
-
-	const handleMouseUp = () => {
-		mouseEventState.set('isHovering');
-		mostRecentChartID.set('');
-	};
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
 		// Define the corners
@@ -103,5 +87,5 @@
 	id={polygon.id}
 	style="position: absolute; left: {polygon.vertices[0].x}px; top: {polygon.vertices[0].y}px;"
 >
-	<canvas bind:this={canvas} on:mousedown={handleMouseDown} on:mouseup={handleMouseUp} />
+	<canvas bind:this={canvas} />
 </div>
