@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { mouseEventState, navBarState, polygons, mouseType } from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
+	import { Chart } from '$lib/components/ui/echarts';
 
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
@@ -14,10 +15,28 @@
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let dragging = false;
+	let plotWidth: number = 0;
+	let plotHeight: number = 0;
 
 	let rectWidth: number;
 	let rectHeight: number;
 	let points: LookupTable = {}; // new state variable for handle positions
+
+	const options = {
+		xAxis: {
+			data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+			type: 'category'
+		},
+		yAxis: {
+			type: 'value'
+		},
+		series: [
+			{
+				data: [820, 932, 901, 934, 1290, 1330, 1320],
+				type: 'bar'
+			}
+		]
+	};
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
 		// Define the corners
@@ -110,6 +129,8 @@
 		canvas.width = Math.abs(endX - startX);
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
+		plotWidth = canvas.width;
+		plotHeight = canvas.height;
 
 		if (context) {
 			//drawRectangle(polygon, context, 'red');
@@ -136,10 +157,22 @@
 		polygon.vertices[2].x
 	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
 >
-	<canvas
-		bind:this={canvas}
-		on:mousedown={handleMouseDown}
-		on:mousemove={handleMouseMove}
-		on:mouseup={handleMouseUp}
-	/>
+	<div class="container" style="width: {plotWidth}px; height: {plotHeight}px;">
+		<canvas
+			bind:this={canvas}
+			on:mousedown={handleMouseDown}
+			on:mousemove={handleMouseMove}
+			on:mouseup={handleMouseUp}
+		/>
+		<div class="container">
+			<Chart {options} />
+		</div>
+	</div>
 </div>
+
+<style>
+	.container {
+		width: 400px;
+		height: 400px;
+	}
+</style>

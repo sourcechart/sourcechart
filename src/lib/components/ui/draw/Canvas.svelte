@@ -14,6 +14,7 @@
 
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import { Chart } from '$lib/components/ui/echarts';
 
 	let width: number = 0;
 	let height: number = 0;
@@ -207,7 +208,7 @@
 </script>
 
 <div
-	class="h-full w-full"
+	class="h-full w-full relative"
 	style={`cursor: ${$mouseType};`}
 	use:MouseActions.trackMouseState
 	on:keydown={() => {
