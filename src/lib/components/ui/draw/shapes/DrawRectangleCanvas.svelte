@@ -166,13 +166,13 @@
 >
 	<div style="position: relative; width: {plotWidth}px; height: {plotHeight}px;">
 		<canvas
-			style="position: absolute;"
+			style="position: absolute;  z-index: 1;"
 			bind:this={canvas}
 			on:mousedown={handleMouseDown}
 			on:mousemove={handleMouseMove}
 			on:mouseup={handleMouseUp}
 		/>
-		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px;">
+		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:2">
 			<Chart {options} renderer={'svg'} />
 		</div>
 	</div>
