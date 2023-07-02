@@ -15,11 +15,9 @@
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let dragging = false;
-	let plotWidth: number = 0;
-	let plotHeight: number = 0;
 
-	let rectWidth: number;
-	let rectHeight: number;
+	let rectWidth: number = 0;
+	let rectHeight: number = 0;
 	let points: LookupTable = {}; // new state variable for handle positions
 
 	const options = {
@@ -148,6 +146,17 @@
 			drawRectangleCanvas(points, context);
 		}
 	});
+
+	const getPlotWidth = () => {
+		return Math.abs(polygon.vertices[0].x - polygon.vertices[2].x);
+	};
+
+	const getPlotHeight = () => {
+		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
+	};
+
+	$: plotWidth = getPlotWidth();
+	$: plotHeight = getPlotHeight();
 </script>
 
 <div
@@ -157,22 +166,15 @@
 		polygon.vertices[2].x
 	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
 >
-	<div class="container" style="width: {plotWidth}px; height: {plotHeight}px;">
+	<div style="width: {plotWidth}px; height: {plotHeight}px;">
 		<canvas
 			bind:this={canvas}
 			on:mousedown={handleMouseDown}
 			on:mousemove={handleMouseMove}
 			on:mouseup={handleMouseUp}
 		/>
-		<div class="container">
-			<Chart {options} />
+		<div style="width: {plotWidth}px; height: {plotHeight}px;">
+			<Chart {options} renderer={'canvas'} />
 		</div>
 	</div>
 </div>
-
-<style>
-	.container {
-		width: 400px;
-		height: 400px;
-	}
-</style>
