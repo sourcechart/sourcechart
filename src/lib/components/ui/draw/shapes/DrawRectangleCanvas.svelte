@@ -164,14 +164,15 @@
 		polygon.vertices[2].x
 	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
 >
-	<div style="width: {plotWidth}px; height: {plotHeight}px;">
+	<div style="position: relative; width: {plotWidth}px; height: {plotHeight}px;">
 		<canvas
+			style="position: absolute;"
 			bind:this={canvas}
 			on:mousedown={handleMouseDown}
 			on:mousemove={handleMouseMove}
 			on:mouseup={handleMouseUp}
 		/>
-		<div style="width: {plotWidth}px; height: {plotHeight}px;">
+		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px;">
 			<Chart {options} renderer={'svg'} />
 		</div>
 	</div>
