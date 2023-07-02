@@ -127,8 +127,6 @@
 		canvas.width = Math.abs(endX - startX);
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
-		plotWidth = canvas.width;
-		plotHeight = canvas.height;
 
 		if (context) {
 			//drawRectangle(polygon, context, 'red');
@@ -174,7 +172,7 @@
 			on:mouseup={handleMouseUp}
 		/>
 		<div style="width: {plotWidth}px; height: {plotHeight}px;">
-			<Chart {options} renderer={'canvas'} />
+			<Chart {options} renderer={'svg'} />
 		</div>
 	</div>
 </div>
