@@ -19,14 +19,8 @@
 	}
 </script>
 
-<div
-	use:clickInside={{}}
-	on:click_inside={handleInside}
-	use:clickOutside={{}}
-	on:click_outside={handleOutside}
-	class="space-y-4"
->
-	<SidebarWrapper bind:open={$activeChart} id="sidebar">
+<div use:clickInside={{ clickInside: handleInside }} class="space-y-4">
+	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
 		<div class="space-y-3">
 			<div class="text-xs space-y-1">
 				<p>FileUpload</p>
