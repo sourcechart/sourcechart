@@ -88,7 +88,7 @@
 			handleTouchErase(x, y);
 		}
 		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && $mouseType === 'move') {
-			//Handled in DrawRectangel.svelte
+			//Handled in DrawRectangleCanvas.svelte
 		}
 		if (
 			$navBarState === 'select' &&

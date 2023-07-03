@@ -39,7 +39,6 @@
 	};
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
-		// Define the corners
 		let vertices: LookupTable = {
 			tl: { x: shrink, y: shrink }, // top-left
 			tr: { x: width - shrink, y: shrink }, // top-right
@@ -156,6 +155,7 @@
 	const getPlotHeight = () => {
 		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
 	};
+
 	$: plotWidth = getPlotWidth();
 	$: plotHeight = getPlotHeight();
 </script>
@@ -173,8 +173,8 @@
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
 	>
-		<canvas style="position: absolute;  z-index: 1;" bind:this={canvas} />
-		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:2">
+		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
+		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1">
 			<Chart {options} renderer={'svg'} />
 		</div>
 	</div>
