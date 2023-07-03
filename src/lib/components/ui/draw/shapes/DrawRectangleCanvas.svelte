@@ -1,4 +1,3 @@
-<!--This is for drawing all rectangluar shaped charts. It might be worth it to abstract out some of this stuff so it can be created on dashboard.svelte-->
 <script lang="ts">
 	import { mouseEventState, navBarState, polygons, mouseType, allCharts } from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
@@ -22,6 +21,22 @@
 	let points: LookupTable = {};
 	let plotHeight: number = 0;
 	let plotWidth: number = 0;
+
+	const options = {
+		xAxis: {
+			data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+			type: 'category'
+		},
+		yAxis: {
+			type: 'value'
+		},
+		series: [
+			{
+				data: [820, 932, 901, 934, 1290, 1330, 1320],
+				type: 'bar'
+			}
+		]
+	};
 
 	const getChartOptions = () => {
 		let chartOptions = $allCharts.find((chart) => chart.chartID === polygon.id);
@@ -165,7 +180,7 @@
 	>
 		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
 		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1">
-			<Chart options={getChartOptions} renderer={'svg'} />
+			<Chart {options} renderer={'svg'} />
 		</div>
 	</div>
 </div>
