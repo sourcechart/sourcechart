@@ -18,7 +18,9 @@
 
 	let rectWidth: number = 0;
 	let rectHeight: number = 0;
-	let points: LookupTable = {}; // new state variable for handle positions
+	let points: LookupTable = {};
+	let plotHeight: number = 0;
+	let plotWidth: number = 0;
 
 	const options = {
 		xAxis: {
@@ -97,8 +99,7 @@
 			newPolygon.vertices[2].x = x - offsetX + canvas.width;
 			newPolygon.vertices[2].y = y - offsetY + canvas.height;
 			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
-
-			polygon = newPolygon; // update the local polygon without updating the store
+			polygon = newPolygon;
 		}
 	};
 
@@ -129,10 +130,9 @@
 		context = canvas.getContext('2d');
 
 		if (context) {
-			//drawRectangle(polygon, context, 'red');
 			rectWidth = Math.abs(endX - startX);
 			rectHeight = Math.abs(endY - startY);
-			// changed the condition here
+
 			context.strokeStyle =
 				($mouseEventState === 'isTouching' && $navBarState === 'drawRectangle') ||
 				$mouseEventState === 'isHovering'
@@ -140,6 +140,10 @@
 					: highlightcolor;
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 			points = calculateVertices(rectWidth, rectHeight, 5);
+
+			plotWidth = getPlotWidth();
+			plotHeight = getPlotHeight();
+
 			drawRectangleHandles(points, context);
 			drawRectangleCanvas(points, context);
 		}
@@ -152,7 +156,6 @@
 	const getPlotHeight = () => {
 		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
 	};
-
 	$: plotWidth = getPlotWidth();
 	$: plotHeight = getPlotHeight();
 </script>
@@ -164,14 +167,13 @@
 		polygon.vertices[2].x
 	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
 >
-	<div style="position: relative; width: {plotWidth}px; height: {plotHeight}px;">
-		<canvas
-			style="position: absolute;  z-index: 1;"
-			bind:this={canvas}
-			on:mousedown={handleMouseDown}
-			on:mousemove={handleMouseMove}
-			on:mouseup={handleMouseUp}
-		/>
+	<div
+		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
+		on:mousedown={handleMouseDown}
+		on:mousemove={handleMouseMove}
+		on:mouseup={handleMouseUp}
+	>
+		<canvas style="position: absolute;  z-index: 1;" bind:this={canvas} />
 		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:2">
 			<Chart {options} renderer={'svg'} />
 		</div>

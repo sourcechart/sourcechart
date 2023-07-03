@@ -14,7 +14,6 @@
 
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { Chart } from '$lib/components/ui/echarts';
 
 	let width: number = 0;
 	let height: number = 0;
@@ -48,7 +47,6 @@
 			const rect = canvas.getBoundingClientRect();
 			offsetX = rect.left;
 			offsetY = rect.top;
-			console.log(offsetX, offsetY);
 		});
 	}
 
