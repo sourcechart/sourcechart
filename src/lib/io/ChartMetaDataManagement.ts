@@ -1,8 +1,6 @@
 import { mostRecentChartID, allCharts } from '$lib/io/Stores';
 
 const addChartMetaData = (id: string, shape: string): void => {
-	//	let id = generateID();
-
 	let chartMetaData: Chart = {
 		chartID: id,
 		chartShape: shape,

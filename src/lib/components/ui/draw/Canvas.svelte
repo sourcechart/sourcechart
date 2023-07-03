@@ -11,13 +11,13 @@
 		allCharts,
 		activeSidebar
 	} from '$lib/io/Stores';
+	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
 	import { generateID } from '$lib/io/GenerateID';
 
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
-	$: console.log($allCharts);
 	let width: number = 0;
 	let height: number = 0;
 
@@ -171,10 +171,10 @@
 			};
 			newPolygon = [];
 			$polygons = [...$polygons, polygon];
+			addChartMetaData(targetId, $navBarState);
 		}
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
-		mostRecentChartID.set('');
 		activeSidebar.set(true);
 	};
 

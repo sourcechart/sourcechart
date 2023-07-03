@@ -12,14 +12,14 @@
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, mostRecentChartID } from '$lib/io/Stores';
 
-	function handleInside(event: Event) {
+	function handleClickInside(event: Event) {
 		//@ts-ignore
 		$mostRecentChartID = event.target.id;
 		$activeSidebar = true;
 	}
 </script>
 
-<div use:clickInside={{ clickInside: handleInside }} class="space-y-4">
+<div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
 		<div class="space-y-3">
 			<div class="text-xs space-y-1">
