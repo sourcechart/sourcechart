@@ -8,7 +8,6 @@
 		polygons,
 		mostRecentChartID,
 		mouseType,
-		allCharts,
 		activeSidebar
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
@@ -66,12 +65,17 @@
 		const containingPolygon = PolyOps.getContainingPolygon(currentPoint, $polygons);
 
 		containingPolygon?.id ? mostRecentChartID.set(containingPolygon.id) : mostRecentChartID.set('');
-
+		console.log(containingPolygon);
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
 				dragOffset = { x, y };
 				mouseEventState.set('isTranslating');
+				activeSidebar.set(true);
+				return;
+			} else {
+				mouseEventState.set('isTouching');
+				activeSidebar.set(false);
 				return;
 			}
 		}
@@ -90,9 +94,6 @@
 		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
 			handleTouchErase(x, y);
 		}
-		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && $mouseType === 'move') {
-			//Handled in DrawRectangleCanvas.svelte
-		}
 		if (
 			$navBarState === 'select' &&
 			$mouseEventState === 'isTouching' &&
@@ -106,17 +107,17 @@
 	/**
 	 * ### Create the shapes where charts will be put.
 	 *
-	 * @param xWithOffset x position on the screen
-	 * @param yWithOffset y position on the screen
+	 * @param x x position on the screen
+	 * @param y y position on the screen
 	 */
-	const handleTouchCreateShapes = (xWithOffset: number, yWithOffset: number): void => {
+	const handleTouchCreateShapes = (x: number, y: number): void => {
 		if ($navBarState === 'drawRectangle') {
 			const polygon = {
 				vertices: [
 					{ x: start.x, y: start.y },
-					{ x: xWithOffset, y: start.y },
-					{ x: xWithOffset, y: yWithOffset },
-					{ x: start.x, y: yWithOffset }
+					{ x: x, y: start.y },
+					{ x: x, y: y },
+					{ x: start.x, y: y }
 				]
 			};
 			newPolygon = [polygon];
@@ -172,10 +173,10 @@
 			newPolygon = [];
 			$polygons = [...$polygons, polygon];
 			addChartMetaData(targetId, $navBarState);
+			activeSidebar.set(true);
 		}
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
-		activeSidebar.set(true);
 	};
 
 	/**
