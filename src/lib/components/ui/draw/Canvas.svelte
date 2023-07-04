@@ -65,7 +65,6 @@
 		const containingPolygon = PolyOps.getContainingPolygon(currentPoint, $polygons);
 
 		containingPolygon?.id ? mostRecentChartID.set(containingPolygon.id) : mostRecentChartID.set('');
-		console.log(containingPolygon);
 		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
 			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {

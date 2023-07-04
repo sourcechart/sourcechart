@@ -163,6 +163,7 @@
 
 	$: plotWidth = getPlotWidth();
 	$: plotHeight = getPlotHeight();
+	$: console.log(getChartOptions());
 </script>
 
 <div
