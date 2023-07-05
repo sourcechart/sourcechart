@@ -4,7 +4,6 @@
 		AxisDropDrown,
 		Aggregator,
 		Groupby,
-		ClearChartOptions,
 		FileUpload,
 		PlotDropdown
 	} from './sidebar-components';
