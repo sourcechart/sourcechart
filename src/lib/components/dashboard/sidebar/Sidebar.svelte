@@ -10,11 +10,9 @@
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
 	import { clickInside } from '$lib/actions/MouseActions';
-	import { activeSidebar, mostRecentChartID } from '$lib/io/Stores';
+	import { activeSidebar } from '$lib/io/Stores';
 
-	function handleClickInside(event: Event) {
-		//@ts-ignore
-		$mostRecentChartID = event.target.id;
+	const handleClickInside = () => {
 		$activeSidebar = true;
 	}
 </script>
