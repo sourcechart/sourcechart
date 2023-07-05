@@ -8,7 +8,7 @@
 	} from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
-	let selectedDataset:string|null = 'Choose Dataset';
+	let selectedDataset: string | null = 'Choose Dataset';
 
 	$: {
 		if ($allCharts.length > 0 && $allCharts[$i]) {
@@ -16,6 +16,7 @@
 			$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 		}
 	}
+
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
