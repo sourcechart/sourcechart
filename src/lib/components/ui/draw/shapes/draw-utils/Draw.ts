@@ -1,6 +1,3 @@
-import type { Polygon, Point } from './Types';
-import { calculateRectangleHandles } from './PolygonOperations';
-
 /**
  * Draw Rectangle edges.
  *

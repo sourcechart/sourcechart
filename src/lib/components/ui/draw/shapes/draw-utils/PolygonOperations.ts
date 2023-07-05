@@ -1,5 +1,3 @@
-import type { Point, Polygon } from './Types';
-
 /**
  * Checks is a point is in any created polygon or shape.
  *
