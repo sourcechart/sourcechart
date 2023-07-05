@@ -3,12 +3,6 @@
 	import NavBar from '$lib/components/landing/homepage/NavBar.svelte';
 	import Video from '$lib/components/landing/homepage/CallToAction.svelte';
 	import Footer from '$lib/components/landing/homepage/Footer.svelte';
-
-	let showDropdown = false; // State variable for dropdown menu visibility
-
-	function toggleDropdown() {
-		showDropdown = !showDropdown;
-	}
 </script>
 
 <title>SourceChart</title>
