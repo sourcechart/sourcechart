@@ -8,8 +8,14 @@
 	} from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
-	let selectedDataset = 'Choose Dataset';
+	let selectedDataset:string|null = 'Choose Dataset';
 
+	$: {
+		if ($allCharts.length > 0 && $allCharts[$i]) {
+			selectedDataset = $allCharts[$i]?.filename ? $allCharts[$i].filename : 'Choose Dataset';
+			$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
+		}
+	}
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
@@ -17,6 +23,7 @@
 	const selectFile = (filename: string) => {
 		selectedDataset = filename;
 		$chosenFile = filename;
+
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			chart.filename = filename;
@@ -42,6 +49,9 @@
 
 <Button color="alternative">{selectedDataset}</Button>
 <Dropdown>
+	<DropdownItem disabled
+		>{selectedDataset !== 'Choose Dataset' ? selectedDataset : 'Select a dataset'}</DropdownItem
+	>
 	{#each $datasets as dataset}
 		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
 	{/each}

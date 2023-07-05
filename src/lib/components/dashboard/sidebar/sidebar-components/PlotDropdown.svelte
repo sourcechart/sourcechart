@@ -10,7 +10,7 @@
 		PiePlotButton
 	} from './chart-components';
 
-	let chosenPlot: string = 'Choose Plot';
+	let chosenPlot: string = 'Choose Chart Type';
 
 	let rectangleCharts = [
 		{
@@ -42,6 +42,13 @@
 
 	$: i = clickedChartIndex();
 
+	$: {
+		if ($allCharts[$i]?.chartOptions?.series[0]?.type) {
+			chosenPlot = $allCharts[$i].chartOptions.series[0].type;
+		} else {
+			chosenPlot = 'Choose Chart Type';
+		}
+	}
 	const chooseChart = (plot: string) => {
 		chosenPlot = plot;
 		allCharts.update((charts) => {

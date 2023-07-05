@@ -14,7 +14,7 @@
 
 	const handleClickInside = () => {
 		$activeSidebar = true;
-	}
+	};
 </script>
 
 <div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
@@ -49,7 +49,6 @@
 			<div class="text-xs space-y-1">
 				<p>ClearChartOptions</p>
 			</div>
-			<ClearChartOptions />
 		</div>
 	</SidebarWrapper>
 </div>

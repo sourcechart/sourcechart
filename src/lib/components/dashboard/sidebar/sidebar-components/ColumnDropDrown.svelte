@@ -12,9 +12,9 @@
 
 	export let axis = '';
 
-	let selectedColumn = `Choose ${axis} Axis`;
+	let selectedColumn: string | null = `Choose ${axis} Axis`;
 
-	let tags: Array<string> = [];
+	let tags: Array<string | null> = [];
 	let chartObject: Chart;
 	let x: any;
 	let y: any;
@@ -30,10 +30,22 @@
 		}
 	}
 
+	$: {
+		if ($allCharts.length > 0 && $allCharts[$i]) {
+			if (axis.toUpperCase() === 'X') {
+				selectedColumn = $allCharts[$i]?.xColumn ? $allCharts[$i].xColumn : `Choose ${axis} Axis`;
+				tags = $allCharts[$i]?.xColumn ? [$allCharts[$i].xColumn] : [];
+			} else if (axis.toUpperCase() === 'Y') {
+				selectedColumn = $allCharts[$i]?.yColumn ? $allCharts[$i].yColumn : `Choose ${axis} Axis`;
+				tags = $allCharts[$i]?.yColumn ? [$allCharts[$i].yColumn] : [];
+			}
+		}
+	}
+
 	$: columns = getColumnsFromFile();
 	$: $activeSidebar, getAxisData();
 
-	function getTagsOnClick() {
+	const getTagsOnClick = () => {
 		tags = [];
 		if (axis.toUpperCase() === 'X') {
 			if ($drawerOptions?.xColumn) {
@@ -50,9 +62,9 @@
 			}
 		}
 		return tags;
-	}
+	};
 
-	function clearData() {
+	const clearData = () => {
 		allCharts.update((charts) => {
 			let chart: Chart = charts[$i];
 			chart.aggregator = null;
@@ -74,14 +86,14 @@
 
 			return charts;
 		});
-	}
+	};
 
-	function getDataResults(res: object) {
+	const getDataResults = (res: object) => {
 		const results = JSON.parse(
 			JSON.stringify(res, (key, value) => (typeof value === 'bigint' ? value.toString() : value))
 		);
 		return results;
-	}
+	};
 
 	async function getAxisData() {
 		if ($drawerOptions.xColumn && $drawerOptions.yColumn && $drawerOptions.database) {
@@ -94,7 +106,7 @@
 		return;
 	}
 
-	function updateChart(data: Array<any>) {
+	const updateChart = (data: Array<any>) => {
 		let xColumn = getColumn(chartObject.xColumn);
 		let yColumn = getColumn(chartObject.yColumn);
 		x = data.map((item) => item[xColumn]);
@@ -105,7 +117,7 @@
 			charts[$i].chartOptions.series[0].data = y;
 			return charts;
 		});
-	}
+	};
 
 	function getColumn(column: string | null) {
 		if (column) {

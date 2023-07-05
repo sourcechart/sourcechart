@@ -1,19 +1,20 @@
 <script lang="ts">
-	import { allCharts, clickedChartIndex, clickedChart, clearChartOptions } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex, clickedChart, clearChartOptions, mostRecentChartID } from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
 	let aggs = ['avg', 'max', 'min', 'sum', 'count'];
-	let selectedAggregator = 'Aggregator';
+	let selectedAggregator:string|null = 'Aggregator';
 
 	$: i = clickedChartIndex();
-	$: clickChart = clickedChart();
 	$: $clearChartOptions, (selectedAggregator = '');
 
-	$: if ($clickChart?.aggregator) {
-		selectedAggregator = $clickChart.aggregator;
+	$: {
+		if($allCharts.length > 0 && $allCharts[$i]) {
+			selectedAggregator = $allCharts[$i]?.aggregator ? $allCharts[$i].aggregator : 'Aggregator';
+		}
 	}
 
-	function selectAggregator(agg: string) {
+	const selectAggregator = (agg: string) => {
 		selectedAggregator = agg;
 
 		allCharts.update((charts) => {
