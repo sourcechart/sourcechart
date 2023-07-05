@@ -70,11 +70,13 @@
 			const polygon = $polygons[selectedPolygonIndex];
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
 				dragOffset = { x, y };
+				if (polygon.id) mostRecentChartID.set(polygon.id);
 				mouseEventState.set('isTranslating');
 				activeSidebar.set(true);
 				return;
 			} else {
 				mouseEventState.set('isTouching');
+				//mostRecentChartID.set('');
 				activeSidebar.set(false);
 				return;
 			}
@@ -90,17 +92,20 @@
 	const handleTouchMove = (x: number, y: number): void => {
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 			handleTouchCreateShapes(x, y);
-		}
-		if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
+			return;
+		} else if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
 			handleTouchErase(x, y);
-		}
-		if (
+			return;
+		} else if (
 			$navBarState === 'select' &&
 			$mouseEventState === 'isTouching' &&
 			$mouseType !== 'move' &&
 			$mouseType
 		) {
 			handleTouchResize(x, y);
+			return;
+		} else {
+			return;
 		}
 	};
 

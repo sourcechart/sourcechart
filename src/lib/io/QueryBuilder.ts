@@ -10,6 +10,7 @@ export class Query {
 		let y = selectBlock.yColumn;
 		let groupby = this.constructGroupBy();
 		let aggregator = this.queryObject.queries.select.yColumn.aggregator;
+		//@ts-ignore
 		y = this.checkAggregator(y, aggregator, this.queryObject.queries.groupbyColumns);
 		let selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
 		let queryParts = [selectQuery, groupby];
@@ -19,6 +20,7 @@ export class Query {
 	}
 
 	private checkSelectBlock() {
+		//@ts-ignore
 		let selectBlock: selectBlock = this.queryObject.queries.select;
 		let xColumn: string;
 		let yColumn: string;
@@ -36,7 +38,8 @@ export class Query {
 
 	private constructGroupBy() {
 		let groupbyQuery: string;
-		let groupby: Array<string> = this.queryObject.queries.groupbyColumns;
+		//@ts-ignore
+		let groupby: Array<string> = this.queryObject.queries.groupbyColumns; //@ts-ignore
 		let selectBlock: selectBlock = this.queryObject.queries.select;
 
 		if (selectBlock.xColumn.column && groupby.length > 0) {
