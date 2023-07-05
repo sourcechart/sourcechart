@@ -1,23 +1,26 @@
 import { mostRecentChartID, allCharts } from '$lib/io/Stores';
 
-const addChartMetaData = (id: string, shape: string): void => {
+const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => {
 	let chartMetaData: Chart = {
 		chartID: id,
 		chartShape: shape,
 		filename: null,
-		chartType: null,
 		aggregator: null,
 		datasetID: null,
 		columns: [],
 		groupbyColumns: [],
 		xColumn: null,
+		polygon: polygon,
 		yColumn: null,
-		xData: [],
-		yData: [],
+		canvasHeight: 0,
+		canvasWidth: 0,
 		database: null, // placeholder
 		chartOptions: {
-			xAxis: { data: [] },
-			series: [{ data: [], type: '' }]
+			xAxis: { data: [], type: 'category' },
+			series: [{ data: [], type: '' }],
+			yAxis: {
+				type: 'value'
+			}
 		}
 	};
 

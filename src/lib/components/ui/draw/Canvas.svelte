@@ -8,7 +8,8 @@
 		polygons,
 		mostRecentChartID,
 		mouseType,
-		activeSidebar
+		activeSidebar,
+		allCharts
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
@@ -126,8 +127,8 @@
 	/**
 	 * ### Handle Touch Resize
 	 *
-	 * @param x
-	 * @param y
+	 * @param x x position on the screen
+	 * @param y y position on the screen
 	 */
 	const handleTouchResize = (x: number, y: number) => {
 		if (selectedPolygonIndex !== null) {
@@ -154,8 +155,8 @@
 	/**
 	 * ### Handle Touch End
 	 *
-	 * @param x X position on the screen
-	 * @param y Y position on the screen
+	 * @param x x position on the screen
+	 * @param y y position on the screen
 	 */
 	const handleTouchEnd = (x: number, y: number) => {
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
@@ -171,7 +172,7 @@
 			};
 			newPolygon = [];
 			$polygons = [...$polygons, polygon];
-			addChartMetaData(targetId, $navBarState);
+			addChartMetaData(targetId, $navBarState, polygon);
 			activeSidebar.set(true);
 		}
 		mouseEventState.set('isHovering');
@@ -181,8 +182,8 @@
 	/**
 	 * ### Handle Mouse Move
 	 *
-	 * @param x
-	 * @param y
+	 * @param x x position on the screen
+	 * @param y y position on the screen
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
@@ -230,8 +231,13 @@
 	}}
 >
 	<div id="canvasParent">
-		{#each $polygons as polygon}
-			<DrawRectangleCanvas {polygon} {defaultcolor} {highlightcolor} />
+		{#each $allCharts as chart (chart.chartID)}
+			<DrawRectangleCanvas
+				polygon={chart.polygon}
+				{defaultcolor}
+				{highlightcolor}
+				options={chart.chartOptions}
+			/>
 		{/each}
 		{#each newPolygon as polygon}
 			<DrawRectangleCanvas {polygon} {defaultcolor} {highlightcolor} />

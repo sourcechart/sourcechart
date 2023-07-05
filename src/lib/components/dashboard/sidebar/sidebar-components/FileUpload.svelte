@@ -23,7 +23,6 @@
 		$fileUploadStore = [...$fileUploadStore, tableColumnsSize];
 	};
 
-	$: console.log(files);
 	const uploadFiles = async (e: Event) => {
 		let target = e.target as HTMLInputElement;
 		let f: File = (target.files as FileList)[0];
@@ -34,7 +33,6 @@
 		var columns = resp.schema.map((item) => item['name']);
 
 		createFileStore(f.name, columns, f.size, id, db);
-		console.log($fileUploadStore);
 	};
 </script>
 

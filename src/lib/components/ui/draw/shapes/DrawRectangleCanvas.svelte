@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { mouseEventState, navBarState, polygons, mouseType, allCharts } from '$lib/io/Stores';
+	import { mouseEventState, navBarState, polygons, mouseType } from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
-	import { Chart } from '$lib/components/ui/echarts';
 
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
+	import { Chart } from '$lib/components/ui/echarts';
 
 	export let polygon: Polygon;
 	export let highlightcolor: string;
@@ -22,9 +22,9 @@
 	let plotHeight: number = 0;
 	let plotWidth: number = 0;
 
-	const options = {
+	export let options: any = {
 		xAxis: {
-			data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+			data: [],
 			type: 'category'
 		},
 		yAxis: {
@@ -32,17 +32,13 @@
 		},
 		series: [
 			{
-				data: [820, 932, 901, 934, 1290, 1330, 1320],
+				data: [],
 				type: 'bar'
 			}
 		]
 	};
 
-	const getChartOptions = () => {
-		let chartOptions = $allCharts.find((chart) => chart.chartID === polygon.id);
-		return chartOptions;
-	};
-
+	$: console.log(options);
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
 		let vertices: LookupTable = {
 			tl: { x: shrink, y: shrink }, // top-left
@@ -163,7 +159,6 @@
 
 	$: plotWidth = getPlotWidth();
 	$: plotHeight = getPlotHeight();
-	$: console.log(getChartOptions());
 </script>
 
 <div

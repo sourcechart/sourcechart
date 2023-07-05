@@ -110,6 +110,25 @@ export const fileDropdown = () =>
 		return files;
 	});
 
+export const getChartOptions = () => {
+	return derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
+		const options = $allCharts.find(
+			(item: { chartID: string }) => item.chartID === $mostRecentChartID
+		);
+		if (options?.chartOptions) {
+			return options?.chartOptions;
+		} else {
+			return {
+				xAxis: { data: [], type: 'category' },
+				series: [{ data: [], type: '' }],
+				yAxis: {
+					type: 'value'
+				}
+			};
+		}
+	});
+};
+
 export const clickedChart = () =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
 		if ($allCharts.length > 0) {

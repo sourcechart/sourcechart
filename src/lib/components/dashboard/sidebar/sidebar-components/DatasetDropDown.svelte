@@ -17,7 +17,6 @@
 	const selectFile = (filename: string) => {
 		selectedDataset = filename;
 		$chosenFile = filename;
-		console.log($allCharts);
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			chart.filename = filename;

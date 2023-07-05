@@ -8,7 +8,7 @@
 type Chart = {
 	chartShape: string;
 	chartID: string;
-	chartType: string | null;
+	polygon: Polygon;
 	filename: string | null;
 	aggregator: string | null;
 	datasetID: string | null;
@@ -16,15 +16,16 @@ type Chart = {
 	groupbyColumns: Array<string>;
 	xColumn: string | null;
 	yColumn: string | null;
-	xData: Array<number>;
-	yData: Array<number>;
 	database: AsyncDuckDB;
+	canvasWidth: number;
+	canvasHeight: number;
 	chartOptions: ChartOptions;
 };
 
 type ChartOptions = {
 	xAxis: {
 		data: Array<number>;
+		type: string;
 	};
 	series: [
 		{
@@ -32,6 +33,9 @@ type ChartOptions = {
 			type: string;
 		}
 	];
+	yAxis: {
+		type: string;
+	};
 };
 
 type SelectBlock = {

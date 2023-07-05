@@ -9,7 +9,6 @@ type Store = Writable<any>;
 export function storeFromLocalStorage(storageKey: string, fallbackValue: any) {
 	if (browser) {
 		const storedValue = window.localStorage.getItem(storageKey);
-		//console.log(storedValue)
 		if (storedValue !== 'undefined' && storedValue !== null) {
 			return typeof fallbackValue === 'object' ? JSON.parse(storedValue) : storedValue;
 		}
@@ -36,7 +35,6 @@ export function setLocalStorage(key: string, value: any) {
 export function storeFromSessionStorage(storageKey: string, fallbackValue: any) {
 	if (browser) {
 		const storedValue = window.sessionStorage.getItem(storageKey);
-		//console.log(storedValue)
 		if (storedValue !== 'undefined' && storedValue !== null) {
 			return typeof fallbackValue === 'object' ? JSON.parse(storedValue) : storedValue;
 		}
