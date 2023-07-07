@@ -120,4 +120,19 @@ const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: str
 	return polygon;
 };
 
-export { drawRectangle, redraw, drawHandles, resizeRectangle };
+const getPlotTopPosition = (polygon: Polygon) => {
+	return Math.min(polygon.vertices[0].y, polygon.vertices[2].y);
+};
+
+const getPlotLeftPosition = (polygon: Polygon) => {
+	return Math.abs(polygon.vertices[0].x - polygon.vertices[2].x);
+};
+
+export {
+	drawRectangle,
+	redraw,
+	drawHandles,
+	resizeRectangle,
+	getPlotTopPosition,
+	getPlotLeftPosition
+};

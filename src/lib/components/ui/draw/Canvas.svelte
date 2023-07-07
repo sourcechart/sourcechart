@@ -49,7 +49,7 @@
 			height = window.innerHeight;
 			const rect = canvas.getBoundingClientRect();
 			offsetX = rect.left;
-			offsetY = rect.top;
+			offsetY = Math.abs(rect.top - height);
 		});
 	}
 
