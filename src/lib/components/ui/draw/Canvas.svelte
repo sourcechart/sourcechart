@@ -20,7 +20,7 @@
 
 	let width: number = 0;
 	let height: number = 0;
-
+	let foo: HTMLDivElement;
 	let newPolygon: Polygon[] = [];
 
 	let selectedPolygonIndex: number | null = null;

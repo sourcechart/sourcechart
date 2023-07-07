@@ -10,12 +10,15 @@
 	export let highlightcolor: string;
 	export let defaultcolor: string;
 
+	let polygonDiv: HTMLDivElement;
 	let offsetX = 0;
 	let offsetY = 0;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let dragging = false;
 
+	let width = 0;
+	let height = 0;
 	let rectWidth: number = 0;
 	let rectHeight: number = 0;
 	let points: LookupTable = {};
@@ -65,6 +68,7 @@
 	const handleMouseDown = (e: MouseEvent) => {
 		let x = e.clientX;
 		let y = e.clientY;
+		console.log(x, y);
 		let inPolygon = isPointInPolygon({ x, y }, polygon);
 		if (inPolygon) {
 			offsetX = x - polygon.vertices[0].x;
@@ -93,10 +97,18 @@
 		let y = e.clientY;
 		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && $mouseType === 'move') {
 			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
-			newPolygon.vertices[0].x = x - offsetX;
-			newPolygon.vertices[0].y = y - offsetY;
-			newPolygon.vertices[2].x = x - offsetX + canvas.width;
-			newPolygon.vertices[2].y = y - offsetY + canvas.height;
+			let dx = x - offsetX;
+			let dy = y - offsetY;
+
+			newPolygon.vertices[0].x = dx;
+			newPolygon.vertices[0].y = dy;
+			newPolygon.vertices[1].x = dx + canvas.width;
+			newPolygon.vertices[1].y = dy;
+			newPolygon.vertices[2].x = dx + canvas.width;
+			newPolygon.vertices[2].y = dy + canvas.height;
+			newPolygon.vertices[3].x = dx;
+			newPolygon.vertices[3].y = dy + canvas.height;
+
 			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
 			polygon = newPolygon;
 		}
@@ -107,12 +119,19 @@
 		let x = e.clientX;
 		let y = e.clientY;
 		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && $mouseType === 'move') {
-			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
-			newPolygon.vertices[0].x = x - offsetX;
-			newPolygon.vertices[0].y = y - offsetY;
-			newPolygon.vertices[2].x = x - offsetX + canvas.width;
-			newPolygon.vertices[2].y = y - offsetY + canvas.height;
-			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
+			let dx = x - offsetX;
+			let dy = y - offsetY;
+
+			polygon.vertices[0].x = dx;
+			polygon.vertices[0].y = dy;
+			polygon.vertices[1].x = dx + canvas.width;
+			polygon.vertices[1].y = dy;
+			polygon.vertices[2].x = dx + canvas.width;
+			polygon.vertices[2].y = dy + canvas.height;
+			polygon.vertices[3].x = dx;
+			polygon.vertices[3].y = dy + canvas.height;
+
+			polygons.update((p) => p.map((poly) => (poly.id === polygon.id ? polygon : poly)));
 			dragging = false;
 		}
 	};
@@ -127,7 +146,7 @@
 		canvas.width = Math.abs(endX - startX);
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
-
+		console.log(polygonDiv);
 		if (context) {
 			rectWidth = Math.abs(endX - startX);
 			rectHeight = Math.abs(endY - startY);
@@ -166,6 +185,9 @@
 		polygon.vertices[0].x,
 		polygon.vertices[2].x
 	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
+	bind:this={polygonDiv}
+	bind:offsetHeight={height}
+	bind:offsetWidth={width}
 >
 	<div
 		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
