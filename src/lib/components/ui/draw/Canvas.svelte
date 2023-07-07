@@ -60,6 +60,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchStart = (x: number, y: number): void => {
+		x = x - offsetX;
+		y = y - offsetY;
 		mouseEventState.set('isTouching');
 		start = { x, y };
 		const currentPoint: Point = { x, y };
@@ -90,6 +92,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchMove = (x: number, y: number): void => {
+		x = x - offsetX;
+		y = y - offsetY;
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 			handleTouchCreateShapes(x, y);
 			return;
@@ -164,6 +168,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchEnd = (x: number, y: number) => {
+		x = x - offsetX;
+		y = y - offsetY;
 		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
 			let targetId = generateID();
 			const polygon = {
