@@ -197,6 +197,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
+		x = x - offsetX;
+		y = y - offsetY;
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 		const polygon = $polygons.find((polygon) => {

@@ -66,9 +66,9 @@
 	};
 
 	const handleMouseDown = (e: MouseEvent) => {
-		let x = e.clientX;
+		let x = e.clientX; //- rect.left; // adjust the mouse x-coordinate by the left offset of the canvas
 		let y = e.clientY;
-		console.log(x, y);
+
 		let inPolygon = isPointInPolygon({ x, y }, polygon);
 		if (inPolygon) {
 			offsetX = x - polygon.vertices[0].x;
@@ -146,7 +146,6 @@
 		canvas.width = Math.abs(endX - startX);
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
-		console.log(polygonDiv);
 		if (context) {
 			rectWidth = Math.abs(endX - startX);
 			rectHeight = Math.abs(endY - startY);
