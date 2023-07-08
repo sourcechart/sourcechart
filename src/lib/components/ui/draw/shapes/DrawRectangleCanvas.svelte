@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { mouseEventState, navBarState, polygons, mouseType } from '$lib/io/Stores';
+	import {
+		mouseEventState,
+		navBarState,
+		polygons,
+		mouseType,
+		mostRecentChartID
+	} from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
 
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
@@ -10,15 +16,12 @@
 	export let highlightcolor: string;
 	export let defaultcolor: string;
 
-	let polygonDiv: HTMLDivElement;
 	let offsetX = 0;
 	let offsetY = 0;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let dragging = false;
 
-	let width = 0;
-	let height = 0;
 	let rectWidth: number = 0;
 	let rectHeight: number = 0;
 	let points: LookupTable = {};
@@ -184,9 +187,6 @@
 		polygon.vertices[0].x,
 		polygon.vertices[2].x
 	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
-	bind:this={polygonDiv}
-	bind:offsetHeight={height}
-	bind:offsetWidth={width}
 >
 	<div
 		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
