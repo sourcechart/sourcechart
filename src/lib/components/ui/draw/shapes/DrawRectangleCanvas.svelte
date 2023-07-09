@@ -2,8 +2,8 @@
 	import {
 		mouseEventState,
 		navBarState,
-		polygons,
 		mouseType,
+		allCharts,
 		mostRecentChartID
 	} from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
@@ -98,7 +98,14 @@
 		if (!dragging) return;
 		let x = e.clientX;
 		let y = e.clientY;
-		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && $mouseType === 'move') {
+		if (
+			$navBarState === 'select' &&
+			$mouseType === 'move' &&
+			polygon.id &&
+			$mouseEventState === 'isTouching'
+		) {
+			mostRecentChartID.set(polygon.id);
+
 			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
 			let dx = x - offsetX;
 			let dy = y - offsetY;
@@ -112,9 +119,17 @@
 			newPolygon.vertices[3].x = dx;
 			newPolygon.vertices[3].y = dy + canvas.height;
 
-			polygons.update((p) => p.map((poly) => (poly.id === newPolygon.id ? newPolygon : poly)));
+			updateAllCharts(newPolygon);
+
 			polygon = newPolygon;
 		}
+	};
+
+	const updateAllCharts = (updatedPolygon: Polygon) => {
+		let i = $allCharts.findIndex((chart) => chart.chartID === polygon.id);
+		let chart = $allCharts[i];
+		chart.polygon.vertices = updatedPolygon.vertices;
+		$allCharts[i] = chart;
 	};
 
 	const handleMouseUp = (e: MouseEvent) => {
@@ -134,7 +149,7 @@
 			polygon.vertices[3].x = dx;
 			polygon.vertices[3].y = dy + canvas.height;
 
-			polygons.update((p) => p.map((poly) => (poly.id === polygon.id ? polygon : poly)));
+			updateAllCharts(polygon);
 			dragging = false;
 		}
 	};

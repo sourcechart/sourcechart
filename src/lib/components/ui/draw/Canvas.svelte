@@ -20,10 +20,8 @@
 
 	let width: number = 0;
 	let height: number = 0;
-	let foo: HTMLDivElement;
 	let newPolygon: Polygon[] = [];
 
-	let selectedPolygonIndex: number | null = null;
 	let start: Point = { x: 0, y: 0 };
 	let dragOffset: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
@@ -40,7 +38,8 @@
 	const highlightcolor: string = 'red';
 	const defaultcolor: string = 'black ';
 
-	$: selectedPolygonIndex = $polygons.findIndex((p) => p.id === $mostRecentChartID);
+	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID); // $polygons.findIndex((p) => p.id === $mostRecentChartID);
+	$: console.log($allCharts, chartIndex, $mostRecentChartID);
 
 	if (browser) {
 		onMount(() => {
@@ -67,9 +66,8 @@
 		const currentPoint: Point = { x, y };
 		const containingPolygon = PolyOps.getContainingPolygon(currentPoint, $polygons);
 
-		containingPolygon?.id ? mostRecentChartID.set(containingPolygon.id) : mostRecentChartID.set('');
-		if ($navBarState === 'select' && selectedPolygonIndex !== null) {
-			const polygon = $polygons[selectedPolygonIndex];
+		if ($navBarState === 'select' && chartIndex >= 0 && containingPolygon) {
+			const polygon = $allCharts[chartIndex].polygon;
 			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
 				dragOffset = { x, y };
 				if (polygon.id) mostRecentChartID.set(polygon.id);
@@ -78,7 +76,6 @@
 				return;
 			} else {
 				mouseEventState.set('isTouching');
-				//mostRecentChartID.set('');
 				activeSidebar.set(false);
 				return;
 			}
@@ -140,9 +137,9 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchResize = (x: number, y: number) => {
-		if (selectedPolygonIndex !== null) {
-			const polygon = $polygons[selectedPolygonIndex];
-			$polygons[selectedPolygonIndex] = resizeRectangle(x, y, polygon, handlePosition);
+		if (chartIndex !== null) {
+			const polygon = $allCharts[chartIndex].polygon;
+			$allCharts[chartIndex].polygon = resizeRectangle(x, y, polygon, handlePosition);
 		}
 	};
 
@@ -154,10 +151,13 @@
 	 */
 	const handleTouchErase = (x: number, y: number): void => {
 		const currentTouchPoint: Point = { x: x, y: y };
-		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, $polygons);
-		const index = polygon ? $polygons.indexOf(polygon) : -1;
+		const polygons = $allCharts.map((chart) => chart.polygon);
+
+		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, polygons);
+
+		const index = polygon ? polygons.indexOf(polygon) : -1;
 		if (index > -1) {
-			$polygons.splice(index, 1);
+			polygons.splice(index, 1);
 		}
 	};
 
@@ -182,7 +182,6 @@
 				]
 			};
 			newPolygon = [];
-			$polygons = [...$polygons, polygon];
 			addChartMetaData(targetId, $navBarState, polygon);
 			activeSidebar.set(true);
 		}
@@ -201,7 +200,10 @@
 		y = y - offsetY;
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
-		const polygon = $polygons.find((polygon) => {
+
+		const polygons = $allCharts.map((chart) => chart.polygon);
+
+		const polygon = polygons.find((polygon) => {
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
