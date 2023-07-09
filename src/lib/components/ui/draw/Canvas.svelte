@@ -39,7 +39,6 @@
 	const defaultcolor: string = 'black ';
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID); // $polygons.findIndex((p) => p.id === $mostRecentChartID);
-	$: console.log($allCharts, chartIndex, $mostRecentChartID);
 
 	if (browser) {
 		onMount(() => {
