@@ -9,7 +9,8 @@
 		mostRecentChartID,
 		mouseType,
 		activeSidebar,
-		allCharts
+		allCharts,
+		clickedChartIndex
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
