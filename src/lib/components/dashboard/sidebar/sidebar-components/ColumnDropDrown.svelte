@@ -43,7 +43,13 @@
 	}
 
 	$: columns = getColumnsFromFile();
-	$: $activeSidebar, getAxisData();
+	$: if (
+		$activeSidebar &&
+		$drawerOptions.xColumn &&
+		$drawerOptions.yColumn &&
+		$drawerOptions.database
+	)
+		getAxisData();
 
 	const getTagsOnClick = () => {
 		tags = [];
@@ -95,16 +101,18 @@
 		return results;
 	};
 
-	async function getAxisData() {
+	const getAxisData = async () => {
+		console.log('getAxisData');
 		if ($drawerOptions.xColumn && $drawerOptions.yColumn && $drawerOptions.database) {
 			const db: DuckDBClient = $drawerOptions.database;
 			var q = $query.toString();
+			console.log('query', q);
 			let results = await db.query(q);
 			let data = getDataResults(results);
 			updateChart(data);
 		}
 		return;
-	}
+	};
 
 	const updateChart = (data: Array<any>) => {
 		let xColumn = getColumn(chartObject.xColumn);
