@@ -40,8 +40,9 @@
 	const defaultcolor: string = 'black ';
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID); // $polygons.findIndex((p) => p.id === $mostRecentChartID);
-	$: touchState = touchStates();
+	$: TOUCHSTATE = touchStates();
 
+	$: console.log($allCharts[chartIndex]);
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -92,13 +93,13 @@
 	const handleTouchMove = (x: number, y: number): void => {
 		x = x - offsetX;
 		y = y - offsetY;
-		if ($touchState === 'isDrawing') {
+		if ($TOUCHSTATE === 'isDrawing') {
 			handleTouchCreateShapes(x, y);
 			return;
-		} else if ($touchState === 'isTranslating') {
+		} else if ($TOUCHSTATE === 'isTranslating') {
 			handleTouchErase(x, y);
 			return;
-		} else if ($touchState === 'isResizing') {
+		} else if ($TOUCHSTATE === 'isResizing') {
 			handleTouchResize(x, y);
 			return;
 		} else {
@@ -166,7 +167,7 @@
 	const handleTouchEnd = (x: number, y: number) => {
 		x = x - offsetX;
 		y = y - offsetY;
-		if ($touchState === 'isDrawing') {
+		if ($TOUCHSTATE === 'isDrawing') {
 			let targetId = generateID();
 			const polygon = {
 				id: targetId,

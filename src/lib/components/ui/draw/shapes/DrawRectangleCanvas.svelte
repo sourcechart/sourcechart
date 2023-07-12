@@ -2,9 +2,9 @@
 	import {
 		mouseEventState,
 		navBarState,
-		mouseType,
 		allCharts,
-		mostRecentChartID
+		mostRecentChartID,
+		touchStates
 	} from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
 
@@ -27,6 +27,8 @@
 	let points: LookupTable = {};
 	let plotHeight: number = 0;
 	let plotWidth: number = 0;
+
+	$: TOUCHSTATE = touchStates();
 
 	export let options: any = {
 		xAxis: {
@@ -98,12 +100,7 @@
 		if (!dragging) return;
 		let x = e.clientX;
 		let y = e.clientY;
-		if (
-			$navBarState === 'select' &&
-			$mouseType === 'move' &&
-			$mouseEventState === 'isTouching' &&
-			polygon.id
-		) {
+		if ($TOUCHSTATE === 'isTranslating' && polygon.id) {
 			mostRecentChartID.set(polygon.id);
 
 			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
@@ -136,7 +133,7 @@
 		if (!dragging) return;
 		let x = e.clientX;
 		let y = e.clientY;
-		if ($navBarState === 'select' && $mouseEventState === 'isTouching' && $mouseType === 'move') {
+		if ($TOUCHSTATE === 'isTranslating') {
 			let dx = x - offsetX;
 			let dy = y - offsetY;
 

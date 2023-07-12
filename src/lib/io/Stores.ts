@@ -147,8 +147,8 @@ export const clickedChartIndex = () =>
 		return i;
 	});
 
-export const touchStates = () =>
-	derived(
+export const touchStates = () => {
+	return derived(
 		[navBarState, mouseEventState, mouseType],
 		([$navBarState, $mouseEventState, $mouseType]) => {
 			let touchState: MouseEvents;
@@ -176,3 +176,4 @@ export const touchStates = () =>
 			return touchState;
 		}
 	);
+};
