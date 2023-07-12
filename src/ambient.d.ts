@@ -86,7 +86,13 @@ type Field = {
  *  @param isTouching when you are move your mouse and it is clicked
  */
 
-type MouseEvents = 'isHovering' | 'isTouching' | 'isTranslating' | 'isResizing';
+type MouseEvents =
+	| 'isHovering'
+	| 'isTouching'
+	| 'isTranslating'
+	| 'isResizing'
+	| 'isDrawing'
+	| 'isErasing';
 type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
 

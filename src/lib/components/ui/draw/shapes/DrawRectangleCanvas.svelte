@@ -101,8 +101,8 @@
 		if (
 			$navBarState === 'select' &&
 			$mouseType === 'move' &&
-			polygon.id &&
-			$mouseEventState === 'isTouching'
+			$mouseEventState === 'isTouching' &&
+			polygon.id
 		) {
 			mostRecentChartID.set(polygon.id);
 

@@ -9,7 +9,8 @@
 		mostRecentChartID,
 		mouseType,
 		activeSidebar,
-		allCharts
+		allCharts,
+		touchStates
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
@@ -39,6 +40,7 @@
 	const defaultcolor: string = 'black ';
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID); // $polygons.findIndex((p) => p.id === $mostRecentChartID);
+	$: touchState = touchStates();
 
 	if (browser) {
 		onMount(() => {
@@ -90,18 +92,13 @@
 	const handleTouchMove = (x: number, y: number): void => {
 		x = x - offsetX;
 		y = y - offsetY;
-		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
+		if ($touchState === 'isDrawing') {
 			handleTouchCreateShapes(x, y);
 			return;
-		} else if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
+		} else if ($touchState === 'isTranslating') {
 			handleTouchErase(x, y);
 			return;
-		} else if (
-			$navBarState === 'select' &&
-			$mouseEventState === 'isTouching' &&
-			$mouseType !== 'move' &&
-			$mouseType
-		) {
+		} else if ($touchState === 'isResizing') {
 			handleTouchResize(x, y);
 			return;
 		} else {
@@ -169,7 +166,7 @@
 	const handleTouchEnd = (x: number, y: number) => {
 		x = x - offsetX;
 		y = y - offsetY;
-		if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
+		if ($touchState === 'isDrawing') {
 			let targetId = generateID();
 			const polygon = {
 				id: targetId,

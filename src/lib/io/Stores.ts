@@ -146,3 +146,33 @@ export const clickedChartIndex = () =>
 		);
 		return i;
 	});
+
+export const touchStates = () =>
+	derived(
+		[navBarState, mouseEventState, mouseType],
+		([$navBarState, $mouseEventState, $mouseType]) => {
+			let touchState: MouseEvents;
+			if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
+				touchState = 'isDrawing';
+			} else if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
+				touchState = 'isErasing';
+			} else if (
+				$navBarState === 'select' &&
+				$mouseEventState === 'isTouching' &&
+				$mouseType !== 'move'
+			) {
+				touchState = 'isResizing';
+			} else if (
+				$navBarState === 'select' &&
+				$mouseType === 'move' &&
+				$mouseEventState === 'isTouching'
+			) {
+				touchState = 'isTranslating';
+			} else if ($navBarState === 'select' && $mouseEventState === 'isHovering') {
+				touchState = 'isHovering';
+			} else {
+				return;
+			}
+			return touchState;
+		}
+	);
