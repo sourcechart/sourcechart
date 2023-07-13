@@ -64,67 +64,64 @@ export const chartOptions = () =>
 			yColumn: options?.yColumn,
 			groupbyColumns: options?.groupbyColumns,
 			aggregator: options?.aggregator
-			//filters: chartOptions?.filters;
-			//colors: chartOptions?.colors
 		};
 	});
 
-export const getQuery = () =>
-	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
+const getQueryObject = (chart: Chart): QueryObject => {
+	return {
+		chartID: chart?.chartID,
+		queries: {
+			select: {
+				xColumn: { column: chart?.xColumn },
+				yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
+				from: chart?.filename
+			},
+			groupbyColumns: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])]
+			/*on: { column1: null, column2: null, HOW: null }
+				filters: [
+					{ column: null, filter: null },
+					{ column: null, filter: null }
+				],
+				having: [{ column: null, filter: null }],
+			*/
+		}
+	};
+};
+
+export const getQuery = () => {
+	return derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
 		if ($allCharts.length > 0) {
 			const chart = $allCharts.find(
 				(item: { chartID: string }) => item.chartID === $mostRecentChartID
 			);
-			//let groupbyColumns = chart?.groupbyColumns ? chart.groupbyColumns: []
-			const getQueryObject = (): QueryObject => {
-				return {
-					chartID: chart?.chartID,
-					queries: {
-						select: {
-							xColumn: { column: chart?.xColumn },
-							yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
-							from: chart?.filename
-						},
-						groupbyColumns: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])]
-						//on: { column1: null, column2: null, HOW: null }
-						//filters: [
-						//	{ column: null, filter: null },
-						//	{ column: null, filter: null }
-						//],
-						//having: [{ column: null, filter: null }],
-					}
-				};
-			};
 
-			var queryObject = getQueryObject();
-			const query = new Query(queryObject);
-			return query.build();
+			if (chart) {
+				let queryObject = getQueryObject(chart);
+				const query = new Query(queryObject);
+				return query.build();
+			}
 		} else {
 			return '';
 		}
 	});
+};
 
-export const fileDropdown = () =>
-	derived(fileUploadStore, ($fileUploadStore) => {
+export const fileDropdown = () => {
+	return derived(fileUploadStore, ($fileUploadStore) => {
 		const files = $fileUploadStore.map((item: { filename: string }) => item.filename);
 		return files;
 	});
+};
 
 export const getChartOptions = () => {
 	return derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
-		const options = $allCharts.find(
+		const chart = $allCharts.find(
 			(item: { chartID: string }) => item.chartID === $mostRecentChartID
 		);
-		if (options?.chartOptions) {
-			return options?.chartOptions;
-		} else {
-			return {
-				xAxis: { data: [], type: 'category' },
-				series: [{ data: [], type: '' }],
-				yAxis: {
-					type: 'value'
-				}
-			};
+		let queryObject: QueryObject;
+		if (chart) {
+			queryObject = getQueryObject(chart);
+			console.log(queryObject);
 		}
 	});
 };
