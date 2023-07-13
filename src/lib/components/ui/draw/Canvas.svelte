@@ -10,7 +10,8 @@
 		mouseType,
 		activeSidebar,
 		allCharts,
-		touchStates
+		touchStates,
+		getChartOptions
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
@@ -38,7 +39,7 @@
 	const tolerance: number = 5;
 	const highlightcolor: string = 'red';
 	const defaultcolor: string = 'black ';
-
+	let ChartOptions: any = {};
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID); // $polygons.findIndex((p) => p.id === $mostRecentChartID);
 	$: TOUCHSTATE = touchStates();
 
@@ -243,12 +244,7 @@
 >
 	<div id="canvasParent">
 		{#each $allCharts as chart (chart.chartID)}
-			<DrawRectangleCanvas
-				polygon={chart.polygon}
-				{defaultcolor}
-				{highlightcolor}
-				options={chart.chartOptions}
-			/>
+			<DrawRectangleCanvas polygon={chart.polygon} {defaultcolor} {highlightcolor} />
 		{/each}
 		{#each newPolygon as polygon}
 			<DrawRectangleCanvas {polygon} {defaultcolor} {highlightcolor} />

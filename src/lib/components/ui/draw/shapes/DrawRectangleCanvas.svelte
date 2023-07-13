@@ -4,7 +4,8 @@
 		navBarState,
 		allCharts,
 		mostRecentChartID,
-		touchStates
+		touchStates,
+		getChartOptions
 	} from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
 
@@ -28,9 +29,7 @@
 	let plotHeight: number = 0;
 	let plotWidth: number = 0;
 
-	$: TOUCHSTATE = touchStates();
-
-	export let options: any = {
+	let options: any = {
 		xAxis: {
 			data: [],
 			type: 'category'
@@ -45,6 +44,10 @@
 			}
 		]
 	};
+
+	$: TOUCHSTATE = touchStates();
+	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
+	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
 		let vertices: LookupTable = {

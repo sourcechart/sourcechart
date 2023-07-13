@@ -9,14 +9,11 @@
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
 	import { clickInside } from '$lib/actions/MouseActions';
-	import { activeSidebar, getChartOptions } from '$lib/io/Stores';
+	import { activeSidebar } from '$lib/io/Stores';
 
 	const handleClickInside = () => {
 		$activeSidebar = true;
 	};
-
-	$: options = getChartOptions();
-	$: console.log($options);
 </script>
 
 <div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">

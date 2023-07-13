@@ -89,48 +89,63 @@ const getQueryObject = (chart: Chart): QueryObject => {
 	};
 };
 
-export const getChartOptions = () => {
-	return derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
-		if ($allCharts.length > 0) {
-			const chart = $allCharts.find(
-				(item: { chartID: string }) => item.chartID === $mostRecentChartID
-			);
+export const getChartOptions = (id: string | undefined) => {
+	if (id) {
+		//@ts-ignore
+		return derived([allCharts], async ([$allCharts], set) => {
+			if ($allCharts.length > 0) {
+				const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
 
-			const getColumn = (column: string | null) => {
-				if (column) {
-					return column.toString();
-				} else {
-					return '';
+				const getColumn = (column: string | null) => {
+					if (column) {
+						return column.toString();
+					} else {
+						return '';
+					}
+				};
+
+				const formatData = (res: any) => {
+					const results = JSON.parse(
+						JSON.stringify(
+							res,
+							(key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+						)
+					);
+					return results;
+				};
+
+				const getDataResults = async (db: DuckDBClient, query: string) => {
+					var results = await db.query(query);
+					return formatData(results);
+				};
+
+				const updateChart = (results: any[], chart: Chart) => {
+					var xColumn = getColumn(chart.xColumn);
+					var yColumn = getColumn(chart.yColumn);
+					var x = results.map((item) => item[xColumn]);
+					var y = results.map((item) => item[yColumn]);
+					chart.chartOptions.xAxis.data = x;
+					chart.chartOptions.series[0].data = y;
+					return chart;
+				};
+
+				if (chart) {
+					let queryObject = getQueryObject(chart);
+					const query = new Query(queryObject);
+					let queryString = query.build();
+					if (chart.database && chart.xColumn && chart.yColumn) {
+						const db: DuckDBClient = chart.database;
+						let results = await getDataResults(db, queryString);
+						let options = updateChart(results, chart);
+						set(options); // Update the derived store with the updated chart options
+					}
 				}
-			};
-
-			const updateChart = async (db: DuckDBClient, query: string, chart: Chart) => {
-				let results = await db.query(query);
-				var xColumn = getColumn(chart.xColumn);
-				var yColumn = getColumn(chart.yColumn);
-				var x = results.map((item) => item[xColumn]);
-				var y = results.map((item) => item[yColumn]);
-				chart.chartOptions.xAxis.data = x;
-				chart.chartOptions.series[0].data = y;
-				return chart;
-			};
-
-			if (chart) {
-				let queryObject = getQueryObject(chart);
-				const query = new Query(queryObject);
-				let queryString = query.build();
-				if (chart.database && chart.xColumn && chart.yColumn) {
-					const db: DuckDBClient = chart.database;
-					let chartOption = updateChart(db, queryString, chart);
-					return chartOption;
-				}
+			} else {
+				set(undefined); // Update the derived store with undefined if there are no charts
 			}
-		} else {
-			return;
-		}
-	});
+		});
+	}
 };
-
 export const fileDropdown = () => {
 	return derived(fileUploadStore, ($fileUploadStore) => {
 		const files = $fileUploadStore.map((item: { filename: string }) => item.filename);

@@ -16,7 +16,6 @@
 
 	$: i = clickedChartIndex();
 	$: drawerOptions = chartOptions();
-	//$: console.log('options', options);
 
 	$: if ($drawerOptions.xColumn && $drawerOptions.yColumn && tags.length == 0) {
 		tags = getTagsOnClick();
