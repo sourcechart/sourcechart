@@ -1,13 +1,7 @@
 <script lang="ts">
-	import { addEChartPropsToStore } from './navbar-utils';
-	import { ChartOptions } from '$lib/io/eChartBuilder';
 </script>
 
 <button
-	on:click|stopPropagation={() => addEChartPropsToStore(ChartOptions.bar)}
-	on:keydown|stopPropagation={(e) => {
-		if (e.key === 'Enter') addEChartPropsToStore(ChartOptions.bar);
-	}}
 	tabindex="0"
 	class="flex flex-col items-center justify-center cursor-pointer dark:text-gray-300"
 >

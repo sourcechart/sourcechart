@@ -1,25 +1,19 @@
-<!-- I only put this here so it would be easier to navigate to in the file tree. Could definitely be in /dashboard/+page.svelte-->
-<script>
-	import MoveableChart from '$lib/components/dashboard/charts/MoveableChart.svelte';
+<script lang="ts">
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
+	import Canvas from '$lib/components/ui/draw/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
-	import { allCharts } from '$lib/io/stores';
 	import { DarkMode } from '$lib/components/ui';
 </script>
 
-<div class="relative">
-	<div class="absolute top-0 right-0 mt-4">
+<!-- Center this on the screen-->
+<div class="flex justify-center mt-3 z-30">
+	<div class="flex-row">
 		<DarkMode />
-	</div>
-	<div class="flex justify-center justify-items-center">
 		<NavBar />
 	</div>
-	<div>
-		{#each $allCharts as item (item)}
-			<MoveableChart id={item.chartID} chartOptions={item.chartOptions} />
-		{/each}
-	</div>
-	<div class="fixed top-1/2 left-0 transform -translate-y-1/2">
-		<Sidebar />
-	</div>
 </div>
+<div class="fixed z-30">
+	<Sidebar />
+</div>
+
+<Canvas />

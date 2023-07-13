@@ -9,7 +9,7 @@
 		clickedChart,
 		clickedChartIndex,
 		groupbyColumns
-	} from '$lib/io/stores';
+	} from '$lib/io/Stores';
 
 	let tags: Array<string> = [];
 
@@ -17,12 +17,8 @@
 	$: clickChart = clickedChart();
 	$: i = clickedChartIndex();
 
-	$: {
-		if ($clickChart) {
-			if (tags.length == 0 && $clickChart.groupbyColumns.length > 0) {
-				tags = getTagsOnClick();
-			}
-		}
+	$: if ($allCharts.length > 0 && $allCharts[$i]?.groupbyColumns) {
+		tags = $allCharts[$i].groupbyColumns;
 	}
 
 	$: if ($clearChartOptions && tags.length > 0 && $clickChart?.groupbyColumns) {
@@ -32,7 +28,7 @@
 		$allCharts[$i] = chart;
 	}
 
-	function addColumnToGroupBy(column: string | null) {
+	const addColumnToGroupBy = (column: string | null) => {
 		let chart = $allCharts[$i];
 		if (column) {
 			tags = [...tags, column]; //@ts-ignore
@@ -40,22 +36,22 @@
 			$groupbyColumns = tags;
 		}
 		$allCharts[$i] = chart;
-	}
+	};
 
-	function getTagsOnClick() {
+	const getTagsOnClick = () => {
 		tags = [];
 		if ($clickChart?.groupbyColumns) {
 			tags = $clickChart.groupbyColumns;
 		}
 		return tags;
-	}
+	};
 
-	function removeItem(item: string) {
+	const removeItem = (item: string) => {
 		tags = tags.filter((tag) => tag !== item);
 		let chart = $allCharts[$i];
 		chart.groupbyColumns = tags;
 		$allCharts[$i] = chart;
-	}
+	};
 </script>
 
 <div class="flex">

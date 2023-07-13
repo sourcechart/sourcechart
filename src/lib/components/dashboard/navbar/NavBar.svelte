@@ -1,33 +1,33 @@
 <script lang="ts">
-	import {
-		AreaPlotButton,
-		BarPlotButton,
-		LinePlotButton,
-		ScatterPlotButton,
-		FileUploadButton,
-		PiePlotButton
-	} from './navbar-components';
-	import NavBarWrapper from './navbar-components/NavBarWrapper.svelte';
+	import { Cursor, Draw, Eraser } from './navbar-icons';
+	import NavBarWrapper from '$lib/components/dashboard/navbar/NavBarWrapper.svelte';
+	import { navBarState } from '$lib/io/Stores';
 
-	let components = [
-		{ componentType: 'bar', component: BarPlotButton },
-		{ componentType: 'line', component: LinePlotButton },
-		{ componentType: 'area', component: AreaPlotButton },
-		{ componentType: 'scatter', component: ScatterPlotButton },
-		{ componentType: 'pie', component: PiePlotButton },
-		{ componentType: 'file-upload', component: FileUploadButton }
+	let icons = [
+		{
+			name: 'Cursor',
+			component: Cursor
+		},
+		{
+			name: 'Draw',
+			component: Draw
+		},
+		{
+			name: 'Eraser',
+			component: Eraser
+		}
 	];
+
+	const setMode = (event: any) => {
+		navBarState.set(event.detail);
+	};
 </script>
 
 <NavBarWrapper>
-	{#each components as component (component)}
-		<div
-			class="flex items-center justify-between mx-1 rounded-md overflow-hidden dark:hover:bg-gray-600"
-		>
-			<div
-				class="relative flex align-center justify-items-center items-center flex-col dark:hover:bg-gray-600"
-			>
-				<svelte:component this={component.component} />
+	{#each icons as { name, component } (name)}
+		<div class="flex items-center justify-between mx-1 rounded-md overflow-hidden">
+			<div class="relative flex align-center justify-items-center items-center flex-col">
+				<svelte:component this={component} on:mode={setMode} />
 			</div>
 		</div>
 	{/each}

@@ -1,10 +1,7 @@
 <script lang="ts">
-	import { addEChartPropsToStore } from './navbar-utils';
-	import { ChartOptions } from '$lib/io/eChartBuilder';
 </script>
 
 <div
-	on:click={() => addEChartPropsToStore(ChartOptions.area)}
 	on:keydown={() => null}
 	class="flex flex-col items-center justify-center cursor-pointer dark:text-gray-300"
 >
