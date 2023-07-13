@@ -42,7 +42,6 @@
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID); // $polygons.findIndex((p) => p.id === $mostRecentChartID);
 	$: TOUCHSTATE = touchStates();
 
-	$: console.log($allCharts[chartIndex]);
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
