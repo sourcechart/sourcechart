@@ -1,6 +1,7 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
 import { Query } from '$lib/io/QueryBuilder';
+import type { DuckDBClient } from './DuckDBCLI';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
@@ -88,20 +89,44 @@ const getQueryObject = (chart: Chart): QueryObject => {
 	};
 };
 
-export const getQuery = () => {
+export const getChartOptions = () => {
 	return derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
 		if ($allCharts.length > 0) {
 			const chart = $allCharts.find(
 				(item: { chartID: string }) => item.chartID === $mostRecentChartID
 			);
 
+			const getColumn = (column: string | null) => {
+				if (column) {
+					return column.toString();
+				} else {
+					return '';
+				}
+			};
+
+			const updateChart = async (db: DuckDBClient, query: string, chart: Chart) => {
+				let results = await db.query(query);
+				var xColumn = getColumn(chart.xColumn);
+				var yColumn = getColumn(chart.yColumn);
+				var x = results.map((item) => item[xColumn]);
+				var y = results.map((item) => item[yColumn]);
+				chart.chartOptions.xAxis.data = x;
+				chart.chartOptions.series[0].data = y;
+				return chart;
+			};
+
 			if (chart) {
 				let queryObject = getQueryObject(chart);
 				const query = new Query(queryObject);
-				return query.build();
+				let queryString = query.build();
+				if (chart.database && chart.xColumn && chart.yColumn) {
+					const db: DuckDBClient = chart.database;
+					let chartOption = updateChart(db, queryString, chart);
+					return chartOption;
+				}
 			}
 		} else {
-			return '';
+			return;
 		}
 	});
 };
@@ -110,19 +135,6 @@ export const fileDropdown = () => {
 	return derived(fileUploadStore, ($fileUploadStore) => {
 		const files = $fileUploadStore.map((item: { filename: string }) => item.filename);
 		return files;
-	});
-};
-
-export const getChartOptions = () => {
-	return derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
-		const chart = $allCharts.find(
-			(item: { chartID: string }) => item.chartID === $mostRecentChartID
-		);
-		let queryObject: QueryObject;
-		if (chart) {
-			queryObject = getQueryObject(chart);
-			console.log(queryObject);
-		}
 	});
 };
 
