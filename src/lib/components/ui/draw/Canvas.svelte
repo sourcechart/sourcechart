@@ -36,10 +36,8 @@
 	let handlePosition: HandlePosition;
 
 	const tolerance: number = 5;
-	const highlightcolor: string = 'red';
-	const defaultcolor: string = 'black ';
 
-	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID); // $polygons.findIndex((p) => p.id === $mostRecentChartID);
+	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: TOUCHSTATE = touchStates();
 
 	if (browser) {
@@ -107,8 +105,7 @@
 				break;
 
 			case 'isTranslating':
-				// handleTouchTranslate(x, y); // Assuming you have this function defined
-				// Or do nothing if you do not have an explicit handleTouchTranslate.
+				// handleTouchTranslate(x, y); this is handled isTranslating DrawRectangleCanvas.svelte
 				break;
 
 			default:
@@ -154,25 +151,16 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchErase = (x: number, y: number): void => {
-		// Only continue if the touchstate is 'isEraser'
-		if ($TOUCHSTATE !== 'isErasing') return;
-
 		const currentTouchPoint: Point = { x: x, y: y };
 		const allPolygons = $allCharts.map((chart) => chart.polygon);
 		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, allPolygons);
 
 		if (polygon) {
-			// Update the allCharts store if a polygon is found
 			allCharts.update((charts) => {
-				// Find the index of the chart with the found polygon
 				const index = charts.findIndex((chart) => chart.polygon === polygon);
-
-				// Remove the chart from the store if it was found
 				if (index > -1) {
 					charts.splice(index, 1);
 				}
-
-				// Return the updated charts array
 				return charts;
 			});
 		}
@@ -185,17 +173,15 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchCreateShapes = (x: number, y: number): void => {
-		if ($navBarState === 'drawRectangle') {
-			const polygon = {
-				vertices: [
-					{ x: start.x, y: start.y },
-					{ x: x, y: start.y },
-					{ x: x, y: y },
-					{ x: start.x, y: y }
-				]
-			};
-			newPolygon = [polygon];
-		}
+		const polygon = {
+			vertices: [
+				{ x: start.x, y: start.y },
+				{ x: x, y: start.y },
+				{ x: x, y: y },
+				{ x: start.x, y: y }
+			]
+		};
+		newPolygon = [polygon];
 	};
 
 	/**
@@ -269,10 +255,10 @@
 >
 	<div id="canvasParent">
 		{#each $allCharts as chart (chart.chartID)}
-			<DrawRectangleCanvas polygon={chart.polygon} {defaultcolor} {highlightcolor} />
+			<DrawRectangleCanvas polygon={chart.polygon} />
 		{/each}
 		{#each newPolygon as polygon}
-			<DrawRectangleCanvas {polygon} {defaultcolor} {highlightcolor} />
+			<DrawRectangleCanvas {polygon} />
 		{/each}
 	</div>
 </div>

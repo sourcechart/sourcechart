@@ -14,8 +14,9 @@
 	import { Chart } from '$lib/components/ui/echarts';
 
 	export let polygon: Polygon;
-	export let highlightcolor: string;
-	export let defaultcolor: string;
+
+	const highlightcolor: string = 'red';
+	const defaultcolor: string = 'transparent';
 
 	let offsetX = 0;
 	let offsetY = 0;
@@ -64,13 +65,17 @@
 		return vertices;
 	};
 
-	const drawRectangleCanvas = (points: LookupTable, context: CanvasRenderingContext2D) => {
+	const drawRectangleCanvas = (
+		points: LookupTable,
+		context: CanvasRenderingContext2D,
+		color: string
+	) => {
 		let rectangleVertices: string[] = ['tl', 'tr', 'br', 'bl'];
 		let vertices: Point[] = [];
 		for (let i = 0; i < rectangleVertices.length; i++) {
 			vertices.push(points[rectangleVertices[i]]);
 		}
-		drawRectangle(vertices, context, 'red');
+		drawRectangle(vertices, context, color);
 	};
 
 	const handleMouseDown = (e: MouseEvent) => {
@@ -94,9 +99,13 @@
 		return vertices;
 	};
 
-	const drawRectangleHandles = (points: LookupTable, context: CanvasRenderingContext2D) => {
+	const drawRectangleHandles = (
+		points: LookupTable,
+		context: CanvasRenderingContext2D,
+		color: string
+	) => {
 		let vertices = getAllHandlePositions(points);
-		drawHandles(vertices, context, 'red', 5);
+		drawHandles(vertices, context, color, 5);
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
@@ -164,23 +173,28 @@
 		canvas.width = Math.abs(endX - startX);
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
+
+		let color =
+			dragging ||
+			$TOUCHSTATE === 'isTranslating' ||
+			$TOUCHSTATE === 'isResizing' ||
+			$TOUCHSTATE === 'isDrawing'
+				? highlightcolor
+				: defaultcolor;
+
 		if (context) {
 			rectWidth = Math.abs(endX - startX);
 			rectHeight = Math.abs(endY - startY);
 
-			context.strokeStyle =
-				($mouseEventState === 'isTouching' && $navBarState === 'drawRectangle') ||
-				$mouseEventState === 'isHovering'
-					? defaultcolor
-					: highlightcolor;
+			context.strokeStyle = color;
 			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 			points = calculateVertices(rectWidth, rectHeight, 5);
 
 			plotWidth = getPlotWidth();
 			plotHeight = getPlotHeight();
 
-			drawRectangleHandles(points, context);
-			drawRectangleCanvas(points, context);
+			drawRectangleHandles(points, context, color);
+			drawRectangleCanvas(points, context, color);
 		}
 	});
 
