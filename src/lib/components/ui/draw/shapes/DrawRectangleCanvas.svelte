@@ -1,12 +1,5 @@
 <script lang="ts">
-	import {
-		mouseEventState,
-		navBarState,
-		allCharts,
-		mostRecentChartID,
-		touchStates,
-		getChartOptions
-	} from '$lib/io/Stores';
+	import { allCharts, mostRecentChartID, touchStates, getChartOptions } from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
 
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
