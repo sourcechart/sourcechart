@@ -50,9 +50,6 @@
 
 <Button color="alternative">{selectedDataset}</Button>
 <Dropdown>
-	<DropdownItem disabled
-		>{selectedDataset !== 'Choose Dataset' ? selectedDataset : 'Select a dataset'}</DropdownItem
-	>
 	{#each $datasets as dataset}
 		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
 	{/each}

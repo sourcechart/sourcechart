@@ -45,9 +45,6 @@
 				<p>Groupby</p>
 			</div>
 			<Groupby />
-			<div class="text-xs space-y-1">
-				<p>ClearChartOptions</p>
-			</div>
 		</div>
 	</SidebarWrapper>
 </div>
