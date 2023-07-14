@@ -49,4 +49,8 @@
 </script>
 
 <Button color="alternative">{selectedDataset}</Button>
-<Dropdown />
+<Dropdown>
+	{#each $datasets as dataset}
+		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
+	{/each}
+</Dropdown>
