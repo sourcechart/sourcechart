@@ -13,7 +13,7 @@
 		{
 			title: 'Security and Compliance',
 			description:
-				'SourceChart.io prioritizes data security. Your data never hits our serves to ensure your data remains secure and confidential.'
+				'SourceChart.io prioritizes data security. Your data never hits our servers to ensure your data remains secure and confidential.'
 		}
 	];
 </script>
