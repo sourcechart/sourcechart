@@ -7,12 +7,12 @@
 		activeSidebar
 	} from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
-
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/ui/echarts';
 
 	export let polygon: Polygon;
+
 	const highlightcolor: string = 'red';
 	const defaultcolor: string = 'transparent';
 
@@ -110,7 +110,6 @@
 		if (!dragging) return;
 		let x = e.clientX;
 		let y = e.clientY;
-		activeSidebar.set(true);
 
 		if ($TOUCHSTATE === 'isTranslating' && polygon.id) {
 			mostRecentChartID.set(polygon.id);
@@ -163,6 +162,14 @@
 		}
 	};
 
+	const getPlotWidth = () => {
+		return Math.abs(polygon.vertices[0].x - polygon.vertices[2].x);
+	};
+
+	const getPlotHeight = () => {
+		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
+	};
+
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
 		let startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
@@ -174,7 +181,10 @@
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
 
-		let color = $activeSidebar && $mostRecentChartID === polygon.id ? highlightcolor : defaultcolor;
+		let color =
+			$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
+				? highlightcolor
+				: defaultcolor;
 
 		if (context) {
 			rectWidth = Math.abs(endX - startX);
@@ -191,14 +201,6 @@
 			drawRectangleCanvas(points, context, color);
 		}
 	});
-
-	const getPlotWidth = () => {
-		return Math.abs(polygon.vertices[0].x - polygon.vertices[2].x);
-	};
-
-	const getPlotHeight = () => {
-		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
-	};
 
 	$: plotWidth = getPlotWidth();
 	$: plotHeight = getPlotHeight();

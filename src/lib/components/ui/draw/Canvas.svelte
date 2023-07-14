@@ -145,11 +145,8 @@
 			};
 			newPolygon = [];
 			addChartMetaData(targetId, $navBarState, polygon);
-			activeSidebar.set(true);
 		}
-		if ($TOUCHSTATE === 'isErasing') {
-			activeSidebar.set(false);
-		}
+
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
 	};
