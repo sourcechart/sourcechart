@@ -10,11 +10,9 @@
 
 	let selectedDataset: string | null = 'Choose Dataset';
 
-	$: {
-		if ($allCharts.length > 0 && $allCharts[$i]) {
-			selectedDataset = $allCharts[$i]?.filename ? $allCharts[$i].filename : 'Choose Dataset';
-			$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
-		}
+	$: if ($allCharts.length > 0 && $allCharts[$i]) {
+		selectedDataset = $allCharts[$i]?.filename ? $allCharts[$i].filename : 'Choose Dataset';
+		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 	}
 
 	$: file = getFileFromStore();
