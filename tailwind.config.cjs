@@ -1,26 +1,30 @@
 const config = {
-	mode:"jit",
+	mode: 'jit',
 	content: [
-	  "./src/**/*.{html,js,svelte,ts}",
-	  "./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}",
+		'./src/**/*.{html,js,svelte,ts}',
+		'./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}'
 	],
-  
+
 	theme: {
-		gradientColorStops: theme => ({
-		  ...theme('colors'),
-		  primary: '#3490dc',
-		  secondary: '#ffed4a',
-		  danger: '#e3342f',
-		  pink: '#d53369',
-		  yellow: '#daae51',
+		gradientColorStops: (theme) => ({
+			...theme('colors'),
+			primary: '#3490dc',
+			secondary: '#ffed4a',
+			danger: '#e3342f',
+			pink: '#d53369',
+			yellow: '#daae51'
 		}),
-		extend: {},
+		extend: { width: {
+        'full': '100%',
+      },
+      height: {
+        'full': '100%',
+      },
+    },
 	},
-  
-	plugins: [
-	  require('flowbite/plugin')
-	],
+
+	plugins: [require('flowbite/plugin')],
 	darkMode: 'class',
-  };
-  
-  module.exports = config;
+};
+
+module.exports = config;

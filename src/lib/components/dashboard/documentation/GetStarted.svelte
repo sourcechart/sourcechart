@@ -1,8 +1,7 @@
-<!-- Use FlowBite Modal and Carousel for a popup guide to SourceChart -->
 <script lang="ts">
 	import { Modal } from 'flowbite-svelte';
 	import { Carousel } from 'flowbite-svelte';
-	import { timesVisitedDashboard } from '$lib/io/stores';
+	import { timesVisitedDashboard } from '$lib/io/Stores';
 
 	var visits = $timesVisitedDashboard;
 	var newVisit = Number(visits) + 1;
@@ -30,9 +29,3 @@
 	let showCaptions = true;
 	let slideControls = true;
 </script>
-
-{#if $timesVisitedDashboard === 1}
-	<Modal title="Getting Started" bind:open={defaultModal} autoclose>
-		<Carousel {images} {showThumbs} {showCaptions} {slideControls} />
-	</Modal>
-{/if}
