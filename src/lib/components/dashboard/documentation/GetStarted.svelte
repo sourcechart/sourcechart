@@ -29,9 +29,3 @@
 	let showCaptions = true;
 	let slideControls = true;
 </script>
-
-{#if $timesVisitedDashboard === 1}
-	<Modal title="Getting Started" bind:open={defaultModal} autoclose>
-		<Carousel {images} {showThumbs} {showCaptions} {slideControls} />
-	</Modal>
-{/if}
