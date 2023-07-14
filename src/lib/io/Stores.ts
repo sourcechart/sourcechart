@@ -183,7 +183,8 @@ export const touchStates = () => {
 			} else if (
 				$navBarState === 'select' &&
 				$mouseEventState === 'isTouching' &&
-				$mouseType !== 'move'
+				$mouseType !== 'move' &&
+				$mouseType !== ''
 			) {
 				touchState = 'isResizing';
 			} else if (
@@ -194,8 +195,10 @@ export const touchStates = () => {
 				touchState = 'isTranslating';
 			} else if ($navBarState === 'select' && $mouseEventState === 'isHovering') {
 				touchState = 'isHovering';
+			} else if ($navBarState === 'select' && $mouseEventState === 'isTouching') {
+				touchState = 'isTouching';
 			} else {
-				return;
+				return 'default';
 			}
 			return touchState;
 		}

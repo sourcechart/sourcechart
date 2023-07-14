@@ -10,8 +10,7 @@
 		mouseType,
 		activeSidebar,
 		allCharts,
-		touchStates,
-		getChartOptions
+		touchStates
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
@@ -39,7 +38,7 @@
 	const tolerance: number = 5;
 	const highlightcolor: string = 'red';
 	const defaultcolor: string = 'black ';
-	let ChartOptions: any = {};
+
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID); // $polygons.findIndex((p) => p.id === $mostRecentChartID);
 	$: TOUCHSTATE = touchStates();
 
@@ -93,17 +92,89 @@
 	const handleTouchMove = (x: number, y: number): void => {
 		x = x - offsetX;
 		y = y - offsetY;
+
+		switch ($TOUCHSTATE) {
+			case 'isDrawing':
+				handleTouchCreateShapes(x, y);
+				break;
+
+			case 'isErasing':
+				handleTouchErase(x, y);
+				break;
+
+			case 'isResizing':
+				handleTouchResize(x, y);
+				break;
+
+			case 'isTranslating':
+				// handleTouchTranslate(x, y); // Assuming you have this function defined
+				// Or do nothing if you do not have an explicit handleTouchTranslate.
+				break;
+
+			default:
+				return;
+		}
+	};
+
+	/**
+	 * ### Handle Touch End
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
+	const handleTouchEnd = (x: number, y: number) => {
+		x = x - offsetX;
+		y = y - offsetY;
 		if ($TOUCHSTATE === 'isDrawing') {
-			handleTouchCreateShapes(x, y);
-			return;
-		} else if ($TOUCHSTATE === 'isTranslating') {
-			handleTouchErase(x, y);
-			return;
-		} else if ($TOUCHSTATE === 'isResizing') {
-			handleTouchResize(x, y);
-			return;
-		} else {
-			return;
+			let targetId = generateID();
+			const polygon = {
+				id: targetId,
+				vertices: [
+					{ x: start.x, y: start.y },
+					{ x: x, y: start.y },
+					{ x: x, y: y },
+					{ x: start.x, y: y }
+				]
+			};
+			newPolygon = [];
+			addChartMetaData(targetId, $navBarState, polygon);
+			activeSidebar.set(true);
+		}
+		if ($TOUCHSTATE === 'isErasing') {
+			activeSidebar.set(false);
+		}
+		mouseEventState.set('isHovering');
+		navBarState.set('select');
+	};
+
+	/**
+	 * ### On intersection of a polygon while your mouse is touching erase
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
+	const handleTouchErase = (x: number, y: number): void => {
+		// Only continue if the touchstate is 'isEraser'
+		if ($TOUCHSTATE !== 'isErasing') return;
+
+		const currentTouchPoint: Point = { x: x, y: y };
+		const allPolygons = $allCharts.map((chart) => chart.polygon);
+		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, allPolygons);
+
+		if (polygon) {
+			// Update the allCharts store if a polygon is found
+			allCharts.update((charts) => {
+				// Find the index of the chart with the found polygon
+				const index = charts.findIndex((chart) => chart.polygon === polygon);
+
+				// Remove the chart from the store if it was found
+				if (index > -1) {
+					charts.splice(index, 1);
+				}
+
+				// Return the updated charts array
+				return charts;
+			});
 		}
 	};
 
@@ -138,52 +209,6 @@
 			const polygon = $allCharts[chartIndex].polygon;
 			$allCharts[chartIndex].polygon = resizeRectangle(x, y, polygon, handlePosition);
 		}
-	};
-
-	/**
-	 * ### On intersection of a polygon while your mouse is touching erase
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
-	const handleTouchErase = (x: number, y: number): void => {
-		const currentTouchPoint: Point = { x: x, y: y };
-		const polygons = $allCharts.map((chart) => chart.polygon);
-
-		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, polygons);
-
-		const index = polygon ? polygons.indexOf(polygon) : -1;
-		if (index > -1) {
-			polygons.splice(index, 1);
-		}
-	};
-
-	/**
-	 * ### Handle Touch End
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
-	const handleTouchEnd = (x: number, y: number) => {
-		x = x - offsetX;
-		y = y - offsetY;
-		if ($TOUCHSTATE === 'isDrawing') {
-			let targetId = generateID();
-			const polygon = {
-				id: targetId,
-				vertices: [
-					{ x: start.x, y: start.y },
-					{ x: x, y: start.y },
-					{ x: x, y: y },
-					{ x: start.x, y: y }
-				]
-			};
-			newPolygon = [];
-			addChartMetaData(targetId, $navBarState, polygon);
-			activeSidebar.set(true);
-		}
-		mouseEventState.set('isHovering');
-		navBarState.set('select');
 	};
 
 	/**
