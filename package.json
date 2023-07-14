@@ -1,6 +1,6 @@
 {
 	"name": "sourcechart",
-	"version": "0.0.2",
+	"version": "0.0.1",
 	"license": "internal",
 	"private": true,
 	"scripts": {
@@ -18,7 +18,7 @@
 		"@duckdb/duckdb-wasm": "^1.24.0",
 		"@playwright/test": "^1.28.1",
 		"@popperjs/core": "^2.11.6",
-		"@sveltejs/adapter-vercel": "^3.0.0",
+		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.5.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
