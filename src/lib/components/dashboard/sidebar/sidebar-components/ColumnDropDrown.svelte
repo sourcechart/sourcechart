@@ -1,11 +1,5 @@
 <script lang="ts">
-	import {
-		getColumnsFromFile,
-		clickedChartIndex,
-		chartOptions,
-		allCharts,
-		getChartOptions
-	} from '$lib/io/Stores';
+	import { getColumnsFromFile, clickedChartIndex, chartOptions, allCharts } from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
 	export let axis = '';
@@ -52,7 +46,7 @@
 		return tags;
 	};
 
-	function chooseColumn(column: string | null) {
+	const chooseColumn = (column: string | null) => {
 		if (column) {
 			selectedColumn = column;
 
@@ -70,7 +64,7 @@
 		} else {
 			tags = [];
 		}
-	}
+	};
 </script>
 
 <Button color="alternative" pill={false} outline={false}>{selectedColumn}</Button>
