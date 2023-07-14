@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { allCharts, mostRecentChartID, touchStates, getChartOptions } from '$lib/io/Stores';
+	import {
+		allCharts,
+		mostRecentChartID,
+		touchStates,
+		getChartOptions,
+		activeSidebar
+	} from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
 
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
@@ -7,7 +13,6 @@
 	import { Chart } from '$lib/components/ui/echarts';
 
 	export let polygon: Polygon;
-
 	const highlightcolor: string = 'red';
 	const defaultcolor: string = 'transparent';
 
@@ -105,6 +110,8 @@
 		if (!dragging) return;
 		let x = e.clientX;
 		let y = e.clientY;
+		activeSidebar.set(true);
+
 		if ($TOUCHSTATE === 'isTranslating' && polygon.id) {
 			mostRecentChartID.set(polygon.id);
 
@@ -167,13 +174,7 @@
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
 
-		let color =
-			dragging ||
-			$TOUCHSTATE === 'isTranslating' ||
-			$TOUCHSTATE === 'isResizing' ||
-			$TOUCHSTATE === 'isDrawing'
-				? highlightcolor
-				: defaultcolor;
+		let color = $activeSidebar && $mostRecentChartID === polygon.id ? highlightcolor : defaultcolor;
 
 		if (context) {
 			rectWidth = Math.abs(endX - startX);

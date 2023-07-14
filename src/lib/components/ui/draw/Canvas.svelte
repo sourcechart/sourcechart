@@ -23,9 +23,9 @@
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
 
-	let start: Point = { x: 0, y: 0 };
-	let dragOffset: Point = { x: 0, y: 0 };
+	let startPosition: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
+	let currentTouchPosition: Point = { x: 0, y: 0 };
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -39,6 +39,7 @@
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: TOUCHSTATE = touchStates();
+	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
 
 	if (browser) {
 		onMount(() => {
@@ -51,6 +52,18 @@
 		});
 	}
 
+	function controlSidebar(touchstate: string) {
+		if (touchstate === 'isTouching') {
+			activeSidebar.set(false);
+		} else if (touchstate === 'isErasing') {
+			activeSidebar.set(false);
+		} else if (touchstate === 'isResizing' || touchstate === 'isTranslating') {
+			activeSidebar.set(true);
+		} else if (touchstate === 'isDrawing') {
+			activeSidebar.set(true);
+		}
+	}
+
 	/**
 	 * ### Handle the touch start event.
 	 *
@@ -60,22 +73,19 @@
 	const handleTouchStart = (x: number, y: number): void => {
 		x = x - offsetX;
 		y = y - offsetY;
+		startPosition = { x, y };
+
 		mouseEventState.set('isTouching');
-		start = { x, y };
-		const currentPoint: Point = { x, y };
-		const containingPolygon = PolyOps.getContainingPolygon(currentPoint, $polygons);
+		const containingPolygon = PolyOps.getContainingPolygon(startPosition, $polygons);
 
 		if ($navBarState === 'select' && chartIndex >= 0 && containingPolygon) {
 			const polygon = $allCharts[chartIndex].polygon;
-			if (polygon && PolyOps.isPointInPolygon({ x, y }, polygon)) {
-				dragOffset = { x, y };
+			if (polygon && PolyOps.isPointInPolygon(startPosition, polygon)) {
 				if (polygon.id) mostRecentChartID.set(polygon.id);
 				mouseEventState.set('isTranslating');
-				activeSidebar.set(true);
 				return;
 			} else {
 				mouseEventState.set('isTouching');
-				activeSidebar.set(false);
 				return;
 			}
 		}
@@ -127,10 +137,10 @@
 			const polygon = {
 				id: targetId,
 				vertices: [
-					{ x: start.x, y: start.y },
-					{ x: x, y: start.y },
+					{ x: startPosition.x, y: startPosition.y },
+					{ x: x, y: startPosition.y },
 					{ x: x, y: y },
-					{ x: start.x, y: y }
+					{ x: startPosition.x, y: y }
 				]
 			};
 			newPolygon = [];
@@ -151,9 +161,9 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchErase = (x: number, y: number): void => {
-		const currentTouchPoint: Point = { x: x, y: y };
+		currentTouchPosition = { x: x, y: y };
 		const allPolygons = $allCharts.map((chart) => chart.polygon);
-		const polygon = PolyOps.getContainingPolygon(currentTouchPoint, allPolygons);
+		const polygon = PolyOps.getContainingPolygon(currentTouchPosition, allPolygons);
 
 		if (polygon) {
 			allCharts.update((charts) => {
@@ -175,10 +185,10 @@
 	const handleTouchCreateShapes = (x: number, y: number): void => {
 		const polygon = {
 			vertices: [
-				{ x: start.x, y: start.y },
-				{ x: x, y: start.y },
+				{ x: startPosition.x, y: startPosition.y },
+				{ x: x, y: startPosition.y },
 				{ x: x, y: y },
-				{ x: start.x, y: y }
+				{ x: startPosition.x, y: y }
 			]
 		};
 		newPolygon = [polygon];
