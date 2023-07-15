@@ -36,6 +36,5 @@
 	};
 </script>
 
-<Label class="pb-2" for="multiple_files">Upload multiple files</Label>
 <Fileupload id="multiple_files" multiple on:change={uploadFiles} />
 <Listgroup {files} class="mt-2" />

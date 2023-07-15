@@ -19,39 +19,33 @@
 
 <div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
-		<div class="flex items-center space-x-1">
-			<p>FileUpload</p>
-			<FileUpload />
-		</div>
-		<div class="flex items-center space-x-1">
-			<p>Datasets</p>
-			<DatasetDropDown />
-		</div>
-		<div class="flex items-center">
-			<div class=" text-xs space-y-1">
-				<p>Choose Chart</p>
+		<div class="space-y-3">
+			<div class="flex items-center space-x-1">
+				<p class="text-xs">FileUpload</p>
+				<FileUpload />
 			</div>
-			<PlotDropdown />
-		</div>
-		<div class="flex items-center">
-			<div class="text-xs space-y-1">
-				<p>Axis</p>
+			<div class="flex items-center space-x-1">
+				<p class="text-xs">Datasets</p>
+				<DatasetDropDown />
 			</div>
-			<AxisDropDrown axis={'X'} />
-			<AxisDropDrown axis={'Y'} />
-		</div>
-		<div class="flex items-center">
-			<div class="text-xs space-y-1">
-				<p>Aggregator</p>
+			<div class="flex items-center">
+				<p class="text-xs">Choose Chart</p>
+				<PlotDropdown />
 			</div>
-			<Aggregator />
-		</div>
-		<div class="flex items-center">
-			<div class="text-xs space-y-1">
-				<p>Groupby</p>
+			<div class="flex items-center">
+				<p class="text-xs">Axis</p>
+				<AxisDropDrown axis={'X'} />
+				<AxisDropDrown axis={'Y'} />
 			</div>
-			<Groupby />
+			<div class="flex items-center">
+				<p class="text-xs">Aggregator</p>
+				<Aggregator />
+			</div>
+			<div class="flex items-center">
+				<p class="text-xs">Groupby</p>
+				<Groupby />
+			</div>
+			<Tags />
 		</div>
-		<Tags />
 	</SidebarWrapper>
 </div>
