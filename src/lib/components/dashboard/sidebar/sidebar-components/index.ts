@@ -3,8 +3,17 @@ import DatasetDropDown from './DatasetDropDown.svelte';
 import AxisDropDrown from './ColumnDropDrown.svelte';
 import Groupby from './Groupby.svelte';
 import Aggregator from './Aggregator.svelte';
-import FileUpload from "./FileUpload.svelte"
-import PlotDropdown from "./PlotDropdown.svelte";
+import FileUpload from './FileUpload.svelte';
+import PlotDropdown from './PlotDropdown.svelte';
+import Tags from './Tags.svelte';
 
-
-export {ClearChartOptions, DatasetDropDown, AxisDropDrown, Groupby, Aggregator, FileUpload, PlotDropdown}
+export {
+	Tags,
+	ClearChartOptions,
+	DatasetDropDown,
+	AxisDropDrown,
+	Groupby,
+	Aggregator,
+	FileUpload,
+	PlotDropdown
+};
