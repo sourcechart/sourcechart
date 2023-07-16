@@ -19,6 +19,8 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
+	let scrollX: number = 0;
+	let scrollY: number = 0;
 	let width: number = 0;
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
@@ -52,6 +54,11 @@
 		});
 	}
 
+	const updateScroll = () => {
+		scrollY = window.scrollY;
+		scrollX = window.scrollX;
+	};
+
 	function controlSidebar(touchstate: string) {
 		if (touchstate === 'isTouching') {
 			activeSidebar.set(false);
@@ -71,8 +78,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchStart = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
 		startPosition = { x, y };
 
 		mouseEventState.set('isTouching');
@@ -98,8 +105,10 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchMove = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
+
+		console.log(scrollY);
 
 		switch ($TOUCHSTATE) {
 			case 'isDrawing':
@@ -130,8 +139,9 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchEnd = (x: number, y: number) => {
-		x = x - offsetX;
-		y = y - offsetY;
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
+
 		if ($TOUCHSTATE === 'isDrawing') {
 			let targetId = generateID();
 			const polygon = {
@@ -143,6 +153,7 @@
 					{ x: startPosition.x, y: y }
 				]
 			};
+			console.log(polygon.vertices);
 			newPolygon = [];
 			addChartMetaData(targetId, $navBarState, polygon);
 		}
@@ -211,8 +222,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 
@@ -277,4 +288,5 @@
 			height = window.innerHeight;
 		}
 	}}
+	on:scroll={updateScroll}
 />
