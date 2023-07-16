@@ -43,14 +43,18 @@
 	$: TOUCHSTATE = touchStates();
 	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
 
+	const updateOffset = () => {
+		const rect = canvas.getBoundingClientRect();
+		offsetX = rect.left;
+		offsetY = Math.abs(rect.top - height);
+	};
+
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
 			width = window.innerWidth;
 			height = window.innerHeight;
-			const rect = canvas.getBoundingClientRect();
-			offsetX = rect.left;
-			offsetY = Math.abs(rect.top - height);
+			updateOffset();
 		});
 	}
 
@@ -146,7 +150,6 @@
 					{ x: startPosition.x, y: y }
 				]
 			};
-			console.log(polygon.vertices);
 			newPolygon = [];
 			addChartMetaData(targetId, $navBarState, polygon);
 		}
