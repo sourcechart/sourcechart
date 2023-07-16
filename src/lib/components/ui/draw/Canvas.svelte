@@ -54,11 +54,6 @@
 		});
 	}
 
-	const updateScroll = () => {
-		scrollY = window.scrollY;
-		scrollX = window.scrollX;
-	};
-
 	function controlSidebar(touchstate: string) {
 		if (touchstate === 'isTouching') {
 			activeSidebar.set(false);
@@ -107,8 +102,6 @@
 	const handleTouchMove = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
-
-		console.log(scrollY);
 
 		switch ($TOUCHSTATE) {
 			case 'isDrawing':
@@ -288,5 +281,10 @@
 			height = window.innerHeight;
 		}
 	}}
-	on:scroll={updateScroll}
+	on:scroll={() => {
+		if (typeof window !== undefined) {
+			scrollY = window.scrollY;
+			scrollX = window.scrollX;
+		}
+	}}
 />
