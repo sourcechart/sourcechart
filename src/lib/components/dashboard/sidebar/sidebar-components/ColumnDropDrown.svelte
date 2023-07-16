@@ -4,7 +4,7 @@
 
 	export let axis = '';
 
-	let selectedColumn: string | null = `Choose ${axis} Axis`;
+	let selectedColumn: string | null = `${axis} Axis`;
 
 	let tags: Array<string | null> = [];
 

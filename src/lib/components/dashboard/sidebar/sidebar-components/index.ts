@@ -4,7 +4,7 @@ import AxisDropDrown from './ColumnDropDrown.svelte';
 import Groupby from './Groupby.svelte';
 import Aggregator from './Aggregator.svelte';
 import FileUpload from './FileUpload.svelte';
-import PlotDropdown from './PlotDropdown.svelte';
+import ChartDropdown from './ChartDropdown.svelte';
 import Tags from './Tags.svelte';
 
 export {
@@ -15,5 +15,5 @@ export {
 	Groupby,
 	Aggregator,
 	FileUpload,
-	PlotDropdown
+	ChartDropdown
 };

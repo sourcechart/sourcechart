@@ -5,7 +5,7 @@
 		Aggregator,
 		Groupby,
 		FileUpload,
-		PlotDropdown,
+		ChartDropdown,
 		Tags
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
@@ -30,18 +30,18 @@
 			</div>
 			<div class="flex items-center">
 				<p class="text-xs">Choose Chart</p>
-				<PlotDropdown />
+				<ChartDropdown />
 			</div>
-			<div class="flex items-center">
+			<div class="flex items-center space-x-1">
 				<p class="text-xs">Axis</p>
 				<AxisDropDrown axis={'X'} />
 				<AxisDropDrown axis={'Y'} />
 			</div>
-			<div class="flex items-center">
+			<div class="flex items-center space-x-1">
 				<p class="text-xs">Aggregator</p>
 				<Aggregator />
 			</div>
-			<div class="flex items-center">
+			<div class="flex items-center space-x-1">
 				<p class="text-xs">Groupby</p>
 				<Groupby />
 			</div>
