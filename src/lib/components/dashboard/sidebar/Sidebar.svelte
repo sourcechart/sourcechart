@@ -20,32 +20,31 @@
 <div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
 		<div class="space-y-3">
-			<div class="flex items-center space-x-1">
-				<p class="text-xs">FileUpload</p>
+			<div class="flex items-center">
 				<FileUpload />
 			</div>
-			<div class="flex items-center space-x-1">
+			<div class="flex flex-col space-y-1 divide-y">
 				<p class="text-xs">Datasets</p>
 				<DatasetDropDown />
 			</div>
-			<div class="flex items-center">
+			<div class="flex flex-col space-y-1">
 				<p class="text-xs">Choose Chart</p>
 				<ChartDropdown />
 			</div>
-			<div class="flex items-center space-x-1">
+			<div class="flex flex-col space-y-1">
 				<p class="text-xs">Axis</p>
 				<AxisDropDrown axis={'X'} />
 				<AxisDropDrown axis={'Y'} />
 			</div>
-			<div class="flex items-center space-x-1">
+			<div class="flex flex-col space-y-1">
 				<p class="text-xs">Aggregator</p>
 				<Aggregator />
 			</div>
-			<div class="flex items-center space-x-1">
+			<div class="flex flex-col space-y-1">
 				<p class="text-xs">Groupby</p>
 				<Groupby />
+				<Tags />
 			</div>
-			<Tags />
 		</div>
 	</SidebarWrapper>
 </div>

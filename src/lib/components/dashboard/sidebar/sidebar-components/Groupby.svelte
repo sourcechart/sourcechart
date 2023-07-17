@@ -46,9 +46,7 @@
 	};
 </script>
 
-<div class="flex">
-	<Button color="alternative" pill={false} outline={false}>Group By Column</Button>
-</div>
+<Button color="alternative" pill={false} outline={false}>Group By Column</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => addColumnToGroupBy(column)}>{column}</DropdownItem>
