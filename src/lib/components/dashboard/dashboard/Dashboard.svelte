@@ -6,11 +6,9 @@
 </script>
 
 <!-- Center this on the screen-->
-<div class="flex justify-center mt-3 z-30">
-	<div class="flex-row">
-		<DarkMode />
-		<NavBar />
-	</div>
+<div class="flex justify-center items-center mt-3 z-30">
+	<DarkMode />
+	<NavBar />
 </div>
 <div class="fixed z-30">
 	<Sidebar />

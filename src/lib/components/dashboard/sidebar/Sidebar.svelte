@@ -20,10 +20,11 @@
 <div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
 		<div class="space-y-3">
-			<div class="flex items-center">
+			<div class="flex flex-col space-y-1">
+				<p class="text-xs">Upload Files</p>
 				<FileUpload />
 			</div>
-			<div class="flex flex-col space-y-1 divide-y">
+			<div class="flex flex-col space-y-1">
 				<p class="text-xs">Datasets</p>
 				<DatasetDropDown />
 			</div>
