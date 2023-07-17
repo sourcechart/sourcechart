@@ -10,7 +10,7 @@
 		PiePlotButton
 	} from './chart-components';
 
-	let chosenPlot: string = 'Choose Chart Type';
+	let chosenPlot: string = 'Chart Type';
 
 	let rectangleCharts = [
 		{

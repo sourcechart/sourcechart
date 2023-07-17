@@ -5,7 +5,8 @@
 		Aggregator,
 		Groupby,
 		FileUpload,
-		PlotDropdown
+		ChartDropdown,
+		Tags
 	} from './sidebar-components';
 	import { SidebarWrapper } from '$lib/components/ui';
 	import { clickInside } from '$lib/actions/MouseActions';
@@ -19,32 +20,32 @@
 <div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
 		<div class="space-y-3">
-			<div class="text-xs space-y-1">
-				<p>FileUpload</p>
+			<div class="flex flex-col space-y-1">
+				<p class="text-xs">Upload Files</p>
+				<FileUpload />
 			</div>
-			<FileUpload />
-			<div class="text-xs space-y-1">
-				<p>Datasets</p>
+			<div class="flex flex-col space-y-1">
+				<p class="text-xs">Datasets</p>
+				<DatasetDropDown />
 			</div>
-			<DatasetDropDown />
-
-			<div class="text-xs space-y-1">
-				<p>Choose Chart</p>
+			<div class="flex flex-col space-y-1">
+				<p class="text-xs">Choose Chart</p>
+				<ChartDropdown />
 			</div>
-			<PlotDropdown />
-			<div class="text-xs space-y-1">
-				<p>Axis</p>
+			<div class="flex flex-col space-y-1">
+				<p class="text-xs">Axis</p>
+				<AxisDropDrown axis={'X'} />
+				<AxisDropDrown axis={'Y'} />
 			</div>
-			<AxisDropDrown axis={'X'} />
-			<AxisDropDrown axis={'Y'} />
-			<div class="text-xs space-y-1">
-				<p>Aggregator</p>
+			<div class="flex flex-col space-y-1">
+				<p class="text-xs">Aggregator</p>
+				<Aggregator />
 			</div>
-			<Aggregator />
-			<div class="text-xs space-y-1">
-				<p>Groupby</p>
+			<div class="flex flex-col space-y-1">
+				<p class="text-xs">Groupby</p>
+				<Groupby />
+				<Tags />
 			</div>
-			<Groupby />
 		</div>
 	</SidebarWrapper>
 </div>

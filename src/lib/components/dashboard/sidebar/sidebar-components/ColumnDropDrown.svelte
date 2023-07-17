@@ -4,7 +4,7 @@
 
 	export let axis = '';
 
-	let selectedColumn: string | null = `Choose ${axis} Axis`;
+	let selectedColumn: string | null = `${axis} Axis`;
 
 	let tags: Array<string | null> = [];
 
@@ -17,10 +17,10 @@
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
 		if (axis.toUpperCase() === 'X') {
-			selectedColumn = $allCharts[$i]?.xColumn ? $allCharts[$i].xColumn : `Choose ${axis} Axis`;
+			selectedColumn = $allCharts[$i]?.xColumn ? $allCharts[$i].xColumn : `${axis} Axis`;
 			tags = $allCharts[$i]?.xColumn ? [$allCharts[$i].xColumn] : [];
 		} else if (axis.toUpperCase() === 'Y') {
-			selectedColumn = $allCharts[$i]?.yColumn ? $allCharts[$i].yColumn : `Choose ${axis} Axis`;
+			selectedColumn = $allCharts[$i]?.yColumn ? $allCharts[$i].yColumn : `${axis} Axis`;
 			tags = $allCharts[$i]?.yColumn ? [$allCharts[$i].yColumn] : [];
 		}
 	}

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
-	import { Tags } from '$lib/components/ui/tags';
 
 	import {
 		getColumnsFromFile,
@@ -45,21 +44,11 @@
 		}
 		return tags;
 	};
-
-	const removeItem = (item: string) => {
-		tags = tags.filter((tag) => tag !== item);
-		let chart = $allCharts[$i];
-		chart.groupbyColumns = tags;
-		$allCharts[$i] = chart;
-	};
 </script>
 
-<div class="flex">
-	<Button color="alternative" pill={false} outline={false}>Group By Column</Button>
-</div>
+<Button color="alternative" pill={false} outline={false}>Group By Column</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => addColumnToGroupBy(column)}>{column}</DropdownItem>
 	{/each}
 </Dropdown>
-<Tags items={tags} {removeItem} />

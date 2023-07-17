@@ -19,6 +19,8 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
+	let scrollX: number = 0;
+	let scrollY: number = 0;
 	let width: number = 0;
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
@@ -41,14 +43,18 @@
 	$: TOUCHSTATE = touchStates();
 	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
 
+	const updateOffset = () => {
+		const rect = canvas.getBoundingClientRect();
+		offsetX = rect.left;
+		offsetY = Math.abs(rect.top - height);
+	};
+
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
 			width = window.innerWidth;
 			height = window.innerHeight;
-			const rect = canvas.getBoundingClientRect();
-			offsetX = rect.left;
-			offsetY = Math.abs(rect.top - height);
+			updateOffset();
 		});
 	}
 
@@ -71,8 +77,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchStart = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
 		startPosition = { x, y };
 
 		mouseEventState.set('isTouching');
@@ -98,8 +104,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchMove = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
 
 		switch ($TOUCHSTATE) {
 			case 'isDrawing':
@@ -130,8 +136,9 @@
 	 * @param y y position on the screen
 	 */
 	const handleTouchEnd = (x: number, y: number) => {
-		x = x - offsetX;
-		y = y - offsetY;
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
+
 		if ($TOUCHSTATE === 'isDrawing') {
 			let targetId = generateID();
 			const polygon = {
@@ -211,8 +218,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleMouseMove = (x: number, y: number): void => {
-		x = x - offsetX;
-		y = y - offsetY;
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 
@@ -275,6 +282,12 @@
 		if (typeof window !== undefined) {
 			width = window.innerWidth;
 			height = window.innerHeight;
+		}
+	}}
+	on:scroll={() => {
+		if (typeof window !== undefined) {
+			scrollY = window.scrollY;
+			scrollX = window.scrollX;
 		}
 	}}
 />

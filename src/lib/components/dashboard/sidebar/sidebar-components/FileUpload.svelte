@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Fileupload, Label, Listgroup } from 'flowbite-svelte';
+	import { Fileupload, Listgroup } from 'flowbite-svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBCLI';
 	import { generateID } from '$lib/io/GenerateID';
 	import { fileUploadStore } from '$lib/io/Stores';
@@ -36,6 +36,5 @@
 	};
 </script>
 
-<Label class="pb-2" for="multiple_files">Upload multiple files</Label>
 <Fileupload id="multiple_files" multiple on:change={uploadFiles} />
 <Listgroup {files} class="mt-2" />
