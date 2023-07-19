@@ -14,8 +14,10 @@
 <div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
 		<Tabs style="underline" defaultClass="" contentClass="">
-			<TabItem open>
-				<LowCodeSidebarTab />
+			<TabItem open title="Lowcode">
+				<div class="space-y-3">
+					<LowCodeSidebarTab />
+				</div>
 			</TabItem>
 		</Tabs>
 	</SidebarWrapper>
