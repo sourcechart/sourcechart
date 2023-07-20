@@ -12,10 +12,6 @@
 
 <div class="space-y-3 mt-3">
 	<div class="flex flex-col space-y-1">
-		<p class="text-xs">Upload Files</p>
-		<FileUpload />
-	</div>
-	<div class="flex flex-col space-y-1">
 		<p class="text-xs">Datasets</p>
 		<DatasetDropDown />
 	</div>
