@@ -46,6 +46,7 @@
 	"type": "module",
 	"dependencies": {
 		"@vercel/analytics": "^1.0.1",
-		"kd-tree-javascript": "^1.0.3"
+		"kd-tree-javascript": "^1.0.3",
+		"ml-distance": "^4.0.1"
 	}
 }

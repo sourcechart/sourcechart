@@ -6,7 +6,7 @@ import {
 	labelClusters
 } from './clusterTree';
 import kdTreePrim from './kdTreePrim';
-import { euclidean } from './metrics';
+import { euclidean, gower } from './metrics';
 import type { DebugInfo, MetricFunction, HdbscanInput } from './types';
 
 export class Hdbscan {
