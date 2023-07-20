@@ -1,4 +1,4 @@
-//import { SingleLinkage } from './types';
+import type { SingleLinkage } from './types';
 import { bfsFromClusterTree, traverseUpwards } from './traversals';
 
 export function epsilonSearch(

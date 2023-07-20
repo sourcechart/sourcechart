@@ -1,7 +1,7 @@
 import { kdTreeCoreDistance } from './coreDistance';
 import { buildMstUsingPrim } from './prim';
 import { buildSingleLinkage } from './linkage';
-//import type { MetricFunction } from './types';
+import type { MetricFunction } from './types';
 
 export default function kdTreePrim(
 	input: Array<Array<number>>,

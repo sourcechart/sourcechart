@@ -1,5 +1,6 @@
+//@ts-expect-error
 import { kdTree } from 'kd-tree-javascript';
-//import { MetricFunction } from './types';
+import type { MetricFunction } from './types';
 
 export function kdTreeCoreDistance(
 	input: Array<Array<number>>,

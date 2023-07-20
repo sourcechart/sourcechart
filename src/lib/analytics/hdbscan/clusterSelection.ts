@@ -1,6 +1,6 @@
 import { bfsFromClusterTree, recurseLeafDFS } from './traversals';
 import { epsilonSearch } from './epsilonSearch';
-//import { StabilityDict, SingleLinkage } from './types';
+import type { StabilityDict, SingleLinkage } from './types';
 
 export function selectClustersUsingEOM(
 	clusterTree: SingleLinkage,
