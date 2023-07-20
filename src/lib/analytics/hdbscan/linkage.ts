@@ -1,5 +1,5 @@
 import { sortMst } from './mst';
-import { HierarchyNode, MST, SingleLinkage } from './types';
+//import { HierarchyNode, MST, SingleLinkage } from './types';
 import { UnionFind } from './unionFind';
 
 function createSingleLinkage(sortedMst: MST) {

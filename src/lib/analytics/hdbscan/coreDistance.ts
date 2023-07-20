@@ -1,5 +1,5 @@
 import { kdTree } from 'kd-tree-javascript';
-import { MetricFunction } from './types';
+//import { MetricFunction } from './types';
 
 export function kdTreeCoreDistance(
 	input: Array<Array<number>>,

@@ -1,4 +1,4 @@
-import { SingleLinkage } from './types';
+import type { SingleLinkage } from './types';
 
 export function bfsFromHierarchy(hierarchy: SingleLinkage, root: number) {
 	const dim = hierarchy.length;

@@ -1,4 +1,4 @@
-import { MetricFunction, HierarchyNode, MST } from './types';
+//import { MetricFunction, HierarchyNode, MST } from './types';
 
 export function buildMstUsingPrim(
 	input: Array<Array<number>>,

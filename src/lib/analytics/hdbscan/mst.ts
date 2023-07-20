@@ -1,4 +1,4 @@
-import { MST, TreeNode } from './types';
+//import { MST, TreeNode } from './types';
 
 export function sortMst(mst: MST) {
 	return mst.sort((a, b) => a.lambda - b.lambda);

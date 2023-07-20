@@ -1,6 +1,7 @@
 import { bfsFromHierarchy } from './traversals';
 import { selectClustersUsingEOM, selectClustersUsingLEAF } from './clusterSelection';
-import { HierarchyNode, SingleLinkage, StabilityDict } from './types';
+import { HierarchyNode } from './types';
+import type { SingleLinkage, StabilityDict } from './types';
 import { TreeUnionFind } from './unionFind';
 
 export function condenseTree(hierarchy: SingleLinkage, minClusterSize: number) {

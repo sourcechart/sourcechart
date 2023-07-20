@@ -7,8 +7,7 @@ import {
 } from './clusterTree';
 import kdTreePrim from './kdTreePrim';
 import { euclidean } from './metrics';
-import { DebugInfo, MetricFunction, HdbscanInput } from './types';
-import { mstToBinaryTree } from './mst';
+import type { DebugInfo, MetricFunction, HdbscanInput } from './types';
 
 export class Hdbscan {
 	private input: Array<Array<number>>;
