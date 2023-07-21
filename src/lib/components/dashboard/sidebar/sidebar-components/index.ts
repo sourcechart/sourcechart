@@ -5,6 +5,7 @@ import Groupby from './Groupby.svelte';
 import Aggregator from './Aggregator.svelte';
 import FileUpload from './FileUpload.svelte';
 import ChartDropdown from './ChartDropdown.svelte';
+import ChooseIDColumn from './ChooseIDColumn.svelte';
 import Tags from './Tags.svelte';
 
 export {
@@ -15,5 +16,6 @@ export {
 	Groupby,
 	Aggregator,
 	FileUpload,
-	ChartDropdown
+	ChartDropdown,
+	ChooseIDColumn
 };

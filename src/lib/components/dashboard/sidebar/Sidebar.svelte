@@ -1,5 +1,6 @@
 <script lang="ts">
 	import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
+	import WorkFlowSidebar from './WorkFlowSidebar.svelte';
 	import FileUpload from './sidebar-components/FileUpload.svelte';
 	import { SidebarWrapper } from '$lib/components/ui';
 	import { Tabs, TabItem } from 'flowbite-svelte';
@@ -22,7 +23,9 @@
 			<TabItem open title="LowCode">
 				<LowCodeSidebarTab />
 			</TabItem>
-			<TabItem title="Work Flows">Workflow</TabItem>
+			<TabItem title="Work Flows">
+				<WorkFlowSidebar />
+			</TabItem>
 		</Tabs>
 	</SidebarWrapper>
 </div>

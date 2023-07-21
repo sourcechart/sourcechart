@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { DatasetDropDown, ColumnDropDrown, Groupby, Tags } from './sidebar-components';
+	import { DatasetDropDown, ChooseIDColumn, Tags } from './sidebar-components';
 </script>
 
 <div class="space-y-3 mt-3">
@@ -8,11 +8,10 @@
 		<DatasetDropDown />
 	</div>
 	<div class="flex flex-col space-y-1">
-		<ColumnDropDrown axis={'X'} />
+		<ChooseIDColumn />
 	</div>
 	<div class="flex flex-col space-y-1">
-		<p class="text-xs">Groupby</p>
-		<Groupby />
+		<p class="text-xs">Add Attributes</p>
 		<Tags />
 	</div>
 </div>
