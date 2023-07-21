@@ -1,10 +1,9 @@
 <script lang="ts">
 	import {
 		DatasetDropDown,
-		AxisDropDrown,
+		ColumnDropDrown,
 		Aggregator,
 		Groupby,
-		FileUpload,
 		ChartDropdown,
 		Tags
 	} from './sidebar-components';
@@ -21,8 +20,8 @@
 	</div>
 	<div class="flex flex-col space-y-1">
 		<p class="text-xs">Axis</p>
-		<AxisDropDrown axis={'X'} />
-		<AxisDropDrown axis={'Y'} />
+		<ColumnDropDrown axis={'X'} />
+		<ColumnDropDrown axis={'Y'} />
 	</div>
 	<div class="flex flex-col space-y-1">
 		<p class="text-xs">Aggregator</p>
