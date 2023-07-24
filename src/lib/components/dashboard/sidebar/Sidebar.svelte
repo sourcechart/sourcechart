@@ -5,7 +5,6 @@
 	import { SidebarWrapper } from '$lib/components/ui';
 	import { Tabs, TabItem } from 'flowbite-svelte';
 	import { DatasetDropDown } from './sidebar-components';
-
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores';
 
