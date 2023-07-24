@@ -1,4 +1,3 @@
-//@ts-expect-error
 import { kdTree } from 'kd-tree-javascript';
 import type { MetricFunction } from './types';
 

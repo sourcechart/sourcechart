@@ -28,7 +28,7 @@ export class Hdbscan {
 		clusterSelectionEpsilon = 0.0,
 		clusterSelectionMethod = 'eom',
 		alpha = 1.0,
-		metric = euclidean,
+		metric = gower,
 		debug = false
 	}: HdbscanInput) {
 		this.input = input;

@@ -1,6 +1,7 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
 import { Query } from '$lib/io/QueryBuilder';
+import * as clustering from 'density-clustering';
 import type { DuckDBClient } from './DuckDBCLI';
 
 export const globalMouseState = writable<boolean>(false);
@@ -264,7 +265,10 @@ export const HDBScanWorkflow = () =>
 					const db: DuckDBClient = dataset.database;
 					let results = await getDataResults(db, queryString);
 					let multidimensialArray = results.map((obj: any) => Object.values(obj));
-					console.log(multidimensialArray);
+
+					const dbscan = new clustering.DBSCAN();
+					var clusters = dbscan.run(multidimensialArray, 2, 2);
+					console.log(clusters);
 				}
 			}
 		}
