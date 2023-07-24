@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { Modal } from 'flowbite-svelte';
-	import { Carousel } from 'flowbite-svelte';
 	import { timesVisitedDashboard } from '$lib/io/Stores';
 
 	var visits = $timesVisitedDashboard;

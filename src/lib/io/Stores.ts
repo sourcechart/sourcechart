@@ -18,6 +18,7 @@ export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
 export const polygons = writable<Polygon[]>([]);
 export const mouseType = writable<string | null>();
+export const workflowIDColumn = writable<string | null>();
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -204,3 +205,20 @@ export const touchStates = () => {
 		}
 	);
 };
+
+export const HDBScanWorkflow = () =>
+	derived(
+		[allCharts, mostRecentChartID, workflowIDColumn],
+		([$allCharts, $mostRecentChartID, $workflowIDColumn]) => {
+			if ($allCharts.length > 0) {
+				const dataset = $allCharts.find(
+					(item: { chartID: string }) => item.chartID === $mostRecentChartID
+				);
+
+				return {
+					id: $workflowIDColumn ? $workflowIDColumn : '',
+					attributes: dataset.groupbyColumns
+				};
+			}
+		}
+	);
