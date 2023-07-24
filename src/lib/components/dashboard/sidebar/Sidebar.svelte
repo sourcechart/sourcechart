@@ -4,6 +4,7 @@
 	import FileUpload from './sidebar-components/FileUpload.svelte';
 	import { SidebarWrapper } from '$lib/components/ui';
 	import { Tabs, TabItem } from 'flowbite-svelte';
+	import { DatasetDropDown } from './sidebar-components';
 
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores';
@@ -18,6 +19,10 @@
 		<div class="flex flex-col space-y-1">
 			<p class="text-xs">Upload Files</p>
 			<FileUpload />
+		</div>
+		<div class="flex flex-col space-y-1">
+			<p class="text-xs">Choose Dataset</p>
+			<DatasetDropDown />
 		</div>
 		<Tabs style="underline" contentClass="">
 			<TabItem open title="LowCode">
