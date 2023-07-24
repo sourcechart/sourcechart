@@ -207,18 +207,6 @@ export const touchStates = () => {
 	);
 };
 
-const getHDBSCANWorkFlow = (someObject: any) => {
-	return {
-		chartID: someObject.chartID,
-		queries: {
-			select: {
-				clusterColumns: { column: someObject.clusterColumns },
-				from: someObject.filename
-			}
-		}
-	};
-};
-
 export const HDBScanWorkflow = () =>
 	derived(
 		[allCharts, mostRecentChartID, workflowIDColumn],
