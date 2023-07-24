@@ -90,35 +90,35 @@ const getQueryObject = (chart: Chart): QueryObject => {
 	};
 };
 
+const formatData = (res: any) => {
+	const results = JSON.parse(
+		JSON.stringify(
+			res,
+			(key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+		)
+	);
+	return results;
+};
+
+const getDataResults = async (db: DuckDBClient, query: string) => {
+	var results = await db.query(query);
+	return formatData(results);
+};
+
+const getColumn = (column: string | null) => {
+	if (column) {
+		return column.toString();
+	} else {
+		return '';
+	}
+};
+
 export const getChartOptions = (id: string | undefined) => {
 	if (id) {
 		//@ts-ignore
 		return derived([allCharts], async ([$allCharts], set) => {
 			if ($allCharts.length > 0) {
 				const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
-
-				const getColumn = (column: string | null) => {
-					if (column) {
-						return column.toString();
-					} else {
-						return '';
-					}
-				};
-
-				const formatData = (res: any) => {
-					const results = JSON.parse(
-						JSON.stringify(
-							res,
-							(key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
-						)
-					);
-					return results;
-				};
-
-				const getDataResults = async (db: DuckDBClient, query: string) => {
-					var results = await db.query(query);
-					return formatData(results);
-				};
 
 				const updateChart = (results: any[], chart: Chart) => {
 					var xColumn = getColumn(chart.xColumn);
@@ -206,19 +206,66 @@ export const touchStates = () => {
 	);
 };
 
+const getHDBSCANWorkFlow = (someObject: any) => {
+	return {
+		chartID: someObject.chartID,
+		queries: {
+			select: {
+				clusterColumns: { column: someObject.clusterColumns },
+				from: someObject.filename
+			}
+		}
+	};
+};
+
 export const HDBScanWorkflow = () =>
 	derived(
 		[allCharts, mostRecentChartID, workflowIDColumn],
-		([$allCharts, $mostRecentChartID, $workflowIDColumn]) => {
+		async ([$allCharts, $mostRecentChartID, $workflowIDColumn]) => {
 			if ($allCharts.length > 0) {
 				const dataset = $allCharts.find(
 					(item: { chartID: string }) => item.chartID === $mostRecentChartID
 				);
 
-				return {
-					id: $workflowIDColumn ? $workflowIDColumn : '',
-					attributes: dataset.groupbyColumns
+				const getCluster = () => {
+					return {
+						chartID: $mostRecentChartID ? $mostRecentChartID : '',
+						id: $workflowIDColumn ? $workflowIDColumn : '',
+						attributes: dataset.groupbyColumns,
+						filename: dataset.filename
+						//filter: dataset.filter
+					};
 				};
+
+				const checkNameForSpacesandHyphens = (column: string) => {
+					if (!column.match('^[a-zA-Z0-9]+$')) {
+						column = ['"', column, '"'].join('');
+					}
+					return column;
+				};
+
+				const constructQuery = (cluster: any) => {
+					let columns = [...cluster.attributes];
+					for (let i = 0; i < columns.length; i++) {
+						columns[i] = checkNameForSpacesandHyphens(columns[i]);
+					}
+					let query = [
+						'SELECT',
+						columns.join(', '),
+						'FROM',
+						checkNameForSpacesandHyphens(cluster.filename)
+					].join(' ');
+					return query;
+				};
+
+				if (dataset) {
+					let hdbscanQuery = getCluster();
+					let queryString = constructQuery(hdbscanQuery);
+					const db: DuckDBClient = dataset.database;
+					let results = await getDataResults(db, queryString);
+					let multidimensialArray = results.map((obj: any) => Object.values(obj));
+					console.log(multidimensialArray);
+				}
 			}
 		}
 	);
