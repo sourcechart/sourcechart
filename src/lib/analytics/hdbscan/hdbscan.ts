@@ -1,6 +1,5 @@
-//@ts-ignore
-import Mst from './mst'; //@ts-ignore
-import Node from './node';
+import Mst from '$lib/analytics/hdbscan/mst';
+import Node from '$lib/analytics/hdbscan/node';
 
 export default class Hdbscan {
 	data: any[];
@@ -52,8 +51,8 @@ export default class Hdbscan {
 		edges //@ts-ignore
 			.sort((val1, val2) => val1.dist - val2.dist) //@ts-ignore
 			.forEach((val) => {
-				const { edge, dist } = val;
-				const left = nodes[edge[0]].getAncestor();
+				const { edge, dist } = val; //@ts-ignore
+				const left = nodes[edge[0]].getAncestor(); //@ts-ignore
 				const right = nodes[edge[1]].getAncestor();
 				const node = new Node({
 					left,
@@ -61,7 +60,7 @@ export default class Hdbscan {
 					data: left.data.concat(right.data),
 					opt: left.opt.concat(right.opt),
 					dist,
-					parent: null,
+					parent: null, //@ts-ignore
 					edge: [data[edge[0]], data[edge[1]]]
 				});
 

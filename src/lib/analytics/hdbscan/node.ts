@@ -1,7 +1,31 @@
 import Bbox from './bbox';
 
 export default class Node {
-	constructor({ left, right, data, dist, parent, opt, edge }) {
+	left: any;
+	right: any;
+	data: any;
+	dist: any;
+	opt: any;
+	edge: any;
+	bbox: any;
+	parent: any;
+	constructor({
+		left,
+		right,
+		data,
+		dist,
+		parent,
+		opt,
+		edge
+	}: {
+		left: any;
+		right: any;
+		data: any;
+		dist: any;
+		parent: any;
+		opt: any;
+		edge: any;
+	}) {
 		this.left = left;
 		this.right = right;
 
@@ -30,7 +54,7 @@ export default class Node {
 	}
 
 	// filter from top to bottom, if true, terminate and return the node, othervise, test the children
-	filter(filterFunc, bbox = null) {
+	filter(filterFunc: any, bbox = null) {
 		if (bbox !== null && !this.bbox.intersect(bbox)) {
 			return [];
 		}

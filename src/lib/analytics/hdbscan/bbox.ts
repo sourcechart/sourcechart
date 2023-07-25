@@ -3,11 +3,12 @@ export default class Bbox {
 	maxX: number;
 	minY: number;
 	maxY: number;
+	arr: any;
 
 	// a list of points [x, y]
-	constructor(arr) {
-		const xs = arr.map((val) => val[0]);
-		const ys = arr.map((val) => val[1]);
+	constructor(arr: any) {
+		const xs = arr.map((val: any[]) => val[0]);
+		const ys = arr.map((val: any[]) => val[1]);
 		this.minX = Math.min.apply(null, xs);
 		this.maxX = Math.max.apply(null, xs);
 		this.minY = Math.min.apply(null, ys);
@@ -26,7 +27,7 @@ export default class Bbox {
 		return [(this.minX + this.maxX) * 0.5, (this.minY + this.maxY) * 0.5];
 	}
 
-	intersect({ minX, maxX, minY, maxY }) {
+	intersect({ minX, maxX, minY, maxY }: { minX: any; maxX: any; minY: any; maxY: any }) {
 		const bbox = new Bbox([
 			[minX, minY],
 			[maxX, maxY]
