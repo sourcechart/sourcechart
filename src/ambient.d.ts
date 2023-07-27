@@ -5,73 +5,6 @@
  *                          *
  *****************************/
 
-type Chart = {
-	chartShape: string;
-	chartID: string;
-	polygon: Polygon;
-	filename: string | null;
-	aggregator: string | null;
-	datasetID: string | null;
-	columns: Array<string>;
-	groupbyColumns: Array<string>;
-	xColumn: string | null;
-	yColumn: string | null;
-	database: AsyncDuckDB;
-	canvasWidth: number;
-	canvasHeight: number;
-	chartOptions: ChartOptions;
-};
-
-type ChartOptions = {
-	xAxis: {
-		data: Array<number>;
-		type: string;
-	};
-	series: [
-		{
-			data: Array<number>;
-			type: string;
-		}
-	];
-	yAxis: {
-		type: string;
-	};
-};
-
-type SelectBlock = {
-	xColumn: { column: string | null | undefined };
-	yColumn: { column: string | null | undefined; aggregator: string | null | undefined };
-	from: string | undefined | null;
-};
-
-type Queries = {
-	select: SelectBlock;
-	//filters: Array<Condition>;
-	//having: Array<Condition>;
-	groupbyColumns: Array<string | null | undefined> | undefined;
-};
-type Condition = { column: string; filter: string | null | number };
-
-type QueryObject = {
-	chartID: string | null | unknown;
-	queries: Queries;
-};
-
-type fileUpload = {
-	filename: string;
-	columns: Array<null | string>;
-	size: number;
-	datasetID: string;
-	database: AsyncDuckDB;
-};
-
-type Field = {
-	name?: string;
-	type: any;
-	nullable?: boolean;
-	databaseType: string;
-};
-
 /****************************
  *                          *
  *       Canvas Types       *
@@ -95,27 +28,6 @@ type MouseEvents =
 	| 'isErasing';
 type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
-
-interface Rectangle {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-	fill: string;
-	stroke: string;
-	id?: string;
-	draggable: boolean;
-}
-
-interface Point {
-	x: number;
-	y: number;
-}
-interface Polygon {
-	id?: string;
-	vertices: Point[];
-	isSelected?: boolean;
-}
 
 type LookupTable = {
 	[key: string]: Point;

@@ -6,7 +6,7 @@ export default class Hdbscan {
 	opt: any[];
 	distFunc: any;
 
-	constructor(dataset: any[], distFunc: any = Hdbscan.distFunc.euclidean) {
+	constructor(dataset: any[], distFunc: any = Hdbscan.distFunc.gowerDist) {
 		this.data = dataset.map((val) => val.data);
 		this.opt = dataset.map((val) => val.opt);
 		this.distFunc = distFunc;
