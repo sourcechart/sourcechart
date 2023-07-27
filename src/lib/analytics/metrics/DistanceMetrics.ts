@@ -1,4 +1,4 @@
-export function euclideanDistance(p: Point, q: Point): number {
+private euclideanDistance(p: Point, q: Point): number {
 	let sum = 0;
 	let i = Math.min(p.length, q.length);
 
@@ -8,7 +8,7 @@ export function euclideanDistance(p: Point, q: Point): number {
 
 	return Math.sqrt(sum);
 }
-export function gowerDistance(p: (number | string)[], q: (number | string)[]): number {
+private gowerDistance(p: (number | string)[], q: (number | string)[]): number {
 	let sum = 0;
 	let validDimensions = 0;
 
