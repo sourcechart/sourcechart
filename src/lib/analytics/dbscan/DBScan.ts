@@ -45,12 +45,10 @@ export class DBSCAN {
 		return this.clusters;
 	}
 
-	public getLabels(): number[] {
-		const labels = new Array(this._datasetLength).fill(-1);
+	public getLabels(): Record<number, number[][]> {
+		const labels: Record<number, number[][]> = {};
 		this.clusters.forEach((cluster, clusterId) => {
-			cluster.forEach((pointId) => {
-				labels[pointId] = clusterId;
-			});
+			labels[clusterId] = cluster.map((pointId) => this.dataset[pointId]);
 		});
 		return labels;
 	}
