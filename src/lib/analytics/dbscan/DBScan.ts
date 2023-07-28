@@ -105,6 +105,46 @@ export class DBSCAN {
 		}
 	}
 
+	public getClusterCentroids(): number[][] {
+		const centroids: number[][] = [];
+		this.clusters.forEach((cluster) => {
+			const clusterPoints = cluster.map((pointId) => this.dataset[pointId]);
+			const centroid = new Array(clusterPoints[0].length).fill(0);
+			clusterPoints.forEach((point) => {
+				point.forEach((val, index) => {
+					centroid[index] += val;
+				});
+			});
+			centroid.forEach((val, index) => {
+				centroid[index] /= clusterPoints.length;
+			});
+			centroids.push(centroid);
+		});
+		return centroids;
+	}
+
+	public getDistancesFromPointToCentroids(point: number[]): number[] {
+		const centroids = this.getClusterCentroids();
+		const distances = centroids.map((centroid) => this.distance(point, centroid));
+		return distances;
+	}
+
+	public getClosestCentroidToPoint(point: number[]): {
+		closestClusterId: number;
+		minDistance: number;
+	} {
+		const distances = this.getDistancesFromPointToCentroids(point);
+		let minDistance = Infinity;
+		let closestClusterId = -1;
+		distances.forEach((distance, clusterId) => {
+			if (distance < minDistance) {
+				minDistance = distance;
+				closestClusterId = clusterId;
+			}
+		});
+		return { closestClusterId, minDistance };
+	}
+
 	private addToCluster(pointId: number, clusterId: number) {
 		this.clusters[clusterId].push(pointId);
 		this._assigned[pointId] = 1;

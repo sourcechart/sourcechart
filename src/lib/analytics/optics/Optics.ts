@@ -24,7 +24,6 @@ export class OPTICS {
 	}
 
 	public run(): number[][] {
-		//this.init(dataset, epsilon, minPts, distance);
 
 		for (let pointId = 0; pointId < this.dataset.length; pointId++) {
 			if (this.processed[pointId] !== 1) {
