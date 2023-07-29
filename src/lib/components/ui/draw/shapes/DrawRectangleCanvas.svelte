@@ -48,6 +48,8 @@
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
 
+	$: console.log(options);
+
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
 		let vertices: LookupTable = {
 			tl: { x: shrink, y: shrink }, // top-left

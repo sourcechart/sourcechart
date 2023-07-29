@@ -271,15 +271,22 @@ export const HDBScanWorkflow = () => {
 					}
 					return dummyData;
 				}
-				const updateChart = (x: number[], y: number[], chart: Chart) => {
-					chart.chartOptions.xAxis.data = x;
-					chart.chartOptions.series[0].data = y;
+				const updateChart = (embedding: number[][], chart: Chart) => {
+					chart.chartOptions.xAxis = {};
+					chart.chartOptions.yAxis = {};
+					let s = {
+						data: embedding,
+						type: 'scatter',
+						symbolSize: 10
+					};
+
+					chart.chartOptions.series[0] = s;
 					return chart;
 				};
 
 				if (chart) {
 					// create a dataaset that has five columns that are in arrays
-					let exampleData = generateDataset(0, 100, 1000, 5);
+					let exampleData = generateDataset(0, 100, 5000, 5);
 
 					//let hdbscanQuery = getCluster();
 					//let queryString = constructQuery(hdbscanQuery);
@@ -297,12 +304,12 @@ export const HDBScanWorkflow = () => {
 					});
 					const embedding = umap.fit(clusters);
 
-					let x = embedding.map((subArray) => subArray[0]);
-					let y = embedding.map((subArray) => subArray[1]);
+					//let x = embedding.map((subArray) => subArray[0]);
+					//let y = embedding.map((subArray) => subArray[1]);
 
-					const options = updateChart(x, y, chart);
+					const options = updateChart(embedding, chart);
 					set(options);
-
+					console.log(chart);
 					//	console.log(embedding.map((subArray) => subArray[0]));
 				}
 			}
