@@ -3,6 +3,7 @@ import { writable, derived } from 'svelte/store';
 import { Query } from '$lib/io/QueryBuilder';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
 import type { DuckDBClient } from './DuckDBCLI';
+import { UMAP } from 'umap-js';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
@@ -247,16 +248,48 @@ export const HDBScanWorkflow = () =>
 					return query;
 				};
 
-				if (dataset) {
-					let hdbscanQuery = getCluster();
-					let queryString = constructQuery(hdbscanQuery);
-					const db: DuckDBClient = dataset.database;
-					let results = await getDataResults(db, queryString);
-					let multidimensialArray = results.map((obj: any) => Object.values(obj));
+				function generateRandomNumber(min: number, max: number) {
+					return Math.floor(Math.random() * (max - min + 1)) + min;
+				}
 
-					const dbscan = new DBSCAN(multidimensialArray, 2, 0.5);
+				function generateDataset(
+					min: number,
+					max: number,
+					rows: number,
+					dimensions: number
+				): number[][] {
+					var dummyData = [];
+					for (var i = 0; i < rows; i++) {
+						// Change 10 to the number of data points you want
+						var dataPoint = [];
+						for (var j = 0; j < dimensions; j++) {
+							// 6 variables in each data point
+							dataPoint.push(generateRandomNumber(min, max));
+						}
+						dummyData.push(dataPoint);
+					}
+					return dummyData;
+				}
+
+				if (dataset) {
+					// create a dataaset that has five columns that are in arrays
+					let exampleData = generateDataset(0, 100, 1000, 5);
+
+					//let hdbscanQuery = getCluster();
+					//let queryString = constructQuery(hdbscanQuery);
+					//const db: DuckDBClient = dataset.database;
+					//let results = await getDataResults(db, queryString);
+					//let multidimensialArray = results.map((obj: any) => Object.values(obj));
+
+					const dbscan = new DBSCAN(exampleData, 5, 2, 'gower');
 					var clusters = dbscan.run();
-					console.log(clusters, dbscan.getLabels());
+					const umap = new UMAP({
+						nComponents: 2,
+						nEpochs: 1,
+						nNeighbors: 20
+					});
+					const embedding = umap.fit(clusters);
+					console.log(embedding);
 				}
 			}
 		}

@@ -1,5 +1,7 @@
 type DistanceFunction = (a: number[], b: number[]) => number;
 
+type Mixed = number | string;
+type Point = number[];
 export class DBSCAN {
 	private dataset: number[][] = [];
 	private epsilon: number = 1;
@@ -13,12 +15,15 @@ export class DBSCAN {
 	private _assigned: number[] = [];
 	private _datasetLength: number = 0;
 
-	constructor(
-		dataset?: number[][],
-		epsilon?: number,
-		minPts?: number,
-		distanceFunction?: DistanceFunction
-	) {
+	constructor(dataset?: number[][], epsilon?: number, minPts?: number, distanceMetric?: string) {
+		let distanceFunction: DistanceFunction;
+		if (distanceMetric === 'euclidean') {
+			distanceFunction = this.euclideanDistance;
+		} else if (distanceMetric === 'gower') {
+			distanceFunction = this.gowerDistance;
+		} else {
+			return;
+		}
 		this.init(dataset, epsilon, minPts, distanceFunction);
 	}
 

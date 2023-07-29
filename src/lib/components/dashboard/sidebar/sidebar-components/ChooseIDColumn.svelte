@@ -4,8 +4,8 @@
 
 	$: columns = getColumnsFromFile();
 	$: workflow = HDBScanWorkflow();
+	$: $workflow;
 
-	$: console.log($workflow);
 	let idColumn: string | null = 'ID Column';
 
 	const chooseIDColumn = (column: string | null) => {
