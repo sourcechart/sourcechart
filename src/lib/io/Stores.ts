@@ -2,9 +2,10 @@
 import { writable, derived } from 'svelte/store';
 import { Query } from '$lib/io/QueryBuilder';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
-import type { DuckDBClient } from './DuckDBCLI';
 import { UMAP } from 'umap-js';
-import type { AsyncDuckDB } from '@duckdb/duckdb-wasm';
+import { ChartDataWorkFlow } from './ChartDataWorkFlows';
+import { generateDataset } from './GenerateDataset';
+import type { DuckDBClient } from './DuckDBCLI';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
@@ -108,30 +109,12 @@ const getDataResults = async (db: DuckDBClient, query: string) => {
 	return formatData(results);
 };
 
-const getColumn = (column: string | null) => {
-	if (column) {
-		return column.toString();
-	} else {
-		return '';
-	}
-};
-
 export const getChartOptions = (id: string | undefined) => {
 	if (id) {
 		//@ts-ignore
 		return derived([allCharts], async ([$allCharts], set) => {
 			if ($allCharts.length > 0) {
 				const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
-
-				const updateChart = (results: any[], chart: Chart) => {
-					var xColumn = getColumn(chart.xColumn);
-					var yColumn = getColumn(chart.yColumn);
-					var x = results.map((item) => item[xColumn]);
-					var y = results.map((item) => item[yColumn]);
-					chart.chartOptions.xAxis.data = x;
-					chart.chartOptions.series[0].data = y;
-					return chart;
-				};
 
 				if (chart) {
 					let queryObject = getQueryObject(chart);
@@ -140,8 +123,9 @@ export const getChartOptions = (id: string | undefined) => {
 					if (chart.database && chart.xColumn && chart.yColumn) {
 						const db: DuckDBClient = chart.database;
 						let results = await getDataResults(db, queryString);
-						let options = updateChart(results, chart);
-						set(options); // Update the derived store with the updated chart options
+						const newChart = new ChartDataWorkFlow();
+						let options = newChart.updateBasicChart(results, chart);
+						set(options);
 					}
 				}
 			} else {
@@ -150,20 +134,6 @@ export const getChartOptions = (id: string | undefined) => {
 		});
 	}
 };
-
-enum WorkFlowType {
-	Basic,
-	Cluster
-}
-class ChartDataWorkFlow {
-	constructor(db: AsyncDuckDB, workflow: WorkFlowType) {}
-
-	public getClusterWorkFlow() {}
-
-	public getBasicDataResults() {}
-
-	private updateChart() {}
-}
 
 export const fileDropdown = () => {
 	return derived(fileUploadStore, ($fileUploadStore) => {
@@ -262,19 +232,6 @@ export const HDBScanWorkflow = () => {
 						checkNameForSpacesandHyphens(cluster.filename)
 					].join(' ');
 					return query;
-				};
-
-				const updateChart = (embedding: number[][], chart: Chart) => {
-					chart.chartOptions.xAxis = {};
-					chart.chartOptions.yAxis = {};
-					let s = {
-						data: embedding,
-						type: 'scatter',
-						symbolSize: 10
-					};
-
-					chart.chartOptions.series[0] = s;
-					return chart;
 				};
 
 				if (chart) {
