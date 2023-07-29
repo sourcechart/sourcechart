@@ -8,6 +8,7 @@
 type Chart = {
 	chartShape: string;
 	chartID: string;
+	workflow: string | null;
 	polygon: Polygon;
 	filename: string | null;
 	aggregator: string | null;

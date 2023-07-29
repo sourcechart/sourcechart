@@ -1,7 +1,6 @@
 type DistanceFunction = (a: number[], b: number[]) => number;
-
-type Mixed = number | string;
 type Point = number[];
+
 export class DBSCAN {
 	private dataset: number[][] = [];
 	private epsilon: number = 1;

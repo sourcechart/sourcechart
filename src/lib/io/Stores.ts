@@ -4,6 +4,7 @@ import { Query } from '$lib/io/QueryBuilder';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
 import type { DuckDBClient } from './DuckDBCLI';
 import { UMAP } from 'umap-js';
+import type { AsyncDuckDB } from '@duckdb/duckdb-wasm';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
@@ -149,6 +150,21 @@ export const getChartOptions = (id: string | undefined) => {
 		});
 	}
 };
+
+enum WorkFlowType {
+	Basic,
+	Cluster
+}
+class ChartDataWorkFlow {
+	constructor(db: AsyncDuckDB, workflow: WorkFlowType) {}
+
+	public getClusterWorkFlow() {}
+
+	public getBasicDataResults() {}
+
+	private updateChart() {}
+}
+
 export const fileDropdown = () => {
 	return derived(fileUploadStore, ($fileUploadStore) => {
 		const files = $fileUploadStore.map((item: { filename: string }) => item.filename);
@@ -224,7 +240,6 @@ export const HDBScanWorkflow = () => {
 							id: $workflowIDColumn ? $workflowIDColumn : '',
 							attributes: chart.groupbyColumns,
 							filename: chart.filename
-							//filter: dataset.filter
 						};
 				};
 
@@ -249,28 +264,6 @@ export const HDBScanWorkflow = () => {
 					return query;
 				};
 
-				function generateRandomNumber(min: number, max: number) {
-					return Math.floor(Math.random() * (max - min + 1)) + min;
-				}
-
-				function generateDataset(
-					min: number,
-					max: number,
-					rows: number,
-					dimensions: number
-				): number[][] {
-					var dummyData = [];
-					for (var i = 0; i < rows; i++) {
-						// Change 10 to the number of data points you want
-						var dataPoint = [];
-						for (var j = 0; j < dimensions; j++) {
-							// 6 variables in each data point
-							dataPoint.push(generateRandomNumber(min, max));
-						}
-						dummyData.push(dataPoint);
-					}
-					return dummyData;
-				}
 				const updateChart = (embedding: number[][], chart: Chart) => {
 					chart.chartOptions.xAxis = {};
 					chart.chartOptions.yAxis = {};

@@ -8,6 +8,7 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 		aggregator: null,
 		datasetID: null,
 		columns: [],
+		workflow: null,
 		groupbyColumns: [],
 		xColumn: null,
 		polygon: polygon,
