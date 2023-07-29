@@ -273,22 +273,25 @@ export const HDBScanWorkflow = () =>
 
 				if (dataset) {
 					// create a dataaset that has five columns that are in arrays
-					let exampleData = generateDataset(0, 100, 1000, 5);
+					//let exampleData = generateDataset(0, 100, 1000, 5);
 
-					//let hdbscanQuery = getCluster();
-					//let queryString = constructQuery(hdbscanQuery);
-					//const db: DuckDBClient = dataset.database;
-					//let results = await getDataResults(db, queryString);
-					//let multidimensialArray = results.map((obj: any) => Object.values(obj));
+					let hdbscanQuery = getCluster();
+					let queryString = constructQuery(hdbscanQuery);
+					const db: DuckDBClient = dataset.database;
+					let results = await getDataResults(db, queryString);
+					let multidimensialArray = results.map((obj: any) => Object.values(obj));
 
-					const dbscan = new DBSCAN(exampleData, 5, 2, 'gower');
+					const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'euclidean');
 					var clusters = dbscan.run();
+
 					const umap = new UMAP({
 						nComponents: 2,
 						nEpochs: 1,
 						nNeighbors: 20
 					});
 					const embedding = umap.fit(clusters);
+					console.log(clusters);
+
 					console.log(embedding);
 				}
 			}
