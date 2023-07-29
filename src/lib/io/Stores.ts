@@ -208,23 +208,24 @@ export const touchStates = () => {
 	);
 };
 
-export const HDBScanWorkflow = () =>
-	derived(
-		[allCharts, mostRecentChartID, workflowIDColumn],
-		async ([$allCharts, $mostRecentChartID, $workflowIDColumn]) => {
+export const HDBScanWorkflow = () => {
+	return derived(
+		[allCharts, mostRecentChartID, workflowIDColumn], //@ts-ignore
+		async ([$allCharts, $mostRecentChartID, $workflowIDColumn], set) => {
 			if ($allCharts.length > 0) {
-				const dataset = $allCharts.find(
+				const chart = $allCharts.find(
 					(item: { chartID: string }) => item.chartID === $mostRecentChartID
 				);
 
 				const getCluster = () => {
-					return {
-						chartID: $mostRecentChartID ? $mostRecentChartID : '',
-						id: $workflowIDColumn ? $workflowIDColumn : '',
-						attributes: dataset.groupbyColumns,
-						filename: dataset.filename
-						//filter: dataset.filter
-					};
+					if (chart)
+						return {
+							chartID: $mostRecentChartID ? $mostRecentChartID : '',
+							id: $workflowIDColumn ? $workflowIDColumn : '',
+							attributes: chart.groupbyColumns,
+							filename: chart.filename
+							//filter: dataset.filter
+						};
 				};
 
 				const checkNameForSpacesandHyphens = (column: string) => {
@@ -270,30 +271,41 @@ export const HDBScanWorkflow = () =>
 					}
 					return dummyData;
 				}
+				const updateChart = (x: number[], y: number[], chart: Chart) => {
+					chart.chartOptions.xAxis.data = x;
+					chart.chartOptions.series[0].data = y;
+					return chart;
+				};
 
-				if (dataset) {
+				if (chart) {
 					// create a dataaset that has five columns that are in arrays
-					//let exampleData = generateDataset(0, 100, 1000, 5);
+					let exampleData = generateDataset(0, 100, 1000, 5);
 
-					let hdbscanQuery = getCluster();
-					let queryString = constructQuery(hdbscanQuery);
-					const db: DuckDBClient = dataset.database;
-					let results = await getDataResults(db, queryString);
-					let multidimensialArray = results.map((obj: any) => Object.values(obj));
+					//let hdbscanQuery = getCluster();
+					//let queryString = constructQuery(hdbscanQuery);
+					//const db: DuckDBClient = dataset.database;
+					//let results = await getDataResults(db, queryString);
+					//let multidimensialArray = results.map((obj: any) => Object.values(obj));
 
-					const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'euclidean');
+					const dbscan = new DBSCAN(exampleData, 5, 2, 'euclidean');
 					var clusters = dbscan.run();
 
 					const umap = new UMAP({
 						nComponents: 2,
 						nEpochs: 1,
-						nNeighbors: 20
+						nNeighbors: 2
 					});
 					const embedding = umap.fit(clusters);
-					console.log(clusters);
 
-					console.log(embedding);
+					let x = embedding.map((subArray) => subArray[0]);
+					let y = embedding.map((subArray) => subArray[1]);
+
+					const options = updateChart(x, y, chart);
+					set(options);
+
+					//	console.log(embedding.map((subArray) => subArray[0]));
 				}
 			}
 		}
 	);
+};

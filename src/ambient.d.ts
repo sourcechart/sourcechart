@@ -5,6 +5,73 @@
  *                          *
  *****************************/
 
+type Chart = {
+	chartShape: string;
+	chartID: string;
+	polygon: Polygon;
+	filename: string | null;
+	aggregator: string | null;
+	datasetID: string | null;
+	columns: Array<string>;
+	groupbyColumns: Array<string>;
+	xColumn: string | null;
+	yColumn: string | null;
+	database: AsyncDuckDB;
+	canvasWidth: number;
+	canvasHeight: number;
+	chartOptions: ChartOptions;
+};
+
+type ChartOptions = {
+	xAxis: {
+		data: Array<number>;
+		type: string;
+	};
+	series: [
+		{
+			data: Array<number>;
+			type: string;
+		}
+	];
+	yAxis: {
+		type: string;
+	};
+};
+
+type SelectBlock = {
+	xColumn: { column: string | null | undefined };
+	yColumn: { column: string | null | undefined; aggregator: string | null | undefined };
+	from: string | undefined | null;
+};
+
+type Queries = {
+	select: SelectBlock;
+	//filters: Array<Condition>;
+	//having: Array<Condition>;
+	groupbyColumns: Array<string | null | undefined> | undefined;
+};
+type Condition = { column: string; filter: string | null | number };
+
+type QueryObject = {
+	chartID: string | null | unknown;
+	queries: Queries;
+};
+
+type fileUpload = {
+	filename: string;
+	columns: Array<null | string>;
+	size: number;
+	datasetID: string;
+	database: AsyncDuckDB;
+};
+
+type Field = {
+	name?: string;
+	type: any;
+	nullable?: boolean;
+	databaseType: string;
+};
+
 /****************************
  *                          *
  *       Canvas Types       *
@@ -29,94 +96,33 @@ type MouseEvents =
 type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
 
+interface Rectangle {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+	fill: string;
+	stroke: string;
+	id?: string;
+	draggable: boolean;
+}
+
+interface Point {
+	x: number;
+	y: number;
+}
+interface Polygon {
+	id?: string;
+	vertices: Point[];
+	isSelected?: boolean;
+}
+
 type LookupTable = {
 	[key: string]: Point;
 };
 interface MouseEventExtended extends MouseEvent {
 	offsetX: number;
 	offsetY: number;
-}
-
-/***************************
- *                         *
- *       HDBSCAN TYPES     *
- *                         *
- ***************************/
-
-export type MetricFunction = (a: Array<number>, b: Array<number>) => number;
-
-export class HierarchyNode {
-	public parent: number;
-	public child: number;
-	public lambda: number;
-	public size: number;
-
-	constructor(parent: number, child: number, lambda: number, size: number) {
-		this.parent = parent;
-		this.child = child;
-		this.lambda = lambda;
-		this.size = size;
-	}
-}
-
-export type MST = Array<HierarchyNode>;
-
-export type SingleLinkage = Array<HierarchyNode>;
-
-export type MSTAlgorithm = (
-	input: Array<Array<number>>,
-	minSamples: number,
-	alpha: number,
-	metric: MetricFunction
-) => SingleLinkage;
-
-export type StabilityDict = Map<number, number>;
-
-export interface HdbscanInput {
-	input: Array<Array<number>>;
-	minClusterSize?: number;
-	minSamples?: number;
-	clusterSelectionEpsilon?: number;
-	clusterSelectionMethod?: string;
-	alpha?: number;
-	metric?: MetricFunction;
-	debug?: boolean;
-}
-
-export class DebugInfo {
-	public coreDistances?: Array<number>;
-	public mst?: MST;
-	public sortedMst?: MST;
-	public singleLinkage?: SingleLinkage;
-	public bfsNodes?: Array<number>;
-	public condensedTree?: SingleLinkage;
-	public clusterNodes?: Array<number>;
-	public clusterNodesMap?: Map<number, number>;
-	public revClusterNodesMap?: Map<number, number>;
-	public clusterTree?: SingleLinkage;
-	public labeledInputs?: Array<number>;
-	public clusters?: Array<Array<number>>;
-	public noise?: Array<number>;
-
-	constructor() {}
-}
-
-export class TreeNode<T> {
-	public left?: TreeNode<T>;
-	public right?: TreeNode<T>;
-	public data: T;
-	public parent?: TreeNode<T>;
-
-	constructor(data: T) {
-		this.data = data;
-	}
-
-	public getAncestor(): TreeNode<T> {
-		if (!this.parent) {
-			return this;
-		}
-		return this.parent.getAncestor();
-	}
 }
 
 /****************************
