@@ -21,7 +21,26 @@ export class Query {
 		}
 	}
 
-	private getClusterQuery() {}
+	private checkClusterColumns() {
+		let columns = this.queryObject.queries.select.cluster.attributes;
+		for (let i = 0; i < columns.length; i++) {
+			columns[i] = this.checkNameForSpacesandHyphens(columns[i]);
+		}
+		return columns;
+	}
+
+	private getClusterQuery() {
+		let columns = this.checkClusterColumns();
+		let filename: string = '';
+
+		if (this.queryObject.queries.select.cluster.from) {
+			var f = this.queryObject.queries.select.cluster.from;
+			filename = this.checkNameForSpacesandHyphens(f);
+		}
+
+		let query = ['SELECT', columns.join(', '), 'FROM', filename].join(' ');
+		return query;
+	}
 
 	private getBasicQuery() {
 		let selectBlock = this.checkSelectBlock();
@@ -54,7 +73,6 @@ export class Query {
 			yColumn = this.checkNameForSpacesandHyphens(selectBlock.select.basic.yColumn.column);
 			file = this.checkNameForSpacesandHyphens(selectBlock.select.basic.from);
 			return { xColumn: xColumn, yColumn: yColumn, file: file };
-			//selectQuery = constructSelectBlock(xColumn, yColumn, file);
 		} else {
 			return { xColumn: null, yColumn: null, file: null };
 		}
@@ -62,9 +80,8 @@ export class Query {
 
 	private constructGroupBy() {
 		let groupbyQuery: string;
-		//@ts-ignore
-		let groupby: Array<string> = this.queryObject.queries.groupbyColumns; //@ts-ignore
-		let selectBlock: selectBlock = this.queryObject.queries.select;
+		let groupby: string[] = this.queryObject.queries.select.basic.groupbyColumns;
+		let selectBlock = this.queryObject.queries.select.basic;
 
 		if (selectBlock.xColumn.column && groupby.length > 0) {
 			groupbyQuery = this.checkXColumnInGroupBy(groupby, selectBlock.xColumn.column);
