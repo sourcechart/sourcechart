@@ -28,8 +28,11 @@ export class Query {
 		let y = selectBlock.yColumn;
 		let groupby = this.constructGroupBy();
 		let aggregator = this.queryObject.queries.select.basic.yColumn.aggregator;
-		//@ts-ignore
-		y = this.checkAggregator(y, aggregator, this.queryObject.queries.groupbyColumns);
+		let groupbyColumns = this.queryObject.queries.select.basic.groupbyColumns;
+
+		if (aggregator && groupbyColumns)
+			y = this.checkAggregator(y, aggregator, this.queryObject.queries.select.basic.groupbyColumns);
+
 		let selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
 		let queryParts = [selectQuery, groupby];
 		let queryString = queryParts.join(' ');
