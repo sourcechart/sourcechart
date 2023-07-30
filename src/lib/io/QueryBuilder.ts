@@ -1,15 +1,33 @@
+enum WorkFlowType {
+	Basic,
+	Cluster
+}
 export class Query {
 	// Builder Class for constructing DuckDB Queries. If you want to add a feature, add a new method and call it in new Query(queryObject).build
 	queryObject: QueryObject;
-	constructor(queryObject: QueryObject) {
+	workFlow: WorkFlowType;
+
+	constructor(queryObject: QueryObject, workflow: WorkFlowType) {
 		this.queryObject = queryObject;
+		this.workFlow = workflow;
 	}
 
 	public build() {
+		switch (this.workFlow) {
+			case WorkFlowType.Basic:
+				return this.getBasicQuery();
+			case WorkFlowType.Cluster:
+				return this.getClusterQuery();
+		}
+	}
+
+	private getClusterQuery() {}
+
+	private getBasicQuery() {
 		let selectBlock = this.checkSelectBlock();
 		let y = selectBlock.yColumn;
 		let groupby = this.constructGroupBy();
-		let aggregator = this.queryObject.queries.select.yColumn.aggregator;
+		let aggregator = this.queryObject.queries.select.basic.yColumn.aggregator;
 		//@ts-ignore
 		y = this.checkAggregator(y, aggregator, this.queryObject.queries.groupbyColumns);
 		let selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
@@ -20,15 +38,18 @@ export class Query {
 	}
 
 	private checkSelectBlock() {
-		//@ts-ignore
-		let selectBlock: selectBlock = this.queryObject.queries.select;
+		let selectBlock: Queries = this.queryObject.queries;
 		let xColumn: string;
 		let yColumn: string;
 		let file: string;
-		if (selectBlock?.xColumn?.column && selectBlock?.yColumn?.column && selectBlock.from) {
-			xColumn = this.checkNameForSpacesandHyphens(selectBlock.xColumn.column);
-			yColumn = this.checkNameForSpacesandHyphens(selectBlock.yColumn.column);
-			file = this.checkNameForSpacesandHyphens(selectBlock.from);
+		if (
+			selectBlock.select.basic.xColumn.column &&
+			selectBlock.select.basic.yColumn.column &&
+			selectBlock.select.basic.from
+		) {
+			xColumn = this.checkNameForSpacesandHyphens(selectBlock.select.basic.xColumn.column);
+			yColumn = this.checkNameForSpacesandHyphens(selectBlock.select.basic.yColumn.column);
+			file = this.checkNameForSpacesandHyphens(selectBlock.select.basic.from);
 			return { xColumn: xColumn, yColumn: yColumn, file: file };
 			//selectQuery = constructSelectBlock(xColumn, yColumn, file);
 		} else {

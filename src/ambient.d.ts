@@ -39,18 +39,23 @@ type ChartOptions = {
 	};
 };
 
-type SelectBlock = {
-	xColumn: { column: string | null | undefined };
-	yColumn: { column: string | null | undefined; aggregator: string | null | undefined };
-	from: string | undefined | null;
-};
-
 type Queries = {
-	select: SelectBlock;
+	select: {
+		basic: {
+			xColumn: { column: string | null | undefined };
+			yColumn: { column: string | null | undefined; aggregator: string | null | undefined };
+			from: string | undefined | null;
+			groupbyColumns: string[];
+		};
+		cluster: {
+			attributes: string[];
+			from: string | undefined | null;
+		};
+	};
 	//filters: Array<Condition>;
 	//having: Array<Condition>;
-	groupbyColumns: Array<string | null | undefined> | undefined;
 };
+
 type Condition = { column: string; filter: string | null | number };
 
 type QueryObject = {
