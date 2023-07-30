@@ -1,10 +1,8 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
-import { Query } from '$lib/io/QueryBuilder';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
 import { UMAP } from 'umap-js';
-import { ChartDataWorkFlow } from './ChartDataWorkFlows';
-import { generateDataset } from './GenerateDataset';
+import { ChartDataWorkFlow } from './ChartDataWorkflows';
 import type { DuckDBClient } from './DuckDBCLI';
 
 export const globalMouseState = writable<boolean>(false);
@@ -23,6 +21,11 @@ export const groupbyColumns = writable<string[]>([]);
 export const polygons = writable<Polygon[]>([]);
 export const mouseType = writable<string | null>();
 export const workflowIDColumn = writable<string | null>();
+
+enum WorkFlowType {
+	Basic,
+	Cluster
+}
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -73,42 +76,6 @@ export const chartOptions = () =>
 		};
 	});
 
-const getQueryObject = (chart: Chart): QueryObject => {
-	return {
-		chartID: chart?.chartID,
-		queries: {
-			select: {
-				xColumn: { column: chart?.xColumn },
-				yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
-				from: chart?.filename
-			},
-			groupbyColumns: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])]
-			/*on: { column1: null, column2: null, HOW: null }
-				filters: [
-					{ column: null, filter: null },
-					{ column: null, filter: null }
-				],
-				having: [{ column: null, filter: null }],
-			*/
-		}
-	};
-};
-
-const formatData = (res: any) => {
-	const results = JSON.parse(
-		JSON.stringify(
-			res,
-			(key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
-		)
-	);
-	return results;
-};
-
-const getDataResults = async (db: DuckDBClient, query: string) => {
-	var results = await db.query(query);
-	return formatData(results);
-};
-
 export const getChartOptions = (id: string | undefined) => {
 	if (id) {
 		//@ts-ignore
@@ -117,16 +84,10 @@ export const getChartOptions = (id: string | undefined) => {
 				const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
 
 				if (chart) {
-					let queryObject = getQueryObject(chart);
-					const query = new Query(queryObject);
-					let queryString = query.build();
-					if (chart.database && chart.xColumn && chart.yColumn) {
-						const db: DuckDBClient = chart.database;
-						let results = await getDataResults(db, queryString);
-						const newChart = new ChartDataWorkFlow();
-						let options = newChart.updateBasicChart(results, chart);
-						set(options);
-					}
+					const db: DuckDBClient = chart.database;
+					const newChart = new ChartDataWorkFlow(db, WorkFlowType.Basic, chart);
+					//let options = newChart.updateBasicChart(results, chart);
+					//set(options);
 				}
 			} else {
 				set(undefined); // Update the derived store with undefined if there are no charts
@@ -236,30 +197,24 @@ export const HDBScanWorkflow = () => {
 
 				if (chart) {
 					// create a dataaset that has five columns that are in arrays
-					let exampleData = generateDataset(0, 100, 5000, 5);
-
 					//let hdbscanQuery = getCluster();
 					//let queryString = constructQuery(hdbscanQuery);
 					//const db: DuckDBClient = dataset.database;
 					//let results = await getDataResults(db, queryString);
 					//let multidimensialArray = results.map((obj: any) => Object.values(obj));
-
-					const dbscan = new DBSCAN(exampleData, 5, 2, 'euclidean');
-					var clusters = dbscan.run();
-
-					const umap = new UMAP({
-						nComponents: 2,
-						nEpochs: 1,
-						nNeighbors: 2
-					});
-					const embedding = umap.fit(clusters);
-
+					//const dbscan = new DBSCAN(exampleData, 5, 2, 'euclidean');
+					//var clusters = dbscan.run();
+					//const umap = new UMAP({
+					//	nComponents: 2,
+					//	nEpochs: 1,
+					//	nNeighbors: 2
+					//});
+					//const embedding = umap.fit(clusters);
 					//let x = embedding.map((subArray) => subArray[0]);
 					//let y = embedding.map((subArray) => subArray[1]);
-
-					const options = updateChart(embedding, chart);
-					set(options);
-					console.log(chart);
+					//const options = updateChart(embedding, chart);
+					//set(options);
+					//console.log(chart);
 					//	console.log(embedding.map((subArray) => subArray[0]));
 				}
 			}
