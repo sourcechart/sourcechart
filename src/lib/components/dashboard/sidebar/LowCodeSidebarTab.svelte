@@ -1,5 +1,12 @@
 <script lang="ts">
 	import { ColumnDropDrown, Aggregator, Groupby, ChartDropdown, Tags } from './sidebar-components';
+	import { allCharts, mostRecentChartID } from '$lib/io/Stores';
+
+	allCharts.update((chart) => {
+		//@ts-ignore
+		if (chart.chartID === $mostRecentChartID) chart.workflow = 'lowcode';
+		return chart;
+	});
 </script>
 
 <div class="space-y-3 mt-3">

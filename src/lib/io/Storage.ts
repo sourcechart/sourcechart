@@ -16,6 +16,7 @@ export function storeFromLocalStorage(storageKey: string, fallbackValue: any) {
 
 	return fallbackValue;
 }
+
 export function storeToLocalStorage(store: Store, storageKey: string) {
 	if (browser) {
 		store.subscribe((value) => {

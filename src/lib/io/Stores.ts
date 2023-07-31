@@ -86,8 +86,6 @@ export const getChartOptions = (id: string | undefined) => {
 				if (chart) {
 					const db: DuckDBClient = chart.database;
 					const newChart = new ChartDataWorkFlow(db, WorkFlowType.Basic, chart);
-					//let options = newChart.updateBasicChart(results, chart);
-					//set(options);
 				}
 			} else {
 				set(undefined); // Update the derived store with undefined if there are no charts
@@ -173,50 +171,6 @@ export const HDBScanWorkflow = () => {
 							filename: chart.filename
 						};
 				};
-
-				const checkNameForSpacesandHyphens = (column: string) => {
-					if (!column.match('^[a-zA-Z0-9]+$')) {
-						column = ['"', column, '"'].join('');
-					}
-					return column;
-				};
-
-				const constructQuery = (cluster: any) => {
-					let columns = [...cluster.attributes];
-					for (let i = 0; i < columns.length; i++) {
-						columns[i] = checkNameForSpacesandHyphens(columns[i]);
-					}
-					let query = [
-						'SELECT',
-						columns.join(', '),
-						'FROM',
-						checkNameForSpacesandHyphens(cluster.filename)
-					].join(' ');
-					return query;
-				};
-
-				if (chart) {
-					// create a dataaset that has five columns that are in arrays
-					//let hdbscanQuery = getCluster();
-					//let queryString = constructQuery(hdbscanQuery);
-					//const db: DuckDBClient = dataset.database;
-					//let results = await getDataResults(db, queryString);
-					//let multidimensialArray = results.map((obj: any) => Object.values(obj));
-					//const dbscan = new DBSCAN(exampleData, 5, 2, 'euclidean');
-					//var clusters = dbscan.run();
-					//const umap = new UMAP({
-					//	nComponents: 2,
-					//	nEpochs: 1,
-					//	nNeighbors: 2
-					//});
-					//const embedding = umap.fit(clusters);
-					//let x = embedding.map((subArray) => subArray[0]);
-					//let y = embedding.map((subArray) => subArray[1]);
-					//const options = updateChart(embedding, chart);
-					//set(options);
-					//console.log(chart);
-					//	console.log(embedding.map((subArray) => subArray[0]));
-				}
 			}
 		}
 	);

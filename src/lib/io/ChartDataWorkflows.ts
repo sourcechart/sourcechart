@@ -72,7 +72,6 @@ class ChartDataWorkFlow {
 	public async updateChart() {
 		let queryString = this.query();
 		let results = await this.getDataResults(this.db, queryString);
-
 		switch (this.workflow) {
 			case WorkFlowType.Basic:
 				return this.updateBasicChart(results, this.chart);

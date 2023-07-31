@@ -2,7 +2,6 @@
  *                          *
  *     SOURCECHART TYPES    *
  *                          *
- *                          *
  *****************************/
 
 type Chart = {
