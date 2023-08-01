@@ -1,6 +1,6 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
-import { Query } from '$lib/io/QueryBuilder';
+import { ChartDataWorkFlow } from './ChartDataWorkflows';
 import type { DuckDBClient } from './DuckDBCLI';
 
 export const globalMouseState = writable<boolean>(false);
@@ -69,27 +69,6 @@ export const chartOptions = () =>
 		};
 	});
 
-const getQueryObject = (chart: Chart): QueryObject => {
-	return {
-		chartID: chart?.chartID,
-		queries: {
-			select: {
-				xColumn: { column: chart?.xColumn },
-				yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
-				from: chart?.filename
-			},
-			groupbyColumns: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])]
-			/*on: { column1: null, column2: null, HOW: null }
-				filters: [
-					{ column: null, filter: null },
-					{ column: null, filter: null }
-				],
-				having: [{ column: null, filter: null }],
-			*/
-		}
-	};
-};
-
 export const getChartOptions = (id: string | undefined) => {
 	if (id) {
 		//@ts-ignore
@@ -97,56 +76,19 @@ export const getChartOptions = (id: string | undefined) => {
 			if ($allCharts.length > 0) {
 				const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
 
-				const getColumn = (column: string | null) => {
-					if (column) {
-						return column.toString();
-					} else {
-						return '';
-					}
-				};
-
-				const formatData = (res: any) => {
-					const results = JSON.parse(
-						JSON.stringify(
-							res,
-							(key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
-						)
-					);
-					return results;
-				};
-
-				const getDataResults = async (db: DuckDBClient, query: string) => {
-					var results = await db.query(query);
-					return formatData(results);
-				};
-
-				const updateChart = (results: any[], chart: Chart) => {
-					var xColumn = getColumn(chart.xColumn);
-					var yColumn = getColumn(chart.yColumn);
-					var x = results.map((item) => item[xColumn]);
-					var y = results.map((item) => item[yColumn]);
-					chart.chartOptions.xAxis.data = x;
-					chart.chartOptions.series[0].data = y;
-					return chart;
-				};
-
 				if (chart) {
-					let queryObject = getQueryObject(chart);
-					const query = new Query(queryObject);
-					let queryString = query.build();
-					if (chart.database && chart.xColumn && chart.yColumn) {
-						const db: DuckDBClient = chart.database;
-						let results = await getDataResults(db, queryString);
-						let options = updateChart(results, chart);
-						set(options); // Update the derived store with the updated chart options
-					}
+					const db: DuckDBClient = chart.database;
+					const newChart = new ChartDataWorkFlow(db, chart);
+					const chartOption = await newChart.updateChart();
+					set(chartOption)
 				}
 			} else {
-				set(undefined); // Update the derived store with undefined if there are no charts
+				set(undefined);
 			}
 		});
 	}
 };
+
 export const fileDropdown = () => {
 	return derived(fileUploadStore, ($fileUploadStore) => {
 		const files = $fileUploadStore.map((item: { filename: string }) => item.filename);
@@ -205,20 +147,3 @@ export const touchStates = () => {
 		}
 	);
 };
-
-export const HDBScanWorkflow = () =>
-	derived(
-		[allCharts, mostRecentChartID, workflowIDColumn],
-		([$allCharts, $mostRecentChartID, $workflowIDColumn]) => {
-			if ($allCharts.length > 0) {
-				const dataset = $allCharts.find(
-					(item: { chartID: string }) => item.chartID === $mostRecentChartID
-				);
-
-				return {
-					id: $workflowIDColumn ? $workflowIDColumn : '',
-					attributes: dataset.groupbyColumns
-				};
-			}
-		}
-	);

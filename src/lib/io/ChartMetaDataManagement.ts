@@ -8,17 +8,20 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 		aggregator: null,
 		datasetID: null,
 		columns: [],
+		workflow: 'basic',
 		groupbyColumns: [],
 		xColumn: null,
 		polygon: polygon,
 		yColumn: null,
 		canvasHeight: 0,
 		canvasWidth: 0,
-		database: null, // placeholder
+		database: null,
 		chartOptions: {
-			xAxis: { data: [], type: 'category' },
-			series: [{ data: [], type: '' }],
+			xAxis: { data: [], type: 'category', axisLine: { show: false } },
+			series: [{ data: [], type: '',  barWidth: '60%',
+ 		}],
 			yAxis: {
+				splitLine: {show:false},
 				type: 'value'
 			}
 		}

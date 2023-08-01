@@ -1,17 +1,54 @@
 export class Query {
 	// Builder Class for constructing DuckDB Queries. If you want to add a feature, add a new method and call it in new Query(queryObject).build
 	queryObject: QueryObject;
-	constructor(queryObject: QueryObject) {
+	workFlow: WorkFlow;
+
+	constructor(queryObject: QueryObject, workflow: WorkFlow) {
 		this.queryObject = queryObject;
+		this.workFlow = workflow;
 	}
 
 	public build() {
+		if (this.workFlow === 'basic') {
+			return this.getBasicQuery();
+		} else if (this.workFlow === 'cluster') {
+			return this.getClusterQuery();
+		} else {
+			return '';
+		}
+	}
+
+	private checkClusterColumns() {
+		let columns = this.queryObject.queries.select.cluster.attributes;
+		for (let i = 0; i < columns.length; i++) {
+			columns[i] = this.checkNameForSpacesandHyphens(columns[i]);
+		}
+		return columns;
+	}
+
+	private getClusterQuery() {
+		let columns = this.checkClusterColumns();
+		let filename: string = '';
+
+		if (this.queryObject.queries.select.cluster.from) {
+			var f = this.queryObject.queries.select.cluster.from;
+			filename = this.checkNameForSpacesandHyphens(f);
+		}
+
+		let query = ['SELECT', columns.join(', '), 'FROM', filename].join(' ');
+		return query;
+	}
+
+	private getBasicQuery() {
 		let selectBlock = this.checkSelectBlock();
 		let y = selectBlock.yColumn;
 		let groupby = this.constructGroupBy();
-		let aggregator = this.queryObject.queries.select.yColumn.aggregator;
-		//@ts-ignore
-		y = this.checkAggregator(y, aggregator, this.queryObject.queries.groupbyColumns);
+		let aggregator = this.queryObject.queries.select.basic.yColumn.aggregator;
+		let groupbyColumns = this.queryObject.queries.select.basic.groupbyColumns;
+
+		if (aggregator && groupbyColumns)
+			y = this.checkAggregator(y, aggregator, this.queryObject.queries.select.basic.groupbyColumns);
+
 		let selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
 		let queryParts = [selectQuery, groupby];
 		let queryString = queryParts.join(' ');
@@ -20,17 +57,19 @@ export class Query {
 	}
 
 	private checkSelectBlock() {
-		//@ts-ignore
-		let selectBlock: selectBlock = this.queryObject.queries.select;
+		let selectBlock: Queries = this.queryObject.queries;
 		let xColumn: string;
 		let yColumn: string;
 		let file: string;
-		if (selectBlock?.xColumn?.column && selectBlock?.yColumn?.column && selectBlock.from) {
-			xColumn = this.checkNameForSpacesandHyphens(selectBlock.xColumn.column);
-			yColumn = this.checkNameForSpacesandHyphens(selectBlock.yColumn.column);
-			file = this.checkNameForSpacesandHyphens(selectBlock.from);
+		if (
+			selectBlock.select.basic.xColumn.column &&
+			selectBlock.select.basic.yColumn.column &&
+			selectBlock.select.basic.from
+		) {
+			xColumn = this.checkNameForSpacesandHyphens(selectBlock.select.basic.xColumn.column);
+			yColumn = this.checkNameForSpacesandHyphens(selectBlock.select.basic.yColumn.column);
+			file = this.checkNameForSpacesandHyphens(selectBlock.select.basic.from);
 			return { xColumn: xColumn, yColumn: yColumn, file: file };
-			//selectQuery = constructSelectBlock(xColumn, yColumn, file);
 		} else {
 			return { xColumn: null, yColumn: null, file: null };
 		}
@@ -38,9 +77,8 @@ export class Query {
 
 	private constructGroupBy() {
 		let groupbyQuery: string;
-		//@ts-ignore
-		let groupby: Array<string> = this.queryObject.queries.groupbyColumns; //@ts-ignore
-		let selectBlock: selectBlock = this.queryObject.queries.select;
+		let groupby: string[] = this.queryObject.queries.select.basic.groupbyColumns;
+		let selectBlock = this.queryObject.queries.select.basic;
 
 		if (selectBlock.xColumn.column && groupby.length > 0) {
 			groupbyQuery = this.checkXColumnInGroupBy(groupby, selectBlock.xColumn.column);
