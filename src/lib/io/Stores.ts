@@ -83,7 +83,7 @@ export const getChartOptions = (id: string | undefined) => {
 					set(chartOption)
 				}
 			} else {
-				set(undefined); // Update the derived store with undefined if there are no charts
+				set(undefined);
 			}
 		});
 	}

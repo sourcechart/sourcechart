@@ -1,5 +1,3 @@
-//Local Storage helper functions
-
 import { browser } from '$app/environment';
 import type { Writable } from 'svelte/store';
 
