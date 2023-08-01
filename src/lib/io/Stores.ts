@@ -1,6 +1,5 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
-
 import { ChartDataWorkFlow } from './ChartDataWorkflows';
 import type { DuckDBClient } from './DuckDBCLI';
 
@@ -80,6 +79,7 @@ export const getChartOptions = (id: string | undefined) => {
 				if (chart) {
 					const db: DuckDBClient = chart.database;
 					const newChart = new ChartDataWorkFlow(db, chart);
+					console.log('newChart', newChart);
 				}
 			} else {
 				set(undefined); // Update the derived store with undefined if there are no charts
@@ -143,29 +143,6 @@ export const touchStates = () => {
 				return 'default';
 			}
 			return touchState;
-		}
-	);
-};
-
-export const HDBScanWorkflow = () => {
-	return derived(
-		[allCharts, mostRecentChartID, workflowIDColumn], //@ts-ignore
-		async ([$allCharts, $mostRecentChartID, $workflowIDColumn], set) => {
-			if ($allCharts.length > 0) {
-				const chart = $allCharts.find(
-					(item: { chartID: string }) => item.chartID === $mostRecentChartID
-				);
-
-				const getCluster = () => {
-					if (chart)
-						return {
-							chartID: $mostRecentChartID ? $mostRecentChartID : '',
-							id: $workflowIDColumn ? $workflowIDColumn : '',
-							attributes: chart.groupbyColumns,
-							filename: chart.filename
-						};
-				};
-			}
 		}
 	);
 };

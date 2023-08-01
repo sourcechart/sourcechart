@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
-	import { getColumnsFromFile, workflowIDColumn, HDBScanWorkflow } from '$lib/io/Stores';
+	import { getColumnsFromFile, workflowIDColumn } from '$lib/io/Stores';
 
 	$: columns = getColumnsFromFile();
-	$: workflow = HDBScanWorkflow();
-	$: $workflow;
 
 	let idColumn: string | null = 'ID Column';
 
