@@ -1,17 +1,15 @@
 <script lang="ts">
 	import {
-		//ChooseIDColumn,
+		ChooseIDColumn,
 		Tags
 	} from './sidebar-components';
 	import { Groupby } from './sidebar-components';
 </script>
 
 <div class="space-y-3 mt-3">
-	<!-- 
 	<div class="flex flex-col space-y-1">
 		<ChooseIDColumn />
 	</div>
-	-->
 	<div class="flex flex-col space-y-1">
 		<p class="text-xs">Add Attributes</p>
 		<Groupby />

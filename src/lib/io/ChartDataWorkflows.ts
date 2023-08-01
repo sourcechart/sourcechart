@@ -71,14 +71,17 @@ class ChartDataWorkFlow {
 			return this.updateBasicChart(results, this.chart);
 		} else if (this.chart.workflow === 'cluster') {
 			let embedding = this.getDensityResults(results);
+			console.log(embedding);
 			return this.updateDensityChart(embedding, this.chart);
 		}
 	}
 
 	private getDensityResults(results:any) {
 		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
+		console.log(multidimensialArray)
 		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'euclidean');
 		var clusters = dbscan.run();
+		if (multidimensialArray.length > 1000) {
 		const umap = new UMAP({
 			nComponents: 2,
 			nEpochs: 1,
@@ -86,6 +89,10 @@ class ChartDataWorkFlow {
 		});
 		const embedding = umap.fit(clusters);
 		return embedding;
+		}
+		else {
+			return multidimensialArray;
+		}
 	}
 
 	private formatData(res: any) {
