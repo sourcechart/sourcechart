@@ -3,9 +3,6 @@
 	import Canvas from '$lib/components/ui/draw/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import { DarkMode } from '$lib/components/ui';
-	import { allCharts } from '$lib/io/Stores';
-
-	$: console.log($allCharts);
 </script>
 
 <!-- Center this on the screen-->

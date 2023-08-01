@@ -78,7 +78,7 @@ class ChartDataWorkFlow {
 
 	private getDensityResults(results:any) {
 		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
-		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'euclidean');
+		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
 		var clusters = dbscan.run();
 		if (multidimensialArray.length > 1000) {
 		const umap = new UMAP({
