@@ -79,7 +79,8 @@ export const getChartOptions = (id: string | undefined) => {
 				if (chart) {
 					const db: DuckDBClient = chart.database;
 					const newChart = new ChartDataWorkFlow(db, chart);
-					console.log('newChart', newChart);
+					let c = await newChart.updateChart();
+					console.log('c', c);
 				}
 			} else {
 				set(undefined); // Update the derived store with undefined if there are no charts

@@ -44,7 +44,7 @@ class ChartDataWorkFlow {
 		return queryString;
 	}
 
-	public updateBasicChart(results: any[], chart: Chart) {
+	private updateBasicChart(results: any[], chart: Chart) {
 		var xColumn = this.getColumn(chart.xColumn);
 		var yColumn = this.getColumn(chart.yColumn);
 		var x = results.map((item) => item[xColumn]);
