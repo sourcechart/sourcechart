@@ -1,5 +1,7 @@
 import type { DuckDBClient } from './DuckDBCLI';
 import { Query } from '$lib/io/QueryBuilder';
+import { UMAP } from 'umap-js';
+import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
 
 class ChartDataWorkFlow {
 	private db: DuckDBClient;
@@ -68,8 +70,22 @@ class ChartDataWorkFlow {
 		if (this.chart.workflow === 'basic') {
 			return this.updateBasicChart(results, this.chart);
 		} else if (this.chart.workflow === 'cluster') {
-			return this.updateDensityChart(results, this.chart);
+			let embedding = this.getDensityResults(results);
+			return this.updateDensityChart(embedding, this.chart);
 		}
+	}
+
+	private getDensityResults(results:any) {
+		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
+		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'euclidean');
+		var clusters = dbscan.run();
+		const umap = new UMAP({
+			nComponents: 2,
+			nEpochs: 1,
+			nNeighbors: 2
+		});
+		const embedding = umap.fit(clusters);
+		return embedding;
 	}
 
 	private formatData(res: any) {
