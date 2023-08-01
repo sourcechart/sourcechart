@@ -21,7 +21,7 @@ type Chart = {
 	database: AsyncDuckDB;
 	canvasWidth: number;
 	canvasHeight: number;
-	chartOptions: ChartOptions;
+	chartOptions: any;
 };
 
 type ChartOptions = {
