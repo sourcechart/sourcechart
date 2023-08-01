@@ -18,8 +18,10 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 		database: null,
 		chartOptions: {
 			xAxis: { data: [], type: 'category', axisLine: { show: false } },
-			series: [{ data: [], type: '' }],
+			series: [{ data: [], type: '',  barWidth: '60%',
+ 		}],
 			yAxis: {
+				splitLine: {show:false},
 				type: 'value'
 			}
 		}
