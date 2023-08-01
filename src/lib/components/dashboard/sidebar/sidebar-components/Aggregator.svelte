@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { allCharts, clickedChartIndex, clickedChart, clearChartOptions, mostRecentChartID } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex, clearChartOptions } from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 
 	let aggs = ['avg', 'max', 'min', 'sum', 'count'];
-	let selectedAggregator:string|null = 'Aggregator';
+	let selectedAggregator: string | null = 'Aggregator';
 
 	$: i = clickedChartIndex();
 	$: $clearChartOptions, (selectedAggregator = '');
 
 	$: {
-		if($allCharts.length > 0 && $allCharts[$i]) {
+		if ($allCharts.length > 0 && $allCharts[$i]) {
 			selectedAggregator = $allCharts[$i]?.aggregator ? $allCharts[$i].aggregator : 'Aggregator';
 		}
 	}
@@ -21,7 +21,7 @@
 			charts[$i].aggregator = selectedAggregator;
 			return charts;
 		});
-	}
+	};
 </script>
 
 <Button color="alternative" pill={false} outline={false}>{selectedAggregator}</Button>

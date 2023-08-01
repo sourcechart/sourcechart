@@ -52,7 +52,16 @@
 	const chooseChart = (plot: string) => {
 		chosenPlot = plot;
 		allCharts.update((charts) => {
-			charts[$i].chartOptions.series[0].type = plot;
+			if (plot === 'area') {
+				charts.forEach((chart) => {
+					chart.chartOptions.series[0].type = 'line';
+					chart.chartOptions.series[0].areaStyle = {};
+				});
+			} else {
+				charts.forEach((chart) => {
+					chart.chartOptions.series[0].type = plot;
+				});
+			}
 			return charts;
 		});
 	};
