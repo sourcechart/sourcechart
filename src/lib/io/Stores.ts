@@ -1,7 +1,6 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
-import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
-import { UMAP } from 'umap-js';
+
 import { ChartDataWorkFlow } from './ChartDataWorkflows';
 import type { DuckDBClient } from './DuckDBCLI';
 
@@ -21,11 +20,6 @@ export const groupbyColumns = writable<string[]>([]);
 export const polygons = writable<Polygon[]>([]);
 export const mouseType = writable<string | null>();
 export const workflowIDColumn = writable<string | null>();
-
-enum WorkFlowType {
-	Basic,
-	Cluster
-}
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -85,7 +79,7 @@ export const getChartOptions = (id: string | undefined) => {
 
 				if (chart) {
 					const db: DuckDBClient = chart.database;
-					const newChart = new ChartDataWorkFlow(db, WorkFlowType.Basic, chart);
+					const newChart = new ChartDataWorkFlow(db, chart);
 				}
 			} else {
 				set(undefined); // Update the derived store with undefined if there are no charts

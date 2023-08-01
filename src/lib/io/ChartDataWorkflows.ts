@@ -1,18 +1,11 @@
 import type { DuckDBClient } from './DuckDBCLI';
 import { Query } from '$lib/io/QueryBuilder';
 
-enum WorkFlowType {
-	Basic,
-	Cluster
-}
-
 class ChartDataWorkFlow {
-	private workflow: WorkFlowType;
 	private db: DuckDBClient;
 	private chart: Chart;
 
-	constructor(db: DuckDBClient, workflow: WorkFlowType, chart: Chart) {
-		this.workflow = workflow;
+	constructor(db: DuckDBClient, chart: Chart) {
 		this.db = db;
 		this.chart = chart;
 	}
@@ -46,7 +39,7 @@ class ChartDataWorkFlow {
 
 	private query() {
 		let queryObject = this.getQueryObject(this.chart);
-		const query = new Query(queryObject, this.workflow);
+		const query = new Query(queryObject, this.chart.workflow);
 		let queryString = query.build();
 		return queryString;
 	}
@@ -72,13 +65,10 @@ class ChartDataWorkFlow {
 	public async updateChart() {
 		let queryString = this.query();
 		let results = await this.getDataResults(this.db, queryString);
-		switch (this.workflow) {
-			case WorkFlowType.Basic:
-				return this.updateBasicChart(results, this.chart);
-			case WorkFlowType.Cluster:
-				return this.updateDensityChart(results, this.chart);
-			default:
-				break;
+		if (this.chart.workflow === 'basic') {
+			return this.updateBasicChart(results, this.chart);
+		} else if (this.chart.workflow === 'cluster') {
+			return this.updateDensityChart(results, this.chart);
 		}
 	}
 
@@ -112,4 +102,4 @@ class ChartDataWorkFlow {
 	}
 }
 
-export { ChartDataWorkFlow, WorkFlowType };
+export { ChartDataWorkFlow };

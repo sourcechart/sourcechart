@@ -4,10 +4,12 @@
  *                          *
  *****************************/
 
+type WorkFlow = 'basic' | 'cluster';
+
 type Chart = {
 	chartShape: string;
 	chartID: string;
-	workflow: string | null;
+	workflow: WorkFlow;
 	polygon: Polygon;
 	filename: string | null;
 	aggregator: string | null;

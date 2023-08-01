@@ -1,23 +1,20 @@
-enum WorkFlowType {
-	Basic,
-	Cluster
-}
 export class Query {
 	// Builder Class for constructing DuckDB Queries. If you want to add a feature, add a new method and call it in new Query(queryObject).build
 	queryObject: QueryObject;
-	workFlow: WorkFlowType;
+	workFlow: WorkFlow;
 
-	constructor(queryObject: QueryObject, workflow: WorkFlowType) {
+	constructor(queryObject: QueryObject, workflow: WorkFlow) {
 		this.queryObject = queryObject;
 		this.workFlow = workflow;
 	}
 
 	public build() {
-		switch (this.workFlow) {
-			case WorkFlowType.Basic:
-				return this.getBasicQuery();
-			case WorkFlowType.Cluster:
-				return this.getClusterQuery();
+		if (this.workFlow === 'basic') {
+			return this.getBasicQuery();
+		} else if (this.workFlow === 'cluster') {
+			return this.getClusterQuery();
+		} else {
+			return '';
 		}
 	}
 
