@@ -1,131 +1,94 @@
-import {
-	computeStabilities,
-	condenseTree,
-	getClusterNodes,
-	getClustersAndNoise,
-	labelClusters
-} from './clusterTree';
-import kdTreePrim from './kdTreePrim';
-import { euclidean, gower } from './metrics';
-import type { DebugInfo, MetricFunction, HdbscanInput } from './types';
+import Mst from '$lib/analytics/hdbscan/mst';
+import Node from '$lib/analytics/hdbscan/node';
 
-export class Hdbscan {
-	private input: Array<Array<number>>;
-	private minClusterSize: number;
-	private minSamples: number;
-	private alpha: number;
-	private metric: MetricFunction;
-	private debug: boolean;
+export default class Hdbscan {
+	data: any[];
+	opt: any[];
+	distFunc: any;
 
-	private debugInfo?: DebugInfo;
-	private clusters: Array<Array<number>>;
-	private noise: Array<number>;
+	constructor(dataset: any[], distFunc: any = Hdbscan.distFunc.gowerDist) {
+		this.data = dataset.map((val) => val.data);
+		this.opt = dataset.map((val) => val.opt);
+		this.distFunc = distFunc;
+	}
+	static distFunc: any;
 
-	constructor({
-		input,
-		minClusterSize = 5,
-		minSamples = 5,
-		clusterSelectionEpsilon = 0.0,
-		clusterSelectionMethod = 'eom',
-		alpha = 1.0,
-		metric = euclidean,
-		debug = false
-	}: HdbscanInput) {
-		this.input = input;
-		this.minClusterSize = minClusterSize;
-		this.minSamples = minSamples;
-		this.alpha = alpha;
-		this.metric = metric;
-		this.debug = debug;
-
-		let debugInfo;
-
-		try {
-			// Build the cluster hierarchy using kdTree and Prim
-			const { coreDistances, mst, sortedMst, singleLinkage } = kdTreePrim(
-				this.input,
-				this.minSamples,
-				this.alpha,
-				this.metric
-			);
-
-			if (this.debug) {
-				debugInfo = { coreDistances, mst, sortedMst, singleLinkage };
-			}
-
-			// Condense the cluster tree
-			const { bfsNodes, condensedTree } = condenseTree(singleLinkage, this.minClusterSize);
-
-			if (this.debug) {
-				debugInfo = { ...debugInfo, bfsNodes, condensedTree };
-			}
-
-			// Compute stabilities of condensed clusters
-			const stabilityDict = computeStabilities(condensedTree);
-
-			if (this.debug) {
-				debugInfo = { ...debugInfo, condensedTree };
-			}
-
-			// Extract the clusters
-			const { clusterNodes, clusterNodesMap, revClusterNodesMap, clusterTree } = getClusterNodes(
-				condensedTree,
-				stabilityDict,
-				clusterSelectionEpsilon,
-				clusterSelectionMethod
-			);
-
-			if (this.debug) {
-				debugInfo = {
-					...debugInfo,
-					clusterNodes,
-					clusterNodesMap,
-					revClusterNodesMap,
-					clusterTree
-				};
-			}
-
-			// Label the inputs
-			const labeledInputs = labelClusters(
-				condensedTree,
-				clusterNodes,
-				clusterNodesMap,
-				clusterSelectionEpsilon
-			);
-
-			if (this.debug) {
-				debugInfo = { ...debugInfo, labeledInputs };
-			}
-
-			// Get array of clusters and noise from labels
-			const { clusters, noise } = getClustersAndNoise(labeledInputs);
-
-			if (this.debug) {
-				debugInfo = { ...debugInfo, clusters, noise };
-				console.debug('debugInfo: ', debugInfo);
-			}
-
-			this.debugInfo = debugInfo;
-			this.clusters = clusters;
-			this.noise = noise;
-		} catch (e) {
-			if (this.debug) {
-				console.debug('debugInfo: ', debugInfo);
-				console.error('Error: Hdbscan: ', e);
-			}
-			throw e;
+	getTree() {
+		const data = this.data;
+		const opt = this.opt;
+		if (!data || !data.length) {
+			throw new Error('invalid data!');
 		}
-	}
 
-	public getDebugInfo() {
-		return this.debugInfo;
-	}
+		if (data.length === 1) {
+			return new Node({
+				left: null,
+				right: null,
+				data,
+				opt,
+				dist: null,
+				parent: null,
+				edge: null
+			});
+		}
 
-	public getClusters() {
-		return this.clusters;
-	}
+		const mst = new Mst(this.data, this.distFunc);
+		const edges = mst.getMst();
+		const nodes = data.map(
+			(val, i) =>
+				new Node({
+					left: null,
+					right: null,
+					data: [val],
+					opt: [opt[i]],
+					dist: null,
+					parent: null,
+					edge: null
+				})
+		);
 
-	public getNoise() {
-		return this.noise;
+		let root = null;
+		edges //@ts-ignore
+			.sort((val1, val2) => val1.dist - val2.dist) //@ts-ignore
+			.forEach((val) => {
+				const { edge, dist } = val; //@ts-ignore
+				const left = nodes[edge[0]].getAncestor(); //@ts-ignore
+				const right = nodes[edge[1]].getAncestor();
+				const node = new Node({
+					left,
+					right,
+					data: left.data.concat(right.data),
+					opt: left.opt.concat(right.opt),
+					dist,
+					parent: null, //@ts-ignore
+					edge: [data[edge[0]], data[edge[1]]]
+				});
+
+				left.parent = right.parent = root = node;
+			});
+		return root;
 	}
 }
+
+Hdbscan.distFunc = {
+	euclidean: (p1: number[], p2: number[]) => {
+		let sum = 0;
+		if (p1.length !== p2.length) {
+			throw new Error('unequal dimension in input data');
+		}
+		for (let i = 0; i < p1.length; i += 1) {
+			sum += Math.pow(p1[i] - p2[i], 2);
+		}
+		return Math.sqrt(sum);
+	},
+
+	gowerDist: (p1: number[], p2: number[]) => {
+		let sum = 0;
+		if (p1.length !== p2.length) {
+			throw new Error('unequal dimension in input data');
+		}
+		for (let i = 0; i < p1.length; i += 1) {
+			sum += Math.abs(p1[i] - p2[i]);
+		}
+	}
+};

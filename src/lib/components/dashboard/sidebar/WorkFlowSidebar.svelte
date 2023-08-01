@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { ChooseIDColumn, Tags } from './sidebar-components';
+	import {
+		ChooseIDColumn,
+		Tags
+	} from './sidebar-components';
 	import { Groupby } from './sidebar-components';
 </script>
 

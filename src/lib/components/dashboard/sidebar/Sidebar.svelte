@@ -6,11 +6,33 @@
 	import { Tabs, TabItem } from 'flowbite-svelte';
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
-	import { activeSidebar } from '$lib/io/Stores';
+	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores';
 
 	const handleClickInside = () => {
 		$activeSidebar = true;
 	};
+
+	function clickClusterTab() {
+		allCharts.update((charts) => {
+			charts.forEach((chart) => {
+				if (chart.chartID === $mostRecentChartID) {
+					chart.workflow = 'cluster';
+				}
+			});
+			return charts;
+		});
+	}
+
+	function clickBasicTab() {
+		allCharts.update((charts) => {
+			charts.forEach((chart) => {
+				if (chart.chartID === $mostRecentChartID) {
+					chart.workflow = 'basic';
+				}
+			});
+			return charts;
+		});
+	}
 </script>
 
 <div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
@@ -24,10 +46,10 @@
 			<DatasetDropDown />
 		</div>
 		<Tabs style="underline" contentClass="">
-			<TabItem open title="LowCode">
+			<TabItem open title="LowCode" on:click={clickBasicTab}>
 				<LowCodeSidebarTab />
 			</TabItem>
-			<TabItem title="Work Flows">
+			<TabItem title="Work Flows" on:click={clickClusterTab}>
 				<WorkFlowSidebar />
 			</TabItem>
 		</Tabs>
