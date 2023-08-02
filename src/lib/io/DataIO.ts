@@ -3,7 +3,7 @@ import { Query } from '$lib/io/QueryBuilder';
 import { UMAP } from 'umap-js';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
 
-class ChartDataWorkFlow {
+class DataIO {
 	private db: DuckDBClient;
 	private chart: Chart;
 
@@ -76,13 +76,6 @@ class ChartDataWorkFlow {
 		}
 	}
 
-	public getClusterCentroids(results: any) {
-		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
-		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
-		var clusters = dbscan.getClusterCentroids()//.getClosestCentroidToPoint()	
-		
-	}
-
 	private getDensityResults(results:any) {
 		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
 		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
@@ -130,4 +123,4 @@ class ChartDataWorkFlow {
 	}
 }
 
-export { ChartDataWorkFlow };
+export { DataIO };
