@@ -178,13 +178,14 @@ export class DBSCAN {
 	}
 
 
-	public getAudienceSegment() {
+	public getAudienceSegments() {
 		const centroids = this.getClusterCentroids();
 		let labels = this.getLabels()
-		let cluster_ids:string[]|number[] = Object.keys(labels).forEach((clusterId) => {
+		//@ts-ignore
+		let cluster_ids:string[]|number[] = Object.keys(labels).forEach((clusterId) => {//@ts-ignore
 			return labels[clusterId]
 		})
-		let closest_points = cluster_ids.map((clusterId) => {
+		let closest_points = cluster_ids.map((clusterId) => {//@ts-ignore
 			return this.getClosestPointToCentroid(clusterId)
 		})
 		let clusterSize = centroids.map((centroid, index) => {
@@ -258,7 +259,6 @@ export class DBSCAN {
 				validDimensions++;
 			}
 		}
-
 		return sum / validDimensions;
 	}
 }
