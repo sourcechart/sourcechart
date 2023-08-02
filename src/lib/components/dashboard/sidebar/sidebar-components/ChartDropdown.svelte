@@ -45,7 +45,6 @@
 	];
 
 	if (sideBarVersion === 'WorkFlow') {
-		console.log('triggered');
 		rectangleCharts = [...rectangleCharts, { chartType: ChartOptions.density }];
 	}
 
