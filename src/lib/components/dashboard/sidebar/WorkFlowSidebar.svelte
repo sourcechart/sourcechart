@@ -9,7 +9,7 @@
 	</div>
 	<div class="flex flex-col space-y-1">
 		<p class="text-xs">Choose Chart</p>
-		<ChartDropdown />
+		<ChartDropdown sideBarVersion={'WorkFlow'} />
 	</div>
 	<div class="flex flex-col space-y-1">
 		<p class="text-xs">Add Attributes</p>

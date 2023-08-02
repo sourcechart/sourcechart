@@ -5,7 +5,7 @@
 <div class="space-y-3 mt-3">
 	<div class="flex flex-col space-y-1">
 		<p class="text-xs">Choose Chart</p>
-		<ChartDropdown />
+		<ChartDropdown sideBarVersion={'LowCode'} />
 	</div>
 	<div class="flex flex-col space-y-1">
 		<p class="text-xs">Axis</p>

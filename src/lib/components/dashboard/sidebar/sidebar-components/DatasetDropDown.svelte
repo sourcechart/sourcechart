@@ -35,6 +35,7 @@
 		});
 	};
 
+	/*
 	const removeItem = (item: string) => {
 		allCharts.update((charts) => {
 			let chart = charts[$i];
@@ -44,6 +45,7 @@
 			return charts;
 		});
 	};
+	*/
 </script>
 
 <Button color="alternative">{selectedDataset}</Button>
