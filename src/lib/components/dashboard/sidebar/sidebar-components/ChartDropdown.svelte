@@ -54,12 +54,13 @@
 		allCharts.update((charts) => {
 			if (plot === 'area') {
 				charts.forEach((chart) => {
-					chart.chartOptions.series[0].type = 'line';
-					chart.chartOptions.series[0].areaStyle = {};
-				});
-			} else {
-				charts.forEach((chart) => {
-					chart.chartOptions.series[0].type = plot;
+					chart.chartType = plot;
+					if (plot === 'area') {
+						chart.chartOptions.series[0].type = 'line';
+						chart.chartOptions.series[0].areaStyle = {};
+					} else {
+						chart.chartOptions.series[0].type = plot;
+					}
 				});
 			}
 			return charts;

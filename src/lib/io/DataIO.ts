@@ -74,6 +74,9 @@ class DataIO {
 			let embedding = this.getDensityResults(results);
 			return this.updateDensityChart(embedding, this.chart);
 		}
+		else if (this.chart.workflow === 'correlation') {
+		//	let 
+		}
 	}
 
 	private getDensityResults(results:any) {
@@ -107,6 +110,13 @@ class DataIO {
 	private async getDataResults(db: DuckDBClient, query: string) {
 		var results = await db.query(query);
 		return this.formatData(results);
+	}
+
+	private getAudienceSegmentationResult(results: any) {
+		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
+		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
+		var clusters = dbscan.getAudienceSegments()
+		return clusters;
 	}
 
 	private updateDensityChart(embedding: number[][], chart: Chart) {
