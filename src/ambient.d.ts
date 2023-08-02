@@ -11,7 +11,7 @@ type PointVector = number[];
 
 type Chart = {
 	chartShape: string;
-	chartType: string;
+	chartType: string | null;
 	chartID: string;
 	workflow: WorkFlow;
 	polygon: Polygon;

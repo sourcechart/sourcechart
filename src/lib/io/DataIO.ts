@@ -63,36 +63,35 @@ class DataIO {
 			return '';
 		}
 	};
-	
+
 	//TODO: check if query needs to be rerun.
 	public async updateChart() {
 		let queryString = this.query();
 		let results = await this.getDataResults(this.db, queryString);
+		console.log(this.chart);
 		if (this.chart.workflow === 'basic') {
 			return this.updateBasicChart(results, this.chart);
 		} else if (this.chart.workflow === 'cluster') {
 			let embedding = this.getDensityResults(results);
 			return this.updateDensityChart(embedding, this.chart);
-		}
-		else if (this.chart.workflow === 'correlation') {
-		//	let 
+		} else if (this.chart.workflow === 'cluster' && this.chart.chartType !== 'density') {
+			//	let
 		}
 	}
 
-	private getDensityResults(results:any) {
-		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
+	private getDensityResults(results: any) {
+		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
 		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
 		var clusters = dbscan.run();
 		if (multidimensialArray.length > 1000) {
-		const umap = new UMAP({
-			nComponents: 2,
-			nEpochs: 1,
-			nNeighbors: 2
-		});
-		const embedding = umap.fit(clusters);
-		return embedding;
-		}
-		else {
+			const umap = new UMAP({
+				nComponents: 2,
+				nEpochs: 1,
+				nNeighbors: 2
+			});
+			const embedding = umap.fit(clusters);
+			return embedding;
+		} else {
 			return multidimensialArray;
 		}
 	}
@@ -113,9 +112,9 @@ class DataIO {
 	}
 
 	private getAudienceSegmentationResult(results: any) {
-		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
+		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
 		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
-		var clusters = dbscan.getAudienceSegments()
+		var clusters = dbscan.getAudienceSegments();
 		return clusters;
 	}
 
