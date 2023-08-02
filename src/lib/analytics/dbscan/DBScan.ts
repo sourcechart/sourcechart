@@ -177,13 +177,28 @@ export class DBSCAN {
 		return closestPoint;
 	}
 
-	public getClosestPointsToCentroids() {
+
+	public getAudienceSegment() {
+		const centroids = this.getClusterCentroids();
 		let labels = this.getLabels()
-		let cluster_ids = Object.keys(labels).forEach((clusterId) => {
-			//@ts-ignore
+		let cluster_ids:string[]|number[] = Object.keys(labels).forEach((clusterId) => {
 			return labels[clusterId]
 		})
+		let closest_points = cluster_ids.map((clusterId) => {
+			return this.getClosestPointToCentroid(clusterId)
+		})
+		let clusterSize = centroids.map((centroid, index) => {
+			return this.clusters[index].length
+		})
+	
+		let arrays = [closest_points, clusterSize, cluster_ids]
+
+		let chartData = arrays.map((array, i) => {
+			return {"closestPoint":array[i], "clusterSize":array[i+1], "clusterLabel":array[i+2]}
+		})
+		return chartData
 	}
+
 	
 	private addToCluster(pointId: number, clusterId: number) {
 		this.clusters[clusterId].push(pointId);

@@ -121,7 +121,6 @@ class ChartDataWorkFlow {
 		chart.chartOptions.xAxis = {}; //@ts-ignore
 		chart.chartOptions.yAxis = {};
 		chart.chartOptions.series[0] = {
-			//@ts-ignore
 			data: embedding,
 			type: 'scatter',
 			symbolSize: 10
