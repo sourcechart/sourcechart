@@ -76,6 +76,13 @@ class ChartDataWorkFlow {
 		}
 	}
 
+	public getClusterCentroids(results: any) {
+		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
+		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
+		var clusters = dbscan.getClusterCentroids()//.getClosestCentroidToPoint()	
+		
+	}
+
 	private getDensityResults(results:any) {
 		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
 		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');

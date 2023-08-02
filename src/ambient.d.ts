@@ -5,6 +5,8 @@
  *****************************/
 
 type WorkFlow = 'basic' | 'cluster';
+type DistanceFunction = (a: number[], b: number[]) => number;
+type PointVector = number[];
 
 type Chart = {
 	chartShape: string;
