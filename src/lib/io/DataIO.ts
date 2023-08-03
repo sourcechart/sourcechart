@@ -3,7 +3,7 @@ import { Query } from '$lib/io/QueryBuilder';
 import { UMAP } from 'umap-js';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
 
-class ChartDataWorkFlow {
+class DataIO {
 	private db: DuckDBClient;
 	private chart: Chart;
 
@@ -63,33 +63,39 @@ class ChartDataWorkFlow {
 			return '';
 		}
 	};
-	
+
 	//TODO: check if query needs to be rerun.
 	public async updateChart() {
 		let queryString = this.query();
 		let results = await this.getDataResults(this.db, queryString);
 		if (this.chart.workflow === 'basic') {
 			return this.updateBasicChart(results, this.chart);
-		} else if (this.chart.workflow === 'cluster') {
+		} else if (this.chart.workflow === 'cluster' && this.chart.chartType === 'density') {
 			let embedding = this.getDensityResults(results);
 			return this.updateDensityChart(embedding, this.chart);
+		} else if (
+			this.chart.workflow === 'cluster' &&
+			this.chart.chartType !== 'density' &&
+			this.chart.chartType
+		) {
+			let chartResults = this.getAudienceSegmentationResult(results);
+			return this.updateAudienceSegmentationChart(chartResults, this.chart);
 		}
 	}
 
-	private getDensityResults(results:any) {
-		let multidimensialArray:number[][] = results.map((obj: any) => Object.values(obj));
+	private getDensityResults(results: any) {
+		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
 		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
-		var clusters = dbscan.run();
+		var clusters = dbscan.run().getClusters();
 		if (multidimensialArray.length > 1000) {
-		const umap = new UMAP({
-			nComponents: 2,
-			nEpochs: 1,
-			nNeighbors: 2
-		});
-		const embedding = umap.fit(clusters);
-		return embedding;
-		}
-		else {
+			const umap = new UMAP({
+				nComponents: 2,
+				nEpochs: 1,
+				nNeighbors: 2
+			});
+			const embedding = umap.fit(clusters);
+			return embedding;
+		} else {
 			return multidimensialArray;
 		}
 	}
@@ -109,12 +115,36 @@ class ChartDataWorkFlow {
 		return this.formatData(results);
 	}
 
+	private getAudienceSegmentationResult(results: any): {
+		centroid: number[][];
+		clusterSize: number;
+		clusterLabel: number;
+	} {
+		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
+		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
+		var clusters = dbscan.run().getAudienceSegments();
+		return clusters;
+	}
+
+	private updateAudienceSegmentationChart(
+		results: {
+			centroid: number[][];
+			clusterSize: number;
+			clusterLabel: number;
+		},
+		chart: Chart
+	) {
+		var label = results.centroid.join(' ');
+		chart.chartOptions.xAxis.data = label;
+		chart.chartOptions.series[0].data = [results.clusterSize];
+		console.log(chart.chartOptions);
+		return chart;
+	}
+
 	private updateDensityChart(embedding: number[][], chart: Chart) {
-		//@ts-ignore
-		chart.chartOptions.xAxis = {}; //@ts-ignore
+		chart.chartOptions.xAxis = {};
 		chart.chartOptions.yAxis = {};
 		chart.chartOptions.series[0] = {
-			//@ts-ignore
 			data: embedding,
 			type: 'scatter',
 			symbolSize: 10
@@ -124,4 +154,4 @@ class ChartDataWorkFlow {
 	}
 }
 
-export { ChartDataWorkFlow };
+export { DataIO };

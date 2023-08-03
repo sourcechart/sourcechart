@@ -12,6 +12,8 @@
 
 	let tags: Array<string> = [];
 
+	export let ButtonName: string;
+
 	$: columns = getColumnsFromFile();
 	$: clickChart = clickedChart();
 	$: i = clickedChartIndex();
@@ -46,7 +48,7 @@
 	};
 </script>
 
-<Button color="alternative" pill={false} outline={false}>Group By Column</Button>
+<Button color="alternative" pill={false} outline={false}>{ButtonName}</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => addColumnToGroupBy(column)}>{column}</DropdownItem>
