@@ -3,9 +3,10 @@
 	import { Groupby, ChartDropdown } from './sidebar-components';
 	import { Range } from 'flowbite-svelte';
 	import { epsilonDistance, minimimPointsForCluster } from '$lib/io/Stores';
+	import { Input } from 'flowbite-svelte';
 
 	let clusterSize = 5;
-	let defaultEpsilon = 0.1;
+	let defaultEpsilon = 1;
 
 	const handleEpsilonDistance = () => {
 		epsilonDistance.update((epsilon) => {
@@ -36,8 +37,8 @@
 		<p class="text-xs">Minimum Distance between Points</p>
 		<Range
 			id="range-minmax"
-			min="0"
-			max="1"
+			min="1"
+			max="100"
 			bind:value={defaultEpsilon}
 			on:change={handleEpsilonDistance}
 		/>
@@ -47,8 +48,8 @@
 		<p class="text-xs">Minimum Size of Groups</p>
 		<Range
 			id="range-minmax"
-			min="0"
-			max="10"
+			min="1"
+			max="100"
 			bind:value={clusterSize}
 			on:change={handleClusterSize}
 		/>

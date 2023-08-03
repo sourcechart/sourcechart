@@ -29,7 +29,7 @@
 		const db = await DuckDBClient.of([f]);
 
 		const resp = await db.query(`SELECT * FROM "${f.name}"`);
-		var id = generateID(); //@ts-ignore
+		var id = generateID();
 		var columns = resp.schema.map((item) => item['name']);
 
 		createFileStore(f.name, columns, f.size, id, db);

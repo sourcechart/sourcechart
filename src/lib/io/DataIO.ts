@@ -68,7 +68,6 @@ class DataIO {
 		}
 	};
 
-	//TODO: check if query needs to be rerun.
 	public async updateChart() {
 		let queryString = this.query();
 		let results = await this.getDataResults(this.db, queryString);
