@@ -6,10 +6,14 @@ import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
 class DataIO {
 	private db: DuckDBClient;
 	private chart: Chart;
+	private epsilon: number | undefined;
+	private minPoints: number | undefined;
 
-	constructor(db: DuckDBClient, chart: Chart) {
+	constructor(db: DuckDBClient, chart: Chart, epsilon?: number, minPoints?: number) {
 		this.db = db;
 		this.chart = chart;
+		this.epsilon = epsilon;
+		this.minPoints = minPoints;
 	}
 
 	private getQueryObject(chart: Chart): QueryObject {
@@ -85,16 +89,20 @@ class DataIO {
 
 	private getDensityResults(results: any) {
 		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
-		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
-		var clusters = dbscan.run().getClusters();
-		if (multidimensialArray.length > 1000) {
-			const umap = new UMAP({
-				nComponents: 2,
-				nEpochs: 1,
-				nNeighbors: 2
-			});
-			const embedding = umap.fit(clusters);
-			return embedding;
+		if (this.epsilon && this.minPoints) {
+			const dbscan = new DBSCAN(multidimensialArray, this.epsilon, this.minPoints, 'gower');
+			var clusters = dbscan.run().getClusters();
+			if (multidimensialArray.length > 1000) {
+				const umap = new UMAP({
+					nComponents: 2,
+					nEpochs: 1,
+					nNeighbors: 2
+				});
+				const embedding = umap.fit(clusters);
+				return embedding;
+			} else {
+				return multidimensialArray;
+			}
 		} else {
 			return multidimensialArray;
 		}
