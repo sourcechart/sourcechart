@@ -71,11 +71,16 @@ class DataIO {
 		console.log(this.chart);
 		if (this.chart.workflow === 'basic') {
 			return this.updateBasicChart(results, this.chart);
-		} else if (this.chart.workflow === 'cluster') {
+		} else if (this.chart.workflow === 'cluster' && this.chart.chartType === 'density') {
 			let embedding = this.getDensityResults(results);
 			return this.updateDensityChart(embedding, this.chart);
-		} else if (this.chart.workflow === 'cluster' && this.chart.chartType !== 'density') {
-			//	let
+		} else if (
+			this.chart.workflow === 'cluster' &&
+			this.chart.chartType !== 'density' &&
+			this.chart.chartType
+		) {
+			let embedding = this.getAudienceSegmentationResult(results);
+			console.log(embedding);
 		}
 	}
 
@@ -115,8 +120,12 @@ class DataIO {
 		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
 		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
 		var clusters = dbscan.getAudienceSegments();
+
+		console.log(clusters);
 		return clusters;
 	}
+
+	private updateAudienceSegmentationChart(results: any[], chart: Chart) {}
 
 	private updateDensityChart(embedding: number[][], chart: Chart) {
 		//@ts-ignore
