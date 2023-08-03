@@ -55,7 +55,7 @@ export class DBSCAN {
 			this.distance = distance;
 		}
 	}
-	// Public functions
+
 	public run(): number[][] {
 		for (let pointId = 0; pointId < this._datasetLength; pointId++) {
 			if (this._visited[pointId] !== 1) {
@@ -74,7 +74,6 @@ export class DBSCAN {
 				}
 			}
 		}
-
 		return this.clusters;
 	}
 
@@ -184,15 +183,15 @@ export class DBSCAN {
 		let closest_points = cluster_ids.map((clusterId) => {
 			return this.getClosestPointToCentroid(clusterId);
 		});
-		let clusterSize = centroids.map((centroid, index) => {
+		let clusterSize = centroids.map((_, index) => {
 			return this.clusters[index].length;
 		});
 
-		let arrays = [closest_points, clusterSize, cluster_ids];
-
-		let chartData = arrays.map((array, i) => {
-			return { closestPoint: array[i], clusterSize: array[i + 1], clusterLabel: array[i + 2] };
-		});
+		const chartData = {
+			closetPoints: closest_points,
+			clusterSize: clusterSize[0],
+			clusterLabel: cluster_ids[0]
+		};
 		return chartData;
 	}
 
