@@ -191,7 +191,7 @@ export class DBSCAN {
 		});
 
 		const chartData = {
-			closetPoints: closest_points,
+			centroid: closest_points,
 			clusterSize: clusterSize[0],
 			clusterLabel: cluster_ids[0]
 		};
