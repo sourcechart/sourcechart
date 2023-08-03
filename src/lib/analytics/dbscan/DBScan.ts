@@ -56,7 +56,7 @@ export class DBSCAN {
 		}
 	}
 
-	public run(): number[][] {
+	public run() {
 		for (let pointId = 0; pointId < this._datasetLength; pointId++) {
 			if (this._visited[pointId] !== 1) {
 				this._visited[pointId] = 1;
@@ -69,11 +69,14 @@ export class DBSCAN {
 					const clusterId = this.clusters.length;
 					this.clusters.push([]);
 					this.addToCluster(pointId, clusterId);
-
 					this.expandCluster(clusterId, neighbors);
 				}
 			}
 		}
+		return this;
+	}
+
+	public getClusters(): number[][] {
 		return this.clusters;
 	}
 
@@ -176,14 +179,14 @@ export class DBSCAN {
 	}
 
 	public getAudienceSegments() {
-		this.run();
 		const centroids = this.getClusterCentroids();
 		let labels = this.getLabels();
 		let cluster_ids = Object.keys(labels).map((clusterId) => parseInt(clusterId));
-		let closest_points = cluster_ids.map((clusterId) => {
+
+		var closest_points = cluster_ids.map((clusterId) => {
 			return this.getClosestPointToCentroid(clusterId);
 		});
-		let clusterSize = centroids.map((_, index) => {
+		var clusterSize = centroids.map((_, index) => {
 			return this.clusters[index].length;
 		});
 

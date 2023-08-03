@@ -68,7 +68,6 @@ class DataIO {
 	public async updateChart() {
 		let queryString = this.query();
 		let results = await this.getDataResults(this.db, queryString);
-		console.log(this.chart);
 		if (this.chart.workflow === 'basic') {
 			return this.updateBasicChart(results, this.chart);
 		} else if (this.chart.workflow === 'cluster' && this.chart.chartType === 'density') {
@@ -79,15 +78,15 @@ class DataIO {
 			this.chart.chartType !== 'density' &&
 			this.chart.chartType
 		) {
-			let embedding = this.getAudienceSegmentationResult(results);
-			console.log(embedding);
+			let chartResults = this.getAudienceSegmentationResult(results);
+			return this.updateAudienceSegmentationChart(chartResults, this.chart);
 		}
 	}
 
 	private getDensityResults(results: any) {
 		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
 		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
-		var clusters = dbscan.run();
+		var clusters = dbscan.run().getClusters();
 		if (multidimensialArray.length > 1000) {
 			const umap = new UMAP({
 				nComponents: 2,
@@ -119,13 +118,15 @@ class DataIO {
 	private getAudienceSegmentationResult(results: any) {
 		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
 		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
-		var clusters = dbscan.getAudienceSegments();
-
-		console.log(clusters);
+		var clusters = dbscan.run().getAudienceSegments();
 		return clusters;
 	}
 
-	private updateAudienceSegmentationChart(results: any[], chart: Chart) {}
+	private updateAudienceSegmentationChart(results: any, chart: Chart) {
+		chart.chartOptions.series[0].data = results.clusterSize;
+		chart.chartOptions.xAxis.data = results.closetPoint;
+		return chart;
+	}
 
 	private updateDensityChart(embedding: number[][], chart: Chart) {
 		//@ts-ignore
