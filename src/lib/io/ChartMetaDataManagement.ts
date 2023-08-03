@@ -3,6 +3,7 @@ import { mostRecentChartID, allCharts } from '$lib/io/Stores';
 const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => {
 	let chartMetaData: Chart = {
 		chartID: id,
+		chartType: null,
 		chartShape: shape,
 		filename: null,
 		aggregator: null,
@@ -17,11 +18,10 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 		canvasWidth: 0,
 		database: null,
 		chartOptions: {
-			xAxis: { data: [], type: 'category', axisLine: { show: false } },
-			series: [{ data: [], type: '',  barWidth: '60%',
- 		}],
+			xAxis: { data: [], type: 'category' },
+			series: [{ data: [], type: '', barWidth: '60%' }],
 			yAxis: {
-				splitLine: {show:false},
+				splitLine: { show: false },
 				type: 'value'
 			}
 		}

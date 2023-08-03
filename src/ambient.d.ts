@@ -5,9 +5,13 @@
  *****************************/
 
 type WorkFlow = 'basic' | 'cluster';
+type ChartType = 'scatter' | 'bar' | 'line' | 'pie' | 'area' | 'clusterDensity';
+type DistanceFunction = (a: number[], b: number[]) => number;
+type PointVector = number[];
 
 type Chart = {
 	chartShape: string;
+	chartType: string | null;
 	chartID: string;
 	workflow: WorkFlow;
 	polygon: Polygon;

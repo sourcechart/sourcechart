@@ -1,6 +1,3 @@
-type DistanceFunction = (a: number[], b: number[]) => number;
-type Point = number[];
-
 export class DBSCAN {
 	private dataset: number[][] = [];
 	private epsilon: number = 1;
@@ -24,37 +21,6 @@ export class DBSCAN {
 			return;
 		}
 		this.init(dataset, epsilon, minPts, distanceFunction);
-	}
-
-	// Public functions
-	public run(): number[][] {
-		for (let pointId = 0; pointId < this._datasetLength; pointId++) {
-			if (this._visited[pointId] !== 1) {
-				this._visited[pointId] = 1;
-
-				const neighbors = this.regionQuery(pointId);
-
-				if (neighbors.length < this.minPts) {
-					this.noise.push(pointId);
-				} else {
-					const clusterId = this.clusters.length;
-					this.clusters.push([]);
-					this.addToCluster(pointId, clusterId);
-
-					this.expandCluster(clusterId, neighbors);
-				}
-			}
-		}
-
-		return this.clusters;
-	}
-
-	public getLabels(): Record<number, number[][]> {
-		const labels: Record<number, number[][]> = {};
-		this.clusters.forEach((cluster, clusterId) => {
-			labels[clusterId] = cluster.map((pointId) => this.dataset[pointId]);
-		});
-		return labels;
 	}
 
 	private init(
@@ -90,6 +56,38 @@ export class DBSCAN {
 		}
 	}
 
+	public run() {
+		for (let pointId = 0; pointId < this._datasetLength; pointId++) {
+			if (this._visited[pointId] !== 1) {
+				this._visited[pointId] = 1;
+
+				const neighbors = this.regionQuery(pointId);
+
+				if (neighbors.length < this.minPts) {
+					this.noise.push(pointId);
+				} else {
+					const clusterId = this.clusters.length;
+					this.clusters.push([]);
+					this.addToCluster(pointId, clusterId);
+					this.expandCluster(clusterId, neighbors);
+				}
+			}
+		}
+		return this;
+	}
+
+	public getClusters(): number[][] {
+		return this.clusters;
+	}
+
+	public getLabels(): Record<number, number[][]> {
+		const labels: Record<number, number[][]> = {};
+		this.clusters.forEach((cluster, clusterId) => {
+			labels[clusterId] = cluster.map((pointId) => this.dataset[pointId]);
+		});
+		return labels;
+	}
+
 	private expandCluster(clusterId: number, neighbors: number[]) {
 		for (let i = 0; i < neighbors.length; i++) {
 			const pointId2 = neighbors[i];
@@ -119,7 +117,7 @@ export class DBSCAN {
 					centroid[index] += val;
 				});
 			});
-			centroid.forEach((val, index) => {
+			centroid.forEach((_, index) => {
 				centroid[index] /= clusterPoints.length;
 			});
 			centroids.push(centroid);
@@ -127,7 +125,7 @@ export class DBSCAN {
 		return centroids;
 	}
 
-	public getDistancesFromPointToCentroids(point: number[]): number[] {
+	private getDistancesFromPointToCentroids(point: number[]): number[] {
 		const centroids = this.getClusterCentroids();
 		const distances = centroids.map((centroid) => this.distance(point, centroid));
 		return distances;
@@ -147,6 +145,57 @@ export class DBSCAN {
 			}
 		});
 		return { closestClusterId, minDistance };
+	}
+
+	public getDistancesToCentroids(): { [clusterId: number]: { [pointId: number]: number } } {
+		const centroids = this.getClusterCentroids();
+		const distancesToCentroids: { [clusterId: number]: { [pointId: number]: number } } = {};
+		this.clusters.forEach((cluster, clusterId) => {
+			const centroid = centroids[clusterId];
+			distancesToCentroids[clusterId] = {};
+			cluster.forEach((pointId) => {
+				const point = this.dataset[pointId];
+				const distanceToCentroid = this.distance(point, centroid);
+				distancesToCentroids[clusterId][pointId] = distanceToCentroid;
+			});
+		});
+		return distancesToCentroids;
+	}
+
+	public getClosestPointToCentroid(clusterId: number): number[] {
+		const centroids = this.getClusterCentroids();
+		const centroid = centroids[clusterId];
+		let minDistance = Infinity;
+		let closestPoint = this.dataset[0];
+		this.clusters[clusterId].forEach((pointId) => {
+			const point = this.dataset[pointId];
+			const distance = this.distance(point, centroid);
+			if (distance < minDistance) {
+				minDistance = distance;
+				closestPoint = point;
+			}
+		});
+		return closestPoint;
+	}
+
+	public getAudienceSegments() {
+		const centroids = this.getClusterCentroids();
+		let labels = this.getLabels();
+		let cluster_ids = Object.keys(labels).map((clusterId) => parseInt(clusterId));
+
+		var closest_points = cluster_ids.map((clusterId) => {
+			return this.getClosestPointToCentroid(clusterId);
+		});
+		var clusterSize = centroids.map((_, index) => {
+			return this.clusters[index].length;
+		});
+
+		const chartData = {
+			centroid: closest_points,
+			clusterSize: clusterSize[0],
+			clusterLabel: cluster_ids[0]
+		};
+		return chartData;
 	}
 
 	private addToCluster(pointId: number, clusterId: number) {
@@ -172,7 +221,7 @@ export class DBSCAN {
 		return a.concat(b.filter((item) => a.indexOf(item) < 0));
 	}
 
-	private euclideanDistance(p: Point, q: Point): number {
+	private euclideanDistance(p: number[], q: number[]): number {
 		let sum = 0;
 		let i = Math.min(p.length, q.length);
 
@@ -182,6 +231,7 @@ export class DBSCAN {
 
 		return Math.sqrt(sum);
 	}
+
 	private gowerDistance(p: (number | string)[], q: (number | string)[]): number {
 		let sum = 0;
 		let validDimensions = 0;
@@ -206,7 +256,6 @@ export class DBSCAN {
 				validDimensions++;
 			}
 		}
-
 		return sum / validDimensions;
 	}
 }

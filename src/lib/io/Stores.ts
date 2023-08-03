@@ -1,6 +1,6 @@
 /**  State Management for Echarts Stores **/
 import { writable, derived } from 'svelte/store';
-import { ChartDataWorkFlow } from './ChartDataWorkflows';
+import { DataIO } from './DataIO';
 import type { DuckDBClient } from './DuckDBCLI';
 
 export const globalMouseState = writable<boolean>(false);
@@ -78,7 +78,7 @@ export const getChartOptions = (id: string | undefined) => {
 
 				if (chart) {
 					const db: DuckDBClient = chart.database;
-					const newChart = new ChartDataWorkFlow(db, chart);
+					const newChart = new DataIO(db, chart);
 					const chartOption = await newChart.updateChart();
 					set(chartOption)
 				}
