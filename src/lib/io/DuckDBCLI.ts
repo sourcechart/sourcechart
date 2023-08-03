@@ -17,6 +17,7 @@ import duckdb_wasm_eh from '@duckdb/duckdb-wasm/dist/duckdb-eh.wasm?url';
 import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url';
 import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
+import { checkNameForSpacesandHyphens } from './FileUtils';
 
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;
@@ -184,11 +185,12 @@ export class DuckDBClient {
 
 			const fileStreamer = new FileStreamer(file);
 			const conn = await db.connect();
+			var filename = checkNameForSpacesandHyphens(file.name);
 			while (!fileStreamer.isEndOfBlob()) {
 				const uint8ArrayBuffer = await fileStreamer.readBlockAsArrayBuffer(); //@ts-ignore
 				await db.registerFileBuffer(file.name, uint8ArrayBuffer);
 				if (firstRun) {
-					let query = `CREATE TABLE IF NOT EXISTS ${tableID} AS 
+					let query = `CREATE TABLE IF NOT EXISTS ${filename} AS 
 								SELECT * FROM ${reader}('${file.name}', ignore_errors=1, AUTO_DETECT=true)
 							LIMIT 0`;
 					await conn.query(query);
@@ -196,7 +198,7 @@ export class DuckDBClient {
 				}
 				try {
 					await conn.query(`
-					INSERT INTO ${tableID}
+					INSERT INTO ${filename}
 						SELECT * FROM ${reader}('${file.name}',  AUTO_DETECT=true, ignore_errors=1);
 				`);
 				} catch (e) {
