@@ -6,7 +6,7 @@
 <div class="space-y-3 mt-3">
 	<div class="flex flex-col space-y-1">
 		<p class="text-xs">Add Attributes</p>
-		<Groupby />
+		<Groupby ButtonName={'Add Attributes'} />
 		<Tags />
 	</div>
 	<div class="flex flex-col space-y-1">
