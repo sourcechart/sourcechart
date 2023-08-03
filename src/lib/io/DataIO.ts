@@ -115,22 +115,34 @@ class DataIO {
 		return this.formatData(results);
 	}
 
-	private getAudienceSegmentationResult(results: any) {
+	private getAudienceSegmentationResult(results: any): {
+		centroid: number[][];
+		clusterSize: number;
+		clusterLabel: number;
+	} {
 		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
 		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
 		var clusters = dbscan.run().getAudienceSegments();
 		return clusters;
 	}
 
-	private updateAudienceSegmentationChart(results: any, chart: Chart) {
-		chart.chartOptions.series[0].data = results.clusterSize;
-		chart.chartOptions.xAxis.data = results.closetPoint;
+	private updateAudienceSegmentationChart(
+		results: {
+			centroid: number[][];
+			clusterSize: number;
+			clusterLabel: number;
+		},
+		chart: Chart
+	) {
+		var label = results.centroid.join(' ');
+		chart.chartOptions.xAxis.data = label;
+		chart.chartOptions.series[0].data = [results.clusterSize];
+		console.log(chart.chartOptions);
 		return chart;
 	}
 
 	private updateDensityChart(embedding: number[][], chart: Chart) {
-		//@ts-ignore
-		chart.chartOptions.xAxis = {}; //@ts-ignore
+		chart.chartOptions.xAxis = {};
 		chart.chartOptions.yAxis = {};
 		chart.chartOptions.series[0] = {
 			data: embedding,
