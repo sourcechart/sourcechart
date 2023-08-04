@@ -4,10 +4,6 @@
 
 <div class="space-y-3 mt-3">
 	<div class="flex flex-col space-y-1">
-		<p class="text-xs">Choose Chart</p>
-		<ChartDropdown sideBarVersion={'LowCode'} />
-	</div>
-	<div class="flex flex-col space-y-1">
 		<p class="text-xs">Axis</p>
 		<ColumnDropDrown axis={'X'} />
 		<ColumnDropDrown axis={'Y'} />
@@ -20,5 +16,9 @@
 		<p class="text-xs">Groupby</p>
 		<Groupby ButtonName={'Group By'} />
 		<Tags />
+	</div>
+	<div class="flex flex-col space-y-1">
+		<p class="text-xs">Choose Chart</p>
+		<ChartDropdown sideBarVersion={'LowCode'} />
 	</div>
 </div>
