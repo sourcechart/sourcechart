@@ -1,3 +1,5 @@
+import { checkNameForSpacesandHyphens } from './FileUtils';
+
 export class Query {
 	// Builder Class for constructing DuckDB Queries. If you want to add a feature, add a new method and call it in new Query(queryObject).build
 	queryObject: QueryObject;
@@ -21,7 +23,7 @@ export class Query {
 	private checkClusterColumns() {
 		let columns = this.queryObject.queries.select.cluster.attributes;
 		for (let i = 0; i < columns.length; i++) {
-			columns[i] = this.checkNameForSpacesandHyphens(columns[i]);
+			columns[i] = checkNameForSpacesandHyphens(columns[i]);
 		}
 		return columns;
 	}
@@ -32,7 +34,7 @@ export class Query {
 
 		if (this.queryObject.queries.select.cluster.from) {
 			var f = this.queryObject.queries.select.cluster.from;
-			filename = this.checkNameForSpacesandHyphens(f);
+			filename = checkNameForSpacesandHyphens(f);
 		}
 
 		let query = ['SELECT', columns.join(', '), 'FROM', filename].join(' ');
@@ -66,9 +68,9 @@ export class Query {
 			selectBlock.select.basic.yColumn.column &&
 			selectBlock.select.basic.from
 		) {
-			xColumn = this.checkNameForSpacesandHyphens(selectBlock.select.basic.xColumn.column);
-			yColumn = this.checkNameForSpacesandHyphens(selectBlock.select.basic.yColumn.column);
-			file = this.checkNameForSpacesandHyphens(selectBlock.select.basic.from);
+			xColumn = checkNameForSpacesandHyphens(selectBlock.select.basic.xColumn.column);
+			yColumn = checkNameForSpacesandHyphens(selectBlock.select.basic.yColumn.column);
+			file = checkNameForSpacesandHyphens(selectBlock.select.basic.from);
 			return { xColumn: xColumn, yColumn: yColumn, file: file };
 		} else {
 			return { xColumn: null, yColumn: null, file: null };
@@ -110,13 +112,6 @@ export class Query {
 			return column;
 		}
 		return yColumn;
-	}
-
-	private checkNameForSpacesandHyphens(column: string) {
-		if (!column.match('^[a-zA-Z0-9]+$')) {
-			column = ['"', column, '"'].join('');
-		}
-		return column;
 	}
 
 	private constructSelect(

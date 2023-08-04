@@ -16,7 +16,8 @@ import mvp_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?ur
 import duckdb_wasm_eh from '@duckdb/duckdb-wasm/dist/duckdb-eh.wasm?url';
 import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url';
 import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
-
+import { FileStreamer } from './FileStreamer';
+import { checkNameForSpacesandHyphens } from './FileUtils';
 
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;
@@ -29,37 +30,38 @@ export class DuckDBClient {
 	}
 
 	public async queryStream(query: string, params?: Array<any>) {
-		//@ts-ignore
-		const connection = await this._db.connect();
-		let reader: any;
-		let batch: any;
-		try {
-			//@ts-ignore
-			if (params?.length > 0) {
-				const statement = await connection.prepare(query); //@ts-ignore
-				reader = await statement.send(...params);
-			} else {
-				reader = await connection.send(query);
-			}
-			batch = await reader.next();
-			if (batch.done) throw new Error('missing first batch');
-		} catch (error) {
-			await connection.close();
-			throw error;
-		}
-		return {
-			schema: getArrowTableSchema(batch.value),
-			async *readRows() {
-				try {
-					while (!batch.done) {
-						yield batch.value.toArray();
-						batch = await reader.next();
-					}
-				} finally {
-					await connection.close();
+		if (this._db) {
+			const connection = await this._db.connect();
+			let reader: any;
+			let batch: any;
+			try {
+				//@ts-ignore
+				if (params?.length > 0) {
+					const statement = await connection.prepare(query); //@ts-ignore
+					reader = await statement.send(...params);
+				} else {
+					reader = await connection.send(query);
 				}
+				batch = await reader.next();
+				if (batch.done) throw new Error('missing first batch');
+			} catch (error) {
+				await connection.close();
+				throw error;
 			}
-		};
+			return {
+				schema: getArrowTableSchema(batch.value),
+				async *readRows() {
+					try {
+						while (!batch.done) {
+							yield batch.value.toArray();
+							batch = await reader.next();
+						}
+					} finally {
+						await connection.close();
+					}
+				}
+			};
+		}
 	}
 
 	public async query(query: string, params?: Array<any>): Promise<Array<any[any]>> {
@@ -77,7 +79,7 @@ export class DuckDBClient {
 		Promise <Array<any[any]>>
 		*/
 		const res = await this.queryStream(query, params);
-		let results: Array<any> = [];
+		let results: Array<any> = []; //@ts-ignore
 		for await (const rows of res.readRows()) {
 			for (const row of rows) {
 				results.push(row);
@@ -88,11 +90,8 @@ export class DuckDBClient {
 	}
 
 	public async queryRow(query: string, params?: Array<any>) {
-		/*Query a single row
-
-
-		*/
-		const result = await this.queryStream(query, params);
+		/*Query a single row*/
+		const result = await this.queryStream(query, params); //@ts-ignore
 		const reader = result.readRows();
 		try {
 			const { done, value } = await reader.next();
@@ -150,7 +149,8 @@ export class DuckDBClient {
 			Object.entries(sources).map(async ([name, source]) => {
 				//@ts-ignore
 				if (source instanceof File) {
-					await insertFile(db, source.name, source);
+					await insertLargeOrDeformedFile(db, source);
+					//await insertFile(db, source.name, source, { ignore_errors: 1 });
 					//@ts-ignore
 				} else if ('file' in source) {
 					const { file, ...options } = source; //@ts-ignore
@@ -162,67 +162,44 @@ export class DuckDBClient {
 		);
 		return new DuckDBClient(db);
 	}
+}
 
-	/*
-	public async oldFileThings(db: AsyncDuckDB, file: File, tableID: string) {
-		Insert file from filesystem to the DuckDBWam via a file Buffer.
-		
-		Args
-		-----
-		filename: File,
-		tableID: string 
-			TableID hash
-		
-		Returns
-		-------
-		duckdb.AsyncDuckDBConnection
-		let firstRun: boolean = true;
-		var filetype = file.name.substring(file.name.lastIndexOf('.'));
-		var reader = getDuckDbExtension(filetype);
+async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
+	let firstRun: boolean = true;
+	var filetype = file.name.substring(file.name.lastIndexOf('.'));
+	var reader = getDuckDbExtension(filetype);
 
-		const fileStreamer = new FileStreamer(file);
-		//const db = await this.db();
-		const conn = await db.connect();
-		while (!fileStreamer.isEndOfBlob()) {
-			//@ts-ignore
-			const uint8ArrayBuffer: Uint8Array = await fileStreamer.readBlockAsArrayBuffer();
-			await db.registerFileBuffer(file.name, uint8ArrayBuffer);
-			if (firstRun) {
-				let query = `CREATE TABLE IF NOT EXISTS ${tableID} AS 
-								SELECT * FROM ${reader}('${file.name}', ignore_errors=1, AUTO_DETECT=true)
-							LIMIT 0`;
-				await conn.query(query);
-				firstRun = false;
-			}
-			try {
-				await conn.query(`
-
-					INSERT INTO ${tableID}
-						SELECT * FROM ${reader}('${file.name}',  AUTO_DETECT=true, ignore_errors=1);
-				`);
-			} catch (e) {
-				console.log(e);
-			}
+	const fileStreamer = new FileStreamer(file);
+	const connection = await db.connect();
+	var filename = checkNameForSpacesandHyphens(file.name);
+	while (!fileStreamer.isEndOfBlob()) {
+		const uint8ArrayBuffer = await fileStreamer.readBlockAsArrayBuffer(); //@ts-ignore
+		await db.registerFileBuffer(file.name, uint8ArrayBuffer);
+		if (firstRun) {
+			let query = `CREATE TABLE IF NOT EXISTS ${filename} AS 
+							SELECT * FROM ${reader}('${file.name}', ignore_errors=1, AUTO_DETECT=true)
+						LIMIT 0`;
+			await connection.query(query);
+			firstRun = false;
 		}
-
-		return conn;
+		try {
+			await connection.query(`
+				INSERT INTO ${filename}
+					SELECT * FROM ${reader}('${file.name}',  AUTO_DETECT=true, ignore_errors=1);
+			`);
+		} catch (e) {
+			console.log(e);
+		}
 	}
-			*/
+
+	return connection;
 }
 
-function isFile(input: unknown) {
-	if ('File' in window && input instanceof File) return true;
-	else return false;
-}
-
-Object.defineProperty(DuckDBClient.prototype, 'dialect', {
-	value: 'duckdb'
-});
-
-async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: Array<any>) {
+async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any) {
 	const buffer = await file.arrayBuffer();
 	await db.registerFileBuffer(file.name, new Uint8Array(buffer));
 	const connection = await db.connect();
+
 	try {
 		switch (file.type) {
 			case 'text/csv':
@@ -255,6 +232,7 @@ async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: Arra
 		await connection.close();
 	}
 }
+
 const makeDB = async () => {
 	/*
 	Make DB from the webapp from web assembly worke
@@ -374,8 +352,7 @@ function getDuckDBType(type: string) {
 	}
 }
 
-//@ts-ignore
-async function remote_fetch(file) {
+async function remote_fetch(file: any) {
 	const response = await fetch(await file.url());
 	if (!response.ok) throw new Error(`Unable to load file: ${file.name}`);
 	return response;

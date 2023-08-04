@@ -27,6 +27,7 @@ export class FileStreamer {
 				resolve(data);
 			};
 
+			//@ts-ignore
 			fileReader.onerror = (event: ErrorEvent) => {
 				reject(event.error);
 			};
@@ -40,13 +41,13 @@ export class FileStreamer {
 	}
 
 	protected getArrayBufferFromEvent(event: Event): ArrayBuffer {
-		const target: FileReader = event.target as FileReader;
+		const target: FileReader = event.target as FileReader; //@ts-ignore
 		const result: Uint8Array = new Uint8Array(target.result);
 		return result;
 	}
 
 	private getTextFromEvent(event: Event): string {
-		const target: FileReader = event.target as FileReader;
+		const target: FileReader = event.target as FileReader; //@ts-ignore\
 		return target.result;
 	}
 
