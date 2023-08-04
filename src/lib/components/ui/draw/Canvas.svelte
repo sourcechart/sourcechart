@@ -42,13 +42,10 @@
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: TOUCHSTATE = touchStates();
 	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
-
-	const updateOffset = () => {
-		const rect = canvas.getBoundingClientRect();
-		offsetX = rect.left;
-		offsetY = Math.abs(rect.top - height);
+	// Keeps the polygon in the correct position when the window is resized
+	$: () => {
+		scrollX, scrollY, offsetX, offsetY;
 	};
-
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -57,6 +54,12 @@
 			updateOffset();
 		});
 	}
+
+	const updateOffset = () => {
+		const rect = canvas.getBoundingClientRect();
+		offsetX = rect.left;
+		offsetY = Math.abs(rect.top - height);
+	};
 
 	function controlSidebar(touchstate: string) {
 		if (touchstate === 'isTouching') {
