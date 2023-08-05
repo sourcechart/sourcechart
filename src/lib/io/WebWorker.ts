@@ -1,5 +1,7 @@
+//@ts-ignore
 import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
 
+//@ts-ignore
 const logHtml = function (cssClass, ...args: Array<any>) {
 	postMessage({
 		type: 'log',
@@ -10,7 +12,7 @@ const logHtml = function (cssClass, ...args: Array<any>) {
 const log = (...args: Array<any>) => logHtml('', ...args);
 const error = (...args: Array<any>) => logHtml('error', ...args);
 
-const start = function (sqlite3: object) {
+const start = function (sqlite3: any) {
 	let db;
 	if (sqlite3.opfs) {
 		db = new sqlite3.oo1.OpfsDb('/mydb.sqlite3');
@@ -33,8 +35,9 @@ const start = function (sqlite3: object) {
 		log("Query data with exec() using rowMode 'array'...");
 		db.exec({
 			sql: 'SELECT a FROM t ORDER BY a LIMIT 3',
-			rowMode: 'array', // 'array' (default), 'object', or 'stmt'
+			rowMode: 'array', //@ts-ignore
 			callback: function (row) {
+				//@ts-ignore
 				log('row ', ++this.counter, '=', row);
 			}.bind({ counter: 0 })
 		});
@@ -52,6 +55,7 @@ sqlite3InitModule({
 	try {
 		start(sqlite3);
 	} catch (e: unknown) {
+		//@ts-ignore
 		error('Exception:', e.message);
 	}
 });
