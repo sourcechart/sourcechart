@@ -5,7 +5,7 @@
 	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
 
-	function clickButton(e: MouseEvent) {
+	function clickButton() {
 		dispatch('mode', 'drawRectangle');
 	}
 </script>

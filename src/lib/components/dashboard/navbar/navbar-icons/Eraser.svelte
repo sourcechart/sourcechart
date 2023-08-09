@@ -6,7 +6,7 @@
 	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
 
-	const handleClick = (e: MouseEvent) => {
+	const handleClick = () => {
 		dispatch('mode', 'eraser');
 	};
 </script>
