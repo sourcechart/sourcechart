@@ -35,13 +35,17 @@
 	</div>
 	<div>
 		<p class="text-xs">Minimum Distance between Points</p>
-		<Range
-			id="range-minmax"
-			min="1"
-			max="100"
-			bind:value={defaultEpsilon}
-			on:change={handleEpsilonDistance}
-		/>
+		<div>
+			<Range
+				class="bg-slate-950"
+				id="range-minmax"
+				min="1"
+				max="100"
+				bind:value={defaultEpsilon}
+				on:change={handleEpsilonDistance}
+			/>
+		</div>
+
 		<p class="text-xs">Distance between Points: {defaultEpsilon}</p>
 	</div>
 	<div>
