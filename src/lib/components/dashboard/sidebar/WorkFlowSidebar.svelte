@@ -39,8 +39,9 @@
 			<Range
 				class="bg-slate-950"
 				id="range-minmax"
-				min="1"
-				max="100"
+				min="0"
+				max="1"
+				step="0.01"
 				bind:value={defaultEpsilon}
 				on:change={handleEpsilonDistance}
 			/>
