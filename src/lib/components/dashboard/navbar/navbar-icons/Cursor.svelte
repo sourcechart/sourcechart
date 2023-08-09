@@ -5,7 +5,7 @@
 	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
 
-	function handleClick(e: MouseEvent) {
+	function handleClick() {
 		dispatch('mode', 'select');
 	}
 </script>

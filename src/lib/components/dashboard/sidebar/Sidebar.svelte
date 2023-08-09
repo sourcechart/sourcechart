@@ -7,6 +7,7 @@
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores';
+	import { Label } from 'flowbite-svelte';
 
 	const handleClickInside = () => {
 		$activeSidebar = true;
@@ -37,12 +38,16 @@
 
 <div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
-		<div class="flex flex-col space-y-1">
-			<p class="text-xs">Upload Files</p>
+		<div class="flex flex-col space-y-1 mt-2 mb-2">
+			<Label class="space-y-2 mb-1">
+				<span>Upload Files</span>
+			</Label>
 			<FileUpload />
 		</div>
 		<div class="flex flex-col space-y-1">
-			<p class="text-xs">Choose Dataset</p>
+			<Label class="space-y-2 mb-1">
+				<span>Choose Dataset</span>
+			</Label>
 			<DatasetDropDown />
 		</div>
 		<Tabs style="underline" contentClass="">

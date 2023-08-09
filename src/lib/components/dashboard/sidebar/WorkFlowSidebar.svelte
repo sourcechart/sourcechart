@@ -3,10 +3,12 @@
 	import { Groupby, ChartDropdown } from './sidebar-components';
 	import { Range } from 'flowbite-svelte';
 	import { epsilonDistance, minimimPointsForCluster } from '$lib/io/Stores';
-	import { Input } from 'flowbite-svelte';
+	import { NumberInput, Label } from 'flowbite-svelte';
 
 	let clusterSize = 5;
 	let defaultEpsilon = 1;
+	let maxRange: number = 1;
+	let stepValue = maxRange / 100;
 
 	const handleEpsilonDistance = () => {
 		epsilonDistance.update((epsilon) => {
@@ -25,32 +27,43 @@
 
 <div class="space-y-3 mt-3">
 	<div class="flex flex-col space-y-1">
-		<p class="text-xs">Add Attributes</p>
+		<Label class="space-y-2 mb-4">
+			<span>Add Attributes</span>
+		</Label>
 		<Groupby ButtonName={'Add Attributes'} />
 		<Tags />
 	</div>
 	<div class="flex flex-col space-y-1">
-		<p class="text-xs">Choose Chart</p>
+		<Label class="space-y-2 mb-4">
+			<span>Choose Chart</span>
+		</Label>
 		<ChartDropdown sideBarVersion={'WorkFlow'} />
 	</div>
 	<div>
-		<p class="text-xs">Minimum Distance between Points</p>
-		<div>
+		<Label class="space-y-2 mb-4">
+			<span>Minimum Distance between Points</span>
+		</Label>
+		<div class="flex-row">
 			<Range
 				class="bg-slate-950"
 				id="range-minmax"
 				min="0"
-				max="1"
-				step="0.01"
+				max={maxRange}
+				step={stepValue}
 				bind:value={defaultEpsilon}
 				on:change={handleEpsilonDistance}
 			/>
+			<Label class="space-y-2 mb-4">
+				<span>Max Range</span>
+				<NumberInput bind:maxRange />
+			</Label>
 		</div>
-
-		<p class="text-xs">Distance between Points: {defaultEpsilon}</p>
 	</div>
 	<div>
-		<p class="text-xs">Minimum Size of Groups</p>
+		<Label class="space-y-2 mb-4">
+			<span>Minimum Size of Groups</span>
+			<NumberInput bind:maxRange />
+		</Label>
 		<Range
 			id="range-minmax"
 			min="1"
