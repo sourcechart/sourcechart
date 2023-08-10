@@ -2,10 +2,9 @@ import sqlite3InitModule from 'sqlite-wasm-esm';
 
 let opfsDb;
 
-onmessage = function (e) {
+onmessage = (e) => {
 	const { command } = e.data;
 
-	console.log('command', command);
 	switch (command) {
 		case 'initialize':
 			initializeDb();
@@ -21,6 +20,7 @@ onmessage = function (e) {
 function initializeDb() {
 	sqlite3InitModule().then((sqlite3) => {
 		//@ts-ignore
+		console.log('sqlite3', sqlite3.oo1);
 		opfsDb = new sqlite3.opfs.OpfsDb('my-db', 'c');
 		opfsDb.open().then(() => {
 			opfsDb

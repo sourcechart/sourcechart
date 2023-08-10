@@ -10,7 +10,7 @@
 	const loadWorker = async () => {
 		const SyncWorker = await import('$lib/io/web.worker?worker');
 		syncWorker = new SyncWorker.default();
-		syncWorker.postMessage({ msg: 'initialize' });
+		syncWorker.postMessage({ command: 'initialize' });
 		syncWorker.onmessage = onWorkerMessage;
 
 		console.log('syncWorker', syncWorker);
