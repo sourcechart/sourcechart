@@ -3,8 +3,9 @@ import { defineConfig } from 'vitest/config';
 
 /** @type {import('vite').Plugin} */
 const viteServerConfig = {
-	name: 'log-request-middleware',
+	name: 'log-request-middleware', //@ts-ignore
 	configureServer(server) {
+		//@ts-ignore
 		server.middlewares.use((req, res, next) => {
 			res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
 			res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
