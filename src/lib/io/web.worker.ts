@@ -14,6 +14,7 @@ onmessage = (e) => {
 		default:
 			self.postMessage({ error: 'Invalid command' });
 	}
+	console.log('foo');
 };
 
 const initDB = () => {

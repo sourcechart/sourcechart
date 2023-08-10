@@ -12,8 +12,6 @@
 		syncWorker = new SyncWorker.default();
 		syncWorker.postMessage({ command: 'initialize' });
 		syncWorker.onmessage = onWorkerMessage;
-
-		console.log('syncWorker', syncWorker);
 	};
 
 	onMount(loadWorker);
