@@ -12,7 +12,7 @@
 		syncWorker = new SyncWorker.default();
 		syncWorker.postMessage({ message: 'initialize' });
 		syncWorker.onmessage = onWorkerMessage;
-		syncWorker.postMessage({ message: 'query' });
+		//syncWorker.postMessage({ message: 'query' });
 	};
 
 	onMount(loadWorker);
