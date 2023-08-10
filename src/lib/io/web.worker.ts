@@ -3,8 +3,9 @@ import sqlite3InitModule from 'sqlite-wasm-esm';
 let opfsDb: any;
 
 onmessage = (e) => {
-	const { command } = e.data;
-	switch (command) {
+	const { message } = e.data;
+
+	switch (message) {
 		case 'initialize':
 			initDB();
 			break;
@@ -12,27 +13,25 @@ onmessage = (e) => {
 			executeQuery();
 			break;
 		default:
-			self.postMessage({ error: 'Invalid command' });
+			postMessage({ error: 'Invalid command' });
 	}
-	console.log('foo');
 };
 
 const initDB = () => {
 	sqlite3InitModule().then((sqlite3) => {
 		//@ts-ignore
 		opfsDb = new sqlite3.opfs.OpfsDb('my-db', 'c');
-		opfsDb.exec('CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY, name TEXT)');
-
-		//.then(() => {
-		//		self.postMessage({ success: true, message: 'Database initialized.' });
-		//	})
-		//	.catch((error) => {
-		//		self.postMessage({ success: false, error: error.message });
-		//	});
+		try {
+			opfsDb.exec('CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY, name TEXT)');
+			postMessage({ success: true, message: 'Database initialized.' });
+		} catch (error) {
+			postMessage({ success: false, message: error });
+		}
 	});
 };
 
 const executeQuery = () => {
+	console.log(opfsDb);
 	if (!opfsDb) {
 		self.postMessage({ success: false, error: 'Database is not initialized.' });
 		return;
