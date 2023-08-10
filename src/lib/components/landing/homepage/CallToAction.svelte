@@ -20,7 +20,7 @@
 				Large Data Visualizations without the Cloud
 			</h1>
 			<p class="text-black max-w-xl font-semibold text-sm sm:text-base md:text-md lg:text-lg xl:text-xl">
-				Rrevolutionize the way your business interacts with data. Start your journey
+				Revolutionize the way your business interacts with data. Start your journey
 				with SourceChart.io today and watch your data come alive.
 			</p>
 			<button
