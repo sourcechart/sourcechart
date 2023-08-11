@@ -3,7 +3,7 @@
 
 	let syncWorker: Worker | undefined = undefined;
 
-	const onWorkerMessage = (e) => {
+	const onWorkerMessage = (e: any) => {
 		console.log(e.data);
 	};
 
@@ -12,7 +12,6 @@
 		syncWorker = new SyncWorker.default();
 		syncWorker.postMessage({ message: 'initialize' });
 		syncWorker.onmessage = onWorkerMessage;
-		//syncWorker.postMessage({ message: 'query' });
 	};
 
 	onMount(loadWorker);

@@ -13,7 +13,7 @@
 		dataID: string,
 		database: DuckDBClient
 	) => {
-		let tableColumnsSize: fileUpload = {
+		let tableColumnsSize: FileUpload = {
 			filename: filename,
 			columns: cols,
 			datasetID: dataID,
@@ -27,9 +27,8 @@
 		let target = e.target as HTMLInputElement;
 		let f: File = (target.files as FileList)[0];
 		const conn = await DuckDBClient.of([f]);
-		console.log(conn);
 		const resp = await conn.query(`SELECT * FROM "${f.name}"`);
-		var id = generateID();
+		var id = generateID(); //@ts-ignore
 		var columns = resp.schema.map((item) => item['name']);
 		//@ts-ignore
 		createFileStore(f.name, columns, f.size, id, conn);
