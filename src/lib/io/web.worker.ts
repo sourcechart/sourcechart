@@ -1,15 +1,5 @@
 import sqlite3InitModule from 'sqlite-wasm-esm';
 
-const getExampleBlob = async () => {
-	const blob = new Blob(['Hello, world!'], { type: 'text/plain' });
-	return bufferToHex(await blob.arrayBuffer());
-};
-
-function bufferToHex(buffer: ArrayBufferLike) {
-	// buffer is an ArrayBuffer
-	return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join('');
-}
-
 onmessage = (e) => {
 	const { message } = e.data;
 
@@ -21,6 +11,16 @@ onmessage = (e) => {
 			postMessage({ error: 'Invalid command' });
 	}
 };
+
+const getExampleBlob = async () => {
+	const blob = new Blob(['Hello, world!'], { type: 'text/plain' });
+	return bufferToHex(await blob.arrayBuffer());
+};
+
+function bufferToHex(buffer: ArrayBufferLike) {
+	// buffer is an ArrayBuffer
+	return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join('');
+}
 
 const initDB = () => {
 	sqlite3InitModule().then(async (sqlite3) => {
