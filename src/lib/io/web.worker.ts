@@ -8,7 +8,6 @@ onmessage = (e) => {
 	switch (message) {
 		case 'initialize':
 			initDB();
-			//executeQuery();
 			break;
 		default:
 			postMessage({ error: 'Invalid command' });
@@ -18,10 +17,10 @@ onmessage = (e) => {
 const initDB = () => {
 	sqlite3InitModule().then((sqlite3) => {
 		//@ts-ignore
-		db = new sqlite3.opfs.OpfsDb('my-db', 'c');
+		db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
 			`
-			CREATE TABLE IF NOT EXISTS test_table (test TEXT); 
+			CREATE TABLE IF NOT EXISTS test_table (filename TEXT, binary BLOB, id INTEGER PRIMARY KEY AUTOINCREMENT); 
 			INSERT INTO test_table (test) VALUES ('Hello, world!');
 			`
 		);
