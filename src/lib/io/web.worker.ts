@@ -25,14 +25,15 @@ const initDB = () => {
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
 			`
-			CREATE TABLE IF NOT EXISTS TestTable (filename TEXT, binary BLOB); 
+			CREATE TABLE IF NOT EXISTS foo (filename TEXT, something INT); 
 			`
 		);
-		db.exec(`
-			INSERT INTO TestTable (filename, binary) VALUES ('${filename}', '${blob}');
-		`);
 
-		let results = db.exec(`SELECT * FROM TestTable;`, { returnValue: 'resultRows' });
+		db.prepare(`INSERT INTO foo (filename, something) VALUES ('${filename}', ?);`)
+			.bind('123')
+			.stepFinalize();
+
+		let results = db.exec(`SELECT * FROM foo;`, { returnValue: 'resultRows' });
 		console.log('results: ', results, 'db: ', db);
 		db.close();
 		postMessage({ message: 'finished' });
