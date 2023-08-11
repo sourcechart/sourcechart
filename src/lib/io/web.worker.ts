@@ -1,6 +1,9 @@
 import sqlite3InitModule from 'sqlite-wasm-esm';
 
-let db;
+const getExampleBlob = () => {
+	const blob = new Blob(['Hello, world!'], { type: 'text/plain' });
+	return blob;
+};
 
 onmessage = (e) => {
 	const { message } = e.data;
@@ -16,15 +19,23 @@ onmessage = (e) => {
 
 const initDB = () => {
 	sqlite3InitModule().then((sqlite3) => {
+		let blob = getExampleBlob();
+		let filename = 'test.txt';
+
 		//@ts-ignore
-		db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
+		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
 			`
-			CREATE TABLE IF NOT EXISTS test_table (filename TEXT, binary BLOB, id INTEGER PRIMARY KEY AUTOINCREMENT); 
-			INSERT INTO test_table (test) VALUES ('Hello, world!');
+			CREATE TABLE IF NOT EXISTS foo (filename TEXT, binary BLOB); 
 			`
 		);
-		let results = db.exec(`SELECT * FROM test_table;`, { returnValue: 'resultRows' });
+		db.exec(``);
+
+		/*
+		db.exec(`INSERT INTO foo (filename, binary) VALUES (${filename}, ${blob});`);
+		*/
+
+		let results = db.exec(`SELECT * FROM foo;`, { returnValue: 'resultRows' });
 		console.log('results: ', results, 'db: ', db);
 		db.close();
 		postMessage({ message: 'finished' });
