@@ -9,6 +9,17 @@
 	import { Dropdown, DropdownItem, Button, P } from 'flowbite-svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 
+	let syncWorker: Worker | undefined = undefined;
+
+	const onWorkerMessage = (e: any) => {
+		console.log(e.data);
+	};
+
+	const loadWorker = async () => {
+		const SyncWorker = await import('$lib/io/web.worker?worker');
+		syncWorker = new SyncWorker.default();
+	};
+
 	let selectedDataset: string | null = 'Choose Dataset';
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
@@ -16,13 +27,6 @@
 		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 	}
 
-	const getFileFromSqlite = () => {};
-
-	const CreateDuckDB = async () => {
-		const conn = await DuckDBClient.of([f]);
-		const resp = await conn.query(`SELECT * FROM "${f.name}"`);
-		var columns = resp.schema.map((item) => item['name']);
-	};
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();

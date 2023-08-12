@@ -11,7 +11,6 @@
 		href?: string;
 		[propName: string]: any;
 	}
-
 	let syncWorker: Worker | undefined = undefined;
 
 	const onWorkerMessage = (e: any) => {
