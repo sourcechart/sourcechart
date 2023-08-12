@@ -1,10 +1,16 @@
 <script lang="ts">
 	import { Fileupload, Listgroup } from 'flowbite-svelte';
-	import { DuckDBClient } from '$lib/io/DuckDBCLI';
 	import { generateID } from '$lib/io/GenerateID';
 	import { fileUploadStore } from '$lib/io/Stores';
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
+
+	interface ListGroupItemType {
+		current?: boolean;
+		disabled?: boolean;
+		href?: string;
+		[propName: string]: any;
+	}
 
 	let syncWorker: Worker | undefined = undefined;
 
@@ -21,19 +27,12 @@
 
 	let files: ListGroupItemType | null = null;
 
-	const createFileStore = (
-		filename: string,
-		cols: any[],
-		fileSize: number,
-		dataID: string,
-		database: DuckDBClient
-	) => {
+	const createFileStore = (filename: string, cols: any[], fileSize: number, dataID: string) => {
 		let tableColumnsSize: FileUpload = {
 			filename: filename,
 			columns: cols,
 			datasetID: dataID,
-			size: fileSize,
-			database: database
+			size: fileSize
 		};
 		$fileUploadStore = [...$fileUploadStore, tableColumnsSize];
 	};
@@ -42,11 +41,10 @@
 		var target = e.target as HTMLInputElement;
 		var f = (target.files as FileList)[0];
 		var arrayBuffer = await f.arrayBuffer();
-		const conn = await DuckDBClient.of([f]);
-		const resp = await conn.query(`SELECT * FROM "${f.name}"`);
+
 		var id = generateID();
 		var hex = bufferToHex(arrayBuffer); //@ts-ignore
-		var columns = resp.schema.map((item) => item['name']);
+
 		//@ts-ignore
 		createFileStore(f.name, columns, f.size, id, conn);
 

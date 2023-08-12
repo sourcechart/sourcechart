@@ -6,7 +6,7 @@
 		allCharts,
 		clickedChartIndex
 	} from '$lib/io/Stores';
-	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	import { Dropdown, DropdownItem, Button, P } from 'flowbite-svelte';
 
 	let selectedDataset: string | null = 'Choose Dataset';
 
@@ -15,6 +15,11 @@
 		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 	}
 
+	const CreateDuckDB = () => {
+		//const conn = await DuckDBClient.of([f]);
+		//const resp = await conn.query(`SELECT * FROM "${f.name}"`);
+		//var columns = resp.schema.map((item) => item['name']);
+	};
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
@@ -26,11 +31,7 @@
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			chart.filename = filename;
-			if ($file?.database && $file?.datasetID) {
-				chart.datasetID = $file.datasetID;
-				chart.database = $file.database;
-			}
-
+			if ($file?.datasetID) chart.datasetID = $file.datasetID;
 			return charts;
 		});
 	};
