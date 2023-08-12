@@ -26,7 +26,7 @@
 	onMount(loadWorker);
 
 	const createFileStore = (filename: string, fileSize: number, dataID: string) => {
-		let tableColumnsSize = {
+		var tableColumnsSize = {
 			filename: filename,
 			datasetID: dataID,
 			size: fileSize
@@ -38,9 +38,9 @@
 		var target = e.target as HTMLInputElement;
 		var f = (target.files as FileList)[0];
 		var arrayBuffer = await f.arrayBuffer();
-
 		var id = generateID();
 		var hex = bufferToHex(arrayBuffer);
+
 		createFileStore(f.name, f.size, id);
 		if (syncWorker) {
 			syncWorker.postMessage({

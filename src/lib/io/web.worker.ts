@@ -1,30 +1,48 @@
 import sqlite3InitModule from 'sqlite-wasm-esm';
 
-type MessageData = {
+type DataMessage = {
 	message: string;
-	size: number;
-	id: string;
 	filename: string;
-	hexadecimal: string;
+	file?: FileUpload;
+	size?: number;
+	id?: string;
+	hexadecimal?: string;
 };
 
+let tableName: string = 'local';
+
 onmessage = (e: MessageEvent) => {
-	const messageData: MessageData = e.data;
+	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
 		case 'initialize':
-			InsertDataIntoDatabase(messageData);
+			insertDataIntoDatabase(messageData);
+			break;
+		case 'query':
+			if (messageData?.file) getBinaryFromDatabase(messageData.file);
 			break;
 		default:
 			postMessage({ error: 'Invalid command' });
 	}
 };
 
-const InsertDataIntoDatabase = (data: MessageData) => {
+const getBinaryFromDatabase = (data: FileUpload) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
-		var tableName: string = 'local';
+		const res = db.exec(`SELECT * FROM ${tableName} WHERE filename= '${data.filename}'`, {
+			returnValue: 'resultRows'
+		});
+
+		var hex = res[0][1];
+		db.close();
+	});
+};
+
+const insertDataIntoDatabase = (data: DataMessage) => {
+	sqlite3InitModule().then(async (sqlite3) => {
+		//@ts-ignore
+		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
 			`
 			CREATE TABLE IF NOT EXISTS ${tableName} (filename TEXT, data TEXT, size INTEGER, id VARCHAR(10)); 

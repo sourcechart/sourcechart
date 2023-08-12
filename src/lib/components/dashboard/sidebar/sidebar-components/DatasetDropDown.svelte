@@ -22,8 +22,6 @@
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	$: console.log('file: ', $file);
-
 	const onWorkerMessage = (e: MessageEvent) => {
 		console.log(e.data);
 	};
@@ -31,11 +29,6 @@
 	const loadWorker = async () => {
 		const SyncWorker = await import('$lib/io/web.worker?worker');
 		syncWorker = new SyncWorker.default();
-		syncWorker.postMessage({
-			message: 'query',
-			file: 'file'
-		});
-		syncWorker.onmessage = onWorkerMessage;
 	};
 
 	onMount(loadWorker);
@@ -43,7 +36,13 @@
 	const selectFile = (filename: string) => {
 		selectedDataset = filename;
 		$chosenFile = filename;
-
+		if (syncWorker) {
+			syncWorker.postMessage({
+				message: 'query',
+				file: $file
+			});
+			syncWorker.onmessage = onWorkerMessage;
+		}
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			chart.filename = filename;
