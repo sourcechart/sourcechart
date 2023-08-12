@@ -70,7 +70,7 @@ type QueryObject = {
 
 type FileUpload = {
 	filename: string;
-	columns: Array<null | string>;
+	//columns: string[];
 	size: number;
 	datasetID: string;
 };

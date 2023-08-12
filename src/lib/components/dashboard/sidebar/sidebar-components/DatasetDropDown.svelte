@@ -8,18 +8,9 @@
 	} from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button, P } from 'flowbite-svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
+	import { onMount } from 'svelte';
 
 	let syncWorker: Worker | undefined = undefined;
-
-	const onWorkerMessage = (e: any) => {
-		console.log(e.data);
-	};
-
-	const loadWorker = async () => {
-		const SyncWorker = await import('$lib/io/web.worker?worker');
-		syncWorker = new SyncWorker.default();
-	};
-
 	let selectedDataset: string | null = 'Choose Dataset';
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
@@ -30,6 +21,24 @@
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
+
+	$: console.log('file: ', $file);
+
+	const onWorkerMessage = (e: MessageEvent) => {
+		console.log(e.data);
+	};
+
+	const loadWorker = async () => {
+		const SyncWorker = await import('$lib/io/web.worker?worker');
+		syncWorker = new SyncWorker.default();
+		syncWorker.postMessage({
+			message: 'query',
+			file: 'file'
+		});
+		syncWorker.onmessage = onWorkerMessage;
+	};
+
+	onMount(loadWorker);
 
 	const selectFile = (filename: string) => {
 		selectedDataset = filename;

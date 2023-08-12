@@ -1,5 +1,4 @@
 import sqlite3InitModule from 'sqlite-wasm-esm';
-import { hexToBuffer } from '$lib/io/HexOps';
 
 type MessageData = {
 	message: string;
@@ -11,7 +10,6 @@ type MessageData = {
 
 onmessage = (e: MessageEvent) => {
 	const messageData: MessageData = e.data;
-	console.log(e.data);
 
 	switch (messageData.message) {
 		case 'initialize':
@@ -33,8 +31,6 @@ const InsertDataIntoDatabase = (data: MessageData) => {
 			INSERT INTO ${tableName} (filename, data, size, id) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.id}');
 			`
 		);
-
-		var results = db.exec(`SELECT * FROM ${tableName};`, { returnValue: 'resultRows' });
 		db.close();
 		postMessage({ message: 'finished' });
 	});

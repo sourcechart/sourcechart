@@ -26,10 +26,9 @@
 
 	let files: ListGroupItemType | null = null;
 
-	const createFileStore = (filename: string, cols: any[], fileSize: number, dataID: string) => {
-		let tableColumnsSize: FileUpload = {
+	const createFileStore = (filename: string, fileSize: number, dataID: string) => {
+		let tableColumnsSize = {
 			filename: filename,
-			columns: cols,
 			datasetID: dataID,
 			size: fileSize
 		};
@@ -45,7 +44,7 @@
 		var hex = bufferToHex(arrayBuffer); //@ts-ignore
 
 		//@ts-ignore
-		createFileStore(f.name, columns, f.size, id, conn);
+		createFileStore(f.name, f.size, id);
 
 		if (syncWorker) {
 			syncWorker.postMessage({
