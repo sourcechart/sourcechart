@@ -14,3 +14,7 @@ export function checkNameForSpacesandHyphens(column: string) {
 	}
 	return column;
 }
+
+export function getFileExtension(filename: string) {
+	return filename.split('.').pop();
+}

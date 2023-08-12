@@ -7,6 +7,7 @@ type DataMessage = {
 	size?: number;
 	id?: string;
 	hexadecimal?: string;
+	fileextension?: string;
 };
 
 let tableName: string = 'local';
@@ -39,7 +40,8 @@ const getBinaryFromDatabase = (data: FileUpload) => {
 			message: 'finished',
 			hexadecimal: hexEncoding,
 			size: data.size,
-			id: data.datasetID
+			id: data.datasetID,
+			fileextension: data.filename.split('.').pop()
 		});
 	});
 };
@@ -50,8 +52,8 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
 			`
-			CREATE TABLE IF NOT EXISTS ${tableName} (filename TEXT, data TEXT, size INTEGER, id VARCHAR(10)); 
-			INSERT INTO ${tableName} (filename, data, size, id) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.id}');
+			CREATE TABLE IF NOT EXISTS ${tableName} (filename TEXT, data TEXT, size INTEGER, id VARCHAR(10), filetype VARCHAR(10)); 
+			INSERT INTO ${tableName} (filename, data, size, id, filetype) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.id}', '${data.fileextension}');
 			`
 		);
 		db.close();

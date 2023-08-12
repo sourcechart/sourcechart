@@ -29,7 +29,8 @@
 		var tableColumnsSize = {
 			filename: filename,
 			datasetID: dataID,
-			size: fileSize
+			size: fileSize,
+			fileextension: filename.split('.').pop()
 		};
 		$fileUploadStore = [...$fileUploadStore, tableColumnsSize];
 	};
@@ -48,8 +49,10 @@
 				size: f.size,
 				id: id,
 				message: 'initialize',
-				hexadecimal: hex
+				hexadecimal: hex,
+				fileextension: f.name.split('.').pop()
 			});
+
 			syncWorker.onmessage = onWorkerMessage;
 		}
 	};

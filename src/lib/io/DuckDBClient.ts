@@ -19,6 +19,8 @@ import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
 import { checkNameForSpacesandHyphens } from './FileUtils';
 
+type Buffer = ArrayBuffer | Uint8Array;
+
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;
 	_conn?: duckdb.AsyncDuckDBConnection | null = null;
@@ -150,8 +152,8 @@ export class DuckDBClient {
 				//@ts-ignore
 				if (source instanceof File) {
 					await insertLargeOrDeformedFile(db, source);
-					//await insertFile(db, source.name, source, { ignore_errors: 1 });
-					//@ts-ignore
+				} else if (source instanceof Buffer) {
+					await insertArrayBuffer(db, name, source); //@ts-ignore
 				} else if ('file' in source) {
 					const { file, ...options } = source; //@ts-ignore
 					await insertFile(db, source.name, file, options);
@@ -163,6 +165,8 @@ export class DuckDBClient {
 		return new DuckDBClient(db);
 	}
 }
+
+async function insertArrayBuffer(db: AsyncDuckDB, name: string, buffer: ArrayBuffer) {}
 
 async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
 	let firstRun: boolean = true;
@@ -194,6 +198,8 @@ async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
 
 	return connection;
 }
+
+async function insertFileBuffer(db: AsyncDuckDB, name: string, buffer: ArrayBuffer) {}
 
 async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any) {
 	const buffer = await file.arrayBuffer();
