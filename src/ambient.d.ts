@@ -68,7 +68,7 @@ type QueryObject = {
 	queries: Queries;
 };
 
-type fileUpload = {
+type FileUpload = {
 	filename: string;
 	columns: Array<null | string>;
 	size: number;
