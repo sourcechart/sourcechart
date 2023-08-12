@@ -1,34 +1,40 @@
 import sqlite3InitModule from 'sqlite-wasm-esm';
+import { hexToBuffer } from '$lib/io/HexOps';
 
-onmessage = (e) => {
-	const { message } = e.data;
+type MessageData = {
+	message: string;
+	size: number;
+	id: string;
+	filename: string;
+	hexadecimal: string;
+};
+
+onmessage = (e: MessageEvent) => {
+	const messageData: MessageData = e.data;
 	console.log(e.data);
 
-	switch (message) {
+	switch (messageData.message) {
 		case 'initialize':
-			initDB();
+			InsertDataIntoDatabase(messageData);
 			break;
 		default:
 			postMessage({ error: 'Invalid command' });
 	}
 };
 
-const initDB = () => {
+const InsertDataIntoDatabase = (data: MessageData) => {
 	sqlite3InitModule().then(async (sqlite3) => {
-		let fileExtension = 'txt';
-		let partition_number = 0;
-		let filename = 'test.txt';
-		let table_name = 'dsadsa';
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
+		var tableName: string = 'local';
 		db.exec(
 			`
-			CREATE TABLE IF NOT EXISTS ${table_name} (filename TEXT, blob BLOB); 
-			INSERT INTO ${table_name} (filename, blob) VALUES ('${filename}', '${b}}');
+			CREATE TABLE IF NOT EXISTS ${tableName} (filename TEXT, data TEXT, size INTEGER, id VARCHAR(10)); 
+			INSERT INTO ${tableName} (filename, data, size, id) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.id}');
 			`
 		);
 
-		let results = db.exec(`SELECT * FROM ${table_name};`, { returnValue: 'resultRows' });
+		var results = db.exec(`SELECT * FROM ${tableName};`, { returnValue: 'resultRows' });
 		db.close();
 		postMessage({ message: 'finished' });
 	});

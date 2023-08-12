@@ -3,6 +3,7 @@
 	import { DuckDBClient } from '$lib/io/DuckDBCLI';
 	import { generateID } from '$lib/io/GenerateID';
 	import { fileUploadStore } from '$lib/io/Stores';
+	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
 
 	let syncWorker: Worker | undefined = undefined;
@@ -35,11 +36,6 @@
 			database: database
 		};
 		$fileUploadStore = [...$fileUploadStore, tableColumnsSize];
-	};
-
-	const bufferToHex = (buffer: ArrayBufferLike) => {
-		// buffer is an ArrayBuffer
-		return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join('');
 	};
 
 	const uploadFiles = async (e: Event) => {
