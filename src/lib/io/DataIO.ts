@@ -1,4 +1,4 @@
-import type { DuckDBClient } from './DuckDBCLI';
+import type { DuckDBClient } from './DuckDBClient';
 import { Query } from '$lib/io/QueryBuilder';
 import { UMAP } from 'umap-js';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';

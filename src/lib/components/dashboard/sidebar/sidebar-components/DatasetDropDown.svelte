@@ -7,6 +7,7 @@
 		clickedChartIndex
 	} from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button, P } from 'flowbite-svelte';
+	import { DuckDBClient } from '$lib/io/DuckDBClient';
 
 	let selectedDataset: string | null = 'Choose Dataset';
 
@@ -15,10 +16,12 @@
 		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 	}
 
-	const CreateDuckDB = () => {
-		//const conn = await DuckDBClient.of([f]);
-		//const resp = await conn.query(`SELECT * FROM "${f.name}"`);
-		//var columns = resp.schema.map((item) => item['name']);
+	const getFileFromSqlite = () => {};
+
+	const CreateDuckDB = async () => {
+		const conn = await DuckDBClient.of([f]);
+		const resp = await conn.query(`SELECT * FROM "${f.name}"`);
+		var columns = resp.schema.map((item) => item['name']);
 	};
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
