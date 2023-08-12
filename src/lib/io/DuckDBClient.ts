@@ -17,7 +17,7 @@ import duckdb_wasm_eh from '@duckdb/duckdb-wasm/dist/duckdb-eh.wasm?url';
 import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url';
 import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
-import { checkNameForSpacesandHyphens } from './FileUtils';
+import { checkNameForSpacesandHyphens, getFileExtension } from './FileUtils';
 
 type Buffer = ArrayBuffer | Uint8Array;
 
@@ -166,7 +166,29 @@ export class DuckDBClient {
 	}
 }
 
-async function insertArrayBuffer(db: AsyncDuckDB, name: string, buffer: ArrayBuffer) {}
+async function insertArrayBuffer(db: AsyncDuckDB, name: string, buffer: ArrayBuffer) {
+	var filetype = name.substring(name.lastIndexOf('.'));
+	let firstRun: boolean = true;
+	const connection = await db.connect(); //@ts-ignore
+	await db.registerFileBuffer(name, buffer);
+	var reader = getFileExtension(filetype);
+	if (firstRun) {
+		let query = `CREATE TABLE IF NOT EXISTS ${name} AS 
+							SELECT * FROM ${reader}('${name}', ignore_errors=1, AUTO_DETECT=true)
+						LIMIT 0`;
+		await connection.query(query);
+		firstRun = false;
+	}
+	try {
+		await connection.query(`
+				INSERT INTO ${name}
+					SELECT * FROM ${reader}('${name}',  AUTO_DETECT=true, ignore_errors=1);
+			`);
+	} catch (e) {
+		console.log(e);
+	}
+	return connection;
+}
 
 async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
 	let firstRun: boolean = true;
@@ -198,8 +220,6 @@ async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
 
 	return connection;
 }
-
-async function insertFileBuffer(db: AsyncDuckDB, name: string, buffer: ArrayBuffer) {}
 
 async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any) {
 	const buffer = await file.arrayBuffer();
