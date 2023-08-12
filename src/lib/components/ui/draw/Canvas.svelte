@@ -15,7 +15,6 @@
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
 	import { generateID } from '$lib/io/GenerateID';
-	import TestWebWorker from './TestWebWorker.svelte';
 
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
@@ -295,4 +294,3 @@
 		}
 	}}
 />
-<TestWebWorker />
