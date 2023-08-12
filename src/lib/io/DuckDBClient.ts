@@ -2,7 +2,7 @@
 The DuckDB client is how we instantiate the Duckdb WASM database inside the browser.
 
 This system works via making a database out of a webpack that is statically loaded into browser,
-and then hydration is run through thefileStreamer and DuckDBWasm Client.  Given that the files
+and then hydration is run through the FileStreamer and DuckDBWasm Client.  Given that the files
 are larger, we have to load it into the database in batches. This process is not optimized yet 
 but will be starting in the coming days.
 
@@ -17,9 +17,7 @@ import duckdb_wasm_eh from '@duckdb/duckdb-wasm/dist/duckdb-eh.wasm?url';
 import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url';
 import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
-import { checkNameForSpacesandHyphens, getFileExtension } from './FileUtils';
-
-type Buffer = ArrayBuffer | Uint8Array;
+import { checkNameForSpacesAndHyphens, getFileExtension } from './FileUtils';
 
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;
@@ -173,9 +171,10 @@ async function insertArrayBuffer(db: AsyncDuckDB, name: string, buffer: ArrayBuf
 	await db.registerFileBuffer(name, buffer);
 	var reader = getFileExtension(filetype);
 	if (firstRun) {
-		let query = `CREATE TABLE IF NOT EXISTS ${name} AS 
-							SELECT * FROM ${reader}('${name}', ignore_errors=1, AUTO_DETECT=true)
-						LIMIT 0`;
+		let query = `
+				SELECT * FROM ${reader}('${name}', ignore_errors=1, AUTO_DETECT=true)
+				LIMIT 0
+				`;
 		await connection.query(query);
 		firstRun = false;
 	}
@@ -197,7 +196,7 @@ async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
 
 	const fileStreamer = new FileStreamer(file);
 	const connection = await db.connect();
-	var filename = checkNameForSpacesandHyphens(file.name);
+	var filename = checkNameForSpacesAndHyphens(file.name);
 	while (!fileStreamer.isEndOfBlob()) {
 		const uint8ArrayBuffer = await fileStreamer.readBlockAsArrayBuffer(); //@ts-ignore
 		await db.registerFileBuffer(file.name, uint8ArrayBuffer);
