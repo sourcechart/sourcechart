@@ -5,13 +5,14 @@
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
 
+	let syncWorker: Worker | undefined = undefined;
+	let files: ListGroupItemType | null = null;
 	interface ListGroupItemType {
 		current?: boolean;
 		disabled?: boolean;
 		href?: string;
 		[propName: string]: any;
 	}
-	let syncWorker: Worker | undefined = undefined;
 
 	const onWorkerMessage = (e: any) => {
 		console.log(e.data);
@@ -23,8 +24,6 @@
 	};
 
 	onMount(loadWorker);
-
-	let files: ListGroupItemType | null = null;
 
 	const createFileStore = (filename: string, fileSize: number, dataID: string) => {
 		let tableColumnsSize = {
@@ -41,11 +40,8 @@
 		var arrayBuffer = await f.arrayBuffer();
 
 		var id = generateID();
-		var hex = bufferToHex(arrayBuffer); //@ts-ignore
-
-		//@ts-ignore
+		var hex = bufferToHex(arrayBuffer);
 		createFileStore(f.name, f.size, id);
-
 		if (syncWorker) {
 			syncWorker.postMessage({
 				filename: f.name,
