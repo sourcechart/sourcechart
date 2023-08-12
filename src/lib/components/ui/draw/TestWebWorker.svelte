@@ -1,4 +1,5 @@
 <script lang="ts">
+	/*
 	import { onMount } from 'svelte';
 
 	let syncWorker: Worker | undefined = undefined;
@@ -15,4 +16,5 @@
 	};
 
 	onMount(loadWorker);
+	*/
 </script>

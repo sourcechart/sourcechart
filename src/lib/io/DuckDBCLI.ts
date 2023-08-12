@@ -133,7 +133,7 @@ export class DuckDBClient {
 
 	static async of(sources = {}, config = {}) {
 		//if (!this._db) {
-		const db: AsyncDuckDB | null = await makeDB(); // If this db does not exist initalize the db
+		const db: AsyncDuckDB | null = await makeDB(); // If this db does not exist initialize the db
 		//@ts-ignore
 		if (config.query?.castTimeStampToDate === undefined) {
 			//@ts-ignore

@@ -2,6 +2,7 @@ import sqlite3InitModule from 'sqlite-wasm-esm';
 
 onmessage = (e) => {
 	const { message } = e.data;
+	console.log(e.data);
 
 	switch (message) {
 		case 'initialize':
@@ -12,19 +13,10 @@ onmessage = (e) => {
 	}
 };
 
-const getExampleBlob = async () => {
-	const blob = new Blob(['Hello, world!'], { type: 'text/plain' });
-	return bufferToHex(await blob.arrayBuffer());
-};
-
-function bufferToHex(buffer: ArrayBufferLike) {
-	// buffer is an ArrayBuffer
-	return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join('');
-}
-
 const initDB = () => {
 	sqlite3InitModule().then(async (sqlite3) => {
-		let b = await getExampleBlob();
+		let fileExtension = 'txt';
+		let partition_number = 0;
 		let filename = 'test.txt';
 		let table_name = 'dsadsa';
 		//@ts-ignore
