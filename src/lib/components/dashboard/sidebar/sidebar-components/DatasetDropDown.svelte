@@ -8,6 +8,7 @@
 	} from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button, P } from 'flowbite-svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
+	import { hexToBuffer } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
 
 	let syncWorker: Worker | undefined = undefined;
@@ -23,7 +24,7 @@
 	$: datasets = fileDropdown();
 
 	const onWorkerMessage = (e: MessageEvent) => {
-		console.log(e.data);
+		var buffer = hexToBuffer(e.data.hexadecimal);
 	};
 
 	const loadWorker = async () => {

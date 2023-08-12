@@ -34,8 +34,13 @@ const getBinaryFromDatabase = (data: FileUpload) => {
 			returnValue: 'resultRows'
 		});
 
-		var hex = res[0][1];
-		db.close();
+		var hexEncoding = res[0][1];
+		postMessage({
+			message: 'finished',
+			hexadecimal: hexEncoding,
+			size: data.size,
+			id: data.datasetID
+		});
 	});
 };
 
