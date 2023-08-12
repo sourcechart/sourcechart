@@ -47,8 +47,9 @@ export const getColumnsFromFile = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
 		const fileObject = $fileUploadStore.find(
 			(item: { filename: string }) => item.filename === $chosenFile
-		);
+		); //@ts-ignore
 		if (fileObject?.columns) {
+			//@ts-ignore
 			return fileObject.columns;
 		} else {
 			return [];
