@@ -102,12 +102,10 @@ export class DuckDBClient {
 	}
 
 	async sql(strings: Array<string>, ...args: Array<any>) {
-		//Get SQL String
 		return await this.query(strings.join('?'), args);
 	}
 
 	public queryTag(strings: Array<string>, ...params: Array<any>) {
-		//Get the Query Tag
 		return [strings.join('?'), params];
 	}
 
@@ -145,7 +143,7 @@ export class DuckDBClient {
 				if (source instanceof File) {
 					await insertLargeOrDeformedFile(db, source); //@ts-ignore
 				} else if ('buffer' in source && 'filename' in source) {
-					console.log(source, name); //@ts-ignore
+					//@ts-ignore
 					await insertArrayBuffer(db, source); //@ts-ignore
 				} else if ('file' in source) {
 					const { file, ...options } = source; //@ts-ignore
@@ -159,20 +157,14 @@ export class DuckDBClient {
 	}
 }
 
-function checkDataObject(data: any) {
-	if (data.buffer && data.filename) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
 async function insertArrayBuffer(db: AsyncDuckDB, source: DataObject) {
-	var filetype = source.filename.substring(source.filename.lastIndexOf('.'));
 	let firstRun: boolean = true;
+	var filetype = source.filename.substring(source.filename.lastIndexOf('.'));
 	const connection = await db.connect(); //@ts-ignore
-	await db.registerFileBuffer(source.filename, buffer);
-	var reader = getFileExtension(filetype);
+	var uint8ArrayBuffer = new Uint8Array(source.buffer);
+	await db.registerFileBuffer(source.filename, uint8ArrayBuffer);
+	var reader = getDuckDbExtension(filetype);
+	console.log(filetype, reader);
 	if (firstRun) {
 		let query = `
 				SELECT * FROM ${reader}('${source.filename}', ignore_errors=1, AUTO_DETECT=true)
@@ -224,8 +216,9 @@ async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
 }
 
 async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any) {
-	const buffer = await file.arrayBuffer();
-	await db.registerFileBuffer(file.name, new Uint8Array(buffer));
+	var arrayBuffer = await file.arrayBuffer();
+	var uint8ArrayBuffer = new Uint8Array(arrayBuffer);
+	await db.registerFileBuffer(file.name, uint8ArrayBuffer);
 	const connection = await db.connect();
 
 	try {

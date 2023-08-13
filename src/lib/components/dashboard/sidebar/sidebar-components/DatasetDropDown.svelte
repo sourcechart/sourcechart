@@ -25,7 +25,6 @@
 
 	const onWorkerMessage = (e: MessageEvent) => {
 		var arrayBuffer = hexToBuffer(e.data.hexadecimal);
-		console.log(e.data);
 		var dataObject = {
 			buffer: arrayBuffer,
 			filename: e.data.filename
