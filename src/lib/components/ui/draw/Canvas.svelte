@@ -19,8 +19,6 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
-	$: console.log($allCharts);
-
 	let scrollX: number = 0;
 	let scrollY: number = 0;
 	let width: number = 0;
@@ -41,10 +39,11 @@
 
 	const tolerance: number = 5;
 
+	//Reactive variables
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: TOUCHSTATE = touchStates();
 	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
-	// Keeps the polygon in the correct position when the window is resized
+
 	$: () => {
 		scrollX, scrollY, offsetX, offsetY;
 	};

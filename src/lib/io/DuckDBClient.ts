@@ -21,7 +21,6 @@ import { checkNameForSpacesAndHyphens } from './FileUtils';
 
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;
-	_conn?: duckdb.AsyncDuckDBConnection | null = null;
 
 	constructor(db: AsyncDuckDB) {
 		Object.defineProperties(this, {
