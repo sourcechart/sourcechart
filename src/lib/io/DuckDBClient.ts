@@ -164,19 +164,19 @@ async function insertArrayBuffer(db: AsyncDuckDB, source: DataObject) {
 	var uint8ArrayBuffer = new Uint8Array(source.buffer);
 	await db.registerFileBuffer(source.filename, uint8ArrayBuffer);
 	var reader = getDuckDbExtension(filetype);
-	console.log(filetype, reader);
+	var filename = checkNameForSpacesAndHyphens(source.filename);
+
 	if (firstRun) {
-		let query = `
-				SELECT * FROM ${reader}('${source.filename}', ignore_errors=1, AUTO_DETECT=true)
-				LIMIT 0
-				`;
+		let query = `CREATE TABLE IF NOT EXISTS ${filename} AS 
+							SELECT * FROM ${reader}('${source.filename}', ignore_errors=1, AUTO_DETECT=true)
+						LIMIT 0`;
 		await connection.query(query);
 		firstRun = false;
 	}
 	try {
 		await connection.query(`
-				INSERT INTO ${source.filename}
-					SELECT * FROM ${reader}('${name}',  AUTO_DETECT=true, ignore_errors=1);
+				INSERT INTO ${filename}
+					SELECT * FROM ${reader}('${source.filename}',  AUTO_DETECT=true, ignore_errors=1);
 			`);
 	} catch (e) {
 		console.log(e);
@@ -192,6 +192,7 @@ async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
 	const fileStreamer = new FileStreamer(file);
 	const connection = await db.connect();
 	var filename = checkNameForSpacesAndHyphens(file.name);
+
 	while (!fileStreamer.isEndOfBlob()) {
 		const uint8ArrayBuffer = await fileStreamer.readBlockAsArrayBuffer(); //@ts-ignore
 		await db.registerFileBuffer(file.name, uint8ArrayBuffer);
