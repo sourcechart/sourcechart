@@ -120,7 +120,6 @@ export class DuckDBClient {
 		return tables.map(({ name }) => ({ name }));
 	}
 
-	//@ts-ignore
 	public async describeColumns(table: string) {
 		const columns = await this.query(`DESCRIBE ${this.escape(table)}`);
 		return columns.map(({ column_name, column_type, null: nullable }) => ({
@@ -131,27 +130,23 @@ export class DuckDBClient {
 		}));
 	}
 
-	static async of(sources = {}, config = {}) {
-		//if (!this._db) {
+	static async of(sources = {}, config: any = {}) {
 		const db: AsyncDuckDB | null = await makeDB(); // If this db does not exist initialize the db
-		//@ts-ignore
+
 		if (config.query?.castTimeStampToDate === undefined) {
-			//@ts-ignore
 			config = { ...config, query: { ...config.query, castTimeStampToDate: true } };
 		}
-		//@ts-ignore
 		if (config.query?.castBigIntToDouble === undefined) {
-			//@ts-ignore
 			config = { ...config, query: { ...config.query, castBigIntToDouble: true } };
 		}
 		await db.open(config);
 		await Promise.all(
 			Object.entries(sources).map(async ([name, source]) => {
-				//@ts-ignore
 				if (source instanceof File) {
-					await insertLargeOrDeformedFile(db, source);
-				} else if (source instanceof Buffer) {
-					await insertArrayBuffer(db, name, source); //@ts-ignore
+					await insertLargeOrDeformedFile(db, source); //@ts-ignore
+				} else if ('buffer' in source && 'filename' in source) {
+					console.log(source, name); //@ts-ignore
+					await insertArrayBuffer(db, source); //@ts-ignore
 				} else if ('file' in source) {
 					const { file, ...options } = source; //@ts-ignore
 					await insertFile(db, source.name, file, options);
@@ -164,15 +159,23 @@ export class DuckDBClient {
 	}
 }
 
-async function insertArrayBuffer(db: AsyncDuckDB, name: string, buffer: ArrayBuffer) {
-	var filetype = name.substring(name.lastIndexOf('.'));
+function checkDataObject(data: any) {
+	if (data.buffer && data.filename) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+async function insertArrayBuffer(db: AsyncDuckDB, source: DataObject) {
+	var filetype = source.filename.substring(source.filename.lastIndexOf('.'));
 	let firstRun: boolean = true;
 	const connection = await db.connect(); //@ts-ignore
-	await db.registerFileBuffer(name, buffer);
+	await db.registerFileBuffer(source.filename, buffer);
 	var reader = getFileExtension(filetype);
 	if (firstRun) {
 		let query = `
-				SELECT * FROM ${reader}('${name}', ignore_errors=1, AUTO_DETECT=true)
+				SELECT * FROM ${reader}('${source.filename}', ignore_errors=1, AUTO_DETECT=true)
 				LIMIT 0
 				`;
 		await connection.query(query);
@@ -180,7 +183,7 @@ async function insertArrayBuffer(db: AsyncDuckDB, name: string, buffer: ArrayBuf
 	}
 	try {
 		await connection.query(`
-				INSERT INTO ${name}
+				INSERT INTO ${source.filename}
 					SELECT * FROM ${reader}('${name}',  AUTO_DETECT=true, ignore_errors=1);
 			`);
 	} catch (e) {

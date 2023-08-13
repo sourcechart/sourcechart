@@ -68,6 +68,11 @@ type QueryObject = {
 	queries: Queries;
 };
 
+type DataObject = {
+	buffer: ArrayBuffer;
+	filename: string;
+};
+
 type FileUpload = {
 	filename: string;
 	//columns: string[];

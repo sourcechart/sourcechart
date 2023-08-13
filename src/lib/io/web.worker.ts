@@ -38,6 +38,7 @@ const getBinaryFromDatabase = (data: FileUpload) => {
 		var hexEncoding = res[0][1];
 		postMessage({
 			message: 'finished',
+			filename: data.filename,
 			hexadecimal: hexEncoding,
 			size: data.size,
 			id: data.datasetID,

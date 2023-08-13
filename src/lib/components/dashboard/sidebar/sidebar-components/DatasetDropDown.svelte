@@ -24,12 +24,25 @@
 	$: datasets = fileDropdown();
 
 	const onWorkerMessage = (e: MessageEvent) => {
-		var buffer = hexToBuffer(e.data.hexadecimal);
+		var arrayBuffer = hexToBuffer(e.data.hexadecimal);
+		console.log(e.data);
+		var dataObject = {
+			buffer: arrayBuffer,
+			filename: e.data.filename
+		};
+		queryDuckDB(dataObject);
 	};
 
 	const loadWorker = async () => {
 		const SyncWorker = await import('$lib/io/web.worker?worker');
 		syncWorker = new SyncWorker.default();
+	};
+
+	const queryDuckDB = async (dataObject: DataObject) => {
+		const db = await DuckDBClient.of([dataObject]);
+		const resp = await db.query(`SELECT * FROM "${filename} LIMIT 0"`);
+		var columns = resp.schema.map((item) => item['name']);
+		console.log(columns);
 	};
 
 	onMount(loadWorker);
