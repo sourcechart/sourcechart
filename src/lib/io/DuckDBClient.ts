@@ -2,7 +2,7 @@
 The DuckDB client is how we instantiate the Duckdb WASM database inside the browser.
 
 This system works via making a database out of a webpack that is statically loaded into browser,
-and then hydration is run through thefileStreamer and DuckDBWasm Client.  Given that the files
+and then hydration is run through the FileStreamer and DuckDBWasm Client.  Given that the files
 are larger, we have to load it into the database in batches. This process is not optimized yet 
 but will be starting in the coming days.
 
@@ -17,11 +17,10 @@ import duckdb_wasm_eh from '@duckdb/duckdb-wasm/dist/duckdb-eh.wasm?url';
 import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url';
 import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
-import { checkNameForSpacesandHyphens } from './FileUtils';
+import { checkNameForSpacesAndHyphens } from './FileUtils';
 
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;
-	_conn?: duckdb.AsyncDuckDBConnection | null = null;
 
 	constructor(db: AsyncDuckDB) {
 		Object.defineProperties(this, {
@@ -102,12 +101,10 @@ export class DuckDBClient {
 	}
 
 	async sql(strings: Array<string>, ...args: Array<any>) {
-		//Get SQL String
 		return await this.query(strings.join('?'), args);
 	}
 
 	public queryTag(strings: Array<string>, ...params: Array<any>) {
-		//Get the Query Tag
 		return [strings.join('?'), params];
 	}
 
@@ -120,7 +117,6 @@ export class DuckDBClient {
 		return tables.map(({ name }) => ({ name }));
 	}
 
-	//@ts-ignore
 	public async describeColumns(table: string) {
 		const columns = await this.query(`DESCRIBE ${this.escape(table)}`);
 		return columns.map(({ column_name, column_type, null: nullable }) => ({
@@ -131,27 +127,23 @@ export class DuckDBClient {
 		}));
 	}
 
-	static async of(sources = {}, config = {}) {
-		//if (!this._db) {
+	static async of(sources = {}, config: any = {}) {
 		const db: AsyncDuckDB | null = await makeDB(); // If this db does not exist initialize the db
-		//@ts-ignore
+
 		if (config.query?.castTimeStampToDate === undefined) {
-			//@ts-ignore
 			config = { ...config, query: { ...config.query, castTimeStampToDate: true } };
 		}
-		//@ts-ignore
 		if (config.query?.castBigIntToDouble === undefined) {
-			//@ts-ignore
 			config = { ...config, query: { ...config.query, castBigIntToDouble: true } };
 		}
 		await db.open(config);
 		await Promise.all(
 			Object.entries(sources).map(async ([name, source]) => {
-				//@ts-ignore
 				if (source instanceof File) {
-					await insertLargeOrDeformedFile(db, source);
-					//await insertFile(db, source.name, source, { ignore_errors: 1 });
+					await insertLargeOrDeformedFile(db, source); //@ts-ignore
+				} else if ('buffer' in source && 'filename' in source) {
 					//@ts-ignore
+					await insertArrayBuffer(db, source); //@ts-ignore
 				} else if ('file' in source) {
 					const { file, ...options } = source; //@ts-ignore
 					await insertFile(db, source.name, file, options);
@@ -164,6 +156,33 @@ export class DuckDBClient {
 	}
 }
 
+async function insertArrayBuffer(db: AsyncDuckDB, source: DataObject) {
+	let firstRun: boolean = true;
+	var filetype = source.filename.substring(source.filename.lastIndexOf('.'));
+	const connection = await db.connect(); //@ts-ignore
+	var uint8ArrayBuffer = new Uint8Array(source.buffer);
+	await db.registerFileBuffer(source.filename, uint8ArrayBuffer);
+	var reader = getDuckDbExtension(filetype);
+	var filename = checkNameForSpacesAndHyphens(source.filename);
+
+	if (firstRun) {
+		let query = `CREATE TABLE IF NOT EXISTS ${filename} AS 
+							SELECT * FROM ${reader}('${source.filename}', ignore_errors=1, AUTO_DETECT=true)
+						LIMIT 0`;
+		await connection.query(query);
+		firstRun = false;
+	}
+	try {
+		await connection.query(`
+				INSERT INTO ${filename}
+					SELECT * FROM ${reader}('${source.filename}',  AUTO_DETECT=true, ignore_errors=1);
+			`);
+	} catch (e) {
+		console.log(e);
+	}
+	return connection;
+}
+
 async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
 	let firstRun: boolean = true;
 	var filetype = file.name.substring(file.name.lastIndexOf('.'));
@@ -171,7 +190,8 @@ async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
 
 	const fileStreamer = new FileStreamer(file);
 	const connection = await db.connect();
-	var filename = checkNameForSpacesandHyphens(file.name);
+	var filename = checkNameForSpacesAndHyphens(file.name);
+
 	while (!fileStreamer.isEndOfBlob()) {
 		const uint8ArrayBuffer = await fileStreamer.readBlockAsArrayBuffer(); //@ts-ignore
 		await db.registerFileBuffer(file.name, uint8ArrayBuffer);
@@ -196,8 +216,9 @@ async function insertLargeOrDeformedFile(db: AsyncDuckDB, file: File) {
 }
 
 async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any) {
-	const buffer = await file.arrayBuffer();
-	await db.registerFileBuffer(file.name, new Uint8Array(buffer));
+	var arrayBuffer = await file.arrayBuffer();
+	var uint8ArrayBuffer = new Uint8Array(arrayBuffer);
+	await db.registerFileBuffer(file.name, uint8ArrayBuffer);
 	const connection = await db.connect();
 
 	try {

@@ -39,13 +39,15 @@
 
 	const tolerance: number = 5;
 
+	//Reactive variables
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: TOUCHSTATE = touchStates();
 	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
-	// Keeps the polygon in the correct position when the window is resized
+
 	$: () => {
 		scrollX, scrollY, offsetX, offsetY;
 	};
+
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');

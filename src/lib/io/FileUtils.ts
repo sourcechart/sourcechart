@@ -8,9 +8,13 @@ export function stripSpaces(name: string): string {
 	return f_name.split(' ').join('_').replace('(|)/g', '');
 }
 
-export function checkNameForSpacesandHyphens(column: string) {
+export function checkNameForSpacesAndHyphens(column: string) {
 	if (!column.match('^[a-zA-Z0-9]+$')) {
 		column = ['"', column, '"'].join('');
 	}
 	return column;
+}
+
+export function getFileExtension(filename: string) {
+	return filename.split('.').pop();
 }

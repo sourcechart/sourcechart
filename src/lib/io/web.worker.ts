@@ -1,40 +1,62 @@
 import sqlite3InitModule from 'sqlite-wasm-esm';
-import { hexToBuffer } from '$lib/io/HexOps';
 
-type MessageData = {
+type DataMessage = {
 	message: string;
-	size: number;
-	id: string;
 	filename: string;
-	hexadecimal: string;
+	file?: FileUpload;
+	size?: number;
+	id?: string;
+	hexadecimal?: string;
+	fileextension?: string;
 };
 
+let tableName: string = 'local';
+
 onmessage = (e: MessageEvent) => {
-	const messageData: MessageData = e.data;
-	console.log(e.data);
+	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
 		case 'initialize':
-			InsertDataIntoDatabase(messageData);
+			insertDataIntoDatabase(messageData);
+			break;
+		case 'query':
+			if (messageData?.file) getBinaryFromDatabase(messageData.file);
 			break;
 		default:
 			postMessage({ error: 'Invalid command' });
 	}
 };
 
-const InsertDataIntoDatabase = (data: MessageData) => {
+const getBinaryFromDatabase = (data: FileUpload) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
-		var tableName: string = 'local';
+		const res = db.exec(`SELECT * FROM ${tableName} WHERE filename= '${data.filename}'`, {
+			returnValue: 'resultRows'
+		});
+
+		var hexEncoding = res[0][1];
+		postMessage({
+			message: 'finished',
+			filename: data.filename,
+			hexadecimal: hexEncoding,
+			size: data.size,
+			id: data.datasetID,
+			fileextension: data.filename.split('.').pop()
+		});
+	});
+};
+
+const insertDataIntoDatabase = (data: DataMessage) => {
+	sqlite3InitModule().then(async (sqlite3) => {
+		//@ts-ignore
+		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
 			`
-			CREATE TABLE IF NOT EXISTS ${tableName} (filename TEXT, data TEXT, size INTEGER, id VARCHAR(10)); 
-			INSERT INTO ${tableName} (filename, data, size, id) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.id}');
+			CREATE TABLE IF NOT EXISTS ${tableName} (filename TEXT, data TEXT, size INTEGER, id VARCHAR(10), filetype VARCHAR(10)); 
+			INSERT INTO ${tableName} (filename, data, size, id, filetype) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.id}', '${data.fileextension}');
 			`
 		);
-
-		var results = db.exec(`SELECT * FROM ${tableName};`, { returnValue: 'resultRows' });
 		db.close();
 		postMessage({ message: 'finished' });
 	});

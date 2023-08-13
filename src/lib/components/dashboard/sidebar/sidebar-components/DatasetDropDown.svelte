@@ -7,7 +7,13 @@
 		clickedChartIndex
 	} from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	import { DuckDBClient } from '$lib/io/DuckDBClient';
+	import { hexToBuffer } from '$lib/io/HexOps';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
+	import { onMount } from 'svelte';
+
+	let syncWorker: Worker | undefined = undefined;
 	let selectedDataset: string | null = 'Choose Dataset';
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
@@ -19,18 +25,50 @@
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	const selectFile = (filename: string) => {
-		selectedDataset = filename;
-		$chosenFile = filename;
+	const onWorkerMessage = (e: MessageEvent) => {
+		var arrayBuffer = hexToBuffer(e.data.hexadecimal);
+		var dataObject = {
+			buffer: arrayBuffer,
+			filename: e.data.filename
+		};
+		queryDuckDB(dataObject);
+	};
+
+	const loadWorker = async () => {
+		const SyncWorker = await import('$lib/io/web.worker?worker');
+		syncWorker = new SyncWorker.default();
+	};
+
+	const queryDuckDB = async (dataObject: DataObject) => {
+		const db = await DuckDBClient.of([dataObject]);
+		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
+		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
+		var columns = resp.schema.map((item) => item['name']);
 
 		allCharts.update((charts) => {
 			let chart = charts[$i];
-			chart.filename = filename;
-			if ($file?.database && $file?.datasetID) {
-				chart.datasetID = $file.datasetID;
-				chart.database = $file.database;
-			}
+			chart.database = db;
+			chart.columns = columns;
+			return charts;
+		});
+	};
 
+	onMount(loadWorker);
+
+	const selectFile = (filename: string) => {
+		selectedDataset = filename;
+		$chosenFile = filename;
+		if (syncWorker) {
+			syncWorker.postMessage({
+				message: 'query',
+				file: $file
+			});
+			syncWorker.onmessage = onWorkerMessage;
+		}
+		allCharts.update((charts) => {
+			let chart = charts[$i];
+			chart.filename = filename;
+			if ($file?.datasetID) chart.datasetID = $file.datasetID;
 			return charts;
 		});
 	};
