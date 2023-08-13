@@ -17,7 +17,7 @@ import duckdb_wasm_eh from '@duckdb/duckdb-wasm/dist/duckdb-eh.wasm?url';
 import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url';
 import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
-import { checkNameForSpacesAndHyphens, getFileExtension } from './FileUtils';
+import { checkNameForSpacesAndHyphens } from './FileUtils';
 
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;

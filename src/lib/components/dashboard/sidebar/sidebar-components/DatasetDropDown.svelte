@@ -6,9 +6,11 @@
 		allCharts,
 		clickedChartIndex
 	} from '$lib/io/Stores';
-	import { Dropdown, DropdownItem, Button, P } from 'flowbite-svelte';
+	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
+	import { checkNameForSpacesAndHyphens, getTableName } from '$lib/io/FileUtils';
+
 	import { onMount } from 'svelte';
 
 	let syncWorker: Worker | undefined = undefined;
@@ -39,7 +41,9 @@
 
 	const queryDuckDB = async (dataObject: DataObject) => {
 		const db = await DuckDBClient.of([dataObject]);
-		const resp = await db.query(`SELECT * FROM "${filename} LIMIT 0"`);
+		//	var table = getTableName(dataObject.filename);
+		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
+		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`);
 		var columns = resp.schema.map((item) => item['name']);
 		console.log(columns);
 	};
