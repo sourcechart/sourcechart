@@ -20,7 +20,7 @@ export const polygons = writable<Polygon[]>([]);
 export const mouseType = writable<string | null>();
 export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
-export const minimimPointsForCluster = writable<number>();
+export const minimumPointsForCluster = writable<number>();
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -74,15 +74,16 @@ export const chartOptions = () =>
 export const getChartOptions = (id: string | undefined) => {
 	if (id) {
 		return derived(
-			[allCharts, epsilonDistance, minimimPointsForCluster], //@ts-ignore
-			async ([$allCharts, $epsilonDistance, $minimimPointsForCluster], set) => {
+			[allCharts, epsilonDistance, minimumPointsForCluster], //@ts-ignore
+			async ([$allCharts, $epsilonDistance, $minimumPointsForCluster], set) => {
 				if ($allCharts.length > 0) {
 					const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
 
 					if (chart) {
 						const db: DuckDBClient = chart.database;
-						const newChart = new DataIO(db, chart, $epsilonDistance, $minimimPointsForCluster);
+						const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
 						const chartOption = await newChart.updateChart();
+						minimumPointsForCluster;
 						set(chartOption);
 					}
 				} else {
