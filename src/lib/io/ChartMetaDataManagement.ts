@@ -16,7 +16,6 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 		yColumn: null,
 		canvasHeight: 0,
 		canvasWidth: 0,
-		database: null,
 		chartOptions: {
 			xAxis: { data: [], type: 'category' },
 			series: [{ data: [], type: '', barWidth: '60%' }],

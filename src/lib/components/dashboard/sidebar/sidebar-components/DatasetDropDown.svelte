@@ -4,7 +4,8 @@
 		getFileFromStore,
 		fileDropdown,
 		allCharts,
-		clickedChartIndex
+		clickedChartIndex,
+		duckDBInstanceStore
 	} from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
@@ -44,10 +45,9 @@
 		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
 		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
 		var columns = resp.schema.map((item) => item['name']);
-
+		duckDBInstanceStore.set(db);
 		allCharts.update((charts) => {
 			let chart = charts[$i];
-			chart.database = db;
 			chart.columns = columns;
 			return charts;
 		});

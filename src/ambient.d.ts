@@ -22,7 +22,6 @@ type Chart = {
 	groupbyColumns: Array<string>;
 	xColumn: string | null;
 	yColumn: string | null;
-	database: AsyncDuckDB;
 	canvasWidth: number;
 	canvasHeight: number;
 	chartOptions: any;
