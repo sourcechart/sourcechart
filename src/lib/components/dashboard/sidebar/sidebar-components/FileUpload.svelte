@@ -4,7 +4,6 @@
 	import { fileUploadStore } from '$lib/io/Stores';
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
-	import { DuckDBClient } from '$lib/io/DuckDBClient';
 
 	let syncWorker: Worker | undefined = undefined;
 	let files: ListGroupItemType | null = null;
