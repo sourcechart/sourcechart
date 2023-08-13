@@ -24,8 +24,6 @@ export const epsilonDistance = writable<number>();
 export const minimumPointsForCluster = writable<number>();
 export const duckDBInstanceStore = writable<DuckDBClient>();
 
-storeToLocalStorage(allCharts, 'allCharts');
-
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
 
@@ -36,8 +34,6 @@ const createDropdownStore = () => {
 		toggle: (id: any) => update((currentId) => (currentId !== id ? id : null))
 	};
 };
-
-export const dropdownStore = createDropdownStore();
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
@@ -156,3 +152,6 @@ export const touchStates = () => {
 		}
 	);
 };
+
+storeToLocalStorage(allCharts, 'allCharts');
+export const dropdownStore = createDropdownStore();
