@@ -10,7 +10,7 @@
 	<DarkMode />
 	<NavBar />
 </div>
-<div class="fixed z-30 mr-4">
+<div class="fixed z-30 ml-3">
 	<Sidebar />
 </div>
 

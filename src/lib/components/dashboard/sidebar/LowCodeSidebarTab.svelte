@@ -19,7 +19,7 @@
 	</div>
 	<div class="flex flex-col space-y-1">
 		<Label class="space-y-2 mb-1">
-			<span>Groupby</span>
+			<span>GroupBy</span>
 		</Label>
 		<Groupby ButtonName={'Group By'} />
 		<Tags />

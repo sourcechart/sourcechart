@@ -44,13 +44,12 @@ export const getFileFromStore = () =>
 	});
 
 export const getColumnsFromFile = () =>
-	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
-		const fileObject = $fileUploadStore.find(
-			(item: { filename: string }) => item.filename === $chosenFile
-		); //@ts-ignore
-		if (fileObject?.columns) {
-			//@ts-ignore
-			return fileObject.columns;
+	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
+		const options = $allCharts.find(
+			(item: { chartID: string }) => item.chartID === $mostRecentChartID
+		);
+		if (options?.columns) {
+			return options.columns;
 		} else {
 			return [];
 		}

@@ -9,7 +9,7 @@
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
-	import { checkNameForSpacesAndHyphens, getTableName } from '$lib/io/FileUtils';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	import { onMount } from 'svelte';
 
@@ -41,11 +41,15 @@
 
 	const queryDuckDB = async (dataObject: DataObject) => {
 		const db = await DuckDBClient.of([dataObject]);
-		//	var table = getTableName(dataObject.filename);
 		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
-		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`);
+		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
 		var columns = resp.schema.map((item) => item['name']);
-		console.log(columns);
+
+		allCharts.update((charts) => {
+			let chart = charts[$i];
+			chart.columns = columns;
+			return charts;
+		});
 	};
 
 	onMount(loadWorker);
