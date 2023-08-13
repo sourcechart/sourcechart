@@ -47,6 +47,7 @@
 
 		allCharts.update((charts) => {
 			let chart = charts[$i];
+			chart.database = db;
 			chart.columns = columns;
 			return charts;
 		});

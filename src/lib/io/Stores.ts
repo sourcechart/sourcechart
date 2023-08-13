@@ -82,8 +82,8 @@ export const getChartOptions = (id: string | undefined) => {
 					if (chart) {
 						const db: DuckDBClient = chart.database;
 						const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
+						console.log('newChart', newChart);
 						const chartOption = await newChart.updateChart();
-						minimumPointsForCluster;
 						set(chartOption);
 					}
 				} else {

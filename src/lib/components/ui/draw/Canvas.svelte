@@ -19,6 +19,8 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
+	$: console.log($allCharts);
+
 	let scrollX: number = 0;
 	let scrollY: number = 0;
 	let width: number = 0;
@@ -46,6 +48,7 @@
 	$: () => {
 		scrollX, scrollY, offsetX, offsetY;
 	};
+
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
