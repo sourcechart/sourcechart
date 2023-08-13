@@ -2,7 +2,7 @@
 	import { Tags } from './sidebar-components';
 	import { Groupby, ChartDropdown } from './sidebar-components';
 	import { Range } from 'flowbite-svelte';
-	import { epsilonDistance, minimimPointsForCluster } from '$lib/io/Stores';
+	import { epsilonDistance, minimumPointsForCluster } from '$lib/io/Stores';
 	import { NumberInput, Label } from 'flowbite-svelte';
 
 	let clusterSize = 5;
@@ -18,9 +18,9 @@
 	};
 
 	const handleClusterSize = () => {
-		minimimPointsForCluster.update((minmumClusterSize) => {
-			minmumClusterSize = clusterSize;
-			return minmumClusterSize;
+		minimumPointsForCluster.update((minimumClusterSize) => {
+			minimumClusterSize = clusterSize;
+			return minimumClusterSize;
 		});
 	};
 </script>
