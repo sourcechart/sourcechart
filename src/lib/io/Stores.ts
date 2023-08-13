@@ -2,6 +2,7 @@
 import { writable, derived } from 'svelte/store';
 import { DataIO } from './DataIO';
 import type { DuckDBClient } from './DuckDBClient';
+import { storeToLocalStorage } from './Storage';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
@@ -12,7 +13,7 @@ export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
-export const allCharts = writable<Chart[]>([]);
+export const allCharts = writable<Chart[]>([]); //storeToLocalStorage([], 'allCharts')
 export const fileUploadStore = writable<FileUpload[]>([]);
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
@@ -21,6 +22,8 @@ export const mouseType = writable<string | null>();
 export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
 export const minimumPointsForCluster = writable<number>();
+export const temporaryStorageValue = writable();
+storeToLocalStorage(allCharts, 'allCharts');
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -82,7 +85,6 @@ export const getChartOptions = (id: string | undefined) => {
 					if (chart) {
 						const db: DuckDBClient = chart.database;
 						const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
-						console.log('newChart', newChart);
 						const chartOption = await newChart.updateChart();
 						set(chartOption);
 					}

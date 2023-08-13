@@ -18,8 +18,7 @@ export function storeFromLocalStorage(storageKey: string, fallbackValue: any) {
 export function storeToLocalStorage(store: Store, storageKey: string) {
 	if (browser) {
 		store.subscribe((value) => {
-			let storageValue = typeof value === 'object' ? JSON.stringify(value) : value;
-
+			var storageValue = typeof value === 'object' ? JSON.stringify(value) : value;
 			window.localStorage.setItem(storageKey, storageValue);
 		});
 	}
@@ -45,8 +44,7 @@ export function storeFromSessionStorage(storageKey: string, fallbackValue: any) 
 export function storeToSessionStorage(store: Store, storageKey: string) {
 	if (browser) {
 		store.subscribe((value) => {
-			let storageValue = typeof value === 'object' ? JSON.stringify(value) : value;
-
+			var storageValue = typeof value === 'object' ? JSON.stringify(value) : value;
 			window.sessionStorage.setItem(storageKey, storageValue);
 		});
 	}
