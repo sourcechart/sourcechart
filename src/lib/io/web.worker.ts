@@ -53,10 +53,22 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
 			`
-			CREATE TABLE IF NOT EXISTS ${tableName} (filename TEXT, data TEXT, size INTEGER, id VARCHAR(10), filetype VARCHAR(10)); 
-			INSERT INTO ${tableName} (filename, data, size, id, filetype) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.id}', '${data.fileextension}');
+			CREATE TABLE IF NOT EXISTS ${tableName} (
+				filename TEXT,
+				data TEXT,
+				size INTEGER,
+				filetype VARCHAR(10),
+				UNIQUE(filename, data, size, filetype)
+			);
+
+			INSERT OR IGNORE INTO ${tableName} (filename, data, size, filetype) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.fileextension}');
 			`
 		);
+
+		var res = db.exec(`SELECT * FROM ${tableName} WHERE filename= '${data.filename}'`, {
+			returnValue: 'resultRows'
+		});
+		console.log(res);
 		db.close();
 		postMessage({ message: 'finished' });
 	});
