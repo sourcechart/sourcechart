@@ -22,14 +22,26 @@ onmessage = (e: MessageEvent) => {
 		case 'query':
 			getBinaryFromDatabase(messageData);
 			break;
+		case 'getDatasets':
+			getUniqueDatasets(messageData);
+			break;
 		default:
 			postMessage({ error: 'Invalid command' });
 	}
 };
 
-const getBinaryFromDatabase = (data: DataMessage) => {
-	console.log(data);
+const getUniqueDatasets = (data: DataMessage) => {
+	sqlite3InitModule().then(async (sqlite3) => {
+		//@ts-ignore
+		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
+		const res = db.exec(`SELECT filename FROM ${tableName}`, {
+			returnValue: 'resultRows'
+		});
+		console.log(res);
+	});
+};
 
+const getBinaryFromDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
@@ -45,6 +57,7 @@ const getBinaryFromDatabase = (data: DataMessage) => {
 			size: data.size,
 			fileextension: data.filename.split('.').pop()
 		});
+		db.close();
 	});
 };
 

@@ -56,8 +56,6 @@
 		});
 	};
 
-	onMount(loadWorker);
-
 	const selectFile = (filename: string) => {
 		selectedDataset = filename;
 		$chosenFile = filename;
@@ -77,6 +75,8 @@
 			return charts;
 		});
 	};
+
+	onMount(loadWorker);
 </script>
 
 <Button color="alternative">{selectedDataset}</Button>

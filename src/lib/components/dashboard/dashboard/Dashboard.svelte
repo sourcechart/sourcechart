@@ -23,6 +23,15 @@
 		}
 	};
 
+	const getAllDatasetsFromSQLITE = () => {
+		if (syncWorker) {
+			syncWorker.postMessage({
+				message: 'getDatasets'
+			});
+			syncWorker.onmessage = onWorkerMessage;
+		}
+	};
+
 	const queryDuckDB = async (dataObject: DataObject) => {
 		const db = await DuckDBClient.of([dataObject]);
 		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
