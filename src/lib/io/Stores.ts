@@ -94,15 +94,6 @@ export const getChartOptions = (id: string | undefined) => {
 	}
 };
 
-/*
-export const fileDropdown = () => {
-	return derived(fileUploadStore, ($fileUploadStore) => {
-		const files = $fileUploadStore.map((chart: { filename: string }) => item.filename);
-		return files;
-	});
-};
-*/
-
 export const fileDropdown = () =>
 	derived(allCharts, ($allCharts) => {
 		const files = $allCharts.map((chart) => chart.filename);
