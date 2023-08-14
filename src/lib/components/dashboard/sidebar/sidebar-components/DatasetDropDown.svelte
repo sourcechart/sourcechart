@@ -4,8 +4,10 @@
 		getFileFromStore,
 		fileDropdown,
 		allCharts,
-		clickedChartIndex
+		clickedChartIndex,
+		duckDBInstanceStore
 	} from '$lib/io/Stores';
+
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
@@ -45,50 +47,45 @@
 		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
 		var columns = resp.schema.map((item) => item['name']);
 
+		duckDBInstanceStore.set(db);
+
 		allCharts.update((charts) => {
 			let chart = charts[$i];
-			chart.database = db;
 			chart.columns = columns;
 			return charts;
 		});
 	};
 
-	onMount(loadWorker);
+	const selectFile = (filename: string | null) => {
+		if (filename) {
+			selectedDataset = filename;
+			$chosenFile = filename;
 
-	const selectFile = (filename: string) => {
-		selectedDataset = filename;
-		$chosenFile = filename;
-		if (syncWorker) {
-			syncWorker.postMessage({
-				message: 'query',
-				file: $file
+			if (syncWorker) {
+				syncWorker.postMessage({
+					message: 'query',
+					filename: filename
+				});
+				syncWorker.onmessage = onWorkerMessage;
+			}
+
+			allCharts.update((charts) => {
+				let chart = charts[$i];
+				chart.filename = filename;
+				if ($file?.datasetID) chart.datasetID = $file.datasetID;
+				return charts;
 			});
-			syncWorker.onmessage = onWorkerMessage;
 		}
-		allCharts.update((charts) => {
-			let chart = charts[$i];
-			chart.filename = filename;
-			if ($file?.datasetID) chart.datasetID = $file.datasetID;
-			return charts;
-		});
 	};
 
-	/*
-	const removeItem = (item: string) => {
-		allCharts.update((charts) => {
-			let chart = charts[$i];
-			chart.groupbyColumns = chart.groupbyColumns.filter(
-				(groupbyColumn: string) => groupbyColumn !== item
-			);
-			return charts;
-		});
-	};
-	*/
+	onMount(loadWorker);
 </script>
 
 <Button color="alternative">{selectedDataset}</Button>
 <Dropdown>
 	{#each $datasets as dataset}
-		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
+		{#if dataset !== null}
+			<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
+		{/if}
 	{/each}
 </Dropdown>

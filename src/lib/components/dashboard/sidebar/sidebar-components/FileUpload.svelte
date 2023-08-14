@@ -14,16 +14,10 @@
 		[propName: string]: any;
 	}
 
-	const onWorkerMessage = (e: any) => {
-		console.log(e.data);
-	};
-
 	const loadWorker = async () => {
 		const SyncWorker = await import('$lib/io/web.worker?worker');
 		syncWorker = new SyncWorker.default();
 	};
-
-	onMount(loadWorker);
 
 	const createFileStore = (filename: string, fileSize: number, dataID: string) => {
 		var tableColumnsSize = {
@@ -52,10 +46,9 @@
 				hexadecimal: hex,
 				fileextension: f.name.split('.').pop()
 			});
-
-			syncWorker.onmessage = onWorkerMessage;
 		}
 	};
+	onMount(loadWorker);
 </script>
 
 <Fileupload id="multiple_files" multiple on:change={uploadFiles} />

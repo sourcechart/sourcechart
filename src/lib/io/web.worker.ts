@@ -20,14 +20,28 @@ onmessage = (e: MessageEvent) => {
 			insertDataIntoDatabase(messageData);
 			break;
 		case 'query':
-			if (messageData?.file) getBinaryFromDatabase(messageData.file);
+			getBinaryFromDatabase(messageData);
+			break;
+		case 'getDatasets':
+			getUniqueDatasets(messageData);
 			break;
 		default:
 			postMessage({ error: 'Invalid command' });
 	}
 };
 
-const getBinaryFromDatabase = (data: FileUpload) => {
+const getUniqueDatasets = (data: DataMessage) => {
+	sqlite3InitModule().then(async (sqlite3) => {
+		//@ts-ignore
+		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
+		const res = db.exec(`SELECT filename FROM ${tableName}`, {
+			returnValue: 'resultRows'
+		});
+		console.log(res);
+	});
+};
+
+const getBinaryFromDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
@@ -41,9 +55,9 @@ const getBinaryFromDatabase = (data: FileUpload) => {
 			filename: data.filename,
 			hexadecimal: hexEncoding,
 			size: data.size,
-			id: data.datasetID,
 			fileextension: data.filename.split('.').pop()
 		});
+		db.close();
 	});
 };
 
@@ -53,11 +67,17 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
 			`
-			CREATE TABLE IF NOT EXISTS ${tableName} (filename TEXT, data TEXT, size INTEGER, id VARCHAR(10), filetype VARCHAR(10)); 
-			INSERT INTO ${tableName} (filename, data, size, id, filetype) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.id}', '${data.fileextension}');
+			CREATE TABLE IF NOT EXISTS ${tableName} (
+				filename TEXT,
+				data TEXT,
+				size INTEGER,
+				filetype VARCHAR(10),
+				UNIQUE(filename, data, size, filetype)
+			);
+
+			INSERT OR IGNORE INTO ${tableName} (filename, data, size, filetype) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.fileextension}');
 			`
 		);
 		db.close();
-		postMessage({ message: 'finished' });
 	});
 };

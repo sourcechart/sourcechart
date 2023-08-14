@@ -1,6 +1,7 @@
-/**  State Management for Echarts Stores **/
+/**  State Management for eCharts Stores **/
 import { writable, derived } from 'svelte/store';
-import { DataIO } from './DataIO';
+import { DataIO } from '$lib/io/DataIO';
+import { storeToLocalStorage, storeFromLocalStorage } from '$lib/io/Storage';
 import type { DuckDBClient } from './DuckDBClient';
 
 export const globalMouseState = writable<boolean>(false);
@@ -12,7 +13,7 @@ export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
-export const allCharts = writable<Chart[]>([]);
+export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
 export const fileUploadStore = writable<FileUpload[]>([]);
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
@@ -21,6 +22,7 @@ export const mouseType = writable<string | null>();
 export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
 export const minimumPointsForCluster = writable<number>();
+export const duckDBInstanceStore = writable<DuckDBClient>();
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -32,8 +34,6 @@ const createDropdownStore = () => {
 		toggle: (id: any) => update((currentId) => (currentId !== id ? id : null))
 	};
 };
-
-export const dropdownStore = createDropdownStore();
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
@@ -62,7 +62,6 @@ export const chartOptions = () =>
 		);
 		return {
 			datasetID: options?.datasetID,
-			database: options?.database,
 			filename: options?.filename,
 			xColumn: options?.xColumn,
 			yColumn: options?.yColumn,
@@ -74,15 +73,16 @@ export const chartOptions = () =>
 export const getChartOptions = (id: string | undefined) => {
 	if (id) {
 		return derived(
-			[allCharts, epsilonDistance, minimumPointsForCluster], //@ts-ignore
-			async ([$allCharts, $epsilonDistance, $minimumPointsForCluster], set) => {
+			[allCharts, epsilonDistance, minimumPointsForCluster, duckDBInstanceStore], //@ts-ignore
+			async (
+				[$allCharts, $epsilonDistance, $minimumPointsForCluster, $duckDBInstanceStore],
+				set
+			) => {
 				if ($allCharts.length > 0) {
 					const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
-
 					if (chart) {
-						const db: DuckDBClient = chart.database;
+						const db = $duckDBInstanceStore;
 						const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
-						console.log('newChart', newChart);
 						const chartOption = await newChart.updateChart();
 						set(chartOption);
 					}
@@ -94,12 +94,11 @@ export const getChartOptions = (id: string | undefined) => {
 	}
 };
 
-export const fileDropdown = () => {
-	return derived(fileUploadStore, ($fileUploadStore) => {
-		const files = $fileUploadStore.map((item: { filename: string }) => item.filename);
+export const fileDropdown = () =>
+	derived(allCharts, ($allCharts) => {
+		const files = $allCharts.map((chart) => chart.filename);
 		return files;
 	});
-};
 
 export const clickedChart = () =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
@@ -152,3 +151,6 @@ export const touchStates = () => {
 		}
 	);
 };
+
+storeToLocalStorage(allCharts, 'allCharts');
+export const dropdownStore = createDropdownStore();
