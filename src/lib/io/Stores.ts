@@ -1,8 +1,12 @@
 /**  State Management for eCharts Stores **/
 import { writable, derived } from 'svelte/store';
 import { DataIO } from '$lib/io/DataIO';
-import type { DuckDBClient } from '$lib/io/DuckDBClient';
 import { storeToLocalStorage, storeFromLocalStorage } from '$lib/io/Storage';
+import { onMount } from 'svelte';
+import type { DuckDBClient } from './DuckDBClient';
+import { checkNameForSpacesAndHyphens } from './FileUtils';
+
+let syncWorker: Worker | undefined = undefined;
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);

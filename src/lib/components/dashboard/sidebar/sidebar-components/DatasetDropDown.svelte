@@ -46,7 +46,9 @@
 		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
 		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
 		var columns = resp.schema.map((item) => item['name']);
+
 		duckDBInstanceStore.set(db);
+
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			chart.columns = columns;
@@ -59,6 +61,7 @@
 	const selectFile = (filename: string) => {
 		selectedDataset = filename;
 		$chosenFile = filename;
+
 		if (syncWorker) {
 			syncWorker.postMessage({
 				message: 'query',
@@ -66,6 +69,7 @@
 			});
 			syncWorker.onmessage = onWorkerMessage;
 		}
+
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			chart.filename = filename;
@@ -73,18 +77,6 @@
 			return charts;
 		});
 	};
-
-	/*
-	const removeItem = (item: string) => {
-		allCharts.update((charts) => {
-			let chart = charts[$i];
-			chart.groupbyColumns = chart.groupbyColumns.filter(
-				(groupbyColumn: string) => groupbyColumn !== item
-			);
-			return charts;
-		});
-	};
-	*/
 </script>
 
 <Button color="alternative">{selectedDataset}</Button>
