@@ -2,11 +2,7 @@
 import { writable, derived } from 'svelte/store';
 import { DataIO } from '$lib/io/DataIO';
 import { storeToLocalStorage, storeFromLocalStorage } from '$lib/io/Storage';
-import { onMount } from 'svelte';
 import type { DuckDBClient } from './DuckDBClient';
-import { checkNameForSpacesAndHyphens } from './FileUtils';
-
-let syncWorker: Worker | undefined = undefined;
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
@@ -85,10 +81,10 @@ export const getChartOptions = (id: string | undefined) => {
 				if ($allCharts.length > 0) {
 					const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
 					if (chart) {
-						const db = $duckDBInstanceStore;
-						const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
-						const chartOption = await newChart.updateChart();
-						set(chartOption);
+						//const db = $duckDBInstanceStore;
+						//const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
+						//const chartOption = await newChart.updateChart();
+						//set(chartOption);
 					}
 				} else {
 					set(undefined);

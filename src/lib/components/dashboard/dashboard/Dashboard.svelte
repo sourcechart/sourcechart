@@ -4,8 +4,13 @@
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import { DarkMode } from '$lib/components/ui';
 	import { onMount } from 'svelte';
+	import { allCharts } from '$lib/io/Stores';
 
-	import { duckDBInstanceStore } from '$lib/io/Stores';
+	const loadPreviousState = () => {
+		console.log('mounted', $allCharts);
+	};
+
+	onMount(loadPreviousState);
 </script>
 
 <!-- Center this on the screen-->

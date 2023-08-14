@@ -42,6 +42,7 @@
 	};
 
 	const queryDuckDB = async (dataObject: DataObject) => {
+		console.log('querying duckdb', dataObject);
 		const db = await DuckDBClient.of([dataObject]);
 		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
 		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
