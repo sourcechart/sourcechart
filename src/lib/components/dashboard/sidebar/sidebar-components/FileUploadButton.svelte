@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Fileupload, Listgroup } from 'flowbite-svelte';
 	import { generateID } from '$lib/io/GenerateID';
 	import { fileUploadStore } from '$lib/io/Stores';
 	import { bufferToHex } from '$lib/io/HexOps';
@@ -53,7 +52,7 @@
 	onMount(loadWorker);
 </script>
 
-<Button color="dark">
+<Button id="multiple_files" color="dark">
 	<div class="flex justify-between space-x-2">
 		<svg
 			class="text-gray-800 dark:text-white"
@@ -77,6 +76,3 @@
 		<p>Add Data</p>
 	</div>
 </Button>
-
-<Fileupload id="multiple_files" multiple on:change={uploadFiles} />
-<Listgroup {files} class="mt-2" />
