@@ -56,24 +56,26 @@
 		});
 	};
 
-	const selectFile = (filename: string) => {
-		selectedDataset = filename;
-		$chosenFile = filename;
+	const selectFile = (filename: string | null) => {
+		if (filename) {
+			selectedDataset = filename;
+			$chosenFile = filename;
 
-		if (syncWorker) {
-			syncWorker.postMessage({
-				message: 'query',
-				filename: filename
+			if (syncWorker) {
+				syncWorker.postMessage({
+					message: 'query',
+					filename: filename
+				});
+				syncWorker.onmessage = onWorkerMessage;
+			}
+
+			allCharts.update((charts) => {
+				let chart = charts[$i];
+				chart.filename = filename;
+				if ($file?.datasetID) chart.datasetID = $file.datasetID;
+				return charts;
 			});
-			syncWorker.onmessage = onWorkerMessage;
 		}
-
-		allCharts.update((charts) => {
-			let chart = charts[$i];
-			chart.filename = filename;
-			if ($file?.datasetID) chart.datasetID = $file.datasetID;
-			return charts;
-		});
 	};
 
 	onMount(loadWorker);
@@ -82,6 +84,8 @@
 <Button color="alternative">{selectedDataset}</Button>
 <Dropdown>
 	{#each $datasets as dataset}
-		<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
+		{#if dataset !== null}
+			<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
+		{/if}
 	{/each}
 </Dropdown>
