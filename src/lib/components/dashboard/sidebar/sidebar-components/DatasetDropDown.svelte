@@ -27,6 +27,7 @@
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
+	$: console.log($allCharts.map((chart) => chart.filename));
 	const onWorkerMessage = (e: MessageEvent) => {
 		var arrayBuffer = hexToBuffer(e.data.hexadecimal);
 		var dataObject = {

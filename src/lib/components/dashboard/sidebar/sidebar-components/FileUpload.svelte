@@ -19,8 +19,6 @@
 		syncWorker = new SyncWorker.default();
 	};
 
-	onMount(loadWorker);
-
 	const createFileStore = (filename: string, fileSize: number, dataID: string) => {
 		var tableColumnsSize = {
 			filename: filename,
@@ -50,6 +48,7 @@
 			});
 		}
 	};
+	onMount(loadWorker);
 </script>
 
 <Fileupload id="multiple_files" multiple on:change={uploadFiles} />
