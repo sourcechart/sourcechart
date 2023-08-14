@@ -81,10 +81,10 @@ export const getChartOptions = (id: string | undefined) => {
 				if ($allCharts.length > 0) {
 					const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
 					if (chart) {
-						//const db = $duckDBInstanceStore;
-						//const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
-						//const chartOption = await newChart.updateChart();
-						//set(chartOption);
+						const db = $duckDBInstanceStore;
+						const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
+						const chartOption = await newChart.updateChart();
+						set(chartOption);
 					}
 				} else {
 					set(undefined);

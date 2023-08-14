@@ -66,7 +66,7 @@
 		if (syncWorker) {
 			syncWorker.postMessage({
 				message: 'query',
-				file: $file
+				filename: filename
 			});
 			syncWorker.onmessage = onWorkerMessage;
 		}

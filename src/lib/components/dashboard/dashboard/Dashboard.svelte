@@ -8,13 +8,23 @@
 
 	let syncWorker: Worker | undefined = undefined;
 
+	const loadDataFromSQLITE = (chart: Chart) => {
+		if (syncWorker) {
+			syncWorker.postMessage({
+				message: 'query',
+				filename: chart.filename
+			});
+		}
+	};
+
 	const loadWorker = async () => {
 		const SyncWorker = await import('$lib/io/web.worker?worker');
 		syncWorker = new SyncWorker.default();
 	};
 
-	const loadPreviousState = () => {
-		console.log('mounted', $allCharts);
+	const loadPreviousState = async () => {
+		await loadWorker();
+		$allCharts.forEach(loadDataFromSQLITE);
 	};
 
 	onMount(loadPreviousState);

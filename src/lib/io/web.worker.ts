@@ -20,14 +20,16 @@ onmessage = (e: MessageEvent) => {
 			insertDataIntoDatabase(messageData);
 			break;
 		case 'query':
-			if (messageData?.file) getBinaryFromDatabase(messageData.file);
+			getBinaryFromDatabase(messageData);
 			break;
 		default:
 			postMessage({ error: 'Invalid command' });
 	}
 };
 
-const getBinaryFromDatabase = (data: FileUpload) => {
+const getBinaryFromDatabase = (data: DataMessage) => {
+	console.log(data);
+
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
@@ -41,7 +43,6 @@ const getBinaryFromDatabase = (data: FileUpload) => {
 			filename: data.filename,
 			hexadecimal: hexEncoding,
 			size: data.size,
-			id: data.datasetID,
 			fileextension: data.filename.split('.').pop()
 		});
 	});
