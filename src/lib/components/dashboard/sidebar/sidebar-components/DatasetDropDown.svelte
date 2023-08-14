@@ -7,6 +7,7 @@
 		clickedChartIndex,
 		duckDBInstanceStore
 	} from '$lib/io/Stores';
+
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';

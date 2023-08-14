@@ -3,6 +3,9 @@
 	import Canvas from '$lib/components/ui/draw/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import { DarkMode } from '$lib/components/ui';
+	import { onMount } from 'svelte';
+
+	import { duckDBInstanceStore } from '$lib/io/Stores';
 </script>
 
 <!-- Center this on the screen-->

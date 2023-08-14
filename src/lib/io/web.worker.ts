@@ -64,12 +64,6 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 			INSERT OR IGNORE INTO ${tableName} (filename, data, size, filetype) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.fileextension}');
 			`
 		);
-
-		var res = db.exec(`SELECT * FROM ${tableName} WHERE filename= '${data.filename}'`, {
-			returnValue: 'resultRows'
-		});
-		console.log(res);
 		db.close();
-		postMessage({ message: 'finished' });
 	});
 };
