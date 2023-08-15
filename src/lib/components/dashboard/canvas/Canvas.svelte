@@ -1,7 +1,6 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
 	import * as PolyOps from './shapes/draw-utils/PolygonOperations';
-	import * as MouseActions from '$lib/actions/MouseActions';
 	import {
 		navBarState,
 		mouseEventState,
@@ -15,7 +14,6 @@
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
 	import { generateID } from '$lib/io/GenerateID';
-
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
@@ -43,6 +41,8 @@
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: TOUCHSTATE = touchStates();
 	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
+
+	$: console.log($TOUCHSTATE);
 
 	$: () => {
 		scrollX, scrollY, offsetX, offsetY;
@@ -78,12 +78,13 @@
 	/**
 	 * ### Handle the touch start event.
 	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
+	 * @param e MouseEvent
+
 	 */
-	const handleTouchStart = (x: number, y: number): void => {
-		x = x - offsetX + scrollX;
-		y = y - offsetY + scrollY;
+	const handleMouseDown = (e: MouseEvent): void => {
+		console.log('mousedown: ', e);
+		var x = e.clientX - offsetX + scrollX;
+		var y = e.clientY - offsetY + scrollY;
 		startPosition = { x, y };
 
 		mouseEventState.set('isTouching');
@@ -108,21 +109,21 @@
 	 * @param x x position on the screen
 	 * @param y y position on the screen
 	 */
-	const handleTouchMove = (x: number, y: number): void => {
+	const handleMouseMoveDown = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
 
 		switch ($TOUCHSTATE) {
 			case 'isDrawing':
-				handleTouchCreateShapes(x, y);
+				handleCreateShapes(x, y);
 				break;
 
 			case 'isErasing':
-				handleTouchErase(x, y);
+				handleErase(x, y);
 				break;
 
 			case 'isResizing':
-				handleTouchResize(x, y);
+				handleResize(x, y);
 				break;
 
 			case 'isTranslating':
@@ -137,12 +138,11 @@
 	/**
 	 * ### Handle Touch End
 	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
+	 * @param e MouseEvent
 	 */
-	const handleTouchEnd = (x: number, y: number) => {
-		x = x - offsetX + scrollX;
-		y = y - offsetY + scrollY;
+	const handleMouseUp = (e: MouseEvent) => {
+		var x = e.clientX - offsetX + scrollX;
+		var y = e.clientY - offsetY + scrollY;
 
 		if ($TOUCHSTATE === 'isDrawing') {
 			let targetId = generateID();
@@ -164,65 +164,12 @@
 	};
 
 	/**
-	 * ### On intersection of a polygon while your mouse is touching erase
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
-	const handleTouchErase = (x: number, y: number): void => {
-		currentTouchPosition = { x: x, y: y };
-		const allPolygons = $allCharts.map((chart) => chart.polygon);
-		const polygon = PolyOps.getContainingPolygon(currentTouchPosition, allPolygons);
-
-		if (polygon) {
-			allCharts.update((charts) => {
-				const index = charts.findIndex((chart) => chart.polygon === polygon);
-				if (index > -1) {
-					charts.splice(index, 1);
-				}
-				return charts;
-			});
-		}
-	};
-
-	/**
-	 * ### Create the shapes where charts will be put.
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
-	const handleTouchCreateShapes = (x: number, y: number): void => {
-		const polygon = {
-			vertices: [
-				{ x: startPosition.x, y: startPosition.y },
-				{ x: x, y: startPosition.y },
-				{ x: x, y: y },
-				{ x: startPosition.x, y: y }
-			]
-		};
-		newPolygon = [polygon];
-	};
-
-	/**
-	 * ### Handle Touch Resize
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
-	const handleTouchResize = (x: number, y: number) => {
-		if (chartIndex !== null) {
-			const polygon = $allCharts[chartIndex].polygon;
-			$allCharts[chartIndex].polygon = resizeRectangle(x, y, polygon, handlePosition);
-		}
-	};
-
-	/**
 	 * ### Handle Mouse Move
 	 *
 	 * @param x x position on the screen
 	 * @param y y position on the screen
 	 */
-	const handleMouseMove = (x: number, y: number): void => {
+	const handleMouseMoveUp = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
 		currentMousePosition = { x: x, y: y };
@@ -250,27 +197,75 @@
 			$mouseType = $mouseType || 'default';
 		}
 	};
+
+	const handleMouseMove = (e: MouseEvent) => {
+		if ($TOUCHSTATE === 'isHovering') {
+			handleMouseMoveUp(e.clientX, e.clientY);
+		} else if ($TOUCHSTATE === 'isTouching') {
+			handleMouseMoveDown(e.clientX, e.clientY);
+		}
+	};
+
+	/**
+	 * ### On intersection of a polygon while your mouse is touching erase
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
+	const handleErase = (x: number, y: number): void => {
+		currentTouchPosition = { x: x, y: y };
+		const allPolygons = $allCharts.map((chart) => chart.polygon);
+		const polygon = PolyOps.getContainingPolygon(currentTouchPosition, allPolygons);
+
+		if (polygon) {
+			allCharts.update((charts) => {
+				const index = charts.findIndex((chart) => chart.polygon === polygon);
+				if (index > -1) {
+					charts.splice(index, 1);
+				}
+				return charts;
+			});
+		}
+	};
+
+	/**
+	 * ### Create the shapes where charts will be put.
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
+	const handleCreateShapes = (x: number, y: number): void => {
+		const polygon = {
+			vertices: [
+				{ x: startPosition.x, y: startPosition.y },
+				{ x: x, y: startPosition.y },
+				{ x: x, y: y },
+				{ x: startPosition.x, y: y }
+			]
+		};
+		newPolygon = [polygon];
+	};
+
+	/**
+	 * ### Handle Touch Resize
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
+	const handleResize = (x: number, y: number) => {
+		if (chartIndex !== null) {
+			const polygon = $allCharts[chartIndex].polygon;
+			$allCharts[chartIndex].polygon = resizeRectangle(x, y, polygon, handlePosition);
+		}
+	};
 </script>
 
 <div
 	class="h-full w-full relative"
 	style={`cursor: ${$mouseType};`}
-	use:MouseActions.trackMouseState
-	on:keydown={() => {
-		null;
-	}}
-	use:MouseActions.mouseMove={{
-		onMove: handleMouseMove
-	}}
-	use:MouseActions.touchStart={{
-		onStart: handleTouchStart
-	}}
-	use:MouseActions.touchMove={{
-		onMove: handleTouchMove
-	}}
-	use:MouseActions.touchEnd={{
-		onEnd: handleTouchEnd
-	}}
+	on:mousedown={handleMouseDown}
+	on:mousemove={handleMouseMove}
+	on:mouseup={handleMouseUp}
 >
 	<div id="canvasParent">
 		{#each $allCharts as chart (chart.chartID)}
