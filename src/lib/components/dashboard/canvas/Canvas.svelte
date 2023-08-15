@@ -9,7 +9,8 @@
 		mouseType,
 		activeSidebar,
 		allCharts,
-		touchStates
+		touchStates,
+		activeDropZone
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './shapes/draw-utils/Draw';
@@ -35,6 +36,10 @@
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
 
+	let isPanning = false;
+	let panStartX = 0;
+	let panStartY = 0;
+
 	const tolerance: number = 5;
 
 	//Reactive variables
@@ -49,6 +54,7 @@
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
+
 			width = window.innerWidth;
 			height = window.innerHeight;
 			updateOffset();
@@ -59,6 +65,23 @@
 		const rect = canvas.getBoundingClientRect();
 		offsetX = rect.left;
 		offsetY = Math.abs(rect.top - height);
+	};
+
+	const handlePanMove = (x: number, y: number) => {
+		if (!isPanning) return;
+
+		const deltaX = x - panStartX;
+		const deltaY = y - panStartY;
+		panStartX = x;
+		panStartY = y;
+
+		scrollX += deltaX;
+		scrollY += deltaY;
+		updateOffset();
+	};
+
+	const handlePanEnd = () => {
+		isPanning = false;
 	};
 
 	function controlSidebar(touchstate: string) {
@@ -77,10 +100,8 @@
 	 * ### Handle the touch start event.
 	 *
 	 * @param e MouseEvent
-
 	 */
 	const handleMouseDown = (e: MouseEvent): void => {
-		console.log('mousedown: ', e);
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 		startPosition = { x, y };
@@ -137,13 +158,7 @@
 	const handleMouseMove = (e: MouseEvent) => {
 		if ($TOUCHSTATE === 'isHovering') {
 			handleMouseMoveUp(e.clientX, e.clientY);
-		} else if (
-			$TOUCHSTATE === 'isTouching' ||
-			$TOUCHSTATE === 'isDrawing' ||
-			$TOUCHSTATE === 'isErasing' ||
-			$TOUCHSTATE === 'isResizing' ||
-			$TOUCHSTATE === 'isTranslating'
-		) {
+		} else {
 			handleMouseMoveDown(e.clientX, e.clientY);
 		}
 	};
@@ -259,8 +274,8 @@
 				handleResize(x, y);
 				break;
 
-			case 'isTranslating':
-				// handleTouchTranslate(x, y); this is handled isTranslating DrawRectangleCanvas.svelte
+			case 'isPanning':
+				handlePanMove(x, y);
 				break;
 
 			default:
@@ -269,23 +284,28 @@
 	};
 </script>
 
-<div
-	class="h-full w-full relative"
-	style={`cursor: ${$mouseType};`}
-	on:mousedown={handleMouseDown}
-	on:mousemove={handleMouseMove}
-	on:mouseup={handleMouseUp}
->
-	<div id="canvasParent">
-		{#each $allCharts as chart (chart.chartID)}
-			<DrawRectangleCanvas polygon={chart.polygon} />
-		{/each}
-		{#each newPolygon as polygon}
-			<DrawRectangleCanvas {polygon} />
-		{/each}
+<div class={`${$activeDropZone ? 'blur-filter' : ''}`}>
+	<div
+		class="h-full w-full relative"
+		style={`cursor: ${$mouseType};`}
+		on:mousedown={handleMouseDown}
+		on:mousemove={handleMouseMove}
+		on:mouseup={handleMouseUp}
+	>
+		<div id="canvasParent">
+			{#if !$activeDropZone}
+				{#each $allCharts as chart (chart.chartID)}
+					<DrawRectangleCanvas polygon={chart.polygon} />
+				{/each}
+				{#each newPolygon as polygon}
+					<DrawRectangleCanvas {polygon} />
+				{/each}
+			{/if}
+		</div>
 	</div>
+	<canvas bind:this={canvas} />
 </div>
-<canvas bind:this={canvas} />
+
 <svelte:window
 	on:resize={() => {
 		if (typeof window !== undefined) {
@@ -300,3 +320,16 @@
 		}
 	}}
 />
+
+<style>
+	.blur-filter {
+		backdrop-filter: blur(10px);
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(55, 47, 47, 0.3);
+		z-index: 1000;
+	}
+</style>
