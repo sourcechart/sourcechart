@@ -72,6 +72,6 @@
 </div>
 
 <div class="z-30 fixed justify-center items-center">
-	<DropZone />
+	<DropZone/>
 </div>
 <Canvas />

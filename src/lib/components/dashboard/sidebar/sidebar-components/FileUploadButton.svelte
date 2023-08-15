@@ -4,12 +4,12 @@
 
 	const dispatch = createEventDispatcher();
 
-	const handleMultipleFiles = () => {
-		dispatch('multipleFiles');
-	};
+	function handleClick() {
+		dispatch('showDropZone');
+	}
 </script>
 
-<Button id="multiple_files" color="dark">
+<Button id="multiple_files" color="dark" on:click={handleClick}>
 	<div class="flex justify-between space-x-2">
 		<svg
 			class="text-gray-800 dark:text-white"
