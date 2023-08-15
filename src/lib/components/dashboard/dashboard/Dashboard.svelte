@@ -2,7 +2,7 @@
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Canvas from '$lib/components/ui/draw/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
-	import DropZone from '$lib/components/dashboard/dropzone/DropZone.svelte';
+	import FileUploadPanel from '$lib/components/dashboard/dropzone/FileUploadPanel.svelte';
 
 	import { DarkMode } from '$lib/components/ui';
 	import { onMount } from 'svelte';
@@ -72,6 +72,6 @@
 </div>
 
 <div class="z-30 fixed justify-center items-center">
-	<DropZone/>
+	<FileUploadPanel />
 </div>
 <Canvas />
