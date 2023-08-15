@@ -42,8 +42,6 @@
 	$: TOUCHSTATE = touchStates();
 	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
 
-	$: console.log($TOUCHSTATE);
-
 	$: () => {
 		scrollX, scrollY, offsetX, offsetY;
 	};
@@ -104,38 +102,6 @@
 	};
 
 	/**
-	 * ### Handle all touch movements
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
-	const handleMouseMoveDown = (x: number, y: number): void => {
-		x = x - offsetX + scrollX;
-		y = y - offsetY + scrollY;
-
-		switch ($TOUCHSTATE) {
-			case 'isDrawing':
-				handleCreateShapes(x, y);
-				break;
-
-			case 'isErasing':
-				handleErase(x, y);
-				break;
-
-			case 'isResizing':
-				handleResize(x, y);
-				break;
-
-			case 'isTranslating':
-				// handleTouchTranslate(x, y); this is handled isTranslating DrawRectangleCanvas.svelte
-				break;
-
-			default:
-				return;
-		}
-	};
-
-	/**
 	 * ### Handle Touch End
 	 *
 	 * @param e MouseEvent
@@ -161,6 +127,25 @@
 
 		mouseEventState.set('isHovering');
 		navBarState.set('select');
+	};
+
+	/**
+	 * ### Handle Mouse Move
+	 *
+	 * @param e MouseEvent
+	 */
+	const handleMouseMove = (e: MouseEvent) => {
+		if ($TOUCHSTATE === 'isHovering') {
+			handleMouseMoveUp(e.clientX, e.clientY);
+		} else if (
+			$TOUCHSTATE === 'isTouching' ||
+			$TOUCHSTATE === 'isDrawing' ||
+			$TOUCHSTATE === 'isErasing' ||
+			$TOUCHSTATE === 'isResizing' ||
+			$TOUCHSTATE === 'isTranslating'
+		) {
+			handleMouseMoveDown(e.clientX, e.clientY);
+		}
 	};
 
 	/**
@@ -195,14 +180,6 @@
 			$mouseType = 'move';
 		} else {
 			$mouseType = $mouseType || 'default';
-		}
-	};
-
-	const handleMouseMove = (e: MouseEvent) => {
-		if ($TOUCHSTATE === 'isHovering') {
-			handleMouseMoveUp(e.clientX, e.clientY);
-		} else if ($TOUCHSTATE === 'isTouching') {
-			handleMouseMoveDown(e.clientX, e.clientY);
 		}
 	};
 
@@ -256,6 +233,38 @@
 		if (chartIndex !== null) {
 			const polygon = $allCharts[chartIndex].polygon;
 			$allCharts[chartIndex].polygon = resizeRectangle(x, y, polygon, handlePosition);
+		}
+	};
+
+	/**
+	 * ### Handle all touch movements
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
+	const handleMouseMoveDown = (x: number, y: number): void => {
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
+
+		switch ($TOUCHSTATE) {
+			case 'isDrawing':
+				handleCreateShapes(x, y);
+				break;
+
+			case 'isErasing':
+				handleErase(x, y);
+				break;
+
+			case 'isResizing':
+				handleResize(x, y);
+				break;
+
+			case 'isTranslating':
+				// handleTouchTranslate(x, y); this is handled isTranslating DrawRectangleCanvas.svelte
+				break;
+
+			default:
+				return;
 		}
 	};
 </script>
