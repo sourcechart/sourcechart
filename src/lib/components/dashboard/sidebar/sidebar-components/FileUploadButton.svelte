@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { generateID } from '$lib/io/GenerateID';
-	import { fileUploadStore } from '$lib/io/Stores';
-	import { bufferToHex } from '$lib/io/HexOps';
-	import { onMount } from 'svelte';
 	import { Button } from 'flowbite-svelte';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+
+	const handleMultipleFiles = () => {
+		dispatch('multipleFiles');
+	};
 </script>
 
 <Button id="multiple_files" color="dark">

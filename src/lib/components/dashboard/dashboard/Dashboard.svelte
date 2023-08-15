@@ -2,6 +2,8 @@
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Canvas from '$lib/components/ui/draw/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
+	import DropZone from '$lib/components/dashboard/dropzone/DropZone.svelte';
+
 	import { DarkMode } from '$lib/components/ui';
 	import { onMount } from 'svelte';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
@@ -18,15 +20,6 @@
 			syncWorker.postMessage({
 				message: 'query',
 				filename: chart.filename
-			});
-			syncWorker.onmessage = onWorkerMessage;
-		}
-	};
-
-	const getAllDatasetsFromSQLITE = () => {
-		if (syncWorker) {
-			syncWorker.postMessage({
-				message: 'getDatasets'
 			});
 			syncWorker.onmessage = onWorkerMessage;
 		}
@@ -78,4 +71,7 @@
 	<Sidebar />
 </div>
 
+<div class="z-30 fixed justify-center items-center">
+	<DropZone />
+</div>
 <Canvas />

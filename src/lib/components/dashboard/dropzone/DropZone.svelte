@@ -5,6 +5,7 @@
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
 
+	let value: string[] = [];
 	let syncWorker: Worker | undefined = undefined;
 
 	const loadWorker = async () => {
@@ -42,11 +43,6 @@
 		}
 	};
 
-	onMount(loadWorker);
-	// Specify the type of value as string array.
-	let value: string[] = [];
-
-	// Add type for the event parameter.
 	const dropHandle = (event: DragEvent) => {
 		value = [];
 		event.preventDefault();
@@ -67,7 +63,6 @@
 		}
 	};
 
-	// Add type for the event parameter.
 	const handleChange = (event: Event) => {
 		const inputElement = event.target as HTMLInputElement;
 		const files = inputElement.files;
@@ -88,6 +83,8 @@
 		if (concat.length > 40) concat = concat.slice(0, 40) + '...';
 		return concat;
 	};
+
+	onMount(loadWorker);
 </script>
 
 <Dropzone
@@ -116,7 +113,7 @@
 		<p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
 			<span class="font-semibold">Click to upload</span> or drag and drop
 		</p>
-		<p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+		<p class="text-xs text-gray-500 dark:text-gray-400">CSV, Parquet, Text, JSON</p>
 	{:else}
 		<p>{showFiles(value)}</p>
 	{/if}
