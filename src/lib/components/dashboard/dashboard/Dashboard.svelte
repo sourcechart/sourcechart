@@ -1,6 +1,6 @@
 <script lang="ts">
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
-	import Canvas from '$lib/components/ui/draw/Canvas.svelte';
+	import Canvas from '$lib/components/dashboard/canvas/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import DropZone from '$lib/components/dashboard/dropzone/DropZone.svelte';
 
