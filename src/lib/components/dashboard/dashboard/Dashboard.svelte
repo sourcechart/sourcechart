@@ -72,9 +72,13 @@
 	<Sidebar />
 </div>
 
-<div class="z-30 flex justify-center items-center inset-0">
-	<DropZone />
-</div>
-<div class="z-0">
-	<Canvas />
+<div class="relative w-screen h-screen">
+	{#if $activeDropZone}
+		<div class="z-31 absolute inset-0 flex justify-center items-center">
+			<DropZone />
+		</div>
+	{/if}
+	<div class="z-0 relative">
+		<Canvas />
+	</div>
 </div>
