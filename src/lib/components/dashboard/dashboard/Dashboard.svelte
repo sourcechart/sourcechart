@@ -72,11 +72,11 @@
 
 <div class="relative">
 	{#if $activeDropZone}
-		<div class="z-31 absolute inset-0 flex justify-center items-center w-screen h-screen">
+		<div class="z-30 absolute inset-0 flex justify-center items-center w-screen h-screen">
 			<DropZone />
 		</div>
 	{/if}
-	<div class="z-0 relative w-screen h-screen">
+	<div class="z-0 w-screen h-screen">
 		<Canvas />
 	</div>
 </div>
