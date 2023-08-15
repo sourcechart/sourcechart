@@ -63,22 +63,20 @@
 </script>
 
 <div class="flex justify-center items-center mt-3 z-30">
-	<div class="flex flex-row">
-		<DarkMode />
-		<NavBar />
-	</div>
+	<DarkMode />
+	<NavBar />
 </div>
 <div class="fixed z-30 ml-1">
 	<Sidebar />
 </div>
 
-<div class="relative w-screen h-screen">
+<div class="relative">
 	{#if $activeDropZone}
-		<div class="z-31 absolute inset-0 flex justify-center items-center">
+		<div class="z-31 absolute inset-0 flex justify-center items-center w-screen h-screen">
 			<DropZone />
 		</div>
 	{/if}
-	<div class="z-0 relative">
+	<div class="z-0 relative w-screen h-screen">
 		<Canvas />
 	</div>
 </div>
