@@ -1,15 +1,13 @@
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
 	import { activeDropZone } from '$lib/io/Stores';
+
+	const handleClick = () => {
+		activeDropZone.set(true);
+	};
 </script>
 
-<Button
-	id="multiple_files"
-	color="dark"
-	on:click={() => {
-		activeDropZone.set(true);
-	}}
->
+<Button id="multiple_files" color="dark" on:click={handleClick}>
 	<div class="flex justify-between space-x-2">
 		<svg
 			class="text-gray-800 dark:text-white"

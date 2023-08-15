@@ -2,12 +2,11 @@
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Canvas from '$lib/components/ui/draw/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
-
 	import DropZone from '$lib/components/dashboard/dropzone/DropZone.svelte';
 
 	import { DarkMode } from '$lib/components/ui';
 	import { onMount } from 'svelte';
-	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex, activeDropZone } from '$lib/io/Stores';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { duckDBInstanceStore } from '$lib/io/Stores';
@@ -63,16 +62,19 @@
 	onMount(loadPreviousState);
 </script>
 
-<!-- Center this on the screen-->
 <div class="flex justify-center items-center mt-3 z-30">
-	<DarkMode />
-	<NavBar />
+	<div class="flex flex-row">
+		<DarkMode />
+		<NavBar />
+	</div>
 </div>
 <div class="fixed z-30 ml-1">
 	<Sidebar />
 </div>
 
-<div class="z-30 fixed justify-center items-center">
+<div class="z-30 flex justify-center items-center inset-0">
 	<DropZone />
 </div>
-<Canvas />
+<div class="z-0">
+	<Canvas />
+</div>
