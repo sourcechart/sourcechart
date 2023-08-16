@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Dropzone } from 'flowbite-svelte';
 	import { generateID } from '$lib/io/GenerateID';
-	import { fileUploadStore } from '$lib/io/Stores';
+	import { fileUploadStore, activeDropZone } from '$lib/io/Stores';
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
 
@@ -51,19 +51,19 @@
 				if (item.kind === 'file') {
 					const file = item.getAsFile();
 					if (file) {
-						uploadToSQLITe(file);
 						value.push(file.name);
+						uploadToSQLITe(file);
+						activeDropZone.set(false);
 					}
 				}
 			});
 		} else if (event.dataTransfer) {
 			[...event.dataTransfer.files].forEach((file) => {
-				console.log(event.dataTransfer);
-
 				value.push(file.name);
 				uploadToSQLITe(file);
 			});
 		}
+		activeDropZone.set(false);
 	};
 
 	/*This is used for Click to Upload Events*/
@@ -74,6 +74,7 @@
 			value.push(files[0].name);
 			[...files].forEach((file) => {
 				uploadToSQLITe(file);
+				activeDropZone.set(false);
 			});
 		}
 	};
@@ -100,7 +101,7 @@
 	on:dragover={(event) => {
 		event.preventDefault();
 	}}
-	on:change={handleChange}
+	on:input={handleChange}
 >
 	<svg
 		aria-hidden="true"
