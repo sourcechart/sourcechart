@@ -1,6 +1,6 @@
 <script>
 	import { Tabs, TabItem } from 'flowbite-svelte';
-	import FileDrop from './components/FileDrop.svelte';
+	import DropZone from './components/DropZone.svelte';
 	import { CloseButton } from 'flowbite-svelte';
 	import { activeDropZone } from '$lib/io/Stores';
 
@@ -18,7 +18,7 @@
 		<CloseButton on:click={handleClick} />
 		<Tabs style="underline" contentClass="p-4 rounded-lg mt-4">
 			<TabItem title="Load Files" open>
-				<FileDrop />
+				<DropZone />
 			</TabItem>
 			<TabItem title="External Datasets">
 				<p>PlaceHolder</p>

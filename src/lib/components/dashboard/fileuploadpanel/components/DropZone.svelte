@@ -23,26 +23,25 @@
 		fileUploadStore.update((files) => [...files, tableColumnsSize]);
 	};
 
-	const uploadFiles = async (e: Event) => {
-		var target = e.target as HTMLInputElement;
-		var f = (target.files as FileList)[0];
-		var arrayBuffer = await f.arrayBuffer();
+	const uploadToSQLITe = async (file: File) => {
+		var arrayBuffer = await file.arrayBuffer();
 		var id = generateID();
 		var hex = bufferToHex(arrayBuffer);
 
-		createFileStore(f.name, f.size, id);
+		createFileStore(file.name, file.size, id);
 		if (syncWorker) {
 			syncWorker.postMessage({
-				filename: f.name,
-				size: f.size,
+				filename: file.name,
+				size: file.size,
 				id: id,
 				message: 'initialize',
 				hexadecimal: hex,
-				fileextension: f.name.split('.').pop()
+				fileextension: file.name.split('.').pop()
 			});
 		}
 	};
 
+	//This is used for Drag and Drop Events
 	const dropHandle = (event: DragEvent) => {
 		value = [];
 		event.preventDefault();
@@ -52,22 +51,27 @@
 					const file = item.getAsFile();
 					if (file) {
 						value.push(file.name);
+						uploadToSQLITe(file);
 					}
 				}
 			});
-		} else {
-			//@ts-ignore
+		} else if (event.dataTransfer) {
 			[...event.dataTransfer.files].forEach((file) => {
 				value.push(file.name);
+				uploadToSQLITe(file);
 			});
 		}
 	};
 
+	/*This is used for Click to Upload Events*/
 	const handleChange = (event: Event) => {
 		const inputElement = event.target as HTMLInputElement;
 		const files = inputElement.files;
 		if (files && files.length > 0) {
 			value.push(files[0].name);
+			[...files].forEach((file) => {
+				uploadToSQLITe(file);
+			});
 		}
 	};
 

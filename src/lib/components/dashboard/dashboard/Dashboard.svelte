@@ -2,7 +2,7 @@
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Canvas from '$lib/components/dashboard/canvas/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
-	import DropZone from '$lib/components/dashboard/dropzone/DropZone.svelte';
+	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 
 	import { DarkMode } from '$lib/components/ui';
 	import { onMount } from 'svelte';
@@ -74,7 +74,7 @@
 	<div class="relative">
 		{#if $activeDropZone}
 			<div class="z-30 absolute inset-0 flex justify-center items-center w-screen h-screen">
-				<DropZone />
+				<FileUploadPanel />
 			</div>
 		{/if}
 		<div class="z-0 relative w-screen h-screen">
