@@ -64,7 +64,7 @@
 	};
 </script>
 
-<Button pill={false} outline={false}>{selectedColumn}</Button>
+<Button pill={false} outline color="light">{selectedColumn}</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>

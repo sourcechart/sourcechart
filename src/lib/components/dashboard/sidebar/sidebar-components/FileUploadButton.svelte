@@ -8,7 +8,7 @@
 	};
 </script>
 
-<Button id="multiple_files" on:click={handleClick}>
+<Button outline color="light" id="multiple_files" on:click={handleClick}>
 	<div class="flex justify-between space-x-2">
 		<svg
 			class="text-gray-700 dark:text-white"

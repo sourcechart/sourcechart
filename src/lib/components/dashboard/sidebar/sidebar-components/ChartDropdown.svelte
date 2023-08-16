@@ -75,7 +75,7 @@
 	};
 </script>
 
-<Button pill={false} outline={false}>{chosenPlot}</Button>
+<Button pill={false} outline color="light">{chosenPlot}</Button>
 <Dropdown>
 	{#each rectangleCharts as { chartType }, i (i)}
 		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>

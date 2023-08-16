@@ -24,7 +24,7 @@
 	};
 </script>
 
-<Button pill={false} outline={false}>{selectedAggregator}</Button>
+<Button pill={false} outline color="light">{selectedAggregator}</Button>
 <Dropdown
 	class="text-center font-medium inline-flex items-center justify-center text-sm text-black dark:bg-gray-700 dark:text-gray-600 hover:text-blue-700 focus:text-blue-700 dark:focus:text-gray-800"
 >
