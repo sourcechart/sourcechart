@@ -5,6 +5,8 @@
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
 
+
+	$: console.log($fileUploadStore)
 	let value: string[] = [];
 	let syncWorker: Worker | undefined = undefined;
 
@@ -20,11 +22,12 @@
 			size: fileSize,
 			fileextension: filename.split('.').pop()
 		};
-		fileUploadStore.update((files) => [...files, tableColumnsSize]);
+		$fileUploadStore = [...$fileUploadStore, tableColumnsSize];
 	};
 
 	const uploadToSQLITe = async (file: File) => {
 		var arrayBuffer = await file.arrayBuffer();
+		console.log(arrayBuffer);
 		var id = generateID();
 		var hex = bufferToHex(arrayBuffer);
 
@@ -50,13 +53,15 @@
 				if (item.kind === 'file') {
 					const file = item.getAsFile();
 					if (file) {
-						value.push(file.name);
 						uploadToSQLITe(file);
+						value.push(file.name);
 					}
 				}
 			});
 		} else if (event.dataTransfer) {
 			[...event.dataTransfer.files].forEach((file) => {
+				console.log(event.dataTransfer);
+
 				value.push(file.name);
 				uploadToSQLITe(file);
 			});

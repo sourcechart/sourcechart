@@ -1,7 +1,12 @@
 /**  State Management for eCharts Stores **/
 import { writable, derived } from 'svelte/store';
 import { DataIO } from '$lib/io/DataIO';
-import { storeToLocalStorage, storeFromLocalStorage } from '$lib/io/Storage';
+import {
+	storeToLocalStorage,
+	storeFromLocalStorage,
+	storeFromSessionStorage,
+	storeToSessionStorage
+} from '$lib/io/Storage';
 import type { DuckDBClient } from './DuckDBClient';
 
 export const globalMouseState = writable<boolean>(false);
@@ -13,7 +18,7 @@ export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
-export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
+export const allCharts = writable<Chart[]>(storeFromSessionStorage('allCharts', []));
 export const fileUploadStore = writable<FileUpload[]>([]);
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
@@ -153,5 +158,5 @@ export const touchStates = () => {
 	);
 };
 
-storeToLocalStorage(allCharts, 'allCharts');
+storeToSessionStorage(allCharts, 'allCharts');
 export const dropdownStore = createDropdownStore();

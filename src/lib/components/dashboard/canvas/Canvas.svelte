@@ -284,27 +284,26 @@
 	};
 </script>
 
-<div class={`${$activeDropZone ? 'blur-filter' : ''}`}>
-	<div
-		class="h-full w-full relative"
-		style={`cursor: ${$mouseType};`}
-		on:mousedown={handleMouseDown}
-		on:mousemove={handleMouseMove}
-		on:mouseup={handleMouseUp}
-	>
-		<div id="canvasParent">
-			{#if !$activeDropZone}
-				{#each $allCharts as chart (chart.chartID)}
-					<DrawRectangleCanvas polygon={chart.polygon} />
-				{/each}
-				{#each newPolygon as polygon}
-					<DrawRectangleCanvas {polygon} />
-				{/each}
-			{/if}
-		</div>
+<!-- <div class={`${$activeDropZone ? 'blur-filter' : ''}`}>-->
+<div
+	class="h-full w-full relative"
+	style={`cursor: ${$mouseType};`}
+	on:mousedown={handleMouseDown}
+	on:mousemove={handleMouseMove}
+	on:mouseup={handleMouseUp}
+>
+	<div id="canvasParent">
+		{#each $allCharts as chart (chart.chartID)}
+			<DrawRectangleCanvas polygon={chart.polygon} />
+		{/each}
+		{#each newPolygon as polygon}
+			<DrawRectangleCanvas {polygon} />
+		{/each}
 	</div>
-	<canvas bind:this={canvas} />
 </div>
+<canvas bind:this={canvas} />
+
+<!-- </div>-->
 
 <svelte:window
 	on:resize={() => {
@@ -321,6 +320,7 @@
 	}}
 />
 
+<!-- 
 <style>
 	.blur-filter {
 		backdrop-filter: blur(10px);
@@ -333,3 +333,4 @@
 		z-index: 1000;
 	}
 </style>
+-->
