@@ -5,8 +5,6 @@
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
 
-
-	$: console.log($fileUploadStore)
 	let value: string[] = [];
 	let syncWorker: Worker | undefined = undefined;
 

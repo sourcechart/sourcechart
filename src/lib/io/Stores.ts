@@ -18,8 +18,8 @@ export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
-export const allCharts = writable<Chart[]>(storeFromSessionStorage('allCharts', []));
-export const fileUploadStore = writable<FileUpload[]>([]);
+export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
+export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
 export const polygons = writable<Polygon[]>([]);
@@ -101,8 +101,8 @@ export const getChartOptions = (id: string | undefined) => {
 };
 
 export const fileDropdown = () =>
-	derived(allCharts, ($allCharts) => {
-		const files = $allCharts.map((chart) => chart.filename);
+	derived(fileUploadStore, ($fileUploadStore) => {
+		const files = $fileUploadStore.map((chart) => chart.filename);
 		return files;
 	});
 
@@ -158,5 +158,6 @@ export const touchStates = () => {
 	);
 };
 
-storeToSessionStorage(allCharts, 'allCharts');
+storeToLocalStorage(fileUploadStore, 'fileUploadStore');
+storeToLocalStorage(allCharts, 'allCharts');
 export const dropdownStore = createDropdownStore();
