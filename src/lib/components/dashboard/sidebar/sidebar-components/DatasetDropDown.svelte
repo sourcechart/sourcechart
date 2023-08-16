@@ -81,7 +81,7 @@
 	onMount(loadWorker);
 </script>
 
-<Button color="alternative">{selectedDataset}</Button>
+<Button outline color="light">{selectedDataset}</Button>
 <Dropdown>
 	{#each $datasets as dataset}
 		{#if dataset !== null}

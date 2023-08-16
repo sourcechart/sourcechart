@@ -48,7 +48,7 @@
 	};
 </script>
 
-<Button color="alternative" pill={false} outline={false}>{ButtonName}</Button>
+<Button pill={false} outline color="light">{ButtonName}</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => addColumnToGroupBy(column)}>{column}</DropdownItem>

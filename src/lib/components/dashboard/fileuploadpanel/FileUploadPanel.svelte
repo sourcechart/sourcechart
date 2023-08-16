@@ -4,6 +4,7 @@
 	import { CloseButton } from 'flowbite-svelte';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
 
+	$: console.log($activeDropZone);
 	const handleClick = () => {
 		activeDropZone.set(false);
 		activeSidebar.set(true);
@@ -16,7 +17,9 @@
 >
 	<div class="mx-auto max-w-md">
 		<h1 class="text-xl dark:text-gray-300">Add Data to Plot</h1>
-		<CloseButton on:click={handleClick} />
+		<div class="close-button">
+			<CloseButton class="close-button" on:click={handleClick} />
+		</div>
 		<Tabs style="underline" contentClass="p-4 rounded-lg mt-4">
 			<TabItem title="Load Files" open>
 				<DropZone />
@@ -27,3 +30,11 @@
 		</Tabs>
 	</div>
 </div>
+
+<style>
+	.close-button {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+	}
+</style>

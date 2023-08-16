@@ -12,7 +12,7 @@
 	};
 </script>
 
-<Button color="alternative" pill={false} outline={false}>{idColumn}</Button>
+<Button pill={false} outline={false}>{idColumn}</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseIDColumn(column)}>{column}</DropdownItem>

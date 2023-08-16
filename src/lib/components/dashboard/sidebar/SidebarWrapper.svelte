@@ -5,7 +5,7 @@
 
 <div
 	class={open
-		? 'bg-gray-900 text-white w-64 overflow-auto transition-transform duration-200 ease-in-out rounded-md border-red-50'
+		? 'bg-gray-800 text-white w-64 overflow-auto transition-transform duration-200 ease-in-out rounded-md border-red-50'
 		: '-translate-x-full invisible'}
 	{id}
 >
