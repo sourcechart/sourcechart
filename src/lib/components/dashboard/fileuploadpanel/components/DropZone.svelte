@@ -20,12 +20,12 @@
 			size: fileSize,
 			fileextension: filename.split('.').pop()
 		};
-		$fileUploadStore = [...$fileUploadStore, tableColumnsSize];
+
+		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 	};
 
 	const uploadToSQLITe = async (file: File) => {
 		var arrayBuffer = await file.arrayBuffer();
-		console.log(arrayBuffer);
 		var id = generateID();
 		var hex = bufferToHex(arrayBuffer);
 
