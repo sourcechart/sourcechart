@@ -1,7 +1,12 @@
 /**  State Management for eCharts Stores **/
 import { writable, derived } from 'svelte/store';
 import { DataIO } from '$lib/io/DataIO';
-import { storeToLocalStorage, storeFromLocalStorage } from '$lib/io/Storage';
+import {
+	storeToLocalStorage,
+	storeFromLocalStorage,
+	storeFromSessionStorage,
+	storeToSessionStorage
+} from '$lib/io/Storage';
 import type { DuckDBClient } from './DuckDBClient';
 
 export const globalMouseState = writable<boolean>(false);
@@ -14,7 +19,7 @@ export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
 export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
-export const fileUploadStore = writable<FileUpload[]>([]);
+export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
 export const polygons = writable<Polygon[]>([]);
@@ -23,6 +28,7 @@ export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
 export const minimumPointsForCluster = writable<number>();
 export const duckDBInstanceStore = writable<DuckDBClient>();
+export const activeDropZone = writable<boolean>();
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -95,8 +101,8 @@ export const getChartOptions = (id: string | undefined) => {
 };
 
 export const fileDropdown = () =>
-	derived(allCharts, ($allCharts) => {
-		const files = $allCharts.map((chart) => chart.filename);
+	derived(fileUploadStore, ($fileUploadStore) => {
+		const files = $fileUploadStore.map((chart) => chart.filename);
 		return files;
 	});
 
@@ -152,5 +158,6 @@ export const touchStates = () => {
 	);
 };
 
+storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');
 export const dropdownStore = createDropdownStore();

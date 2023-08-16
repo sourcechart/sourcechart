@@ -6,7 +6,14 @@ const config = {
 	],
 
 	plugins: [require('flowbite/plugin')],
-	darkMode: 'class'
+	darkMode: 'class',
+	theme: {
+		extend: {
+			backgroundColor: {
+				body: '#1A202C' // dark gray color
+			}
+		}
+	}
 };
 
 module.exports = config;

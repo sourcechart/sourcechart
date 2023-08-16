@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { getColumnsFromFile, clickedChartIndex, chartOptions, allCharts } from '$lib/io/Stores';
 	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
-
 	export let axis = '';
 
 	let selectedColumn: string | null = `${axis} Axis`;
-
 	let tags: Array<string | null> = [];
 
 	$: i = clickedChartIndex();
 	$: drawerOptions = chartOptions();
+	$: columns = getColumnsFromFile();
 
 	$: if ($drawerOptions.xColumn && $drawerOptions.yColumn && tags.length == 0) {
 		tags = getTagsOnClick();
@@ -24,8 +23,6 @@
 			tags = $allCharts[$i]?.yColumn ? [$allCharts[$i].yColumn] : [];
 		}
 	}
-
-	$: columns = getColumnsFromFile();
 
 	const getTagsOnClick = () => {
 		tags = [];

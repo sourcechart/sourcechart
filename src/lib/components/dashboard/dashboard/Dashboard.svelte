@@ -1,10 +1,12 @@
 <script lang="ts">
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
-	import Canvas from '$lib/components/ui/draw/Canvas.svelte';
+	import Canvas from '$lib/components/dashboard/canvas/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
+	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
+
 	import { DarkMode } from '$lib/components/ui';
 	import { onMount } from 'svelte';
-	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex, activeDropZone } from '$lib/io/Stores';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { duckDBInstanceStore } from '$lib/io/Stores';
@@ -18,15 +20,6 @@
 			syncWorker.postMessage({
 				message: 'query',
 				filename: chart.filename
-			});
-			syncWorker.onmessage = onWorkerMessage;
-		}
-	};
-
-	const getAllDatasetsFromSQLITE = () => {
-		if (syncWorker) {
-			syncWorker.postMessage({
-				message: 'getDatasets'
 			});
 			syncWorker.onmessage = onWorkerMessage;
 		}
@@ -69,13 +62,24 @@
 	onMount(loadPreviousState);
 </script>
 
-<!-- Center this on the screen-->
-<div class="flex justify-center items-center mt-3 z-30">
-	<DarkMode />
-	<NavBar />
-</div>
-<div class="fixed z-30 ml-1">
-	<Sidebar />
-</div>
+<div class="dark:bg-gray-900 opacity-30 min-h-screen">
+	<div class="flex justify-center items-center mt-3 z-30">
+		<DarkMode />
+		<NavBar />
+	</div>
+	<div class="fixed z-30 ml-1">
+		<Sidebar />
+	</div>
 
-<Canvas />
+	<div class="relative">
+		{#if $activeDropZone}
+			<div class="z-30 absolute inset-0 flex justify-center items-center w-screen h-screen">
+				<FileUploadPanel />
+			</div>
+		{/if}
+
+		<div class="z-0 relative w-screen h-screen">
+			<Canvas />
+		</div>
+	</div>
+</div>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
 	import WorkFlowSidebar from './WorkFlowSidebar.svelte';
-	import FileUpload from './sidebar-components/FileUpload.svelte';
+	import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
 	import { SidebarWrapper } from '$lib/components/ui';
 	import { Tabs, TabItem } from 'flowbite-svelte';
 	import { DatasetDropDown } from './sidebar-components';
@@ -42,7 +42,7 @@
 			<Label class="space-y-2 mb-1">
 				<span>Upload Files</span>
 			</Label>
-			<FileUpload />
+			<FileUploadButton />
 		</div>
 		<div class="flex flex-col space-y-1">
 			<Label class="space-y-2 mb-1">
