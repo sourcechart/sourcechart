@@ -53,7 +53,6 @@
 					if (file) {
 						value.push(file.name);
 						uploadToSQLITe(file);
-						activeDropZone.set(false);
 					}
 				}
 			});
@@ -74,9 +73,9 @@
 			value.push(files[0].name);
 			[...files].forEach((file) => {
 				uploadToSQLITe(file);
-				activeDropZone.set(false);
 			});
 		}
+		activeDropZone.set(false);
 	};
 
 	const showFiles = (files: string[]): string => {
