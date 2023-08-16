@@ -47,10 +47,6 @@
 	$: TOUCHSTATE = touchStates();
 	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
 
-	$: () => {
-		scrollX, scrollY, offsetX, offsetY;
-	};
-
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
