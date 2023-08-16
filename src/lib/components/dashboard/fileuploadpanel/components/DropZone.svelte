@@ -55,14 +55,15 @@
 						uploadToSQLITe(file);
 					}
 				}
+				activeDropZone.set(false);
 			});
 		} else if (event.dataTransfer) {
 			[...event.dataTransfer.files].forEach((file) => {
 				value.push(file.name);
 				uploadToSQLITe(file);
 			});
+			activeDropZone.set(false);
 		}
-		activeDropZone.set(false);
 	};
 
 	/*This is used for Click to Upload Events*/
@@ -74,8 +75,8 @@
 			[...files].forEach((file) => {
 				uploadToSQLITe(file);
 			});
+			activeDropZone.set(false);
 		}
-		activeDropZone.set(false);
 	};
 
 	const showFiles = (files: string[]): string => {
@@ -100,7 +101,7 @@
 	on:dragover={(event) => {
 		event.preventDefault();
 	}}
-	on:input={handleChange}
+	on:change={handleChange}
 >
 	<svg
 		aria-hidden="true"
