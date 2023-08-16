@@ -15,8 +15,6 @@
 	let syncWorker: Worker | undefined = undefined;
 	$: i = clickedChartIndex();
 
-	$: console.log($activeDropZone);
-
 	const loadDataFromSQLITE = (chart: Chart) => {
 		if (syncWorker) {
 			syncWorker.postMessage({
@@ -74,13 +72,11 @@
 	</div>
 
 	<div class="relative">
-		<!--
 		{#if $activeDropZone}
 			<div class="z-30 absolute inset-0 flex justify-center items-center w-screen h-screen">
 				<FileUploadPanel />
 			</div>
 		{/if}
-		-->
 
 		<div class="z-0 relative w-screen h-screen">
 			<Canvas />
