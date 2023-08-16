@@ -274,9 +274,9 @@
 				handleResize(x, y);
 				break;
 
-			case 'isPanning':
-				handlePanMove(x, y);
-				break;
+			//case 'isPanning':
+			//	handlePanMove(x, y);
+			//	break;
 
 			default:
 				return;
@@ -284,26 +284,25 @@
 	};
 </script>
 
-<!-- <div class={`${$activeDropZone ? 'blur-filter' : ''}`}>-->
-<div
-	class="h-full w-full relative"
-	style={`cursor: ${$mouseType};`}
-	on:mousedown={handleMouseDown}
-	on:mousemove={handleMouseMove}
-	on:mouseup={handleMouseUp}
->
-	<div id="canvasParent">
-		{#each $allCharts as chart (chart.chartID)}
-			<DrawRectangleCanvas polygon={chart.polygon} />
-		{/each}
-		{#each newPolygon as polygon}
-			<DrawRectangleCanvas {polygon} />
-		{/each}
+<div class={`${$activeDropZone ? 'blur-filter' : ''}`}>
+	<div
+		class="h-full w-full relative"
+		style={`cursor: ${$mouseType};`}
+		on:mousedown={handleMouseDown}
+		on:mousemove={handleMouseMove}
+		on:mouseup={handleMouseUp}
+	>
+		<div id="canvasParent">
+			{#each $allCharts as chart (chart.chartID)}
+				<DrawRectangleCanvas polygon={chart.polygon} />
+			{/each}
+			{#each newPolygon as polygon}
+				<DrawRectangleCanvas {polygon} />
+			{/each}
+		</div>
 	</div>
+	<canvas bind:this={canvas} />
 </div>
-<canvas bind:this={canvas} />
-
-<!-- </div>-->
 
 <svelte:window
 	on:resize={() => {
@@ -312,15 +311,8 @@
 			height = window.innerHeight;
 		}
 	}}
-	on:scroll={() => {
-		if (typeof window !== undefined) {
-			scrollY = window.scrollY;
-			scrollX = window.scrollX;
-		}
-	}}
 />
 
-<!-- 
 <style>
 	.blur-filter {
 		backdrop-filter: blur(10px);
@@ -333,4 +325,3 @@
 		z-index: 1000;
 	}
 </style>
--->
