@@ -10,12 +10,6 @@
 	}
 </script>
 
-<Button
-	on:click={clearUpdatedChartObject}
-	type="button"
-	color="alternative"
-	pill={false}
-	outline={false}
->
+<Button on:click={clearUpdatedChartObject} type="button" pill={false} outline={false}>
 	Clear Choices
 </Button>
