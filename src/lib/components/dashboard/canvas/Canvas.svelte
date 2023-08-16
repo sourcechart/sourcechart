@@ -280,7 +280,7 @@
 	};
 </script>
 
-<div class={`${$activeDropZone ? 'blur-filter' : ''}`}>
+<div class={`${$activeDropZone ? '' : 'blur-filter'}`}>
 	<div
 		class="h-full w-full relative"
 		style={`cursor: ${$mouseType};`}
@@ -289,12 +289,14 @@
 		on:mouseup={handleMouseUp}
 	>
 		<div id="canvasParent">
-			{#each $allCharts as chart (chart.chartID)}
-				<DrawRectangleCanvas polygon={chart.polygon} />
-			{/each}
-			{#each newPolygon as polygon}
-				<DrawRectangleCanvas {polygon} />
-			{/each}
+			{#if !$activeDropZone}
+				{#each $allCharts as chart (chart.chartID)}
+					<DrawRectangleCanvas polygon={chart.polygon} />
+				{/each}
+				{#each newPolygon as polygon}
+					<DrawRectangleCanvas {polygon} />
+				{/each}
+			{/if}
 		</div>
 	</div>
 	<canvas bind:this={canvas} />
