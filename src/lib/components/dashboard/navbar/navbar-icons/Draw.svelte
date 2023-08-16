@@ -26,7 +26,7 @@
 				width="16"
 				height="16"
 				rx="2"
-				stroke="#ffffff"
+				stroke="#9ca3af"
 				stroke-width="1"
 				stroke-linecap="round"
 				stroke-linejoin="round"

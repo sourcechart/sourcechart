@@ -13,7 +13,7 @@
 
 <button on:click={handleClick} class={mode === 'eraser' ? 'dark:bg-gray-700' : 'dark:bg-gray-800'}>
 	<svg
-		fill="#ffffff"
+		fill="#9ca3af"
 		height="24px"
 		width="24px"
 		version="1.1"
