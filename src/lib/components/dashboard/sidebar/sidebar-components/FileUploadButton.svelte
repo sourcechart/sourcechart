@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
-	import { activeDropZone } from '$lib/io/Stores';
+	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
 
 	const handleClick = () => {
 		activeDropZone.set(true);
+		activeSidebar.set(false);
 	};
 </script>
 

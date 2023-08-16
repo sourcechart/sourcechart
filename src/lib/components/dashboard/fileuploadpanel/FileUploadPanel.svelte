@@ -2,10 +2,11 @@
 	import { Tabs, TabItem } from 'flowbite-svelte';
 	import DropZone from './components/DropZone.svelte';
 	import { CloseButton } from 'flowbite-svelte';
-	import { activeDropZone } from '$lib/io/Stores';
+	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
 
 	const handleClick = () => {
 		activeDropZone.set(false);
+		activeSidebar.set(true);
 	};
 </script>
 
