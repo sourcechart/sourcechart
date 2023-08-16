@@ -280,7 +280,7 @@
 	};
 </script>
 
-<div class={`${$activeDropZone ? '' : 'blur-filter'}`}>
+<div class="blur-filter">
 	<div
 		class="h-full w-full relative"
 		style={`cursor: ${$mouseType};`}
