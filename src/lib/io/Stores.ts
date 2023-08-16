@@ -28,7 +28,7 @@ export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
 export const minimumPointsForCluster = writable<number>();
 export const duckDBInstanceStore = writable<DuckDBClient>();
-export const activeDropZone = writable<boolean>(true);
+export const activeDropZone = writable<boolean>();
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);

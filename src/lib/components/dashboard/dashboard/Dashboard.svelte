@@ -15,6 +15,8 @@
 	let syncWorker: Worker | undefined = undefined;
 	$: i = clickedChartIndex();
 
+	$: console.log($activeDropZone);
+
 	const loadDataFromSQLITE = (chart: Chart) => {
 		if (syncWorker) {
 			syncWorker.postMessage({
