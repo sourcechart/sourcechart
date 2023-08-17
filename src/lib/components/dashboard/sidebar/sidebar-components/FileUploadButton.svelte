@@ -1,4 +1,5 @@
 <script lang="ts">
+	//@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
 

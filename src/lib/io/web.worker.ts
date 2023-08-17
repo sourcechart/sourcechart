@@ -10,7 +10,7 @@ type DataMessage = {
 	fileextension?: string;
 };
 
-let tableName: string = 'local';
+let tableName: string = 'localDB';
 
 onmessage = (e: MessageEvent) => {
 	const messageData: DataMessage = e.data;
@@ -63,6 +63,7 @@ const getBinaryFromDatabase = (data: DataMessage) => {
 
 const insertDataIntoDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
+		console.log(data);
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
@@ -78,6 +79,12 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 			INSERT OR IGNORE INTO ${tableName} (filename, data, size, filetype) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.fileextension}');
 			`
 		);
+		var res = db.exec(`SELECT * FROM ${tableName} WHERE filename= '${data.filename}'`, {
+			returnValue: 'resultRows'
+		});
+
+		console.log(res);
+		postMessage({ message: 'finished' }); //TODO: add id to database and return it here
 		db.close();
 	});
 };
