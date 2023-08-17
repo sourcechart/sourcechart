@@ -1,10 +1,10 @@
 <script>
 	import { Tabs, TabItem } from 'flowbite-svelte';
 	import DropZone from './components/DropZone.svelte';
+	import ExternalDatasets from './components/ExternalDatasets.svelte';
 	import { CloseButton } from 'flowbite-svelte';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
 
-	$: console.log($activeDropZone);
 	const handleClick = () => {
 		activeDropZone.set(false);
 		activeSidebar.set(true);
@@ -25,7 +25,7 @@
 				<DropZone />
 			</TabItem>
 			<TabItem title="External Datasets">
-				<p>PlaceHolder</p>
+				<ExternalDatasets />
 			</TabItem>
 		</Tabs>
 	</div>
