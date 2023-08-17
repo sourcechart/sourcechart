@@ -16,7 +16,7 @@
 		{
 			name: 'Leader List',
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
-			description: 'List of All Leaders Since '
+			description: 'List of All Leaders Since 1950'
 		},
 		{
 			name: 'Regime List',

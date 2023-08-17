@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
-	import { fileUploadStore } from '$lib/io/Stores';
+	import { createFileStore } from '$lib/io/FileUploadStore';
 	import { generateID } from '$lib/io/GenerateID';
 	import { bufferToHex } from '$lib/io/HexOps';
 
@@ -12,17 +12,6 @@
 		const response = await fetch(Dataset.url);
 		var buffer = await response.arrayBuffer();
 		uploadToSQLITE(buffer);
-	};
-
-	const createFileStore = (filename: string, fileSize: number, dataID: string) => {
-		var tableColumnsSize = {
-			filename: filename,
-			datasetID: dataID,
-			size: fileSize,
-			fileextension: filename.split('.').pop()
-		};
-
-		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 	};
 
 	const uploadToSQLITE = async (arrayBuffer: ArrayBuffer) => {

@@ -4,6 +4,7 @@
 	import { fileUploadStore, activeDropZone } from '$lib/io/Stores';
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
+	import { createFileStore } from '$lib/io/FileUploadStore';
 
 	let value: string[] = [];
 	let syncWorker: Worker | undefined = undefined;
@@ -11,17 +12,6 @@
 	const loadWorker = async () => {
 		const SyncWorker = await import('$lib/io/web.worker?worker');
 		syncWorker = new SyncWorker.default();
-	};
-
-	const createFileStore = (filename: string, fileSize: number, dataID: string) => {
-		var tableColumnsSize = {
-			filename: filename,
-			datasetID: dataID,
-			size: fileSize,
-			fileextension: filename.split('.').pop()
-		};
-
-		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 	};
 
 	const uploadToSQLITe = async (file: File) => {
