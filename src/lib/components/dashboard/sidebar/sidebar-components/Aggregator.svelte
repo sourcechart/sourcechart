@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { allCharts, clickedChartIndex, clearChartOptions } from '$lib/io/Stores';
-	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+
+	//@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
+	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
 
 	let aggs = ['avg', 'max', 'min', 'sum', 'count'];
 	let selectedAggregator: string | null = 'Aggregator';

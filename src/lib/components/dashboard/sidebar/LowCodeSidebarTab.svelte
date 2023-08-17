@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { ColumnDropDrown, Aggregator, Groupby, ChartDropdown, Tags } from './sidebar-components';
-	import { Label } from 'flowbite-svelte';
+	import { ColumnDropDrown, Aggregator, Groupby, ChartDropdown, Tags } from './sidebar-components'; //@ts-ignore
+	import Label from 'flowbite-svelte/Label.svelte';
 </script>
 
 <div class="space-y-3 mt-3">

@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
+	//@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
+	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
+
 	import { ChartOptions } from '$lib/io/ChartOptions';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 

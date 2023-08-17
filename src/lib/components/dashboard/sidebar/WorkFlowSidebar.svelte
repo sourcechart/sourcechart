@@ -2,8 +2,9 @@
 	import { Tags } from './sidebar-components';
 	import { Groupby, ChartDropdown } from './sidebar-components';
 	import { Range } from 'flowbite-svelte';
-	import { epsilonDistance, minimumPointsForCluster } from '$lib/io/Stores';
-	import { NumberInput, Label } from 'flowbite-svelte';
+	import { epsilonDistance, minimumPointsForCluster } from '$lib/io/Stores'; //@ts-ignore
+	import NumberInput from 'flowbite-svelte/NumberInput.svelte'; //@ts-ignore
+	import Label from 'flowbite-svelte/Label.svelte';
 
 	let clusterSize = 5;
 	let defaultEpsilon = 1;

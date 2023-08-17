@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button } from 'flowbite-svelte';
+	import Button from 'flowbite-svelte/Button.svelte';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
 
 	const handleClick = () => {

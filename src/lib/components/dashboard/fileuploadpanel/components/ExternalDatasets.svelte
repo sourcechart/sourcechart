@@ -1,16 +1,14 @@
 <script lang="ts">
-	import {
-		Table,
-		TableHead,
-		TableHeadCell,
-		TableBody,
-		Button,
-		TableBodyCell,
-		TableBodyRow
-	} from 'flowbite-svelte';
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { generateID } from '$lib/io/GenerateID';
-	import { createFileStore } from '$lib/io/Stores';
+	import { createFileStore } from '$lib/io/Stores'; //@ts-ignore
+	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
+	import TableHead from 'flowbite-svelte/TableHead.svelte'; //@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import TableBody from 'flowbite-svelte/TableBody.svelte'; //@ts-ignore
+	import TableBodyCell from 'flowbite-svelte/TableBodyCell.svelte'; //@ts-ignore
+	import TableBodyRow from 'flowbite-svelte/TableBodyRow.svelte'; //@ts-ignore
+	import TableHeadCell from 'flowbite-svelte/TableHeadCell.svelte';
 
 	let syncWorker: Worker | undefined = undefined;
 
@@ -33,20 +31,33 @@
 	];
 
 	const addURLToDatabase = async (dataset: ExternalDataset) => {
+		let fileextension: string = '';
+		let filename: string = '';
 		const response = await fetch(dataset.url);
 		var buffer = await response.arrayBuffer();
-		uploadToSQLITE(buffer, dataset);
+		filename = dataset.url.split('/').pop();
+		if (filename) fileextension = filename.split('.').pop();
+
+		var size = buffer.byteLength / 1000;
+
+		console.log(filename, fileextension);
+		uploadToSQLITE(buffer, filename, fileextension, size);
 	};
 
-	const uploadToSQLITE = async (arrayBuffer: ArrayBuffer, dataset: ExternalDataset) => {
+	const uploadToSQLITE = async (
+		arrayBuffer: ArrayBuffer,
+		filename: string,
+		fileextension: string,
+		size: number
+	) => {
 		var id = generateID();
 		var hex = bufferToHex(arrayBuffer);
 
-		createFileStore(dataset.name, arrayBuffer.byteLength, id);
+		createFileStore(filename, arrayBuffer.byteLength, id);
 		if (syncWorker) {
 			syncWorker.postMessage({
 				filename: dataset.name,
-				size: arrayBuffer.byteLength,
+				size: arrayBuffer.byteLength / 1000,
 				id: id,
 				message: 'initialize',
 				hexadecimal: hex,

@@ -1,7 +1,10 @@
 <script lang="ts">
-	import { Tabs, TabItem } from 'flowbite-svelte';
+	//@ts-ignore
+	import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
+	import TabItem from 'flowbite-svelte/TabItem.svelte'; //@ts-ignore
+	import CloseButton from 'flowbite-svelte/CloseButton.svelte';
+
 	import DropZone from './components/DropZone.svelte';
-	import { CloseButton } from 'flowbite-svelte';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
 	import ExternalDatasets from './components/ExternalDatasets.svelte';
 

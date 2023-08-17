@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
-	import { getColumnsFromFile, workflowIDColumn } from '$lib/io/Stores';
+	import { getColumnsFromFile, workflowIDColumn } from '$lib/io/Stores'; //@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
+	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; //@ts-ignore
 
 	$: columns = getColumnsFromFile();
 
