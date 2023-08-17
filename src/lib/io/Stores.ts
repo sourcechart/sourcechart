@@ -1,12 +1,7 @@
 /**  State Management for eCharts Stores **/
 import { writable, derived } from 'svelte/store';
 import { DataIO } from '$lib/io/DataIO';
-import {
-	storeToLocalStorage,
-	storeFromLocalStorage,
-	storeFromSessionStorage,
-	storeToSessionStorage
-} from '$lib/io/Storage';
+import { storeToLocalStorage, storeFromLocalStorage } from '$lib/io/Storage';
 import type { DuckDBClient } from './DuckDBClient';
 
 export const globalMouseState = writable<boolean>(false);
@@ -100,11 +95,12 @@ export const getChartOptions = (id: string | undefined) => {
 	}
 };
 
-export const fileDropdown = derived(fileUploadStore, ($fileUploadStore) => {
-	const filenames = $fileUploadStore.map((chart) => chart.filename);
-	const uniqueFilenames = [...new Set(filenames)];
-	return uniqueFilenames;
-});
+export const fileDropdown = () =>
+	derived(fileUploadStore, ($fileUploadStore) => {
+		const filenames = $fileUploadStore.map((chart) => chart.filename);
+		const uniqueFilenames = [...new Set(filenames)];
+		return uniqueFilenames;
+	});
 
 export const clickedChart = () =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
