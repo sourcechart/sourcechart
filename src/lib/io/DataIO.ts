@@ -144,7 +144,6 @@ class DataIO {
 		var label = results.centroid.join(' ');
 		chart.chartOptions.xAxis.data = label;
 		chart.chartOptions.series[0].data = [results.clusterSize];
-		console.log(chart.chartOptions);
 		return chart;
 	}
 
