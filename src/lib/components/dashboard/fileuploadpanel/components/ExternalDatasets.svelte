@@ -71,8 +71,8 @@
 			syncWorker.onerror = (e) => {
 				console.log(e);
 			};
-			activeDropZone.set(false);
 		}
+		activeDropZone.set(false);
 	};
 
 	onMount(loadWorker);

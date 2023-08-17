@@ -100,11 +100,11 @@ export const getChartOptions = (id: string | undefined) => {
 	}
 };
 
-export const fileDropdown = () =>
-	derived(fileUploadStore, ($fileUploadStore) => {
-		const files = $fileUploadStore.map((chart) => chart.filename);
-		return files;
-	});
+export const fileDropdown = derived(fileUploadStore, ($fileUploadStore) => {
+	const filenames = $fileUploadStore.map((chart) => chart.filename);
+	const uniqueFilenames = [...new Set(filenames)];
+	return uniqueFilenames;
+});
 
 export const clickedChart = () =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {

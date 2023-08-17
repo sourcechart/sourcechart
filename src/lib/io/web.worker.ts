@@ -79,12 +79,6 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 			INSERT OR IGNORE INTO ${tableName} (filename, data, size, filetype) VALUES ('${data.filename}', '${data.hexadecimal}', ${data.size}, '${data.fileextension}');
 			`
 		);
-		var res = db.exec(`SELECT * FROM ${tableName} WHERE filename= '${data.filename}'`, {
-			returnValue: 'resultRows'
-		});
-
-		console.log(res);
-		postMessage({ message: 'finished' }); //TODO: add id to database and return it here
 		db.close();
 	});
 };
