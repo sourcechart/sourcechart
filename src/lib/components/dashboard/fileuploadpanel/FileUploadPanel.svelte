@@ -3,67 +3,12 @@
 	import DropZone from './components/DropZone.svelte';
 	import { CloseButton } from 'flowbite-svelte';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
-	import {
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		TableHead,
-		TableHeadCell,
-		Button
-	} from 'flowbite-svelte';
-
-	import { createFileStore } from '$lib/io/Stores';
-	import { generateID } from '$lib/io/GenerateID';
-	import { bufferToHex } from '$lib/io/HexOps';
-
-	let syncWorker: Worker | undefined = undefined;
-
-	let datasets: ExternalDataset[] = [
-		{
-			name: 'ElectionList',
-			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
-			description: 'List of All Elections since 1950'
-		},
-		{
-			name: 'Leader List',
-			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
-			description: 'List of All Leaders Since 1950'
-		},
-		{
-			name: 'Regime List',
-			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/regime_list.csv',
-			description: 'List of All regimes'
-		}
-	];
+	import ExternalDatasets from './components/ExternalDatasets.svelte';
 
 	const handleClick = () => {
 		console.log();
 		activeDropZone.set(false);
 		activeSidebar.set(true);
-	};
-
-	const addURLToDatabase = async (dataset: ExternalDataset) => {
-		const response = await fetch(dataset.url);
-		var buffer = await response.arrayBuffer();
-		uploadToSQLITE(buffer, dataset);
-	};
-
-	const uploadToSQLITE = async (arrayBuffer: ArrayBuffer, dataset: ExternalDataset) => {
-		var id = generateID();
-		var hex = bufferToHex(arrayBuffer);
-
-		createFileStore(dataset.name, arrayBuffer.byteLength, id);
-		if (syncWorker) {
-			syncWorker.postMessage({
-				filename: dataset.name,
-				size: arrayBuffer.byteLength,
-				id: id,
-				message: 'initialize',
-				hexadecimal: hex,
-				fileextension: dataset.url.split('.').pop()
-			});
-		}
 	};
 </script>
 
@@ -80,28 +25,7 @@
 				<DropZone />
 			</TabItem>
 			<TabItem title="External Datasets">
-				<div class="w-full">
-					<Table>
-						<TableHead>
-							<TableHeadCell>Dataset</TableHeadCell>
-							<TableHeadCell>Description</TableHeadCell>
-							<TableHeadCell />
-						</TableHead>
-					</Table>
-					<TableBody class="divide-y">
-						{#each datasets as dataset}
-							<TableBodyRow>
-								<TableBodyCell>{dataset.name}</TableBodyCell>
-								<TableBodyCell>{dataset.description}</TableBodyCell>
-								<TableBodyCell>
-									<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
-										>Add Dataset</Button
-									>
-								</TableBodyCell>
-							</TableBodyRow>
-						{/each}
-					</TableBody>
-				</div>
+				<ExternalDatasets />
 			</TabItem>
 		</Tabs>
 	</div>
