@@ -8,7 +8,10 @@
 		duckDBInstanceStore
 	} from '$lib/io/Stores';
 
-	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	//@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
+	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; //@ts-ignore
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';

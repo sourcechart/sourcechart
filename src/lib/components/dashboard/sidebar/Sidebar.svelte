@@ -2,8 +2,10 @@
 	import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
 	import WorkFlowSidebar from './WorkFlowSidebar.svelte';
 	import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
-	import { SidebarWrapper } from '$lib/components/ui';
-	import { Tabs, TabItem } from 'flowbite-svelte';
+	import { SidebarWrapper } from '$lib/components/ui'; //@ts-ignore
+	import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
+	import TabItem from 'flowbite-svelte/TabItem.svelte';
+
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores';

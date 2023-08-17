@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Button } from 'flowbite-svelte';
+	//@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
 
 	const handleClick = () => {
@@ -11,7 +12,7 @@
 <Button outline color="light" id="multiple_files" on:click={handleClick}>
 	<div class="flex justify-between space-x-2">
 		<svg
-			class="text-gray-700 dark:text-white"
+			class="text-gray-700 dark:text-gray-400"
 			x="0px"
 			y="0px"
 			width="18"
@@ -29,6 +30,6 @@
 				d="M9 1v16M1 9h16"
 			/>
 		</svg>
-		<p>Add Data</p>
+		<p class="text-gray-400">Add Data</p>
 	</div>
 </Button>

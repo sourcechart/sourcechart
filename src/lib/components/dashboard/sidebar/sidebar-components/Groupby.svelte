@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	//@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
+	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
 
 	import {
 		getColumnsFromFile,

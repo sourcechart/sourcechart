@@ -27,6 +27,12 @@ type Chart = {
 	chartOptions: any;
 };
 
+type ExternalDataset = {
+	name: string;
+	url: string;
+	description: string;
+};
+
 type ChartOptions = {
 	xAxis: {
 		data: number[];

@@ -55,6 +55,8 @@
 	};
 
 	const loadPreviousState = async () => {
+		if ($allCharts.length === 0) return;
+
 		await loadWorker();
 		$allCharts.forEach(loadDataFromSQLITE);
 	};

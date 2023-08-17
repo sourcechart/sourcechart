@@ -10,7 +10,7 @@ type DataMessage = {
 	fileextension?: string;
 };
 
-let tableName: string = 'local';
+let tableName: string = 'localDB';
 
 onmessage = (e: MessageEvent) => {
 	const messageData: DataMessage = e.data;
@@ -63,6 +63,7 @@ const getBinaryFromDatabase = (data: DataMessage) => {
 
 const insertDataIntoDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
+		console.log(data);
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
