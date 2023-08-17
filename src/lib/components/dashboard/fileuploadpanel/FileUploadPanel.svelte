@@ -38,6 +38,7 @@
 	];
 
 	const handleClick = () => {
+		console.log();
 		activeDropZone.set(false);
 		activeSidebar.set(true);
 	};
