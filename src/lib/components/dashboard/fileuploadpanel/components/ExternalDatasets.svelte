@@ -14,9 +14,7 @@
 	let syncWorker: Worker | undefined = undefined;
 	let fileextension: string | undefined = '';
 	let filename: string | undefined = '';
-
 	let size: number = 0;
-	let id: string;
 
 	const datasets: ExternalDataset[] = [
 		{
@@ -59,17 +57,15 @@
 		var id = generateID();
 		var hex = bufferToHex(arrayBuffer);
 
-		var message = {
-			filename: filename,
-			size: size,
-			id: id,
-			message: 'initialize',
-			hexadecimal: hex,
-			fileextension: fileextension
-		};
-
 		if (syncWorker) {
-			syncWorker.postMessage(message);
+			syncWorker.postMessage({
+				filename: filename,
+				size: size,
+				id: id,
+				message: 'initialize',
+				hexadecimal: hex,
+				fileextension: fileextension
+			});
 			createFileStore(filename, size, id);
 
 			syncWorker.onerror = (e) => {
