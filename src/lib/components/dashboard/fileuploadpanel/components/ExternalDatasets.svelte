@@ -13,6 +13,25 @@
 	import { createFileStore } from '$lib/io/Stores';
 
 	let syncWorker: Worker | undefined = undefined;
+
+	const datasets: ExternalDataset[] = [
+		{
+			name: 'ElectionList',
+			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
+			description: 'List of All Elections since 1950'
+		},
+		{
+			name: 'Leader List',
+			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
+			description: 'List of All Leaders Since 1950'
+		},
+		{
+			name: 'Regime List',
+			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/regime_list.csv',
+			description: 'List of All regimes'
+		}
+	];
+
 	const addURLToDatabase = async (dataset: ExternalDataset) => {
 		const response = await fetch(dataset.url);
 		var buffer = await response.arrayBuffer();
@@ -35,24 +54,6 @@
 			});
 		}
 	};
-
-	let datasets: ExternalDataset[] = [
-		{
-			name: 'ElectionList',
-			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
-			description: 'List of All Elections since 1950'
-		},
-		{
-			name: 'Leader List',
-			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
-			description: 'List of All Leaders Since 1950'
-		},
-		{
-			name: 'Regime List',
-			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/regime_list.csv',
-			description: 'List of All regimes'
-		}
-	];
 </script>
 
 <div class="w-full">
