@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { Dropzone } from 'flowbite-svelte';
 	import { generateID } from '$lib/io/GenerateID';
-	import { fileUploadStore, activeDropZone } from '$lib/io/Stores';
+	import { createFileStore, activeDropZone } from '$lib/io/Stores';
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
-	import { createFileStore } from '$lib/io/FileUploadStore';
 
 	let value: string[] = [];
 	let syncWorker: Worker | undefined = undefined;

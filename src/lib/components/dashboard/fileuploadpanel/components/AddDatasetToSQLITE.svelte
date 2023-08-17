@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from 'flowbite-svelte';
-	import { createFileStore } from '$lib/io/FileUploadStore';
+	import { createFileStore } from '$lib/io/Stores';
 	import { generateID } from '$lib/io/GenerateID';
 	import { bufferToHex } from '$lib/io/HexOps';
 
