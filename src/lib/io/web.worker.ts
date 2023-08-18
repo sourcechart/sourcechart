@@ -15,7 +15,8 @@ let dbFileName = 'LocalDB.sqlite3';
 onmessage = async (e: MessageEvent) => {
 	const opfsRoot = await navigator.storage.getDirectory();
 	const fileHandle = await opfsRoot.getFileHandle(dbFileName, { create: true });
-	console.log(fileHandle);
+	const accessHandle = await fileHandle.getFileHandle(dbFileName);
+
 	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
