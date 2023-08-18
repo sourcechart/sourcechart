@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { Tags } from './sidebar-components';
-	import { Groupby, ChartDropdown } from './sidebar-components';
-	import { Range } from 'flowbite-svelte';
+	import { Groupby, ChartDropdown } from './sidebar-components'; //@ts-ignore
+	import Range from 'flowbite-svelte/Range.svelte';
 	import { epsilonDistance, minimumPointsForCluster } from '$lib/io/Stores'; //@ts-ignore
 	import NumberInput from 'flowbite-svelte/NumberInput.svelte'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
 
 	let clusterSize = 5;
 	let defaultEpsilon = 1;
-	let maxRange: number = 1;
+	let maxRange = 1;
 	let stepValue = maxRange / 100;
 
 	const handleEpsilonDistance = () => {
@@ -46,7 +46,6 @@
 		</Label>
 		<div class="flex-row">
 			<Range
-				class="bg-slate-950"
 				id="range-minmax"
 				min="0"
 				max={maxRange}
@@ -54,17 +53,14 @@
 				bind:value={defaultEpsilon}
 				on:change={handleEpsilonDistance}
 			/>
+			<p class="text-xs">Distance between Points: {defaultEpsilon}</p>
 			<Label class="space-y-2 mb-4">
 				<span>Max Range</span>
-				<NumberInput bind:maxRange />
+				<NumberInput bind:value={maxRange} />
 			</Label>
 		</div>
 	</div>
 	<div>
-		<Label class="space-y-2 mb-4">
-			<span>Minimum Size of Groups</span>
-			<NumberInput bind:maxRange />
-		</Label>
 		<Range
 			id="range-minmax"
 			min="1"

@@ -89,7 +89,7 @@ class DataIO {
 	private getDensityResults(results: any) {
 		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
 		if (this.epsilon && this.minPoints) {
-			const dbscan = new DBSCAN(multidimensialArray, this.epsilon, this.minPoints, 'gower');
+			const dbscan = new DBSCAN(multidimensialArray, this.epsilon, this.minPoints, 'euclidean');
 			var clusters = dbscan.run().getClusters();
 			if (multidimensialArray.length > 1000) {
 				const umap = new UMAP({
@@ -128,8 +128,9 @@ class DataIO {
 		clusterLabel: number;
 	} {
 		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
-		const dbscan = new DBSCAN(multidimensialArray, 5, 2, 'gower');
+		const dbscan = new DBSCAN(multidimensialArray, this.epsilon, this.minPoints, 'euclidean');
 		var clusters = dbscan.run().getAudienceSegments();
+		console.log(clusters);
 		return clusters;
 	}
 

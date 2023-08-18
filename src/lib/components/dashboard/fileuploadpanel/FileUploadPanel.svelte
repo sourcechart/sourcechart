@@ -9,7 +9,6 @@
 	import ExternalDatasets from './components/ExternalDatasets.svelte';
 
 	const handleClick = () => {
-		console.log();
 		activeDropZone.set(false);
 		activeSidebar.set(true);
 	};
