@@ -11,12 +11,11 @@ type DataMessage = {
 };
 
 let tableName = 'datastash';
-let dbFileName = 'LocalDB';
+let dbFileName = 'LocalDB.sqlite3';
 onmessage = async (e: MessageEvent) => {
 	const opfsRoot = await navigator.storage.getDirectory();
-	console.log(opfsRoot);
-	//const fileHandle = await opfsRoot.getFileHandle(dbFileName, { create: true });
-	//const syncAccessHandle = await fileHandle.createSyncAccessHandle();
+	const fileHandle = await opfsRoot.getFileHandle(dbFileName, { create: true });
+	console.log(fileHandle);
 	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
