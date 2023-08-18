@@ -1,5 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
+import mkcert from 'vite-plugin-mkcert';
+import crossOriginIsolation from 'vite-plugin-cross-origin-isolation';
 
 /** @type {import('vite').Plugin} */
 const viteServerConfig = {
@@ -15,7 +17,7 @@ const viteServerConfig = {
 };
 
 export default defineConfig({
-	plugins: [viteServerConfig, sveltekit()],
+	plugins: [viteServerConfig, sveltekit(), mkcert(), crossOriginIsolation()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
