@@ -12,13 +12,10 @@ type DataMessage = {
 
 let tableName = 'datastash';
 let dbFileName = './LocalDB.sqlite3';
-let accessHandle;
 onmessage = async (e: MessageEvent) => {
-	let storageManager = new StorageManager();
-	const root = await storageManager.getDirectory();
-	const draftHandle = await root.getFileHandle(dbFileName, { create: true });
-	accessHandle = await draftHandle.createWritable();
-
+	const opfsRoot = await navigator.storage.getDirectory();
+	const fileHandle = await opfsRoot.getFileHandle('my highspeed file.txt', { create: true });
+	const syncAccessHandle = await fileHandle.createSyncAccessHandle();
 	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
