@@ -11,6 +11,7 @@ type DataMessage = {
 };
 
 let tableName: string = 'localDB';
+let dbPath = './LocalDB.sqlite3';
 
 onmessage = (e: MessageEvent) => {
 	const messageData: DataMessage = e.data;
@@ -33,7 +34,7 @@ onmessage = (e: MessageEvent) => {
 const getUniqueDatasets = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
+		const db = new sqlite3.opfs.OpfsDb(dbPath);
 		const res = db.exec(`SELECT filename FROM ${tableName}`, {
 			returnValue: 'resultRows'
 		});
@@ -44,7 +45,7 @@ const getUniqueDatasets = (data: DataMessage) => {
 const getBinaryFromDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
+		const db = new sqlite3.opfs.OpfsDb(dbPath);
 		const res = db.exec(`SELECT * FROM ${tableName} WHERE filename= '${data.filename}'`, {
 			returnValue: 'resultRows'
 		});
@@ -65,7 +66,7 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		console.log(data);
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
+		const db = new sqlite3.opfs.OpfsDb(dbPath);
 		db.exec(
 			`
 			CREATE TABLE IF NOT EXISTS ${tableName} (
