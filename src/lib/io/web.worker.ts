@@ -11,7 +11,7 @@ type DataMessage = {
 };
 
 let tableName = 'datastash';
-let dbFileName = 'LocalDB.sqlite3';
+let dbFileName = 'LocalDB';
 onmessage = async (e: MessageEvent) => {
 	const opfsRoot = await navigator.storage.getDirectory();
 	const fileHandle = await opfsRoot.getFileHandle(dbFileName, { create: true });
@@ -36,7 +36,7 @@ onmessage = async (e: MessageEvent) => {
 const getUniqueDatasets = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb(dbFileName);
+		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		const res = db.exec(`SELECT filename FROM ${tableName}`, {
 			returnValue: 'resultRows'
 		});
@@ -47,7 +47,7 @@ const getUniqueDatasets = (data: DataMessage) => {
 const getBinaryFromDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb(dbFileName);
+		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		const res = db.exec(`SELECT * FROM ${tableName} WHERE filename= '${data.filename}'`, {
 			returnValue: 'resultRows'
 		});
@@ -68,7 +68,7 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		console.log(data);
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb(dbFileName);
+		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
 			`
 			CREATE TABLE IF NOT EXISTS ${tableName} (
