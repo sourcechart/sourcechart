@@ -35,6 +35,7 @@ onmessage = async (e: MessageEvent) => {
 
 const getUniqueDatasets = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
+		//git
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		const res = db.exec(`SELECT filename FROM ${tableName}`, {
