@@ -13,7 +13,8 @@ type DataMessage = {
 let tableName = 'datastash';
 let dbFileName = 'LocalDB';
 onmessage = async (e: MessageEvent) => {
-	//const opfsRoot = await navigator.storage.getDirectory();
+	const opfsRoot = await navigator.storage.getDirectory();
+	console.log(opfsRoot);
 	//const fileHandle = await opfsRoot.getFileHandle(dbFileName, { create: true });
 	//const syncAccessHandle = await fileHandle.createSyncAccessHandle();
 	const messageData: DataMessage = e.data;
