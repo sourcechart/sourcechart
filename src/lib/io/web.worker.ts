@@ -15,7 +15,7 @@ let dbFileName = 'LocalDB';
 onmessage = async (e: MessageEvent) => {
 	const opfsRoot = await navigator.storage.getDirectory();
 	const fileHandle = await opfsRoot.getFileHandle(dbFileName, { create: true });
-	const syncAccessHandle = await fileHandle.createSyncAccessHandle();
+	//const syncAccessHandle = await fileHandle.createSyncAccessHandle();
 	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
