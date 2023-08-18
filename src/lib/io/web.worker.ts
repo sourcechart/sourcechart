@@ -9,7 +9,7 @@ type DataMessage = {
 	hexadecimal?: string;
 	fileextension?: string;
 };
-
+console.log();
 let tableName = 'datastash';
 let dbFileName = 'LocalDB.sqlite3';
 onmessage = async (e: MessageEvent) => {
