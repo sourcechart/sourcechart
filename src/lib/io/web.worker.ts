@@ -10,46 +10,15 @@ type DataMessage = {
 	fileextension?: string;
 };
 
-let rootDirectory;
+let tableName = 'datastash';
+let dbFileName = './LocalDB.sqlite3';
+let accessHandle;
+onmessage = async (e: MessageEvent) => {
+	let storageManager = new StorageManager();
+	const root = await storageManager.getDirectory();
+	const draftHandle = await root.getFileHandle(dbFileName, { create: true });
+	accessHandle = await draftHandle.createWritable();
 
-navigator.storage.getDirectory().then((fetchedRootDirectory) => {
-	rootDirectory = fetchedRootDirectory;
-});
-
-let tableName: string = 'localDB';
-let dbPath = './LocalDB.sqlite3';
-
-const upsertDestinationFolders = async (location) => {
-	const folderNames = location.split('/');
-	let acc = [];
-
-	// Loop over all the parts of the path that aren't the filename
-	for (const [index, folderName] of folderNames.slice(0, folderNames.length - 1).entries()) {
-		// When we haven't created any of the path yet
-		if (acc.length === 0) {
-			// Create a directory under the root
-			const folderHandle = await rootDirectory.getDirectoryHandle(folderName, {
-				create: true
-			});
-
-			// Push as the first value of acc
-			acc.push(folderHandle);
-		} else {
-			// Get the parent directory (i.e. the last directory created)
-			const parentDirectory = acc[index - 1];
-
-			// Create a directory under the parent
-			const folderHandle = await parentDirectory.getDirectoryHandle(folderName, {
-				create: true
-			});
-
-			acc.push(folderHandle);
-		}
-	}
-
-	return acc;
-};
-onmessage = (e: MessageEvent) => {
 	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
@@ -70,7 +39,7 @@ onmessage = (e: MessageEvent) => {
 const getUniqueDatasets = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb(dbPath);
+		const db = new sqlite3.opfs.OpfsDb(dbFileName);
 		const res = db.exec(`SELECT filename FROM ${tableName}`, {
 			returnValue: 'resultRows'
 		});
@@ -81,7 +50,7 @@ const getUniqueDatasets = (data: DataMessage) => {
 const getBinaryFromDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb(dbPath);
+		const db = new sqlite3.opfs.OpfsDb(dbFileName);
 		const res = db.exec(`SELECT * FROM ${tableName} WHERE filename= '${data.filename}'`, {
 			returnValue: 'resultRows'
 		});
@@ -102,7 +71,7 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		console.log(data);
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb(dbPath);
+		const db = new sqlite3.opfs.OpfsDb(dbFileName);
 		db.exec(
 			`
 			CREATE TABLE IF NOT EXISTS ${tableName} (
