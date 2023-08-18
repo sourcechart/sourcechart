@@ -1,21 +1,14 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 
-/** @type {import('vite').Plugin} */
-const viteServerConfig = {
-	name: 'log-request-middleware', //@ts-ignore
-	configureServer(server) {
-		//@ts-ignore
-		server.middlewares.use((req, res, next) => {
-			res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-			res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
-			next();
-		});
-	}
-};
-
 export default defineConfig({
-	plugins: [viteServerConfig, sveltekit()],
+	server: {
+		headers: {
+			'Cross-Origin-Opener-Policy': 'same-origin',
+			'Cross-Origin-Embedder-Policy': 'require-corp'
+		}
+	},
+	plugins: [sveltekit()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
