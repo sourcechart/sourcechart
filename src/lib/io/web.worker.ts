@@ -10,9 +10,45 @@ type DataMessage = {
 	fileextension?: string;
 };
 
+let rootDirectory;
+
+navigator.storage.getDirectory().then((fetchedRootDirectory) => {
+	rootDirectory = fetchedRootDirectory;
+});
+
 let tableName: string = 'localDB';
 let dbPath = './LocalDB.sqlite3';
 
+const upsertDestinationFolders = async (location) => {
+	const folderNames = location.split('/');
+	let acc = [];
+
+	// Loop over all the parts of the path that aren't the filename
+	for (const [index, folderName] of folderNames.slice(0, folderNames.length - 1).entries()) {
+		// When we haven't created any of the path yet
+		if (acc.length === 0) {
+			// Create a directory under the root
+			const folderHandle = await rootDirectory.getDirectoryHandle(folderName, {
+				create: true
+			});
+
+			// Push as the first value of acc
+			acc.push(folderHandle);
+		} else {
+			// Get the parent directory (i.e. the last directory created)
+			const parentDirectory = acc[index - 1];
+
+			// Create a directory under the parent
+			const folderHandle = await parentDirectory.getDirectoryHandle(folderName, {
+				create: true
+			});
+
+			acc.push(folderHandle);
+		}
+	}
+
+	return acc;
+};
 onmessage = (e: MessageEvent) => {
 	const messageData: DataMessage = e.data;
 
