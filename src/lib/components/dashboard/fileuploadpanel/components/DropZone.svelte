@@ -82,17 +82,13 @@
 		return concat;
 	};
 
+	const dragOver = (event: DragEvent) => {
+		event.preventDefault();
+	};
 	onMount(loadWorker);
 </script>
 
-<Dropzone
-	id="dropzone"
-	on:drop={dropHandle}
-	on:dragover={(event) => {
-		event.preventDefault();
-	}}
-	on:change={handleChange}
->
+<Dropzone id="dropzone" on:drop={dropHandle} on:dragover={dragOver} on:change={handleChange}>
 	<svg
 		aria-hidden="true"
 		class="mb-3 w-10 h-10 text-gray-400"
