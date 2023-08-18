@@ -14,7 +14,7 @@ let tableName = 'datastash';
 let dbFileName = './LocalDB.sqlite3';
 onmessage = async (e: MessageEvent) => {
 	const opfsRoot = await navigator.storage.getDirectory();
-	const fileHandle = await opfsRoot.getFileHandle('my highspeed file.txt', { create: true });
+	const fileHandle = await opfsRoot.getFileHandle(dbFileName, { create: true });
 	const syncAccessHandle = await fileHandle.createSyncAccessHandle();
 	const messageData: DataMessage = e.data;
 
