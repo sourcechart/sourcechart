@@ -1,4 +1,4 @@
-import sqlite3InitModule from 'sqlite-wasm-esm';
+import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
 
 type DataMessage = {
 	message: string;
@@ -22,6 +22,7 @@ onmessage = async (e: MessageEvent) => {
 	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
+		/*
 		case 'initialize':
 			insertDataIntoDatabase(messageData);
 			break;
@@ -31,8 +32,9 @@ onmessage = async (e: MessageEvent) => {
 		case 'getDatasets':
 			getUniqueDatasets(messageData);
 			break;
+			*/
 		default:
-			postMessage({ error: 'Invalid command' });
+			foo();
 	}
 };
 
@@ -87,5 +89,38 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 			`
 		);
 		db.close();
+	});
+};
+
+const foo = () => {
+	// In `worker.js`.
+
+	const log = (...args) => console.log(...args);
+	const error = (...args) => console.error(...args);
+
+	const start = function (sqlite3) {
+		log('Running SQLite3 version', sqlite3.version.libVersion);
+		let db;
+		if ('opfs' in sqlite3) {
+			db = new sqlite3.oo1.OpfsDb('/mydb.sqlite3');
+			log('OPFS is available, created persisted database at', db.filename);
+		} else {
+			db = new sqlite3.oo1.DB('/mydb.sqlite3', 'ct');
+			log('OPFS is not available, created transient database', db.filename);
+		}
+		// Your SQLite code here.
+	};
+
+	log('Loading and initializing SQLite3 module...');
+	sqlite3InitModule({
+		print: log,
+		printErr: error
+	}).then((sqlite3) => {
+		log('Done initializing. Running demo...');
+		try {
+			start(sqlite3);
+		} catch (err) {
+			error(err.name, err.message);
+		}
 	});
 };
