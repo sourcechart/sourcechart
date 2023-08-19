@@ -1,9 +1,12 @@
 import adapter from '@sveltejs/adapter-auto';
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vitest/config';
 
 /** @type {import('vite').Plugin} */
 const viteServerConfig = {
-	name: 'log-request-middleware',
+	name: 'log-request-middleware', //@ts-ignore
 	configureServer(server) {
+		//@ts-ignore
 		server.middlewares.use((req, res, next) => {
 			res.setHeader('Access-Control-Allow-Origin', '*');
 			res.setHeader('Access-Control-Allow-Methods', 'GET');
@@ -15,13 +18,14 @@ const viteServerConfig = {
 };
 
 /** @type {import('@sveltejs/kit').Config} */
-const config = {
-	kit: {
-		adapter: adapter(),
-		vite: {
-			plugins: [viteServerConfig]
-		}
+export default defineConfig({
+	plugins: [viteServerConfig, sveltekit()],
+	test: {
+		include: ['src/**/*.{test,spec}.{js,ts}']
+	},
+	build: { target: ['es2020'] }, // Needed in `sqlite-wasm-esm` for big-ints to work
+	optimizeDeps: {
+		exclude: ['sqlite-wasm-esm'], // TODO remove once fixed https://github.com/vitejs/vite/issues/8427
+		esbuildOptions: { target: 'es2020' } // Needed in `sqlite-wasm-esm` for big-ints to work
 	}
-};
-
-export default config;
+});
