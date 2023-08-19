@@ -1,10 +1,5 @@
-<script lang="ts">
-	export let label: string;
-</script>
-
-<button class="login-with-google-btn">
-	{label}
-</button>
+<button class="login-with-google-btn" />
+<slot />
 
 <style>
 	.login-with-google-btn {
