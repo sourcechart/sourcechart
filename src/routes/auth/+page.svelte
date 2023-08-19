@@ -1,11 +1,11 @@
 <!-- // src/routes/auth/+page.svelte -->
-<script>
+<script lang="ts">
 	export let data;
 	let { supabase } = data;
 	$: ({ supabase } = data);
 
-	let email;
-	let password;
+	let email: string;
+	let password: string;
 
 	const handleSignUp = async () => {
 		await supabase.auth.signUp({
