@@ -2,11 +2,8 @@
 <script lang="ts">
 	//import { enhance } from '$app/forms';
 
-	import GenericLoginButton from '$lib/components/landing/signin/auth/GenericLoginButton.svelte';
 	export let form;
 </script>
-
-<GenericLoginButton>Login</GenericLoginButton>
 
 <div
 	class="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-6 sm:py-12"
@@ -41,6 +38,7 @@
 						/>
 					</div>
 				</form>
+				<h1>GOOGLE SIGN IN BUTTON GOES HERE</h1>
 				<footer>
 					<a class=" hover:text-gray-400 text-sm float-left" href="#">Forgot Password?</a>
 					<a class=" hover:text-gray-400 text-sm float-right" href="#">Create Account</a>
