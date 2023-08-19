@@ -1,5 +1,4 @@
-//@ts-ignore
-import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
+import sqlite3InitModule from 'sqlite-wasm-esm';
 
 type DataMessage = {
 	message: string;
@@ -36,6 +35,7 @@ onmessage = async (e: MessageEvent) => {
 };
 
 const getUniqueDatasets = (data: DataMessage) => {
+	//@ts-ignore
 	sqlite3InitModule().then(async (sqlite3) => {
 		//git
 		//@ts-ignore
@@ -48,6 +48,7 @@ const getUniqueDatasets = (data: DataMessage) => {
 };
 
 const getBinaryFromDatabase = (data: DataMessage) => {
+	//@ts-ignore
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
@@ -68,6 +69,7 @@ const getBinaryFromDatabase = (data: DataMessage) => {
 };
 
 const insertDataIntoDatabase = (data: DataMessage) => {
+	//@ts-ignore
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
@@ -88,6 +90,7 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 	});
 };
 
+/*
 const foo = () => {
 	// In `worker.js`.
 
@@ -120,3 +123,4 @@ const foo = () => {
 		}
 	});
 };
+*/
