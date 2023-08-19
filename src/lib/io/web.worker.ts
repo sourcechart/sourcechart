@@ -21,7 +21,6 @@ onmessage = async (e: MessageEvent) => {
 	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
-		
 		case 'initialize':
 			insertDataIntoDatabase(messageData);
 			break;
@@ -31,7 +30,6 @@ onmessage = async (e: MessageEvent) => {
 		case 'getDatasets':
 			getUniqueDatasets(messageData);
 			break;
-			*/
 		default:
 			foo();
 	}
