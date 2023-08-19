@@ -1,5 +1,5 @@
 // src/routes/+page.server.ts
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit'; //@ts-ignore
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ url, locals: { getSession } }) => {
@@ -7,7 +7,7 @@ export const load: PageServerLoad = async ({ url, locals: { getSession } }) => {
 
 	// if the user is already logged in return them to the account page
 	if (session) {
-		throw redirect(303, '/account');
+		throw redirect(303, '/dashboard');
 	}
 
 	return { url: url.origin };
