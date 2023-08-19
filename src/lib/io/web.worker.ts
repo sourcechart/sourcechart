@@ -9,16 +9,10 @@ type DataMessage = {
 	hexadecimal?: string;
 	fileextension?: string;
 };
-
 let tableName = 'datastash';
-let dbFileName = './LocalDB.sqlite3';
-let accessHandle;
-onmessage = async (e: MessageEvent) => {
-	let storageManager = new StorageManager();
-	const root = await storageManager.getDirectory();
-	const draftHandle = await root.getFileHandle(dbFileName, { create: true });
-	accessHandle = await draftHandle.createWritable();
+let dbFileName = 'LocalDB';
 
+onmessage = async (e: MessageEvent) => {
 	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
@@ -39,7 +33,7 @@ onmessage = async (e: MessageEvent) => {
 const getUniqueDatasets = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb(dbFileName);
+		const db = new sqlite3.opfs.OpfsDb(dbFileName, 'c');
 		const res = db.exec(`SELECT filename FROM ${tableName}`, {
 			returnValue: 'resultRows'
 		});
@@ -50,7 +44,7 @@ const getUniqueDatasets = (data: DataMessage) => {
 const getBinaryFromDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb(dbFileName);
+		const db = new sqlite3.opfs.OpfsDb(dbFileName, 'c');
 		const res = db.exec(`SELECT * FROM ${tableName} WHERE filename= '${data.filename}'`, {
 			returnValue: 'resultRows'
 		});
@@ -69,9 +63,8 @@ const getBinaryFromDatabase = (data: DataMessage) => {
 
 const insertDataIntoDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
-		console.log(data);
 		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb(dbFileName);
+		const db = new sqlite3.opfs.OpfsDb(dbFileName, 'c');
 		db.exec(
 			`
 			CREATE TABLE IF NOT EXISTS ${tableName} (
