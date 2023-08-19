@@ -1,3 +1,4 @@
+//@ts-ignore
 import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
 
 type DataMessage = {
@@ -9,20 +10,18 @@ type DataMessage = {
 	hexadecimal?: string;
 	fileextension?: string;
 };
-console.log();
 let tableName = 'datastash';
 let dbFileName = 'LocalDB';
 
 onmessage = async (e: MessageEvent) => {
 	const opfsRoot = await navigator.storage.getDirectory();
-	const fileHandle = await opfsRoot.getFileHandle(dbFileName, { create: true });
+	const fileHandle = await opfsRoot.getFileHandle(dbFileName, { create: true }); //@ts-ignore
 	const accessHandle = fileHandle.createSyncAccessHandle();
-	//	const accessHandle = await fileHandle.getFileHandle(dbFileName);
 
 	const messageData: DataMessage = e.data;
 
 	switch (messageData.message) {
-		/*
+		
 		case 'initialize':
 			insertDataIntoDatabase(messageData);
 			break;
@@ -72,7 +71,6 @@ const getBinaryFromDatabase = (data: DataMessage) => {
 
 const insertDataIntoDatabase = (data: DataMessage) => {
 	sqlite3InitModule().then(async (sqlite3) => {
-		console.log(data);
 		//@ts-ignore
 		const db = new sqlite3.opfs.OpfsDb('LocalDB', 'c');
 		db.exec(
