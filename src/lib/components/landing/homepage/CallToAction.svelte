@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 
 	const enterFree = () => {
-		goto('/email-sign-up');
+		goto('/auth');
 	};
 </script>
 
