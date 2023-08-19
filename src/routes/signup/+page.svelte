@@ -12,6 +12,14 @@
 			<div class="w-full max-w-xs m-auto rounded p-5">
 				<form>
 					<div>
+						<label class="block mb-2 outline-1" for="username">Email</label>
+						<input
+							class="w-full p-2 mb-6 border outline-gray-400 outline-1 rounded-md focus:bg-gray-300"
+							type="text"
+							name="username"
+						/>
+					</div>
+					<div>
 						<label class="block mb-2 outline-1" for="username">Username</label>
 						<input
 							class="w-full p-2 mb-6 border outline-gray-400 outline-1 rounded-md focus:bg-gray-300"
@@ -21,6 +29,14 @@
 					</div>
 					<div>
 						<label class="block mb-2" for="password">Password</label>
+						<input
+							class="w-full p-2 mb-6 border outline-1 rounded-md focus:bg-gray-300"
+							type="text"
+							name="username"
+						/>
+					</div>
+					<div>
+						<label class="block mb-2" for="password">Confirm Password</label>
 						<input
 							class="w-full p-2 mb-6 border outline-1 rounded-md focus:bg-gray-300"
 							type="text"
