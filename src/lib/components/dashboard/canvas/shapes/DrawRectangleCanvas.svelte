@@ -9,7 +9,7 @@
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
 	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
-	import { Chart } from '$lib/components/ui/echarts';
+	import { Chart } from '$lib/components/dashboard/echarts';
 
 	export let polygon: Polygon;
 
