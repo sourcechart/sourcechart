@@ -1,37 +1,9 @@
-<script lang='ts'>
-	import { supabaseClient } from '$lib/supabase';
-	import { goto } from '$app/navigation';
-	import { enhance } from '$app/forms';
-
-	import type { SubmitFunction } from '$app/forms';
-	import type { Provider } from '@supabase/supabase-js';
-
-
-	async function signInWithProvider(provider: Provider) {
-		const { data, error } = await supabaseClient.auth.signInWithOAuth({
-			provider: provider
-		});
-		if (!error) {
-			goto('/dashboard');
-		}
-	}
-
-	export const submitSocialLogin: SubmitFunction = async ({ action, cancel }) => {
-		switch (action.searchParams.get('provider')) {
-			case 'google':
-				await signInWithProvider('google');
-				break;
-		}
-
-		cancel();
-	};
+<script lang="ts">
 </script>
 
-<form class="socials" method="POST" use:enhance={submitSocialLogin}>
-	<button formaction="?/login&provider=google" class="login-with-google-btn w-full h-10">Continue with Google</button>
+<form class="socials" method="POST">
+	<button class="login-with-google-btn w-full h-10">Continue with Google</button>
 </form>
-
-
 
 <style>
 	.login-with-google-btn {

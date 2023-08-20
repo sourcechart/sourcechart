@@ -1,15 +1,22 @@
 <script lang="ts">
+	import GoogleSignInButton from '$lib/components/landing/signin/auth/GoogleSignInButton.svelte';
 </script>
 
-<div
-	class="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-6 sm:py-12"
->
+<div class="relative flex min-h-screen flex-col justify-center overflow-hidden py-6 sm:py-12">
 	<div
-		class="relative bg-white px-6 pb-8 pt-10 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10"
+		class="relative bg-white px-6 border pb-8 pt-10 shadow-xl ring-1 ring-gray-900 outline-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10"
 	>
 		<div class="mx-auto max-w-md">
-			<img src="/img/logo.svg" class="h-6" alt="Tailwind Play" />
 			<div class="w-full max-w-xs m-auto rounded p-5">
+				<GoogleSignInButton />
+				<div class="inline-flex items-center justify-center w-full">
+					<hr class="w-full h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+					<span
+						class="absolute px-2 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900"
+						>or</span
+					>
+				</div>
+
 				<form>
 					<div>
 						<label class="block mb-2 outline-1" for="username">Username</label>
@@ -34,10 +41,13 @@
 						/>
 					</div>
 				</form>
-				<h1>GOOGLE SIGN IN BUTTON GOES HERE</h1>
 				<footer>
-					<a class=" hover:text-gray-400 text-sm float-left" href="#">Forgot Password?</a>
-					<a class=" hover:text-gray-400 text-sm float-right" href="#">Create Account</a>
+					<a class="hover:text-blue-400 text-blue-500 text-sm float-right" href="#"
+						>Create Account</a
+					>
+					<a class="hover:text-blue-400 text-blue-500 text-sm float-left" href="#"
+						>Forgot Password?</a
+					>
 				</footer>
 			</div>
 		</div>
