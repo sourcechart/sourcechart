@@ -16,7 +16,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		const session = await event.locals.getSession();
 		if (!session) {
 			// the user is not signed in
-			throw redirect(303, '/');
+			throw redirect(303, '/login');
 		}
 	}
 
@@ -24,7 +24,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		const session = await event.locals.getSession();
 		if (!session) {
 			// the user is not signed in
-			throw error(303, '/');
+			throw error(303, '/login');
 		}
 	}
 
