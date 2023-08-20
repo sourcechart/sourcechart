@@ -12,6 +12,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 		event
 	});
 
+	/**
+	 * a little helper that is written for convenience so that instead
+	 * of calling `const { data: { session } } = await supabase.auth.getSession()`
+	 * you just call this `await getSession()`
+	 */
+	event.locals.getSession = async () => {
+		const {
+			data: { session } //@ts-ignore
+		} = await event.locals.supabase.auth.getSession();
+		return session;
+	};
+
 	if (event.url.pathname.startsWith('/dashboard')) {
 		const session = await event.locals.getSession();
 		if (!session) {
@@ -20,7 +32,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
-	if (event.url.pathname.startsWith('/dashboard') && event.request.method === 'POST') {
+	if (event.url.pathname.startsWith('/dashboard') && event.request.method === 'GET') {
 		const session = await event.locals.getSession();
 		if (!session) {
 			// the user is not signed in
@@ -28,24 +40,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
-	/**
-	 * a little helper that is written for convenience so that instead
-	 * of calling `const { data: { session } } = await supabase.auth.getSession()`
-	 * you just call this `await getSession()`
-	 */
-	//@ts-ignore
-	event.locals.getSession = async () => {
-		const {
-			data: { session } //@ts-ignore
-		} = await event.locals.supabase.auth.getSession();
-		return session;
-	};
-
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {
 			return name === 'content-range';
 		}
 	});
 };
-
-// src/hooks.server.ts

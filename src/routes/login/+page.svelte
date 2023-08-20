@@ -10,7 +10,6 @@
 	>
 		<Auth
 			supabaseClient={data.supabase}
-			redirectTo={`${data.url}/auth/callback`}
 			showLinks={false}
 			providers={['google', 'slack']}
 			appearance={{ theme: ThemeSupa, style: { input: 'color: #fff' } }}
