@@ -11,7 +11,7 @@
 		<Auth
 			supabaseClient={data.supabase}
 			showLinks={false}
-			providers={['google', 'slack']}
+			providers={['google']}
 			appearance={{ theme: ThemeSupa, style: { input: 'color: #fff' } }}
 		/>
 	</div>
