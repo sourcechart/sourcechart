@@ -4,9 +4,10 @@
 
 <div class="relative flex min-h-screen flex-col justify-center overflow-hidden py-6 sm:py-12">
 	<div
-		class="relative bg-white px-6 border pb-8 pt-10 shadow-xl ring-1 ring-gray-900 outline-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10"
+		class="relative bg-white px-6 border pb-8 pt-10 shadow-xl round ring-1 ring-gray-900 outline-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10"
 	>
 		<div class="mx-auto max-w-md">
+			<h1>Login</h1>
 			<div class="w-full max-w-xs m-auto rounded p-5">
 				<GoogleSignInButton />
 				<div class="inline-flex items-center justify-center w-full">
@@ -42,10 +43,10 @@
 					</div>
 				</form>
 				<footer>
-					<a class="hover:text-blue-400 text-blue-500 text-sm float-right" href="#"
+					<a class="hover:text-blue-300 text-blue-500 text-sm float-right" href="/signup"
 						>Create Account</a
 					>
-					<a class="hover:text-blue-400 text-blue-500 text-sm float-left" href="#"
+					<a class="hover:text-blue-300 text-blue-500 text-sm float-left" href="/forgot-password"
 						>Forgot Password?</a
 					>
 				</footer>
