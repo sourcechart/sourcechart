@@ -9,7 +9,7 @@
 	const addDataToDatabase = async () => {
 		const { error } = await data.supabase.from('users').insert({
 			id: data.session?.user.id,
-			email: data.session?.user.email,
+			email: data.session?.user.email, //@ts-ignore
 			session_id: data.session?.user.session_id
 		});
 

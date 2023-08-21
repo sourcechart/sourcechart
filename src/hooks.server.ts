@@ -40,6 +40,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
+	if (event.url.pathname.startsWith('/dashboard') && event.request.method === 'POST') {
+		const session = await event.locals.getSession();
+		if (!session) {
+			// the user is not signed in
+			throw error(303, '/login');
+		}
+	}
+
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {
 			return name === 'content-range';
