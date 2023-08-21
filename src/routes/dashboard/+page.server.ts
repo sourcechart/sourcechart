@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals: { supabase, getSession } }) => {
@@ -8,10 +8,9 @@ export const load: PageServerLoad = async ({ locals: { supabase, getSession } })
 		throw redirect(303, '/login');
 	}
 
-	const { data, error } = await supabase
-		.from('sessions')
-		.insert({ userId: session.user.id, id: session.user.session_id })
-		.select();
-
+	const { data } = await supabase.from('countries').select('name');
 	console.log(data);
+	return {
+		countries: data ?? []
+	};
 };
