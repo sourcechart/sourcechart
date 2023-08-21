@@ -1,15 +1,16 @@
 <script lang="ts">
 	import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
-	import WorkFlowSidebar from './WorkFlowSidebar.svelte';
 	import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
-	import { SidebarWrapper } from '$lib/components/ui'; //@ts-ignore
-	import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
-	import TabItem from 'flowbite-svelte/TabItem.svelte';
+	//import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
+	//import TabItem from 'flowbite-svelte/TabItem.svelte';
+	//import Aggregator from './sidebar-components/Aggregator.svelte';
+	//import WorkFlowSidebar from './WorkFlowSidebar.svelte';
 
+	import { SidebarWrapper } from '$lib/components/ui'; //@ts-ignore
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
-	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores';
-	import { Label } from 'flowbite-svelte';
+	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
+	import Label from 'flowbite-svelte/Label.svelte';
 
 	const handleClickInside = () => {
 		$activeSidebar = true;
