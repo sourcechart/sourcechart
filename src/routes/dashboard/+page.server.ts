@@ -7,7 +7,4 @@ export const load: PageServerLoad = async ({ locals: { supabase, getSession } })
 	if (!session) {
 		throw redirect(303, '/login');
 	}
-
-	let userID = session.user.id;
-	let email = session.user.email;
 };

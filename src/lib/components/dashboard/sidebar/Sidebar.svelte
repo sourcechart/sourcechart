@@ -12,6 +12,8 @@
 	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
 
+	export let data;
+
 	const handleClickInside = () => {
 		$activeSidebar = true;
 	};
@@ -58,10 +60,11 @@
 		<Tabs style="underline" contentClass="">
 			<TabItem open title="LowCode" on:click={clickBasicTab}>
 			</TabItem>
-			<TabItem title="Work Flows" on:click={clickClusterTab}>
-				<WorkFlowSidebar />
-			</TabItem>
-			
+			{#if data.session.user.email === 'tccoleman26@gmail.com'}
+				<TabItem title="Work Flows" on:click={clickClusterTab}>
+					<WorkFlowSidebar />
+				</TabItem>
+			{/if}
 		</Tabs>
 		-->
 	</SidebarWrapper>

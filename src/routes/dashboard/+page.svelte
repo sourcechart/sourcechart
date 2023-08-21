@@ -12,9 +12,11 @@
 	import { duckDBInstanceStore } from '$lib/io/Stores';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { setLocalStorage } from '$lib/io/Storage';
+
 	setLocalStorage('color-theme', 'dark');
 
 	export let data;
+
 	let syncWorker: Worker | undefined = undefined;
 	$: i = clickedChartIndex();
 
@@ -73,7 +75,7 @@
 		<NavBar />
 	</div>
 	<div class="fixed z-30 ml-1">
-		<Sidebar />
+		<Sidebar {data} />
 	</div>
 
 	<div class="relative">
