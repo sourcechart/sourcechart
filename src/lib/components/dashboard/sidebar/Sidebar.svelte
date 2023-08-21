@@ -60,9 +60,7 @@
 				<TabItem open title="LowCode" on:click={clickBasicTab}>
 					<LowCodeSidebarTab />
 				</TabItem>
-				<TabItem title="Work Flows" on:click={clickClusterTab}>
-					<WorkFlowSidebar />
-				</TabItem>
+				<TabItem title="Work Flows" on:click={clickClusterTab} />
 			</Tabs>
 		{:else}
 			<LowCodeSidebarTab />
