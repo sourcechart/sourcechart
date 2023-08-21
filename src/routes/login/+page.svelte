@@ -2,10 +2,6 @@
 	import { Auth } from '@supabase/auth-ui-svelte';
 	import { ThemeSupa } from '@supabase/auth-ui-shared';
 	export let data;
-
-	let userID = data.session?.user.id;
-	let email = data.session?.user.email;
-	let sessionID = data.session?.user.session_id;
 </script>
 
 <div class="relative flex min-h-screen flex-col justify-center overflow-hidden py-6 sm:py-12">
