@@ -55,17 +55,17 @@
 			</Label>
 			<DatasetDropDown />
 		</div>
-		<LowCodeSidebarTab />
-		<!--
-		<Tabs style="underline" contentClass="">
-			<TabItem open title="LowCode" on:click={clickBasicTab}>
-			</TabItem>
-			{#if data.session.user.email === 'tccoleman26@gmail.com'}
+		{#if data.session.user.email === 'tccoleman26@gmail.com'}
+			<Tabs style="underline" contentClass="">
+				<TabItem open title="LowCode" on:click={clickBasicTab}>
+					<LowCodeSidebarTab />
+				</TabItem>
 				<TabItem title="Work Flows" on:click={clickClusterTab}>
 					<WorkFlowSidebar />
 				</TabItem>
-			{/if}
-		</Tabs>
-		-->
+			</Tabs>
+		{:else}
+			<LowCodeSidebarTab />
+		{/if}
 	</SidebarWrapper>
 </div>
