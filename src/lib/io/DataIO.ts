@@ -130,7 +130,6 @@ class DataIO {
 		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
 		const dbscan = new DBSCAN(multidimensialArray, this.epsilon, this.minPoints, 'euclidean');
 		var clusters = dbscan.run().getAudienceSegments();
-		console.log(clusters);
 		return clusters;
 	}
 
