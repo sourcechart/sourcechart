@@ -5,6 +5,7 @@
 	import { inject } from '@vercel/analytics';
 	inject({ mode: dev ? 'development' : 'production' });
 
+	/*
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 
@@ -24,6 +25,7 @@
 
 		return () => data.subscription.unsubscribe();
 	});
+	*/
 </script>
 
 <slot />
