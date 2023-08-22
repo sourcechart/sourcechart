@@ -7,4 +7,6 @@ export const load: PageServerLoad = async ({ locals: { supabase, getSession } })
 	if (!session) {
 		throw redirect(303, '/login');
 	}
+
+	return { props: { session } };
 };
