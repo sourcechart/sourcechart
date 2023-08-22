@@ -1,5 +1,4 @@
 <script lang="ts">
-	//@ts-ignore
 	import Dropzone from 'flowbite-svelte/Dropzone.svelte';
 	import { generateID } from '$lib/io/GenerateID';
 	import { createFileStore, activeDropZone } from '$lib/io/Stores';

@@ -40,6 +40,7 @@
 	//let panStartX = 0;
 	//let panStartY = 0;
 
+	$: console.log($allCharts);
 	const tolerance: number = 5;
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
