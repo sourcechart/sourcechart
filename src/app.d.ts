@@ -1,5 +1,3 @@
-// src/app.d.ts
-
 import { SupabaseClient, Session } from '@supabase/supabase-js';
 
 declare global {
@@ -11,7 +9,5 @@ declare global {
 		interface PageData {
 			session: Session | null;
 		}
-		// interface Error {}
-		// interface Platform {}
 	}
 }

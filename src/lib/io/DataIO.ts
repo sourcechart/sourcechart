@@ -1,6 +1,5 @@
 import type { DuckDBClient } from './DuckDBClient';
 import { Query } from '$lib/io/QueryBuilder';
-import { UMAP } from 'umap-js';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
 
 class DataIO {
@@ -74,8 +73,8 @@ class DataIO {
 		if (this.chart.workflow === 'basic') {
 			return this.updateBasicChart(results, this.chart);
 		} else if (this.chart.workflow === 'cluster' && this.chart.chartType === 'density') {
-			let embedding = this.getDensityResults(results);
-			return this.updateDensityChart(embedding, this.chart);
+			//let embedding = this.getDensityResults(results);
+			//return this.updateDensityChart(embedding, this.chart);
 		} else if (
 			this.chart.workflow === 'cluster' &&
 			this.chart.chartType !== 'density' &&
@@ -92,13 +91,14 @@ class DataIO {
 			const dbscan = new DBSCAN(multidimensialArray, this.epsilon, this.minPoints, 'euclidean');
 			var clusters = dbscan.run().getClusters();
 			if (multidimensialArray.length > 1000) {
-				const umap = new UMAP({
-					nComponents: 2,
-					nEpochs: 1,
-					nNeighbors: 2
-				});
-				const embedding = umap.fit(clusters);
-				return embedding;
+				//	const umap = new UMAP({
+				//		nComponents: 2,
+				//		nEpochs: 1,
+				//			nNeighbors: 2
+				//		});
+				//		const embedding = umap.fit(clusters);
+				//	return embedding;
+				return;
 			} else {
 				return multidimensialArray;
 			}
