@@ -10,9 +10,19 @@
 	>
 		<Auth
 			supabaseClient={data.supabase}
-			showLinks={false}
-			providers={['google', 'slack']}
-			appearance={{ theme: ThemeSupa, style: { input: 'color: #fff' } }}
+			showLinks={true}
+			providers={['google']}
+			appearance={{
+				theme: ThemeSupa,
+				variables: {
+					default: {
+						colors: {
+							brand: 'red',
+							brandAccent: 'darkred'
+						}
+					}
+				}
+			}}
 		/>
 	</div>
 </div>

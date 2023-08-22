@@ -1,3 +1,4 @@
+<!-- 
 <script lang="ts">
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Canvas from '$lib/components/dashboard/canvas/Canvas.svelte';
@@ -12,6 +13,8 @@
 	import { duckDBInstanceStore } from '$lib/io/Stores';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 
+
+	export let data
 	let syncWorker: Worker | undefined = undefined;
 	$: i = clickedChartIndex();
 
@@ -85,3 +88,4 @@
 		</div>
 	</div>
 </div>
+-->

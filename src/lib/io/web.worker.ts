@@ -22,23 +22,9 @@ onmessage = async (e: MessageEvent) => {
 		case 'query':
 			getBinaryFromDatabase(messageData);
 			break;
-		case 'getDatasets':
-			getUniqueDatasets(messageData);
-			break;
 		default:
 			postMessage({ error: 'Invalid command' });
 	}
-};
-
-const getUniqueDatasets = (data: DataMessage) => {
-	sqlite3InitModule().then(async (sqlite3) => {
-		//@ts-ignore
-		const db = new sqlite3.opfs.OpfsDb(dbFileName, 'c');
-		const res = db.exec(`SELECT filename FROM ${tableName}`, {
-			returnValue: 'resultRows'
-		});
-		console.log(res);
-	});
 };
 
 const getBinaryFromDatabase = (data: DataMessage) => {

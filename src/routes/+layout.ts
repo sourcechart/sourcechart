@@ -1,5 +1,3 @@
-/*
-import { invalidate } from '$app/navigation'; //@ts-ignore
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
 import { createSupabaseLoadClient } from '@supabase/auth-helpers-sveltekit';
 
@@ -20,5 +18,3 @@ export const load = async ({ fetch, data, depends }) => {
 
 	return { supabase, session };
 };
-
-*/
