@@ -31,11 +31,6 @@
 			name: 'Regime List',
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/regime_list.csv',
 			description: 'List of All regimes'
-		},
-		{
-			name: 'Test Cluster',
-			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/test_cluster.csv',
-			description: 'Test Cluster'
 		}
 	];
 
