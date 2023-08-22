@@ -1,6 +1,6 @@
 <script lang="ts">
 	import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
-	import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
+	import FileUploadButton from './sidebar-components/FileUploadButton.svelte'; //@ts-ignore
 	import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
 	import TabItem from 'flowbite-svelte/TabItem.svelte';
 	//import Aggregator from './sidebar-components/Aggregator.svelte';
