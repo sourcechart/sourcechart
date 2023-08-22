@@ -54,7 +54,7 @@
 			</Label>
 			<DatasetDropDown />
 		</div>
-		{#if data.session.user.email == 'tccoleman26@gmail.com'}
+		{#if data.session.user.email == 'noreply@gmail.com'}
 			<Tabs style="underline" contentClass="">
 				<TabItem open title="LowCode" on:click={clickBasicTab}>
 					<LowCodeSidebarTab />
