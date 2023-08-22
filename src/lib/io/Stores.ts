@@ -1,7 +1,8 @@
-/**  State Management for Echarts Stores **/
+/**  State Management for eCharts Stores **/
 import { writable, derived } from 'svelte/store';
-import { Query } from '$lib/io/QueryBuilder';
-import type { DuckDBClient } from './DuckDBCLI';
+import { DataIO } from '$lib/io/DataIO';
+import { storeToLocalStorage, storeFromLocalStorage } from '$lib/io/Storage';
+import type { DuckDBClient } from './DuckDBClient';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
@@ -12,12 +13,17 @@ export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
-export const allCharts = writable<Chart[]>([]);
-export const fileUploadStore = writable<fileUpload[]>([]);
+export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
+export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
 export const polygons = writable<Polygon[]>([]);
 export const mouseType = writable<string | null>();
+export const workflowIDColumn = writable<string | null>();
+export const epsilonDistance = writable<number>();
+export const minimumPointsForCluster = writable<number>();
+export const duckDBInstanceStore = writable<DuckDBClient>();
+export const activeDropZone = writable<boolean>();
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -30,8 +36,6 @@ const createDropdownStore = () => {
 	};
 };
 
-export const dropdownStore = createDropdownStore();
-
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
 		const fObject = $fileUploadStore.find(
@@ -41,12 +45,12 @@ export const getFileFromStore = () =>
 	});
 
 export const getColumnsFromFile = () =>
-	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
-		const fileObject = $fileUploadStore.find(
-			(item: { filename: string }) => item.filename === $chosenFile
+	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
+		const options = $allCharts.find(
+			(item: { chartID: string }) => item.chartID === $mostRecentChartID
 		);
-		if (fileObject?.columns) {
-			return fileObject.columns;
+		if (options?.columns) {
+			return options.columns;
 		} else {
 			return [];
 		}
@@ -59,7 +63,6 @@ export const chartOptions = () =>
 		);
 		return {
 			datasetID: options?.datasetID,
-			database: options?.database,
 			filename: options?.filename,
 			xColumn: options?.xColumn,
 			yColumn: options?.yColumn,
@@ -68,90 +71,36 @@ export const chartOptions = () =>
 		};
 	});
 
-const getQueryObject = (chart: Chart): QueryObject => {
-	return {
-		chartID: chart?.chartID,
-		queries: {
-			select: {
-				xColumn: { column: chart?.xColumn },
-				yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
-				from: chart?.filename
-			},
-			groupbyColumns: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])]
-			/*on: { column1: null, column2: null, HOW: null }
-				filters: [
-					{ column: null, filter: null },
-					{ column: null, filter: null }
-				],
-				having: [{ column: null, filter: null }],
-			*/
-		}
-	};
-};
-
 export const getChartOptions = (id: string | undefined) => {
 	if (id) {
-		//@ts-ignore
-		return derived([allCharts], async ([$allCharts], set) => {
-			if ($allCharts.length > 0) {
-				const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
-
-				const getColumn = (column: string | null) => {
-					if (column) {
-						return column.toString();
-					} else {
-						return '';
+		return derived(
+			[allCharts, epsilonDistance, minimumPointsForCluster, duckDBInstanceStore], //@ts-ignore
+			async (
+				[$allCharts, $epsilonDistance, $minimumPointsForCluster, $duckDBInstanceStore],
+				set
+			) => {
+				if ($allCharts.length > 0) {
+					const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
+					if (chart) {
+						const db = $duckDBInstanceStore;
+						const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
+						const chartOption = await newChart.updateChart();
+						set(chartOption);
 					}
-				};
-
-				const formatData = (res: any) => {
-					const results = JSON.parse(
-						JSON.stringify(
-							res,
-							(key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
-						)
-					);
-					return results;
-				};
-
-				const getDataResults = async (db: DuckDBClient, query: string) => {
-					var results = await db.query(query);
-					return formatData(results);
-				};
-
-				const updateChart = (results: any[], chart: Chart) => {
-					var xColumn = getColumn(chart.xColumn);
-					var yColumn = getColumn(chart.yColumn);
-					var x = results.map((item) => item[xColumn]);
-					var y = results.map((item) => item[yColumn]);
-					chart.chartOptions.xAxis.data = x;
-					chart.chartOptions.series[0].data = y;
-					return chart;
-				};
-
-				if (chart) {
-					let queryObject = getQueryObject(chart);
-					const query = new Query(queryObject);
-					let queryString = query.build();
-					if (chart.database && chart.xColumn && chart.yColumn) {
-						const db: DuckDBClient = chart.database;
-						let results = await getDataResults(db, queryString);
-						let options = updateChart(results, chart);
-						set(options); // Update the derived store with the updated chart options
-					}
+				} else {
+					set(undefined);
 				}
-			} else {
-				set(undefined); // Update the derived store with undefined if there are no charts
 			}
-		});
+		);
 	}
 };
-export const fileDropdown = () => {
-	return derived(fileUploadStore, ($fileUploadStore) => {
-		const files = $fileUploadStore.map((item: { filename: string }) => item.filename);
-		return files;
+
+export const fileDropdown = () =>
+	derived(fileUploadStore, ($fileUploadStore) => {
+		const filenames = $fileUploadStore.map((chart) => chart.filename);
+		const uniqueFilenames = [...new Set(filenames)];
+		return uniqueFilenames;
 	});
-};
 
 export const clickedChart = () =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
@@ -203,4 +152,19 @@ export const touchStates = () => {
 			return touchState;
 		}
 	);
+};
+
+storeToLocalStorage(fileUploadStore, 'fileUploadStore');
+storeToLocalStorage(allCharts, 'allCharts');
+
+export const dropdownStore = createDropdownStore();
+export const createFileStore = (filename: string, fileSize: number, dataID: string) => {
+	var tableColumnsSize = {
+		filename: filename,
+		datasetID: dataID,
+		size: fileSize,
+		fileextension: filename.split('.').pop()
+	};
+
+	fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 };

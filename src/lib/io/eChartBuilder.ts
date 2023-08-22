@@ -1,10 +1,4 @@
-export enum ChartOptions {
-	bar = 'bar',
-	line = 'line',
-	scatter = 'scatter',
-	area = 'area',
-	pie = 'pie'
-}
+import { ChartOptions } from './ChartOptions';
 
 export class EChartBuilder {
 	protected chartOption?: string;

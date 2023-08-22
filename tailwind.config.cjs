@@ -5,26 +5,15 @@ const config = {
 		'./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}'
 	],
 
-	theme: {
-		gradientColorStops: (theme) => ({
-			...theme('colors'),
-			primary: '#3490dc',
-			secondary: '#ffed4a',
-			danger: '#e3342f',
-			pink: '#d53369',
-			yellow: '#daae51'
-		}),
-		extend: { width: {
-        'full': '100%',
-      },
-      height: {
-        'full': '100%',
-      },
-    },
-	},
-
 	plugins: [require('flowbite/plugin')],
 	darkMode: 'class',
+	theme: {
+		extend: {
+			backgroundColor: {
+				body: '#1A202C' // dark gray color
+			}
+		}
+	}
 };
 
 module.exports = config;

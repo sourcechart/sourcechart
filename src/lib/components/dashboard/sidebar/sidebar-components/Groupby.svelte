@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { Dropdown, DropdownItem, Button } from 'flowbite-svelte';
+	//@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
+	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
 
 	import {
 		getColumnsFromFile,
@@ -11,6 +14,8 @@
 	} from '$lib/io/Stores';
 
 	let tags: Array<string> = [];
+
+	export let ButtonName: string;
 
 	$: columns = getColumnsFromFile();
 	$: clickChart = clickedChart();
@@ -46,7 +51,7 @@
 	};
 </script>
 
-<Button color="alternative" pill={false} outline={false}>Group By Column</Button>
+<Button pill={false} outline color="light">{ButtonName}</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => addColumnToGroupBy(column)}>{column}</DropdownItem>

@@ -1,4 +1,4 @@
-import DarkMode from "./darkmode/DarkMode.svelte";;
-import SidebarWrapper from "./sidebar/SidebarWrapper.svelte";
+import DarkMode from './darkmode/DarkMode.svelte';
+import SidebarWrapper from '../dashboard/sidebar/SidebarWrapper.svelte';
 
-export {DarkMode, SidebarWrapper}
+export { DarkMode, SidebarWrapper };

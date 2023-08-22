@@ -1,51 +1,70 @@
 <script lang="ts">
-	import {
-		DatasetDropDown,
-		AxisDropDrown,
-		Aggregator,
-		Groupby,
-		FileUpload,
-		ChartDropdown,
-		Tags
-	} from './sidebar-components';
-	import { SidebarWrapper } from '$lib/components/ui';
+	import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
+	import FileUploadButton from './sidebar-components/FileUploadButton.svelte'; //@ts-ignore
+	import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
+	import TabItem from 'flowbite-svelte/TabItem.svelte'; //@ts-ignore
+	import { SidebarWrapper } from '$lib/components/ui'; //@ts-ignore
+	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
-	import { activeSidebar } from '$lib/io/Stores';
+	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
+	import Label from 'flowbite-svelte/Label.svelte';
+	//import Aggregator from './sidebar-components/Aggregator.svelte';
+	//import WorkFlowSidebar from './WorkFlowSidebar.svelte';
+
+	export let data;
 
 	const handleClickInside = () => {
 		$activeSidebar = true;
 	};
+
+	function clickClusterTab() {
+		allCharts.update((charts) => {
+			charts.forEach((chart) => {
+				if (chart.chartID === $mostRecentChartID) {
+					chart.workflow = 'cluster';
+				}
+			});
+			return charts;
+		});
+	}
+
+	function clickBasicTab() {
+		allCharts.update((charts) => {
+			charts.forEach((chart) => {
+				if (chart.chartID === $mostRecentChartID) {
+					chart.workflow = 'basic';
+				}
+			});
+			return charts;
+		});
+	}
 </script>
 
 <div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
-		<div class="space-y-3">
-			<div class="flex flex-col space-y-1">
-				<p class="text-xs">Upload Files</p>
-				<FileUpload />
-			</div>
-			<div class="flex flex-col space-y-1">
-				<p class="text-xs">Datasets</p>
-				<DatasetDropDown />
-			</div>
-			<div class="flex flex-col space-y-1">
-				<p class="text-xs">Choose Chart</p>
-				<ChartDropdown />
-			</div>
-			<div class="flex flex-col space-y-1">
-				<p class="text-xs">Axis</p>
-				<AxisDropDrown axis={'X'} />
-				<AxisDropDrown axis={'Y'} />
-			</div>
-			<div class="flex flex-col space-y-1">
-				<p class="text-xs">Aggregator</p>
-				<Aggregator />
-			</div>
-			<div class="flex flex-col space-y-1">
-				<p class="text-xs">Groupby</p>
-				<Groupby />
-				<Tags />
-			</div>
+		<div class="flex flex-col space-y-1 mt-2 mb-2">
+			<Label class="space-y-2 mb-1">
+				<span>Upload Files</span>
+			</Label>
+			<FileUploadButton />
 		</div>
+		<div class="flex flex-col space-y-1">
+			<Label class="space-y-2 mb-1">
+				<span>Choose Dataset</span>
+			</Label>
+			<DatasetDropDown />
+		</div>
+		{#if data.session.user.email == 'noreply@gmail.com'}
+			<Tabs style="underline" contentClass="">
+				<TabItem open title="LowCode" on:click={clickBasicTab}>
+					<LowCodeSidebarTab />
+				</TabItem>
+				<TabItem title="Work Flows" on:click={clickClusterTab}>
+					<!--	<WorkflowSidebar /> -->
+				</TabItem>
+			</Tabs>
+		{:else}
+			<LowCodeSidebarTab />
+		{/if}
 	</SidebarWrapper>
 </div>

@@ -1,44 +1,56 @@
 <script lang="ts">
-	import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
-	import { ChartOptions } from '$lib/io/eChartBuilder';
+	//@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
+	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
+
+	import { ChartOptions } from '$lib/io/ChartOptions';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
-	import {
+
+	/*import {
 		AreaPlotButton,
 		BarPlotButton,
 		LinePlotButton,
 		ScatterPlotButton,
 		PiePlotButton
 	} from './chart-components';
+	*/
+	type SideBarVersion = 'WorkFlow' | 'LowCode';
+	export let sideBarVersion: SideBarVersion;
 
 	let chosenPlot: string = 'Chart Type';
 
-	let rectangleCharts = [
+	let rectangleCharts: any[] = [
 		{
-			icon: '',
-			chartType: ChartOptions.bar,
-			component: BarPlotButton
+			//	icon: '',
+			chartType: ChartOptions.bar
+			//	component: BarPlotButton
 		},
 		{
-			icon: '',
-			chartType: ChartOptions.scatter,
-			component: ScatterPlotButton
+			//	icon: '',
+			chartType: ChartOptions.scatter
+			//	component: ScatterPlotButton
 		},
 		{
-			icon: '',
-			chartType: ChartOptions.pie,
-			component: PiePlotButton
+			//	icon: '',
+			chartType: ChartOptions.pie
+			//	component: PiePlotButton
 		},
 		{
-			icon: '',
-			chartType: ChartOptions.line,
-			component: LinePlotButton
+			//	icon: '',
+			chartType: ChartOptions.line
+			//		component: LinePlotButton
 		},
 		{
-			icon: '',
-			chartType: ChartOptions.area,
-			component: AreaPlotButton
+			//D	icon: '',
+			chartType: ChartOptions.area
+			//D	component: AreaPlotButton
 		}
 	];
+
+	if (sideBarVersion === 'WorkFlow') {
+		rectangleCharts = [...rectangleCharts, { chartType: ChartOptions.density }];
+	}
 
 	$: i = clickedChartIndex();
 
@@ -52,15 +64,24 @@
 	const chooseChart = (plot: string) => {
 		chosenPlot = plot;
 		allCharts.update((charts) => {
-			charts[$i].chartOptions.series[0].type = plot;
+			charts.forEach((chart) => {
+				chart.chartType = plot;
+				if (plot === 'area') {
+					chart.chartOptions.series[0].type = 'line';
+					chart.chartOptions.series[0].areaStyle = {};
+				} else {
+					chart.chartOptions.series[0].type = plot;
+				}
+			});
+
 			return charts;
 		});
 	};
 </script>
 
-<Button color="alternative" pill={false} outline={false}>{chosenPlot}</Button>
+<Button pill={false} outline color="light">{chosenPlot}</Button>
 <Dropdown>
-	{#each rectangleCharts as { icon, chartType, component }, i (i)}
+	{#each rectangleCharts as { chartType }, i (i)}
 		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>
 	{/each}
 </Dropdown>

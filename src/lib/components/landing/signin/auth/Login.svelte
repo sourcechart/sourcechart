@@ -2,11 +2,6 @@
 	import GoogleSignInButton from './GoogleSignInButton.svelte';
 
 	let count = 0;
-
-	function updateCount() {
-		//This is a hack to see if the user has already attempted to log in. Because I am too tired to deal with urls.
-		count += 1;
-	}
 	let email: string = '';
 	let password: string = '';
 
@@ -77,8 +72,7 @@
 			<button
 				type="submit"
 				class="mt-4 w-full py-2 px-4 text-black rounded-md login-with-button"
-				disabled={!emailValid || !passwordValid}
-				on:change={updateCount}>Log In</button
+				disabled={!emailValid || !passwordValid}>Log In</button
 			>
 		</div>
 	</div>
