@@ -20,17 +20,17 @@
 		{
 			name: 'ElectionList',
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
-			description: 'List of All Elections since 1950'
+			description: 'List of all elections since 1950'
 		},
 		{
 			name: 'Leader List',
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
-			description: 'List of All Leaders Since 1950'
+			description: 'List of all leaders since 1950'
 		},
 		{
 			name: 'Regime List',
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/regime_list.csv',
-			description: 'List of All regimes'
+			description: 'List of all regimes since 1950'
 		}
 	];
 
