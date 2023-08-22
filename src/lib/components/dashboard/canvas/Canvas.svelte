@@ -36,13 +36,12 @@
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
 
-	let isPanning = false;
-	let panStartX = 0;
-	let panStartY = 0;
+	//let isPanning = false;
+	//let panStartX = 0;
+	//let panStartY = 0;
 
 	const tolerance: number = 5;
 
-	//Reactive variables
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: TOUCHSTATE = touchStates();
 	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
@@ -63,23 +62,6 @@
 		offsetY = Math.abs(rect.top - height);
 	};
 
-	const handlePanMove = (x: number, y: number) => {
-		if (!isPanning) return;
-
-		const deltaX = x - panStartX;
-		const deltaY = y - panStartY;
-		panStartX = x;
-		panStartY = y;
-
-		scrollX += deltaX;
-		scrollY += deltaY;
-		updateOffset();
-	};
-
-	const handlePanEnd = () => {
-		isPanning = false;
-	};
-
 	function controlSidebar(touchstate: string) {
 		if (touchstate === 'isTouching') {
 			activeSidebar.set(false);
@@ -97,7 +79,7 @@
 	 *
 	 * @param e MouseEvent
 	 */
-	const handleMouseDown = (e: MouseEvent): void => {
+	const handleMouseDown = (e): void => {
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 		startPosition = { x, y };
@@ -123,7 +105,7 @@
 	 *
 	 * @param e MouseEvent
 	 */
-	const handleMouseUp = (e: MouseEvent) => {
+	const handleMouseUp = (e) => {
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 
@@ -151,7 +133,7 @@
 	 *
 	 * @param e MouseEvent
 	 */
-	const handleMouseMove = (e: MouseEvent) => {
+	const handleMouseMove = (e) => {
 		if ($TOUCHSTATE === 'isHovering') {
 			handleMouseMoveUp(e.clientX, e.clientY);
 		} else {
