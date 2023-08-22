@@ -2,6 +2,8 @@
 	import { Auth } from '@supabase/auth-ui-svelte';
 	import { ThemeSupa } from '@supabase/auth-ui-shared';
 	export let data;
+
+	console.log(data);
 </script>
 
 <div class="relative flex min-h-screen flex-col justify-center overflow-hidden py-6 sm:py-12">

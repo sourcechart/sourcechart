@@ -16,7 +16,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	 * a little helper that is written for convenience so that instead
 	 * of calling `const { data: { session } } = await supabase.auth.getSession()`
 	 * you just call this `await getSession()`
-	 *
 	 */
 	event.locals.getSession = async () => {
 		const {
@@ -34,22 +33,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	if (event.url.pathname.startsWith('/dashboard') && event.request.method === 'GET') {
-		const session = await event.locals.getSession();
-		if (!session) {
-			// the user is not signed in
-			throw error(303, '/login');
-		}
-	}
-
-	if (event.url.pathname.startsWith('/dashboard') && event.request.method === 'POST') {
-		const session = await event.locals.getSession();
-		if (!session) {
-			// the user is not signed in
-			throw error(303, '/login');
-		}
-	}
-
-	if (event.url.pathname.startsWith('/dashboard') && event.request.method === 'FETCH') {
 		const session = await event.locals.getSession();
 		if (!session) {
 			// the user is not signed in
