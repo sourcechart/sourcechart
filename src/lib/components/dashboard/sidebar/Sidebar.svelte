@@ -14,6 +14,7 @@
 
 	export let data;
 
+	console.log(data);
 	const handleClickInside = () => {
 		$activeSidebar = true;
 	};
@@ -55,17 +56,16 @@
 			</Label>
 			<DatasetDropDown />
 		</div>
-		{#if data.session.user.email === 'tccoleman26@gmail.com'}
+		<!-- {#if data.session.user.email === 'tccoleman26@gmail.com'}
 			<Tabs style="underline" contentClass="">
 				<TabItem open title="LowCode" on:click={clickBasicTab}>
 					<LowCodeSidebarTab />
 				</TabItem>
 				<TabItem title="Work Flows" on:click={clickClusterTab}>
-					<!-- <WorkflowSidebar/>-->
+				<WorkflowSidebar/>
 				</TabItem>
 			</Tabs>
-		{:else}
-			<LowCodeSidebarTab />
-		{/if}
+		{:else} -->
+		<LowCodeSidebarTab />
 	</SidebarWrapper>
 </div>
