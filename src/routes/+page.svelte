@@ -22,7 +22,7 @@
 </script>
 
 <title>SourceChart</title>
-<nav class="navbar">
+<nav class="navbar bg-gray-900">
 	<div class="logo">
 		<a href="/" class="logo-link">
 			<img src="logo1.png" alt="Logo" class="logo-img" />
@@ -52,8 +52,8 @@
 	{/each}
 </section>
 
-<footer class="footer">
-	<div class="legal-section">
+<footer class="footer bg-gray-900">
+	<div class="legal-section text-gray-100">
 		<a href="/privacy-policy">Privacy Policy</a>
 		<a href="/terms-and-conditions">Terms and Conditions</a>
 		<a href="/disclaimer"> Disclaimer</a>
@@ -159,7 +159,6 @@
 	/* FOOTER */
 	.footer {
 		padding: 2rem 0;
-		background-color: #f3f4f6;
 	}
 	.legal-section {
 		display: flex;
