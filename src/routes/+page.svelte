@@ -135,13 +135,13 @@
 	}
 	.hero-title {
 		color: white;
-		font-size: 2.5rem;
+		font-size: 3rem;
 		margin-bottom: 1rem;
 		font-weight: bold;
 	}
 	.hero-description {
 		color: white;
-		font-size: 1.25rem;
+		font-size: 1.5rem;
 		margin-bottom: 2rem;
 	}
 	.hero-button {
