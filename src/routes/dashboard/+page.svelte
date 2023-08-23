@@ -69,7 +69,7 @@
 	onMount(loadPreviousState);
 </script>
 
-<div class="dark:bg-gray-900 min-h-screen overflow-hidden">
+<div class="dark:bg-gray-900 overflow-hidden">
 	<div class="flex justify-center items-center mt-3 z-30">
 		<DarkMode />
 		<NavBar />
