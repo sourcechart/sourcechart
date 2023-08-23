@@ -1,8 +1,8 @@
 <body class="bg-gray-100">
 	<!-- Hero Section -->
 	<section class="rounded-md bg-slate-800 py-20 text-white">
-		<img src="/img/logo.svg" class="h-6 px-16" alt="Tailwind Play" />
 		<div class="container mx-auto px-4">
+			<img src="/img/logo.svg" class="h-6" alt="Tailwind Play" />
 			<h1 class="mb-4 text-5xl font-bold">Large Insights without the Cloud</h1>
 			<p class="mb-8 text-xl">
 				SuperCharge your insights with cloud native performance in your browser
