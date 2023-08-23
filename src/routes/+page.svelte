@@ -29,16 +29,18 @@
 		</a>
 	</div>
 	<div class="navbar-links">
-		<button on:click={enterFree} class="try-now-button"> Try Now </button>
+		<button on:click={enterFree} class="try-now-button">Try Now</button>
 	</div>
 </nav>
 
 <section class="hero-section">
+	<video autoplay muted loop class="hero-video">
+		<source src="/demoMP4.mp4" type="video/mp4" />
+		Your browser does not support the video tag.
+	</video>
 	<div class="hero-content">
-		<h1 class="hero-title text-black">Large Data Visualizations without the Cloud</h1>
-		<p class="hero-description text-black">
-			Revolutionize your data interactions with SourceChart.io.
-		</p>
+		<h1 class="hero-title">Large Data Visualizations without the Cloud</h1>
+		<p class="hero-description">Revolutionize your data interactions with SourceChart.io.</p>
 		<button on:click={enterFree} class="hero-button">Try Now</button>
 	</div>
 </section>
@@ -53,7 +55,7 @@
 </section>
 
 <footer class="footer bg-gray-900">
-	<div class="legal-section text-gray-100">
+	<div class="legal-section">
 		<a href="/privacy-policy">Privacy Policy</a>
 		<a href="/terms-and-conditions">Terms and Conditions</a>
 		<a href="/disclaimer"> Disclaimer</a>
@@ -67,19 +69,18 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 1rem 3rem;
-		box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+		color: white;
 	}
 	.logo-link {
 		display: flex;
 		align-items: center;
 		text-decoration: none;
-		color: black;
+		color: white;
 	}
 	.logo-img {
 		height: 40px;
 		margin-right: 1rem;
 	}
-
 	.try-now-button {
 		padding: 0.5rem 2rem;
 		background-color: #f15b5d;
@@ -96,21 +97,32 @@
 
 	/* HERO SECTION */
 	.hero-section {
-		background: url('path/to/your/background-image.jpg') center/cover no-repeat;
+		position: relative;
 		padding: 6rem 3rem;
 		color: white;
 	}
+	.hero-video {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 80%;
+		object-fit: cover;
+		z-index: -1;
+	}
 	.hero-content {
+		position: relative;
+		z-index: 10;
 		max-width: 800px;
 	}
 	.hero-title {
-		color: black;
+		color: white;
 		font-size: 2.5rem;
 		margin-bottom: 1rem;
 		font-weight: bold;
 	}
 	.hero-description {
-		color: rgb(179, 179, 179);
+		color: white;
 		font-size: 1.25rem;
 		margin-bottom: 2rem;
 	}
@@ -159,6 +171,7 @@
 	/* FOOTER */
 	.footer {
 		padding: 2rem 0;
+		color: white;
 	}
 	.legal-section {
 		display: flex;
@@ -167,7 +180,7 @@
 	}
 	.legal-section a {
 		text-decoration: none;
-		color: #555;
+		color: white;
 		transition: color 0.3s;
 	}
 	.legal-section a:hover {
