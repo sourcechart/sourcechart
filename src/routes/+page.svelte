@@ -35,8 +35,10 @@
 
 <section class="hero-section">
 	<div class="hero-content">
-		<h1 class="hero-title">Large Data Visualizations without the Cloud</h1>
-		<p class="hero-description">Revolutionize your data interactions with SourceChart.io.</p>
+		<h1 class="hero-title text-black">Large Data Visualizations without the Cloud</h1>
+		<p class="hero-description text-black">
+			Revolutionize your data interactions with SourceChart.io.
+		</p>
 		<button on:click={enterFree} class="hero-button">Try Now</button>
 	</div>
 </section>
@@ -77,10 +79,7 @@
 		height: 40px;
 		margin-right: 1rem;
 	}
-	.site-title {
-		font-size: 1.6rem;
-		font-weight: bold;
-	}
+
 	.try-now-button {
 		padding: 0.5rem 2rem;
 		background-color: #f15b5d;
@@ -105,11 +104,13 @@
 		max-width: 800px;
 	}
 	.hero-title {
+		color: black;
 		font-size: 2.5rem;
 		margin-bottom: 1rem;
 		font-weight: bold;
 	}
 	.hero-description {
+		color: rgb(179, 179, 179);
 		font-size: 1.25rem;
 		margin-bottom: 2rem;
 	}
