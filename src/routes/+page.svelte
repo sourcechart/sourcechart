@@ -8,15 +8,18 @@
 	let features = [
 		{
 			title: 'Advanced Data Visualizations',
-			description: 'Interactive visualizations for faster and more effective decision-making.'
+			description:
+				'Our platform provides an interactive, visualizations of your complex data, leading to faster and more effective decision-making.'
 		},
 		{
 			title: 'Robust Analytics',
-			description: 'Deep insights into your business trends and patterns.'
+			description:
+				'We utilize advanced data analytics techniques to give you a deeper understanding of your business trends and patterns.'
 		},
 		{
 			title: 'Security and Compliance',
-			description: 'Top-tier data security, keeping your information confidential.'
+			description:
+				'SourceChart.io prioritizes data security. Your data never hits our servers to ensure your data remains secure and confidential.'
 		}
 	];
 </script>
@@ -63,7 +66,6 @@
 </footer>
 
 <style>
-	/* NAVBAR */
 	.navbar {
 		display: flex;
 		align-items: center;
@@ -71,16 +73,25 @@
 		padding: 1rem 3rem;
 		color: white;
 	}
+
+	.logo,
+	.navbar-links {
+		display: flex;
+		align-items: center; /* Align items vertically in the center */
+	}
+
 	.logo-link {
 		display: flex;
 		align-items: center;
 		text-decoration: none;
 		color: white;
 	}
+
 	.logo-img {
 		height: 40px;
 		margin-right: 1rem;
 	}
+
 	.try-now-button {
 		padding: 0.5rem 2rem;
 		background-color: #f15b5d;
@@ -91,6 +102,11 @@
 		cursor: pointer;
 		transition: background-color 0.3s;
 	}
+
+	.try-now-button:hover {
+		background-color: #d94b4c;
+	}
+
 	.try-now-button:hover {
 		background-color: #d94b4c;
 	}
@@ -109,7 +125,9 @@
 		height: 80%;
 		object-fit: cover;
 		z-index: -1;
+		opacity: 0.9; /* Added transparency */
 	}
+
 	.hero-content {
 		position: relative;
 		z-index: 10;
