@@ -1,11 +1,14 @@
 <body class="bg-gray-100">
 	<!-- Hero Section -->
 	<section class="rounded-md bg-slate-800 py-20 text-white">
+		<img src="/img/logo.svg" class="h-6 px-16" alt="Tailwind Play" />
 		<div class="container mx-auto px-4">
-			<h1 class="mb-4 text-5xl font-bold">Welcome to Our Website!</h1>
-			<p class="mb-8 text-xl">Large Insights without the Cloud</p>
+			<h1 class="mb-4 text-5xl font-bold">Large Insights without the Cloud</h1>
+			<p class="mb-8 text-xl">
+				SuperCharge your insights with cloud native performance in your browser
+			</p>
 			<a
-				href="/login"
+				href="#"
 				class="rounded-full bg-red-600 px-6 py-2 text-xl font-bold transition duration-200 hover:bg-red-700"
 				>Learn More</a
 			>
@@ -57,7 +60,7 @@
 		<div class="container mx-auto px-4 text-center">
 			<h2 class="mb-8 text-4xl font-bold">Ready to Get Started?</h2>
 			<a
-				href="/login"
+				href="#"
 				class="rounded-full bg-red-600 px-6 py-2 text-xl font-bold transition duration-200 hover:bg-red-700"
 				>Join Us Now</a
 			>
