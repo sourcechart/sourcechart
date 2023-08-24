@@ -26,56 +26,197 @@
 </script>
 
 <title>SourceChart</title>
-
 <nav class="bg-gray-900 p-4 flex justify-between items-center">
 	<a href="/" class="flex items-center text-white space-x-2">
 		<img src="logo1.png" alt="Logo" class="h-10" />
 	</a>
-	<button
-		on:click={enterFree}
-		class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 font-bold"
-	>
-		Try Now
-	</button>
+	<button on:click={enterFree} class="hero-button"> Try Now </button>
 </nav>
 
-<section class="py-16 text-black px-4 mt-20 mb-20">
-	<h1 class="text-3xl mb-4 mt-8 font-bold py-10">Large Data Visualizations without the Cloud</h1>
-	<p class="text-xl mb-8 max-w-xl mx-auto">
-		Revolutionize your data interactions with SourceChart.io.
-	</p>
-	<button
-		on:click={enterFree}
-		class="bg-red-600 text-white px-6 py-3 rounded hover:bg-red-500 font-bold"
-	>
-		Try Now
-	</button>
-</section>
-<section class="px-4 mt-20">
-	<h2 class="text-xl mb-4 font-bold">Use SourceChart directly inside your browser</h2>
-	<DeviceMockup device="laptop">
-		<video autoplay muted loop class="dark:hidden h-[156px] md:h-[278px] w-full rounded-xl">
-			<source src="/demoMP4.mp4" type="video/mp4" />
-			Your browser does not support the video tag.
-		</video>
-	</DeviceMockup>
+<section class="hero-section">
+	<img
+		src="3d-techno-purple-background-with-flowing-dots.png"
+		alt="Techno Purple Background"
+		class="hero-background"
+	/>
+	<div class="hero-content">
+		<h1 class="hero-title text-6xl">Large Data Visualizations without the Cloud</h1>
+		<p class="hero-description">Revolutionize your data interactions with SourceChart.io.</p>
+		<button on:click={enterFree} class="hero-button">Try Now</button>
+	</div>
 </section>
 
-<section class="py-12 space-y-8">
-	{#each features as feature}
-		<div class="p-8 bg-white shadow-md rounded transform hover:scale-105 transition-transform mx-4">
-			<h2 class="text-xl mb-4 font-bold">{feature.title}</h2>
-			<p class="text-gray-600">{feature.description}</p>
-		</div>
-	{/each}
+<section class="features-section">
+	<h1 class="bg-slate-900 text-4xl">Feature Selection</h1>
+	<div class="features-grid">
+		<!-- This div will hold the cards -->
+		{#each features as feature}
+			<div class="feature-card">
+				<h2 class="feature-title">{feature.title}</h2>
+				<p class="feature-description">{feature.description}</p>
+			</div>
+		{/each}
+	</div>
 </section>
 
-<footer class="bg-gray-900 py-8 text-white">
-	<div class="flex justify-center space-x-8">
-		<a href="/privacy-policy" class="hover:text-red-600 transition-colors">Privacy Policy</a>
-		<a href="/terms-and-conditions" class="hover:text-red-600 transition-colors"
-			>Terms and Conditions</a
-		>
-		<a href="/disclaimer" class="hover:text-red-600 transition-colors">Disclaimer</a>
+<section class="features-section">
+	<h1 class="bg-slate-900 text-4xl mb-4">Usage</h1>
+	<div class="features-grid">
+		<DeviceMockup device="laptop">
+			<video autoplay loop muted playsinline class="h-[156px] md:h-[278px] w-full rounded-xl">
+				<source src="demoMP4.mp4" type="video/mp4" />
+				Your browser does not support the video tag.
+			</video>
+		</DeviceMockup>
+	</div>
+</section>
+
+<footer class="footer bg-gray-900">
+	<div class="legal-section">
+		<a href="/privacy-policy">Privacy Policy</a>
+		<a href="/terms-and-conditions">Terms and Conditions</a>
+		<a href="/disclaimer"> Disclaimer</a>
 	</div>
 </footer>
+
+<style>
+	/* HERO SECTION */
+	.hero-section {
+		position: relative;
+		display: flex; /* Keeps the hero section as a flex container */
+		justify-content: flex-start; /* Aligns content to the left horizontally */
+		align-items: center; /* Centers content vertically */
+		padding: 3rem; /* Adjusts padding as needed */
+		color: white;
+		overflow: hidden; /* Ensure nothing spills outside */
+	}
+
+	.hero-background {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 80%;
+		object-fit: cover;
+		z-index: -1;
+		opacity: 0.9; /* Adjust opacity as needed */
+	}
+
+	.hero-content {
+		position: relative;
+		z-index: 10;
+		text-align: center; /* Center the content of hero-content */
+		padding: 1rem; /* Additional padding to ensure content doesn't touch the edges */
+		max-width: 90%; /* Makes sure the content doesn't span the full width of the hero section, adjust if necessary */
+	}
+	.hero-description {
+		color: white;
+		font-size: 1.5vw; /* Adjusts the font size based on the viewport width */
+		margin-bottom: 2rem;
+		max-font-size: 1.5rem; /* Set a maximum size if necessary */
+	}
+	.hero-description {
+		color: white;
+		font-size: 1.5rem;
+		margin-bottom: 2rem;
+	}
+	.hero-button {
+		padding: 0.75rem 2rem;
+		background-color: #f25c5e;
+		color: white;
+		border: none;
+		border-radius: 0.25rem;
+		font-weight: bold;
+		cursor: pointer;
+		transition: background-color 0.3s;
+	}
+	.hero-button:hover {
+		background-color: #d94b4c;
+	}
+
+	/* FEATURES SECTION */
+	.features-section {
+		display: flex;
+		justify-content: space-around;
+		flex-wrap: wrap;
+		padding: 3rem 0;
+	}
+	.feature-card {
+		flex: 1 1 250px;
+		background-color: white;
+		border-radius: 0.25rem;
+		padding: 2rem;
+		margin: 1rem;
+		box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+		transition: transform 0.3s;
+	}
+	.feature-card:hover {
+		transform: translateY(-10px);
+	}
+	.feature-title {
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+		font-weight: bold;
+	}
+	.feature-description {
+		color: #555;
+	}
+
+	/* FOOTER */
+	.footer {
+		padding: 2rem 0;
+		color: white;
+	}
+	.legal-section {
+		display: flex;
+		justify-content: center;
+		gap: 20px;
+	}
+	.legal-section a {
+		text-decoration: none;
+		color: white;
+		transition: color 0.3s;
+	}
+	.legal-section a:hover {
+		color: #f15b5d;
+	}
+
+	/* FEATURES SECTION */
+	.features-section {
+		display: flex;
+		justify-content: space-around;
+		flex-wrap: wrap;
+		padding: 2rem 0; /* adjusted top padding from 3rem to 2rem */
+	}
+
+	.features-grid {
+		display: flex;
+		justify-content: space-around;
+		flex-wrap: wrap;
+		width: 100%; /* Utilize full available width */
+	}
+
+	.feature-card {
+		flex: 1 1 250px;
+		background-color: white;
+		border-radius: 0.25rem;
+		padding: 2rem;
+		margin: 1rem;
+		box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+		transition: transform 0.3s;
+	}
+
+	.feature-card:hover {
+		transform: translateY(-10px);
+	}
+
+	@media (max-width: 768px) {
+		.hero-title {
+			font-size: 4vw; /* Increase font size on smaller screens */
+		}
+
+		.hero-description {
+			font-size: 2.5vw; /* Increase font size on smaller screens */
+		}
+	}
+</style>
