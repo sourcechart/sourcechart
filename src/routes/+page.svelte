@@ -102,7 +102,6 @@
 	.hero-section {
 		position: relative;
 		display: flex; /* Keeps the hero section as a flex container */
-		justify-content: flex-start; /* Aligns content to the left horizontally */
 		align-items: center; /* Centers content vertically */
 		padding: 3rem; /* Adjusts padding as needed */
 		color: white;
