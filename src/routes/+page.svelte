@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import DeviceMockup from 'flowbite-svelte/DeviceMockup.svelte';
 
 	const enterFree = () => {
 		goto('/login');
@@ -65,6 +64,21 @@
 </section>
 
 <section class="features-section">
+	<h1 class="bg-slate-900 text-4xl">Usage</h1>
+	<div class="features-grid">
+		<div class="video-card">
+			<div class="video-container">
+				<!-- renamed class for clarity -->
+				<video autoplay loop muted playsinline class="video-style rounded-xl">
+					<source src="demoMP4.mp4" type="video/mp4" />
+					Your browser does not support the video tag.
+				</video>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="features-section">
 	<h1 class="bg-slate-900 text-4xl">Feature Selection</h1>
 	<div class="features-grid">
 		<!-- This div will hold the cards -->
@@ -74,18 +88,6 @@
 				<p class="feature-description">{feature.description}</p>
 			</div>
 		{/each}
-	</div>
-</section>
-
-<section class="usage-section mb-4">
-	<h1 class="text-4xl mb-4 usage-title">Usage</h1>
-	<div class="usage-card">
-		<DeviceMockup device="desktop">
-			<video autoplay loop muted playsinline class="h-[156px] md:h-[278px] w-full rounded-xl">
-				<source src="demoMP4.mp4" type="video/mp4" />
-				Your browser does not support the video tag.
-			</video>
-		</DeviceMockup>
 	</div>
 </section>
 
@@ -130,7 +132,6 @@
 		color: white;
 		font-size: 1.5vw; /* Adjusts the font size based on the viewport width */
 		margin-bottom: 2rem;
-		max-font-size: 1.5rem; /* Set a maximum size if necessary */
 	}
 	.hero-description {
 		color: white;
@@ -167,6 +168,19 @@
 		margin: 1rem;
 		box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 		transition: transform 0.3s;
+	}
+
+	.video-card {
+		width: 100%; /* Adjust this to fit your desired video card width */
+		background-color: white;
+		border-radius: 0.25rem;
+		padding: 2rem;
+		margin: 1rem;
+		box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+		transition: transform 0.3s;
+		display: flex; /* Makes the card a flex container */
+		justify-content: center; /* Center children horizontally */
+		align-items: center; /* Center children vertically */
 	}
 	.feature-card:hover {
 		transform: translateY(-10px);
@@ -238,18 +252,9 @@
 		}
 	}
 
-	.usage-section {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding: 3rem 2rem; /* Added some horizontal padding */
-	}
-	.usage-title {
-		text-align: center; /* Center the title text */
-		margin-bottom: 2rem; /* Space below the title */
-	}
-	.usage-card {
-		width: 100%; /* Use full width */
-		max-width: 1200px; /* Set a maximum width if desired */
+	.video-style {
+		width: 80vw; /* 80% of viewport width */
+		height: 45vw; /* Keeping 16:9 aspect ratio */
+		max-width: 100%; /* Ensures the video doesn't overflow its container */
 	}
 </style>
