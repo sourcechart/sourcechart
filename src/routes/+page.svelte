@@ -40,9 +40,27 @@
 		class="hero-background"
 	/>
 	<div class="hero-content">
-		<h1 class="hero-title text-6xl">Large Data Visualizations without the Cloud</h1>
+		<h1 class="hero-title text-6xl">Data Visualizations without the Cloud</h1>
 		<p class="hero-description">Revolutionize your data interactions with SourceChart.io.</p>
 		<button on:click={enterFree} class="hero-button">Try Now</button>
+	</div>
+</section>
+
+<section class="features-section">
+	<h1 class="bg-slate-900 text-4xl">About</h1>
+	<div class="features-grid">
+		<!-- This div will hold the cards -->
+		<div class="feature-card">
+			<p class="feature-description">
+				Experience secure in-browser data visualization with our solution that ensures your data
+				never ventures beyond your device. Visualize and process data directly within your browser,
+				free from cloud-related concerns. Harnessing the power of OPFS API, WASM, and Sveltekit, our
+				platform captures the finesse of excalichart. By integrating SQLiteWASM and DuckDBWASM, we
+				ensure smooth data handling, beautifully brought to life via echarts in Sveltekit. And with
+				the reliability of hosting on Vercel, you get all the convenience without any of the risks.
+				Step into a safer, more efficient visualization journey with us.
+			</p>
+		</div>
 	</div>
 </section>
 
@@ -59,10 +77,10 @@
 	</div>
 </section>
 
-<section class="features-section">
-	<h1 class="bg-slate-900 text-4xl mb-4">Usage</h1>
-	<div class="features-grid">
-		<DeviceMockup device="laptop">
+<section class="usage-section mb-4">
+	<h1 class="text-4xl mb-4 usage-title">Usage</h1>
+	<div class="usage-card">
+		<DeviceMockup device="desktop">
 			<video autoplay loop muted playsinline class="h-[156px] md:h-[278px] w-full rounded-xl">
 				<source src="demoMP4.mp4" type="video/mp4" />
 				Your browser does not support the video tag.
@@ -218,5 +236,21 @@
 		.hero-description {
 			font-size: 2.5vw; /* Increase font size on smaller screens */
 		}
+	}
+
+	.usage-section {
+		display: flex;
+		flex-direction: column; /* Stack children vertically */
+		align-items: center; /* Center children horizontally */
+		justify-content: center; /* Center children vertically */
+		padding: 3rem 0; /* Padding around the section */
+	}
+	.usage-title {
+		text-align: center; /* Center the title text */
+		margin-bottom: 2rem; /* Space below the title */
+	}
+	.usage-card {
+		width: 100%; /* Use full width */
+		max-width: 1200px; /* Set a maximum width if desired */
 	}
 </style>
