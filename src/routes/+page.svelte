@@ -101,11 +101,11 @@
 	/* HERO SECTION */
 	.hero-section {
 		position: relative;
-		display: flex; /* Keeps the hero section as a flex container */
-		align-items: center; /* Centers content vertically */
-		padding: 3rem; /* Adjusts padding as needed */
+		display: flex;
+		align-items: center;
+		padding: 3rem 2rem; /* Added some horizontal padding */
 		color: white;
-		overflow: hidden; /* Ensure nothing spills outside */
+		overflow: hidden;
 	}
 
 	.hero-background {
@@ -122,7 +122,7 @@
 	.hero-content {
 		position: relative;
 		z-index: 10;
-		text-align: center; /* Center the content of hero-content */
+		text-align: left; /* Center the content of hero-content */
 		padding: 1rem; /* Additional padding to ensure content doesn't touch the edges */
 		max-width: 90%; /* Makes sure the content doesn't span the full width of the hero section, adjust if necessary */
 	}
@@ -154,10 +154,11 @@
 	/* FEATURES SECTION */
 	.features-section {
 		display: flex;
-		justify-content: space-around;
-		flex-wrap: wrap;
-		padding: 3rem 0;
+		flex-direction: column; /* Stack children vertically */
+		align-items: center; /* Center children horizontally */
+		padding: 3rem 2rem; /* Added some horizontal padding */
 	}
+
 	.feature-card {
 		flex: 1 1 250px;
 		background-color: white;
@@ -181,7 +182,7 @@
 
 	/* FOOTER */
 	.footer {
-		padding: 2rem 0;
+		padding: 2rem 2rem; /* Added some horizontal padding */
 		color: white;
 	}
 	.legal-section {
@@ -210,7 +211,7 @@
 		display: flex;
 		justify-content: space-around;
 		flex-wrap: wrap;
-		width: 100%; /* Utilize full available width */
+		width: 100%;
 	}
 
 	.feature-card {
@@ -239,10 +240,9 @@
 
 	.usage-section {
 		display: flex;
-		flex-direction: column; /* Stack children vertically */
-		align-items: center; /* Center children horizontally */
-		justify-content: center; /* Center children vertically */
-		padding: 3rem 0; /* Padding around the section */
+		flex-direction: column;
+		align-items: center;
+		padding: 3rem 2rem; /* Added some horizontal padding */
 	}
 	.usage-title {
 		text-align: center; /* Center the title text */
