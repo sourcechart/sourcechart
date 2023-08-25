@@ -8,20 +8,13 @@
 	<div
 		class="relative px-6 border pb-8 pt-10 shadow-xl round ring-1 ring-gray-900 outline-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10"
 	>
+		<img src="logo1.png" alt="Logo" class="mx-auto mb-4 w-48" />
 		<Auth
 			supabaseClient={data.supabase}
 			showLinks={true}
 			providers={['google']}
 			appearance={{
-				theme: ThemeSupa,
-				variables: {
-					default: {
-						colors: {
-							brand: 'red',
-							brandAccent: 'darkred'
-						}
-					}
-				}
+				theme: ThemeSupa
 			}}
 		/>
 	</div>
