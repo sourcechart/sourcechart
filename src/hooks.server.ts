@@ -24,22 +24,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return session;
 	};
 
-	if (event.url.pathname.startsWith('/dashboard')) {
-		const session = await event.locals.getSession();
-		if (!session) {
-			// the user is not signed in
-			throw redirect(303, '/login');
-		}
-	}
-
-	if (event.url.pathname.startsWith('/dashboard') && event.request.method === 'GET') {
-		const session = await event.locals.getSession();
-		if (!session) {
-			// the user is not signed in
-			throw error(303, '/login');
-		}
-	}
-
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {
 			return name === 'content-range';

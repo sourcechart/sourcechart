@@ -8,8 +8,6 @@
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
-	//import Aggregator from './sidebar-components/Aggregator.svelte';
-	//import WorkFlowSidebar from './WorkFlowSidebar.svelte';
 
 	export let data;
 
@@ -54,17 +52,19 @@
 			</Label>
 			<DatasetDropDown />
 		</div>
-		{#if data.session.user.email == 'noreply@gmail.com'}
+		<!--
 			<Tabs style="underline" contentClass="">
 				<TabItem open title="LowCode" on:click={clickBasicTab}>
 					<LowCodeSidebarTab />
 				</TabItem>
 				<TabItem title="Work Flows" on:click={clickClusterTab}>
-					<!--	<WorkflowSidebar /> -->
 				</TabItem>
 			</Tabs>
 		{:else}
+
 			<LowCodeSidebarTab />
 		{/if}
+							-->
+		<LowCodeSidebarTab />
 	</SidebarWrapper>
 </div>

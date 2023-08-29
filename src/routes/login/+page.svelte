@@ -3,8 +3,6 @@
 	let username = '';
 	let password = '';
 
-	$: console.log(data);
-
 	function handleSubmit(submitter) {
 		// Perform authentication here
 		console.log(`Username: ${username}, Password: ${password}`);
