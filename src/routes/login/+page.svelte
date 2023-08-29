@@ -1,21 +1,48 @@
 <script lang="ts">
-	import { Auth } from '@supabase/auth-ui-svelte';
-	import { ThemeSupa } from '@supabase/auth-ui-shared';
 	export let data;
+	let username = '';
+	let password = '';
+
+	$: console.log(data);
+
+	function handleSubmit(submitter) {
+		// Perform authentication here
+		console.log(`Username: ${username}, Password: ${password}`);
+	}
 </script>
 
-<div class="relative flex min-h-screen flex-col justify-center overflow-hidden py-6 sm:py-12">
-	<div
-		class="relative px-6 border pb-8 pt-10 shadow-xl round ring-1 ring-gray-900 outline-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10"
-	>
-		<img src="logo1.png" alt="Logo" class="mx-auto mb-4 w-48" />
-		<Auth
-			supabaseClient={data.supabase}
-			showLinks={true}
-			providers={['google']}
-			appearance={{
-				theme: ThemeSupa
-			}}
-		/>
+<div class="flex justify-center items-center h-screen bg-gray-200">
+	<div class="bg-white p-8 rounded-lg shadow-md w-96">
+		<h1 class="text-2xl mb-4">Login</h1>
+		<form on:submit|preventDefault={handleSubmit}>
+			<div class="mb-4">
+				<label for="username" class="block text-sm font-medium text-gray-600">Username</label>
+				<input
+					id="username"
+					type="text"
+					class="mt-1 p-2 w-full rounded-md border"
+					bind:value={username}
+				/>
+			</div>
+
+			<div class="mb-4">
+				<label for="password" class="block text-sm font-medium text-gray-600">Password</label>
+				<input
+					id="password"
+					type="password"
+					class="mt-1 p-2 w-full rounded-md border"
+					bind:value={password}
+				/>
+			</div>
+
+			<div>
+				<button
+					type="submit"
+					class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200"
+				>
+					Login
+				</button>
+			</div>
+		</form>
 	</div>
 </div>
