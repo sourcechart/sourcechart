@@ -2,11 +2,6 @@
 	export let data;
 	let username = '';
 	let password = '';
-
-	function handleSubmit(submitter) {
-		// Perform authentication here
-		console.log(`Username: ${username}, Password: ${password}`);
-	}
 </script>
 
 <div class="flex justify-center items-center h-screen bg-gray-200">

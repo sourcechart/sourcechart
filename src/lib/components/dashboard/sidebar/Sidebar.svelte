@@ -1,8 +1,8 @@
 <script lang="ts">
 	import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
 	import FileUploadButton from './sidebar-components/FileUploadButton.svelte'; //@ts-ignore
-	import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
-	import TabItem from 'flowbite-svelte/TabItem.svelte'; //@ts-ignore
+	//import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
+	//import TabItem from 'flowbite-svelte/TabItem.svelte'; //@ts-ignore
 	import { SidebarWrapper } from '$lib/components/ui'; //@ts-ignore
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
