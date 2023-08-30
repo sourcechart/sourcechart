@@ -2,6 +2,7 @@
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
 import type { Handle } from '@sveltejs/kit';
+import { redirect, error } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	//@ts-ignore
@@ -22,6 +23,22 @@ export const handle: Handle = async ({ event, resolve }) => {
 		} = await event.locals.supabase.auth.getSession();
 		return session;
 	};
+
+	if (event.url.pathname.startsWith('/dashboard')) {
+		const session = await event.locals.getSession();
+		if (!session) {
+			// the user is not signed in
+			throw redirect(303, '/login');
+		}
+	}
+
+	if (event.url.pathname.startsWith('/dashboard') && event.request.method === 'GET') {
+		const session = await event.locals.getSession();
+		if (!session) {
+			// the user is not signed in
+			throw error(303, '/login');
+		}
+	}
 
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {

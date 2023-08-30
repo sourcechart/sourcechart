@@ -1,13 +1,15 @@
 <script lang="ts">
 	import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
 	import FileUploadButton from './sidebar-components/FileUploadButton.svelte'; //@ts-ignore
-	//import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
-	//import TabItem from 'flowbite-svelte/TabItem.svelte'; //@ts-ignore
+	import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
+	import TabItem from 'flowbite-svelte/TabItem.svelte'; //@ts-ignore
 	import { SidebarWrapper } from '$lib/components/ui'; //@ts-ignore
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
+	//import Aggregator from './sidebar-components/Aggregator.svelte';
+	//import WorkFlowSidebar from './WorkFlowSidebar.svelte';
 
 	export let data;
 
@@ -52,19 +54,17 @@
 			</Label>
 			<DatasetDropDown />
 		</div>
-		<!--
+		{#if data.session.user.email == 'noreply@gmail.com'}
 			<Tabs style="underline" contentClass="">
 				<TabItem open title="LowCode" on:click={clickBasicTab}>
 					<LowCodeSidebarTab />
 				</TabItem>
 				<TabItem title="Work Flows" on:click={clickClusterTab}>
+					<!--	<WorkflowSidebar /> -->
 				</TabItem>
 			</Tabs>
 		{:else}
-
 			<LowCodeSidebarTab />
 		{/if}
-							-->
-		<LowCodeSidebarTab />
 	</SidebarWrapper>
 </div>

@@ -4,7 +4,6 @@
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 
-	//@ts-ignore
 	import DarkMode from 'flowbite-svelte/DarkMode.svelte';
 	import { onMount } from 'svelte';
 	import { allCharts, clickedChartIndex, activeDropZone } from '$lib/io/Stores';

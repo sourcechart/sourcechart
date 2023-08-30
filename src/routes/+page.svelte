@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 
 	const enterFree = () => {
-		goto('/dashboard');
+		goto('/login');
 	};
 
 	let features = [
