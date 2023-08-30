@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { Auth } from '@supabase/auth-ui-svelte';
-	import { ThemeSupa } from '@supabase/auth-ui-shared';
-	export let data;
 	let username = '';
 	let password = '';
+
 	function handleSubmit() {
 		// Perform authentication here
 		console.log(`Username: ${username}, Password: ${password}`);
@@ -13,7 +11,7 @@
 <!-- Use Tailwind CSS classes for styling -->
 <div class="flex justify-center items-center h-screen bg-gray-200">
 	<div class="bg-white p-8 rounded-lg shadow-md w-96">
-		<h1 class="text-2xl mb-4">Login</h1>
+		<img src="logo1.png" alt="Logo" class="mx-auto mb-4 w-52" />
 		<form on:submit|preventDefault={handleSubmit}>
 			<div class="mb-4">
 				<label for="username" class="block text-sm font-medium text-gray-600">Username</label>
