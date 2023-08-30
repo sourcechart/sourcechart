@@ -6,13 +6,10 @@
 	let email: string;
 	let password: string;
 
-	const handleLogin = async () => {
-		await supabase.auth.signUp({
+	const handleSignIn = async () => {
+		await supabase.auth.signInWithPassword({
 			email,
-			password,
-			options: {
-				emailRedirectTo: `${location.origin}/auth/callback`
-			}
+			password
 		});
 	};
 </script>
@@ -20,8 +17,10 @@
 <!-- Use Tailwind CSS classes for styling -->
 <div class="flex justify-center items-center h-screen bg-gray-200">
 	<div class="bg-white p-8 rounded-lg shadow-md w-96">
-		<img src="logo1.png" alt="Logo" class="mx-auto mb-4 w-52" />
-		<form>
+		<h1 class="text-2xl mb-4">Login</h1>
+		<img src="logo1.png" alt="Logo" class="mx-auto mb-4 w-48" />
+
+		<form on:submit|preventDefault={handleSubmit}>
 			<div class="mb-4">
 				<label for="username" class="block text-sm font-medium text-gray-600">Username</label>
 				<input
@@ -46,7 +45,6 @@
 				<button
 					type="submit"
 					class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200"
-					on:click={handleLogin}
 				>
 					Login
 				</button>
