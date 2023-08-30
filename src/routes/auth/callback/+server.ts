@@ -1,4 +1,4 @@
-// src/routes/auth/callback/+server.ts
+// I am not sure what this actually does
 import { redirect } from '@sveltejs/kit';
 
 export const GET = async ({ url, locals: { supabase } }) => {
@@ -8,5 +8,5 @@ export const GET = async ({ url, locals: { supabase } }) => {
 		await supabase.auth.exchangeCodeForSession(code);
 	}
 
-	throw redirect(303, '/dashboard');
+	throw redirect(303, '/');
 };
