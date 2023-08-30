@@ -6,11 +6,27 @@
 	let email: string;
 	let password: string;
 
+	type Provider = 'google';
+
 	const handleSignIn = async () => {
 		await supabase.auth.signInWithPassword({
 			email,
 			password
 		});
+	};
+
+	const handleSignUp = async () => {
+		await supabase.auth.signUp({
+			email,
+			password,
+			options: {
+				emailRedirectTo: `${location.origin}/auth/callback`
+			}
+		});
+	};
+
+	const handleOAuthLogin = async (provider: Provider) => {
+		const { data, error } = await supabase.auth.signInWithOAuth({ provider: provider });
 	};
 </script>
 
@@ -20,7 +36,7 @@
 		<h1 class="text-2xl mb-4">Login</h1>
 		<img src="logo1.png" alt="Logo" class="mx-auto mb-4 w-48" />
 
-		<form on:submit|preventDefault={handleSubmit}>
+		<form>
 			<div class="mb-4">
 				<label for="username" class="block text-sm font-medium text-gray-600">Username</label>
 				<input
