@@ -7,7 +7,7 @@
 		activeSidebar
 	} from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
-	import { drawHandles, drawRectangle } from './draw-utils/Draw';
+	import { drawHandles, drawRectangle, drawSquiggles } from './draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
 
@@ -48,8 +48,13 @@
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
 
+	const handleEraseShape = (context: CanvasRenderingContext2D) => {
+		if ($TOUCHSTATE !== 'isErasing') return;
+		drawSquiggles(polygon.vertices[0], polygon.vertices[2], context, 'red');
+	};
+
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
-		let vertices: LookupTable = {
+		var vertices: LookupTable = {
 			tl: { x: shrink, y: shrink }, // top-left
 			tr: { x: width - shrink, y: shrink }, // top-right
 			br: { x: width - shrink, y: height - shrink }, // bottom-right
@@ -68,17 +73,17 @@
 		context: CanvasRenderingContext2D,
 		color: string
 	) => {
-		let rectangleVertices: string[] = ['tl', 'tr', 'br', 'bl'];
-		let vertices: Point[] = [];
-		for (let i = 0; i < rectangleVertices.length; i++) {
+		var rectangleVertices: string[] = ['tl', 'tr', 'br', 'bl'];
+		var vertices: Point[] = [];
+		for (var i = 0; i < rectangleVertices.length; i++) {
 			vertices.push(points[rectangleVertices[i]]);
 		}
 		drawRectangle(vertices, context, color);
 	};
 
 	const handleMouseDown = (e: MouseEvent) => {
-		let x = e.clientX; //- rect.left; // adjust the mouse x-coordinate by the left offset of the canvas
-		let y = e.clientY;
+		var x = e.clientX; // adjust the mouse x-coordinate by the left offset of the canvas
+		var y = e.clientY;
 
 		let inPolygon = isPointInPolygon({ x, y }, polygon);
 		if (inPolygon) {
@@ -89,9 +94,9 @@
 	};
 
 	const getAllHandlePositions = (points: LookupTable): Point[] => {
-		let handlePositions = ['tl', 'tr', 'br', 'bl', 'mt', 'mr', 'mb', 'ml'];
-		let vertices: Point[] = [];
-		for (let i = 0; i < handlePositions.length; i++) {
+		var handlePositions = ['tl', 'tr', 'br', 'bl', 'mt', 'mr', 'mb', 'ml'];
+		var vertices: Point[] = [];
+		for (var i = 0; i < handlePositions.length; i++) {
 			vertices.push(points[handlePositions[i]]);
 		}
 		return vertices;
@@ -102,21 +107,21 @@
 		context: CanvasRenderingContext2D,
 		color: string
 	) => {
-		let vertices = getAllHandlePositions(points);
+		var vertices = getAllHandlePositions(points);
 		drawHandles(vertices, context, color, 5);
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
 		if (!dragging) return;
-		let x = e.clientX;
-		let y = e.clientY;
+		var x = e.clientX;
+		var y = e.clientY;
 
 		if ($TOUCHSTATE === 'isTranslating' && polygon.id) {
 			mostRecentChartID.set(polygon.id);
 
-			let newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
-			let dx = x - offsetX;
-			let dy = y - offsetY;
+			var newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
+			var dx = x - offsetX;
+			var dy = y - offsetY;
 
 			newPolygon.vertices[0].x = dx;
 			newPolygon.vertices[0].y = dy;
@@ -142,11 +147,11 @@
 
 	const handleMouseUp = (e: MouseEvent) => {
 		if (!dragging) return;
-		let x = e.clientX;
-		let y = e.clientY;
+		var x = e.clientX;
+		var y = e.clientY;
 		if ($TOUCHSTATE === 'isTranslating') {
-			let dx = x - offsetX;
-			let dy = y - offsetY;
+			var dx = x - offsetX;
+			var dy = y - offsetY;
 
 			polygon.vertices[0].x = dx;
 			polygon.vertices[0].y = dy;
@@ -172,16 +177,16 @@
 
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
-		let startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
-		let startY = Math.min(polygon.vertices[0].y, polygon.vertices[2].y);
-		let endX = Math.max(polygon.vertices[0].x, polygon.vertices[2].x);
-		let endY = Math.max(polygon.vertices[0].y, polygon.vertices[2].y);
+		var startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
+		var startY = Math.min(polygon.vertices[0].y, polygon.vertices[2].y);
+		var endX = Math.max(polygon.vertices[0].x, polygon.vertices[2].x);
+		var endY = Math.max(polygon.vertices[0].y, polygon.vertices[2].y);
 
 		canvas.width = Math.abs(endX - startX);
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
 
-		let color =
+		var color =
 			$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
 				? highlightcolor
 				: defaultcolor;
@@ -191,7 +196,7 @@
 			rectHeight = Math.abs(endY - startY);
 
 			context.strokeStyle = color;
-			context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
+			//context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 			points = calculateVertices(rectWidth, rectHeight, 5);
 
 			plotWidth = getPlotWidth();
@@ -199,6 +204,7 @@
 
 			drawRectangleHandles(points, context, color);
 			drawRectangleCanvas(points, context, color);
+			handleEraseShape(context);
 		}
 	});
 

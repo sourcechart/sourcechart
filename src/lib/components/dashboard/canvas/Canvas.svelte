@@ -184,7 +184,7 @@
 	 */
 	const handleErase = (x: number, y: number): void => {
 		currentTouchPosition = { x: x, y: y };
-		if (context) drawSquiggles(currentTouchPosition, context, 'red');
+		handleEraseShape(x, y);
 		const allPolygons = $allCharts.map((chart) => chart.polygon);
 		const polygon = PolyOps.getContainingPolygon(currentTouchPosition, allPolygons);
 
@@ -197,17 +197,6 @@
 				return charts;
 			});
 		}
-	};
-
-	const drawSquiggles = (currentPoint: Point, context: CanvasRenderingContext2D, color: string) => {
-		console.log('drawSquiggles', startPosition, currentPoint, context, color);
-		context.strokeStyle = color;
-		context.lineWidth = 1;
-		context.beginPath();
-		context.moveTo(startPosition.x, startPosition.y);
-		context.lineTo(currentPoint.x, currentPoint.y);
-		context.stroke();
-		startPosition = currentTouchPosition;
 	};
 
 	/**
@@ -225,6 +214,19 @@
 				{ x: startPosition.x, y: y }
 			]
 		};
+		newPolygon = [polygon];
+	};
+
+	const handleEraseShape = (x: number, y: number): void => {
+		const polygon = {
+			vertices: [
+				{ x: startPosition.x, y: startPosition.y },
+				{ x: x, y: startPosition.y },
+				{ x: x, y: y },
+				{ x: startPosition.x, y: y }
+			]
+		};
+		startPosition = { x, y };
 		newPolygon = [polygon];
 	};
 
@@ -257,7 +259,6 @@
 				break;
 
 			case 'isErasing':
-				console.log('erase');
 				handleErase(x, y);
 				break;
 

@@ -64,32 +64,28 @@ const drawHandles = (
 	context.strokeStyle = color;
 	context.lineWidth = 1;
 	vertices.forEach((point) => {
-		if (context) {
-			context.globalAlpha = 0.5; // sets transparency to 50%
-			context.beginPath();
-			context.rect(point.x - side / 2, point.y - side / 2, side, side);
-			context.stroke();
-			context.globalAlpha = 1.0; // reset the transparency to the original state
-		}
+		context.globalAlpha = 0.5; // sets transparency to 50%
+		context.beginPath();
+		context.rect(point.x - side / 2, point.y - side / 2, side, side);
+		context.stroke();
+		context.globalAlpha = 1.0; // reset the transparency to the original state
 	});
 };
 
 export const drawSquiggles = (
-	startPoint: Point,
+	startPosition: Point,
 	currentPoint: Point,
 	context: CanvasRenderingContext2D,
 	color: string
 ) => {
-	console.log('drawSquiggles', startPoint, currentPoint, context, color);
-	context.strokeStyle = color;
-	context.lineWidth = 1;
 	context.beginPath();
-	context.moveTo(startPoint.x, startPoint.y);
+	context.strokeStyle = color;
+	context.fillStyle = 'red';
+	context.lineWidth = 4;
+	context.moveTo(startPosition.x, startPosition.y);
 	context.lineTo(currentPoint.x, currentPoint.y);
-	context.closePath();
 	context.stroke();
 };
-
 /**
  * Resize retangle from corner
  *
