@@ -3,18 +3,9 @@
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
 	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
-
 	import { ChartOptions } from '$lib/io/ChartOptions';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
-	/*import {
-		AreaPlotButton,
-		BarPlotButton,
-		LinePlotButton,
-		ScatterPlotButton,
-		PiePlotButton
-	} from './chart-components';
-	*/
 	type SideBarVersion = 'WorkFlow' | 'LowCode';
 	export let sideBarVersion: SideBarVersion;
 

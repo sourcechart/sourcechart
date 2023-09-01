@@ -1,17 +1,24 @@
 <script lang="ts">
-	import { getColumnsFromFile, clickedChartIndex, chartOptions, allCharts } from '$lib/io/Stores'; //@ts-ignore
+	import {
+		columnLabel,
+		getColumnsFromFile,
+		clickedChartIndex,
+		chartOptions,
+		allCharts
+	} from '$lib/io/Stores'; //@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
 	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; //@ts-ignore
 
 	export let axis = '';
-
-	let selectedColumn: string | null = `${axis} Axis`;
 	let tags: Array<string | null> = [];
+	//let label: string | null | undefined = `${axis.toUpperCase()} Axis`;
 
 	$: i = clickedChartIndex();
 	$: drawerOptions = chartOptions();
 	$: columns = getColumnsFromFile();
+	$: label = columnLabel(axis);
+	$: console.log($label);
 
 	$: if ($drawerOptions.xColumn && $drawerOptions.yColumn && tags.length == 0) {
 		tags = getTagsOnClick();
@@ -19,10 +26,8 @@
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
 		if (axis.toUpperCase() === 'X') {
-			selectedColumn = $allCharts[$i]?.xColumn ? $allCharts[$i].xColumn : `${axis} Axis`;
 			tags = $allCharts[$i]?.xColumn ? [$allCharts[$i].xColumn] : [];
 		} else if (axis.toUpperCase() === 'Y') {
-			selectedColumn = $allCharts[$i]?.yColumn ? $allCharts[$i].yColumn : `${axis} Axis`;
 			tags = $allCharts[$i]?.yColumn ? [$allCharts[$i].yColumn] : [];
 		}
 	}
@@ -48,8 +53,6 @@
 
 	const chooseColumn = (column: string | null) => {
 		if (column) {
-			selectedColumn = column;
-
 			allCharts.update((charts) => {
 				if (axis.toUpperCase() === 'X') {
 					charts[$i].xColumn = column;
@@ -67,7 +70,7 @@
 	};
 </script>
 
-<Button pill={false} outline color="light">{selectedColumn}</Button>
+<Button pill={false} outline color="light">{$label}</Button>
 <Dropdown>
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>

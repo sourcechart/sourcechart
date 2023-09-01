@@ -27,6 +27,12 @@ type Chart = {
 	chartOptions: any;
 };
 
+type ColumnName = {
+	name: string;
+	axis: string;
+	chartID: string;
+};
+
 type ExternalDataset = {
 	name: string;
 	url: string;
