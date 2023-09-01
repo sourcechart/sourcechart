@@ -175,6 +175,8 @@ export const columnLabel = (axis: string) =>
 				} else {
 					return `${axis.toUpperCase()} Axis`;
 				}
+			} else {
+				return `${axis.toUpperCase()} Axis`;
 			}
 		} else {
 			return `${axis.toUpperCase()} Axis`;
