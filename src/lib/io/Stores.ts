@@ -24,6 +24,7 @@ export const epsilonDistance = writable<number>();
 export const minimumPointsForCluster = writable<number>();
 export const duckDBInstanceStore = writable<DuckDBClient>();
 export const activeDropZone = writable<boolean>();
+export const selectedColumnStore = writable<ColumnName[]>([]);
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -66,6 +67,7 @@ export const chartOptions = () =>
 			filename: options?.filename,
 			xColumn: options?.xColumn,
 			yColumn: options?.yColumn,
+			columns: options?.columns,
 			groupbyColumns: options?.groupbyColumns,
 			aggregator: options?.aggregator
 		};
@@ -153,6 +155,33 @@ export const touchStates = () => {
 		}
 	);
 };
+
+export const columnLabel = (axis: string) =>
+	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
+		const options = $allCharts.find(
+			(item: { chartID: string }) => item.chartID === $mostRecentChartID
+		);
+		if (options) {
+			let axisColumn;
+			let columns = options.columns;
+			if (axis === 'X') {
+				axisColumn = options.xColumn;
+			} else if (axis === 'Y') {
+				axisColumn = options.yColumn;
+			}
+			if (columns && axisColumn) {
+				if (columns.includes(axisColumn)) {
+					return axisColumn;
+				} else {
+					return `${axis.toUpperCase()} Axis`;
+				}
+			} else {
+				return `${axis.toUpperCase()} Axis`;
+			}
+		} else {
+			return `${axis.toUpperCase()} Axis`;
+		}
+	});
 
 storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');
