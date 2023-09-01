@@ -183,6 +183,8 @@
 	 * @param y y position on the screen
 	 */
 	const handleErase = (x: number, y: number): void => {
+		drawEraseTrail(x, y); // Draw the erase trail
+
 		currentTouchPosition = { x: x, y: y };
 		const allPolygons = $allCharts.map((chart) => chart.polygon);
 		const polygon = PolyOps.getContainingPolygon(currentTouchPosition, allPolygons);
@@ -214,6 +216,19 @@
 			]
 		};
 		newPolygon = [polygon];
+	};
+
+	/**
+	 * ### Draw the erase trail
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
+	const drawEraseTrail = (x: number, y: number): void => {
+		if (context) {
+			context.fillStyle = 'gray';
+			context.fillRect(x - 5, y - 5, 10, 10); // 10x10 square centered at (x, y)
+		}
 	};
 
 	/**
