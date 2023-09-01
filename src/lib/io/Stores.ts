@@ -159,6 +159,7 @@ export const touchStates = () => {
 export const columnLabel = (axis: string) =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
 		let axisColumn;
+
 		if ($allCharts.length > 0) {
 			const options = $allCharts.find(
 				(item: { chartID: string }) => item.chartID === $mostRecentChartID
@@ -173,6 +174,8 @@ export const columnLabel = (axis: string) =>
 				if (columns && axisColumn) {
 					if (columns.includes(axisColumn)) {
 						return axisColumn;
+					} else {
+						return `${axis.toUpperCase()} Axis`;
 					}
 				}
 			}

@@ -12,13 +12,11 @@
 
 	export let axis = '';
 	let tags: Array<string | null> = [];
-	//let label: string | null | undefined = `${axis.toUpperCase()} Axis`;
 
 	$: i = clickedChartIndex();
 	$: drawerOptions = chartOptions();
 	$: columns = getColumnsFromFile();
 	$: label = columnLabel(axis);
-	$: console.log($label);
 
 	$: if ($drawerOptions.xColumn && $drawerOptions.yColumn && tags.length == 0) {
 		tags = getTagsOnClick();
