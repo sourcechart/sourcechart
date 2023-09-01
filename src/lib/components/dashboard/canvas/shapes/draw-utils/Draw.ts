@@ -74,6 +74,22 @@ const drawHandles = (
 	});
 };
 
+export const drawSquiggles = (
+	startPoint: Point,
+	currentPoint: Point,
+	context: CanvasRenderingContext2D,
+	color: string
+) => {
+	console.log('drawSquiggles', startPoint, currentPoint, context, color);
+	context.strokeStyle = color;
+	context.lineWidth = 1;
+	context.beginPath();
+	context.moveTo(startPoint.x, startPoint.y);
+	context.lineTo(currentPoint.x, currentPoint.y);
+	context.closePath();
+	context.stroke();
+};
+
 /**
  * Resize retangle from corner
  *
