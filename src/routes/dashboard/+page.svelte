@@ -13,9 +13,9 @@
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { setLocalStorage } from '$lib/io/Storage';
 
-	setLocalStorage('color-theme', 'dark');
-
 	export let data;
+
+	setLocalStorage('color-theme', 'dark');
 
 	let syncWorker: Worker | undefined = undefined;
 	$: i = clickedChartIndex();
