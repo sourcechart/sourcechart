@@ -18,6 +18,8 @@
 	$: columns = getColumnsFromFile();
 	$: label = columnLabel(axis);
 
+	$: console.log($label);
+
 	$: if ($drawerOptions.xColumn && $drawerOptions.yColumn && tags.length == 0) {
 		tags = getTagsOnClick();
 	}

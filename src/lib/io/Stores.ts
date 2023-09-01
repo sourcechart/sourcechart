@@ -158,25 +158,22 @@ export const touchStates = () => {
 
 export const columnLabel = (axis: string) =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
-		let axisColumn;
-
-		if ($allCharts.length > 0) {
-			const options = $allCharts.find(
-				(item: { chartID: string }) => item.chartID === $mostRecentChartID
-			);
-			if (options) {
-				let columns = options.columns;
-				if (axis === 'X') {
-					axisColumn = options.xColumn;
-				} else if (axis === 'Y') {
-					axisColumn = options.yColumn;
-				}
-				if (columns && axisColumn) {
-					if (columns.includes(axisColumn)) {
-						return axisColumn;
-					} else {
-						return `${axis.toUpperCase()} Axis`;
-					}
+		const options = $allCharts.find(
+			(item: { chartID: string }) => item.chartID === $mostRecentChartID
+		);
+		if (options) {
+			let axisColumn;
+			let columns = options.columns;
+			if (axis === 'X') {
+				axisColumn = options.xColumn;
+			} else if (axis === 'Y') {
+				axisColumn = options.yColumn;
+			}
+			if (columns && axisColumn) {
+				if (columns.includes(axisColumn)) {
+					return axisColumn;
+				} else {
+					return `${axis.toUpperCase()} Axis`;
 				}
 			}
 		} else {
