@@ -72,20 +72,29 @@ const drawHandles = (
 	});
 };
 
-export const drawSquiggles = (
-	startPosition: Point,
-	currentPoint: Point,
+const drawMouseTrail = (
+	mouseTrail: Point[],
 	context: CanvasRenderingContext2D,
-	color: string
-) => {
+	lineColor: string
+): void => {
+	if (mouseTrail.length < 2) return; // Need at least two points to draw a line
+
+	if (!context) {
+		console.error('Context is not available');
+		return;
+	}
+
 	context.beginPath();
-	context.strokeStyle = color;
-	context.fillStyle = 'red';
-	context.lineWidth = 4;
-	context.moveTo(startPosition.x, startPosition.y);
-	context.lineTo(currentPoint.x, currentPoint.y);
+	context.moveTo(mouseTrail[0].x, mouseTrail[0].y);
+
+	for (let i = 1; i < mouseTrail.length; i++) {
+		context.lineTo(mouseTrail[i].x, mouseTrail[i].y);
+	}
+
+	context.strokeStyle = lineColor; // Use the color that is passed in
 	context.stroke();
 };
+
 /**
  * Resize retangle from corner
  *
@@ -142,6 +151,7 @@ const getPlotLeftPosition = (polygon: Polygon) => {
 
 export {
 	drawRectangle,
+	drawMouseTrail,
 	redraw,
 	drawHandles,
 	resizeRectangle,

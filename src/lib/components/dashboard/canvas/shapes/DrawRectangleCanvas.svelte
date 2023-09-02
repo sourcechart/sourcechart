@@ -7,7 +7,7 @@
 		activeSidebar
 	} from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
-	import { drawHandles, drawRectangle, drawSquiggles } from './draw-utils/Draw';
+	import { drawHandles, drawRectangle, drawMouseTrail } from './draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
 
@@ -47,11 +47,6 @@
 	$: TOUCHSTATE = touchStates();
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
-
-	const handleEraseShape = (context: CanvasRenderingContext2D) => {
-		if ($TOUCHSTATE !== 'isErasing') return;
-		drawSquiggles(polygon.vertices[0], polygon.vertices[2], context, 'red');
-	};
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
 		var vertices: LookupTable = {
@@ -196,7 +191,6 @@
 			rectHeight = Math.abs(endY - startY);
 
 			context.strokeStyle = color;
-			//context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas before redraw
 			points = calculateVertices(rectWidth, rectHeight, 5);
 
 			plotWidth = getPlotWidth();
@@ -204,7 +198,6 @@
 
 			drawRectangleHandles(points, context, color);
 			drawRectangleCanvas(points, context, color);
-			handleEraseShape(context);
 		}
 	});
 

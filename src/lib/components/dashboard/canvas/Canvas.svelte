@@ -1,5 +1,6 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
+	import DrawEraserTrail from './shapes/DrawEraserTrail.svelte';
 	import * as PolyOps from './shapes/draw-utils/PolygonOperations';
 	import {
 		navBarState,
@@ -23,6 +24,7 @@
 	let width: number = 0;
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
+	let eraserTrail: Point[] = [];
 
 	let startPosition: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
@@ -218,16 +220,7 @@
 	};
 
 	const handleEraseShape = (x: number, y: number): void => {
-		const polygon = {
-			vertices: [
-				{ x: startPosition.x, y: startPosition.y },
-				{ x: x, y: startPosition.y },
-				{ x: x, y: y },
-				{ x: startPosition.x, y: y }
-			]
-		};
-		startPosition = { x, y };
-		newPolygon = [polygon];
+		eraserTrail = [...eraserTrail, { x: x, y: y }];
 	};
 
 	/**
@@ -288,6 +281,7 @@
 				{#each newPolygon as polygon}
 					<DrawRectangleCanvas {polygon} />
 				{/each}
+				<DrawEraserTrail {eraserTrail} />
 			{/if}
 		</div>
 	</div>
