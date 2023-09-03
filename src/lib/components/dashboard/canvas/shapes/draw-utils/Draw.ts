@@ -71,7 +71,6 @@ const drawHandles = (
 		context.globalAlpha = 1.0; // reset the transparency to the original state
 	});
 };
-
 const drawMouseTrail = (
 	mouseTrail: Point[],
 	context: CanvasRenderingContext2D,
@@ -79,20 +78,14 @@ const drawMouseTrail = (
 ): void => {
 	if (mouseTrail.length < 2) return; // Need at least two points to draw a line
 
-	if (!context) {
-		console.error('Context is not available');
-		return;
-	}
-
 	context.beginPath();
-	context.moveTo(mouseTrail[0].x, mouseTrail[0].y);
+	context.strokeStyle = 'red';
 
 	for (let i = 1; i < mouseTrail.length; i++) {
+		context.moveTo(mouseTrail[i - 1].x, mouseTrail[i - 1].y);
 		context.lineTo(mouseTrail[i].x, mouseTrail[i].y);
+		context.stroke();
 	}
-
-	context.strokeStyle = lineColor; // Use the color that is passed in
-	context.stroke();
 };
 
 /**

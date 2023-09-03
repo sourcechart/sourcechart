@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 	import { browser } from '$app/environment';
+	import { drawMouseTrail } from './draw-utils/Draw';
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -11,12 +12,13 @@
 
 	export let eraserTrail: Point[] = [];
 
-	$: console.log(eraserTrail);
+	$: if (eraserTrail.length > 2 && context) {
+		drawMouseTrail(eraserTrail, context, 'red');
+	}
 
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
-
 			width = window.innerWidth;
 			height = window.innerHeight;
 			updateOffset();
@@ -28,6 +30,10 @@
 		offsetX = rect.left;
 		offsetY = Math.abs(rect.top - height);
 	};
+
+	afterUpdate(() => {
+		if (context) drawMouseTrail(eraserTrail, context, 'red');
+	});
 </script>
 
 <div class="absolute h-full w-full">
@@ -38,6 +44,15 @@
 		if (typeof window !== undefined) {
 			width = window.innerWidth;
 			height = window.innerHeight;
+			updateOffset();
 		}
 	}}
 />
+
+<style>
+	canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+</style>
