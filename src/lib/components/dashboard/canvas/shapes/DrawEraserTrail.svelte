@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { touchStates } from '$lib/io/Stores';
-	import { onMount, afterUpdate } from 'svelte';
+	import { onMount } from 'svelte';
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -32,6 +32,7 @@
 		lineColor: string
 	): void => {
 		if (mouseTrail.length < 2) return;
+		//console.log(mouseTrail);
 		context.beginPath();
 		context.strokeStyle = lineColor;
 		for (let i = 1; i < mouseTrail.length; i++) {
@@ -49,8 +50,10 @@
 
 	const handleMouseUp = () => {
 		if ($touchState !== 'isErasing') return;
-		eraserTrail = [];
-		if (context) drawEraserTrail(eraserTrail, context, 'red');
+		if (context) {
+			eraserTrail = [];
+			context.clearRect(0, 0, width, height);
+		}
 	};
 </script>
 

@@ -18,6 +18,7 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import type { Mouse } from '@playwright/test';
 
 	let scrollX: number = 0;
 	let scrollY: number = 0;
@@ -47,7 +48,6 @@
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
-
 			width = window.innerWidth;
 			height = window.innerHeight;
 			updateOffset();
@@ -77,7 +77,7 @@
 	 *
 	 * @param e MouseEvent
 	 */
-	const handleMouseDown = (e): void => {
+	const handleMouseDown = (e: MouseEvent): void => {
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 		startPosition = { x, y };
@@ -103,7 +103,7 @@
 	 *
 	 * @param e MouseEvent
 	 */
-	const handleMouseUp = (e) => {
+	const handleMouseUp = (e: MouseEvent) => {
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 
@@ -131,7 +131,7 @@
 	 *
 	 * @param e MouseEvent
 	 */
-	const handleMouseMove = (e) => {
+	const handleMouseMove = (e: MouseEvent) => {
 		if ($TOUCHSTATE === 'isHovering') {
 			handleMouseMoveUp(e.clientX, e.clientY);
 		} else {
