@@ -70,7 +70,7 @@
 	};
 </script>
 
-<Button pill={false} outline color="light">{chosenPlot}</Button>
+<Button pill={false} outline color="light">Bar Chart</Button>
 <Dropdown>
 	{#each rectangleCharts as { chartType }, i (i)}
 		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>
