@@ -38,10 +38,6 @@
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
 
-	//let isPanning = false;
-	//let panStartX = 0;
-	//let panStartY = 0;
-
 	const tolerance: number = 5;
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
@@ -219,6 +215,12 @@
 		newPolygon = [polygon];
 	};
 
+	/**
+	 * ### Handle Erase Shape
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
 	const handleEraseShape = (x: number, y: number): void => {
 		eraserTrail = [...eraserTrail, { x: x, y: y }];
 	};
@@ -281,8 +283,9 @@
 				{#each newPolygon as polygon}
 					<DrawRectangleCanvas {polygon} />
 				{/each}
-				<DrawEraserTrail {eraserTrail} />
 			{/if}
+
+			<DrawEraserTrail {eraserTrail} />
 		</div>
 	</div>
 	<canvas bind:this={canvas} />

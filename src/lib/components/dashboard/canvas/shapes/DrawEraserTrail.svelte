@@ -1,58 +1,57 @@
 <script lang="ts">
-	import { onMount, afterUpdate } from 'svelte';
-	import { browser } from '$app/environment';
-	import { drawMouseTrail } from './draw-utils/Draw';
+	import { touchStates } from '$lib/io/Stores';
+	import { afterUpdate } from 'svelte';
 
+	export let eraserTrail: Point[];
+
+	let offsetX = 0;
+	let offsetY = 0;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
-	let offsetX: number = 0;
-	let offsetY: number = 0;
-	let width: number = 0;
-	let height: number = 0;
 
-	export let eraserTrail: Point[] = [];
+	let plotHeight: number = 0;
+	let plotWidth: number = 0;
 
-	$: if (eraserTrail.length > 2 && context) {
-		drawMouseTrail(eraserTrail, context, 'red');
-	}
+	$: TOUCHSTATE = touchStates();
 
-	if (browser) {
-		onMount(() => {
-			context = canvas.getContext('2d');
-			width = window.innerWidth;
-			height = window.innerHeight;
-			updateOffset();
-		});
-	}
+	const handleMouseDown = (e: MouseEvent) => {
+		var x = e.clientX; // adjust the mouse x-coordinate by the left offset of the canvas
+		var y = e.clientY;
+	};
 
-	const updateOffset = () => {
-		const rect = canvas.getBoundingClientRect();
-		offsetX = rect.left;
-		offsetY = Math.abs(rect.top - height);
+	const handleMouseMove = (e: MouseEvent) => {
+		var x = e.clientX;
+		var y = e.clientY;
+
+		if ($TOUCHSTATE === 'isErasing') {
+			var dx = x - offsetX;
+			var dy = y - offsetY;
+		}
+	};
+
+	const handleMouseUp = (e: MouseEvent) => {
+		var x = e.clientX;
+		var y = e.clientY;
+		if ($TOUCHSTATE === 'isErasing') {
+			var dx = x - offsetX;
+			var dy = y - offsetY;
+		}
 	};
 
 	afterUpdate(() => {
-		if (context) drawMouseTrail(eraserTrail, context, 'red');
+		context = canvas.getContext('2d');
+
+		if (context) {
+			context.strokeStyle = 'red';
+		}
 	});
 </script>
 
-<div class="absolute h-full w-full">
-	<canvas bind:this={canvas} />
+<div
+	style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
+	on:mousedown={handleMouseDown}
+	on:mousemove={handleMouseMove}
+	on:mouseup={handleMouseUp}
+>
+	<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
 </div>
-<svelte:window
-	on:resize={() => {
-		if (typeof window !== undefined) {
-			width = window.innerWidth;
-			height = window.innerHeight;
-			updateOffset();
-		}
-	}}
-/>
-
-<style>
-	canvas {
-		position: absolute;
-		top: 0;
-		left: 0;
-	}
-</style>
