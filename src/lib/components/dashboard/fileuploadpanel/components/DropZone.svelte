@@ -2,7 +2,7 @@
 	//@ts-ignore
 	import Dropzone from 'flowbite-svelte/Dropzone.svelte';
 	import { generateID } from '$lib/io/GenerateID';
-	import { createFileStore, activeDropZone } from '$lib/io/Stores';
+	import { createFileStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
 
@@ -46,6 +46,7 @@
 					}
 				}
 				activeDropZone.set(false);
+				activeSidebar.set(true);
 			});
 		} else if (event.dataTransfer) {
 			[...event.dataTransfer.files].forEach((file) => {
@@ -53,6 +54,7 @@
 				uploadToSQLITe(file);
 			});
 			activeDropZone.set(false);
+			activeSidebar.set(true);
 		}
 	};
 
@@ -66,6 +68,7 @@
 				uploadToSQLITe(file);
 			});
 			activeDropZone.set(false);
+			activeSidebar.set(true);
 		}
 	};
 

@@ -5,7 +5,7 @@
  *****************************/
 
 type WorkFlow = 'basic' | 'cluster';
-type ChartType = 'scatter' | 'bar' | 'line' | 'pie' | 'area' | 'clusterDensity';
+type ChartType = 'Scatter' | 'Bar' | 'Line' | 'Pie' | 'Area' | 'ClusterDensity';
 type DistanceFunction = (a: number[], b: number[]) => number;
 type PointVector = number[];
 

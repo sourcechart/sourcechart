@@ -1,7 +1,10 @@
 <script lang="ts">
 	//@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte';
+	import { fileDropdown } from '$lib/io/Stores';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
+
+	$: numberOfDatasets = fileDropdown();
 
 	const handleClick = () => {
 		activeDropZone.set(true);
@@ -30,6 +33,6 @@
 				d="M9 1v16M1 9h16"
 			/>
 		</svg>
-		<p class="text-gray-400">Add Data</p>
+		<p class="text-gray-400">Add Data [{$numberOfDatasets.length}]</p>
 	</div>
 </Button>
