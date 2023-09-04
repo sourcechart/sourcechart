@@ -8,7 +8,7 @@
 	type SideBarVersion = 'WorkFlow' | 'LowCode';
 	export let sideBarVersion: SideBarVersion;
 
-	let chosenPlot: string = 'Chart Type';
+	let chosenPlot: string = 'Bar Chart (Default)';
 
 	let rectangleCharts: any[] = [
 		{
@@ -31,19 +31,22 @@
 	if (sideBarVersion === 'WorkFlow') {
 		rectangleCharts = [...rectangleCharts, { chartType: 'density' }];
 	}
+	function capitalizeFirstLetter(string: string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
 
 	$: i = clickedChartIndex();
 
 	$: {
 		if ($allCharts[$i]?.chartOptions?.series[0]?.type) {
-			chosenPlot = $allCharts[$i].chartOptions.series[0].type;
+			chosenPlot = capitalizeFirstLetter($allCharts[$i].chartOptions.series[0].type);
 		} else {
-			chosenPlot = 'Choose Chart Type';
+			chosenPlot = 'Bar Chart (Default)';
 		}
 	}
 	const chooseChart = (plot: string) => {
-		plot = plot.toLowerCase();
 		chosenPlot = plot;
+		plot = plot.toLowerCase();
 		allCharts.update((charts) => {
 			charts.forEach((chart) => {
 				chart.chartType = plot;
@@ -60,7 +63,7 @@
 	};
 </script>
 
-<Button pill={false} outline color="light">Bar Chart (Default)</Button>
+<Button pill={false} outline color="light">{chosenPlot}</Button>
 <Dropdown class="overflow-y-auto py-1 h-48">
 	{#each rectangleCharts as { chartType }, i (i)}
 		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>
