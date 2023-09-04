@@ -61,7 +61,7 @@
 </script>
 
 <Button pill={false} outline color="light">Bar Chart (Default)</Button>
-<Dropdown class="overflow-y-auto py-1">
+<Dropdown class="overflow-y-auto py-1 h-48">
 	{#each rectangleCharts as { chartType }, i (i)}
 		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>
 	{/each}

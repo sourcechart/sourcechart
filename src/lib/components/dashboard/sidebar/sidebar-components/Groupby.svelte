@@ -52,7 +52,7 @@
 </script>
 
 <Button pill={false} outline color="light">{ButtonName}</Button>
-<Dropdown class="overflow-y-auto py-1 h-32">
+<Dropdown class="overflow-y-auto h-48 py-1">
 	{#each $columns as column}
 		<DropdownItem on:click={() => addColumnToGroupBy(column)}>{column}</DropdownItem>
 	{/each}

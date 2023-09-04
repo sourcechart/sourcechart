@@ -85,7 +85,7 @@
 </script>
 
 <Button outline color="light">{selectedDataset}</Button>
-<Dropdown class="overflow-y-auto py-1 h-48">
+<Dropdown class="overflow-y-auto py-1 h-32">
 	{#each $datasets as dataset}
 		{#if dataset !== null}
 			<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
