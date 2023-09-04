@@ -78,7 +78,7 @@ export class DuckDBClient {
 		Promise <Array<any[any]>>
 		*/
 		const res = await this.queryStream(query, params);
-		let results: Array<any> = []; //@ts-ignore
+		let results = []; //@ts-ignore
 		for await (const rows of res.readRows()) {
 			for (const row of rows) {
 				results.push(row);
