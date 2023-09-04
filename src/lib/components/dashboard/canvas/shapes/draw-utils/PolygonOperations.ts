@@ -104,7 +104,6 @@ const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 		});
 	}
 
-	// Concatenating vertices and midpoints to get all the handles.
 	return vertices.concat(midPoints);
 };
 
