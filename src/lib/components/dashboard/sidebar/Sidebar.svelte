@@ -8,8 +8,6 @@
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
-	//import Aggregator from './sidebar-components/Aggregator.svelte';
-	//import WorkFlowSidebar from './WorkFlowSidebar.svelte';
 
 	export let data;
 

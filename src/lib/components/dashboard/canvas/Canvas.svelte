@@ -1,5 +1,6 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
+	import DrawEraserTrail from './shapes/DrawEraserTrail.svelte';
 	import * as PolyOps from './shapes/draw-utils/PolygonOperations';
 	import {
 		navBarState,
@@ -17,12 +18,14 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import type { Mouse } from '@playwright/test';
 
 	let scrollX: number = 0;
 	let scrollY: number = 0;
 	let width: number = 0;
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
+	let eraserTrail: Point[] = [];
 
 	let startPosition: Point = { x: 0, y: 0 };
 	let currentMousePosition: Point = { x: 0, y: 0 };
@@ -36,10 +39,6 @@
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
 
-	//let isPanning = false;
-	//let panStartX = 0;
-	//let panStartY = 0;
-
 	const tolerance: number = 5;
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
@@ -49,7 +48,6 @@
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
-
 			width = window.innerWidth;
 			height = window.innerHeight;
 			updateOffset();
@@ -79,7 +77,7 @@
 	 *
 	 * @param e MouseEvent
 	 */
-	const handleMouseDown = (e): void => {
+	const handleMouseDown = (e: MouseEvent): void => {
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 		startPosition = { x, y };
@@ -105,7 +103,7 @@
 	 *
 	 * @param e MouseEvent
 	 */
-	const handleMouseUp = (e) => {
+	const handleMouseUp = (e: MouseEvent) => {
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 
@@ -133,7 +131,7 @@
 	 *
 	 * @param e MouseEvent
 	 */
-	const handleMouseMove = (e) => {
+	const handleMouseMove = (e: MouseEvent) => {
 		if ($TOUCHSTATE === 'isHovering') {
 			handleMouseMoveUp(e.clientX, e.clientY);
 		} else {
@@ -184,6 +182,7 @@
 	 */
 	const handleErase = (x: number, y: number): void => {
 		currentTouchPosition = { x: x, y: y };
+		handleEraseShape(x, y);
 		const allPolygons = $allCharts.map((chart) => chart.polygon);
 		const polygon = PolyOps.getContainingPolygon(currentTouchPosition, allPolygons);
 
@@ -214,6 +213,16 @@
 			]
 		};
 		newPolygon = [polygon];
+	};
+
+	/**
+	 * ### Handle Erase Shape
+	 *
+	 * @param x x position on the screen
+	 * @param y y position on the screen
+	 */
+	const handleEraseShape = (x: number, y: number): void => {
+		eraserTrail = [...eraserTrail, { x: x, y: y }];
 	};
 
 	/**
@@ -252,10 +261,6 @@
 				handleResize(x, y);
 				break;
 
-			//case 'isPanning':
-			//	handlePanMove(x, y);
-			//	break;
-
 			default:
 				return;
 		}
@@ -280,6 +285,7 @@
 				{/each}
 			{/if}
 		</div>
+		<DrawEraserTrail />
 	</div>
 	<canvas bind:this={canvas} />
 </div>

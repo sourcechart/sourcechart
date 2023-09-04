@@ -1,14 +1,12 @@
-import { ChartOptions } from './ChartOptions';
-
 export class EChartBuilder {
-	protected chartOption?: string;
+	protected chartOption?: ChartType;
 	private xData: Array<any>;
 	private yData: Array<any>;
 	private xType: string | null;
 	private xAxisType: string;
 
 	constructor(
-		chartOption: string = ChartOptions.bar,
+		chartOption: ChartType = 'bar',
 		xData: Array<any> = [],
 		yData: Array<any> = [],
 		xType: string | null = 'category'

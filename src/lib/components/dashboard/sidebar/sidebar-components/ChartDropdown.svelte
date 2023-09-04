@@ -3,7 +3,6 @@
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
 	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
-	import { ChartOptions } from '$lib/io/ChartOptions';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	type SideBarVersion = 'WorkFlow' | 'LowCode';
@@ -13,34 +12,24 @@
 
 	let rectangleCharts: any[] = [
 		{
-			//	icon: '',
-			chartType: ChartOptions.bar
-			//	component: BarPlotButton
+			chartType: 'Bar'
 		},
 		{
-			//	icon: '',
-			chartType: ChartOptions.scatter
-			//	component: ScatterPlotButton
+			chartType: 'Scatter'
 		},
 		{
-			//	icon: '',
-			chartType: ChartOptions.pie
-			//	component: PiePlotButton
+			chartType: 'Pie'
 		},
 		{
-			//	icon: '',
-			chartType: ChartOptions.line
-			//		component: LinePlotButton
+			chartType: 'Line'
 		},
 		{
-			//D	icon: '',
-			chartType: ChartOptions.area
-			//D	component: AreaPlotButton
+			chartType: 'Area'
 		}
 	];
 
 	if (sideBarVersion === 'WorkFlow') {
-		rectangleCharts = [...rectangleCharts, { chartType: ChartOptions.density }];
+		rectangleCharts = [...rectangleCharts, { chartType: 'density' }];
 	}
 
 	$: i = clickedChartIndex();
@@ -53,6 +42,7 @@
 		}
 	}
 	const chooseChart = (plot: string) => {
+		plot = plot.toLowerCase();
 		chosenPlot = plot;
 		allCharts.update((charts) => {
 			charts.forEach((chart) => {
@@ -70,7 +60,7 @@
 	};
 </script>
 
-<Button pill={false} outline color="light">{chosenPlot}</Button>
+<Button pill={false} outline color="light">Bar Chart (Default)</Button>
 <Dropdown>
 	{#each rectangleCharts as { chartType }, i (i)}
 		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>
