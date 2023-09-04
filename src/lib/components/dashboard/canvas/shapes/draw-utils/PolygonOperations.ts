@@ -23,6 +23,12 @@ const isPointInPolygon = (point: Point, polygon: Polygon): boolean => {
 	return inside;
 };
 
+/**
+ * Get Cursor Style From Direction
+ *
+ * @param direction
+ * @returns string|null
+ */
 const getCursorStyleFromDirection = (direction: string): string | null => {
 	const cursorMap: { [key: string]: string } = {
 		n: 'ns-resize',
@@ -66,7 +72,6 @@ const isNearPoint = (
 
  *  @param point the current point (mouse position, or other)
  *  @param polygons all the polygons that are on the canvas
-
 */
 const getContainingPolygon = (point: Point, polygons: Polygon[]): Polygon | null => {
 	let containedPolygon: Polygon | null = null;

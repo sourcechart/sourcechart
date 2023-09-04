@@ -12,29 +12,19 @@
 
 	let rectangleCharts: any[] = [
 		{
-			//	icon: '',
-			chartType: 'bar'
-			//	component: BarPlotButton
+			chartType: 'Bar'
 		},
 		{
-			//	icon: '',
-			chartType: 'scatter'
-			//	component: ScatterPlotButton
+			chartType: 'Scatter'
 		},
 		{
-			//	icon: '',
-			chartType: 'pie'
-			//	component: PiePlotButton
+			chartType: 'Pie'
 		},
 		{
-			//	icon: '',
-			chartType: 'line'
-			//		component: LinePlotButton
+			chartType: 'Line'
 		},
 		{
-			//D	icon: '',
-			chartType: 'area'
-			//D	component: AreaPlotButton
+			chartType: 'Area'
 		}
 	];
 
@@ -52,6 +42,7 @@
 		}
 	}
 	const chooseChart = (plot: string) => {
+		plot = plot.toLowerCase();
 		chosenPlot = plot;
 		allCharts.update((charts) => {
 			charts.forEach((chart) => {
@@ -69,7 +60,7 @@
 	};
 </script>
 
-<Button pill={false} outline color="light">Bar Chart</Button>
+<Button pill={false} outline color="light">Bar Chart (Default)</Button>
 <Dropdown>
 	{#each rectangleCharts as { chartType }, i (i)}
 		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>
