@@ -284,9 +284,8 @@
 					<DrawRectangleCanvas {polygon} />
 				{/each}
 			{/if}
-
-			<DrawEraserTrail />
 		</div>
+		<DrawEraserTrail />
 	</div>
 	<canvas bind:this={canvas} />
 </div>

@@ -7,12 +7,24 @@
 	let width: number = 0;
 	let height: number = 0;
 	let eraserTrail: Point[] = [];
+	let touchState = touchStates();
+	let offsetX: number = 0;
+	let offsetY: number = 0;
 
 	onMount(() => {
 		context = canvas.getContext('2d');
+		width = window.innerWidth;
+		height = window.innerHeight;
+		updateOffset();
+		canvas.width = width;
+		canvas.height = height;
 	});
 
-	let TOUCHSTATE = touchStates();
+	const updateOffset = () => {
+		const rect = canvas.getBoundingClientRect();
+		offsetX = rect.left;
+		offsetY = Math.abs(rect.top - height);
+	};
 
 	const drawEraserTrail = (
 		mouseTrail: Point[],
@@ -20,24 +32,25 @@
 		lineColor: string
 	): void => {
 		if (mouseTrail.length < 2) return;
-
 		context.beginPath();
-		context.moveTo(0, 0);
+		context.strokeStyle = lineColor;
 		for (let i = 1; i < mouseTrail.length; i++) {
+			context.moveTo(mouseTrail[i - 1].x, mouseTrail[i - 1].y);
 			context.lineTo(mouseTrail[i].x, mouseTrail[i].y);
+			context.stroke();
 		}
-		context.stroke();
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
-		if ($TOUCHSTATE !== 'isErasing') return;
+		if ($touchState !== 'isErasing') return;
 		eraserTrail = [...eraserTrail, { x: e.clientX, y: e.clientY }];
 		if (context) drawEraserTrail(eraserTrail, context, 'red');
 	};
 
 	const handleMouseUp = () => {
-		if ($TOUCHSTATE !== 'isErasing') return;
+		if ($touchState !== 'isErasing') return;
 		eraserTrail = [];
+		if (context) drawEraserTrail(eraserTrail, context, 'red');
 	};
 </script>
 
@@ -50,8 +63,6 @@
 			width = window.innerWidth;
 			height = window.innerHeight;
 			if (canvas) {
-				canvas.width = width;
-				canvas.height = height;
 			}
 		}
 	}}
