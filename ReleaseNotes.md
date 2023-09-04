@@ -1,6 +1,16 @@
 # Release Notes
 
-### July 2024
+## September 2023
+
+- Added Erase
+- Redid landing page
+- Fixed bug in choosing datasets
+
+## August 2023
+
+- Can persist data with SQLITE Database
+
+### July 2023
 
 - Added in custom Rectangles for plots
 
