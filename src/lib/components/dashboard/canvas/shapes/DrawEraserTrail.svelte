@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { touchStates } from '$lib/io/Stores';
-	import { onMount } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 	import { drawEraserTrail } from './draw-utils/Draw';
 
 	let canvas: HTMLCanvasElement;
@@ -45,3 +45,15 @@
 <div class="absolute h-full w-full" on:mousemove={handleMouseMove} on:mouseup={handleMouseUp}>
 	<canvas style="position: absolute;" bind:this={canvas} />
 </div>
+<svelte:window
+	on:resize={() => {
+		if (typeof window !== 'undefined') {
+			width = window.innerWidth;
+			height = window.innerHeight;
+			if (canvas) {
+				canvas.width = width;
+				canvas.height = height;
+			}
+		}
+	}}
+/>
