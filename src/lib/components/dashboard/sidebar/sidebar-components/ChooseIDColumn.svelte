@@ -15,7 +15,7 @@
 </script>
 
 <Button pill={false} outline={false}>{idColumn}</Button>
-<Dropdown>
+<Dropdown class="overflow-y-auto py-1">
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseIDColumn(column)}>{column}</DropdownItem>
 	{/each}
