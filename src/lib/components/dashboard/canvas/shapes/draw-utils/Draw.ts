@@ -36,11 +36,11 @@ const drawRectangle = (
 const redraw = (
 	polygons: Polygon[],
 	context: CanvasRenderingContext2D,
-	width: number,
-	height: number,
+	windowWidth: number,
+	windowHeight: number,
 	selectedPolygonIndex: number | null
 ): void => {
-	context.clearRect(0, 0, width, height);
+	context.clearRect(0, 0, windowWidth, windowHeight);
 	polygons.forEach((polygon, i) => {
 		let lineColor = i === selectedPolygonIndex ? 'red' : 'black';
 		drawRectangle(polygon.vertices, context, lineColor);
@@ -74,22 +74,27 @@ const drawHandles = (
 const drawEraserTrail = (
 	mouseTrail: Point[],
 	context: CanvasRenderingContext2D,
+	windowWidth: number,
+	windowHeight: number,
 	lineColor: string
 ): void => {
+	console.log(mouseTrail);
 	if (mouseTrail.length < 2) return; // Need at least two points to draw a line
 
-	context.beginPath();
 	context.strokeStyle = 'red';
+	context.beginPath();
+	context.moveTo(0, 0);
 
-	for (let i = 1; i < mouseTrail.length; i++) {
-		context.moveTo(mouseTrail[i - 1].x, mouseTrail[i - 1].y);
+	for (let i = 0; i < mouseTrail.length; i++) {
+		//console.log(mouseTrail[i].x, mouseTrail[i].y);
+
 		context.lineTo(mouseTrail[i].x, mouseTrail[i].y);
 		context.stroke();
 	}
 };
 
 /**
- * Resize retangle from corner
+ * Resize rectangle from corner
  *
  * @param x
  * @param y

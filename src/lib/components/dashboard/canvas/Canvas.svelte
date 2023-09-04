@@ -285,7 +285,7 @@
 				{/each}
 			{/if}
 
-			<DrawEraserTrail {eraserTrail} />
+			<DrawEraserTrail />
 		</div>
 	</div>
 	<canvas bind:this={canvas} />

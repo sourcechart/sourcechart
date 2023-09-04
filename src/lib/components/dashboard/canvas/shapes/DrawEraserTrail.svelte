@@ -1,56 +1,58 @@
 <script lang="ts">
 	import { touchStates } from '$lib/io/Stores';
-	import { drawEraserTrail } from './draw-utils/Draw';
-	import { afterUpdate } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 
-	export let eraserTrail: Point[];
-
-	let offsetX = 0;
-	let offsetY = 0;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
+	let width: number = 0;
+	let height: number = 0;
+	let eraserTrail: Point[] = [];
 
-	$: TOUCHSTATE = touchStates();
+	onMount(() => {
+		context = canvas.getContext('2d');
+	});
 
-	const handleMouseDown = (e: MouseEvent) => {
-		var x = e.clientX; // adjust the mouse x-coordinate by the left offset of the canvas
-		var y = e.clientY;
+	let TOUCHSTATE = touchStates();
+
+	const drawEraserTrail = (
+		mouseTrail: Point[],
+		context: CanvasRenderingContext2D,
+		lineColor: string
+	): void => {
+		if (mouseTrail.length < 2) return;
+
+		context.beginPath();
+		context.moveTo(0, 0);
+		for (let i = 1; i < mouseTrail.length; i++) {
+			context.lineTo(mouseTrail[i].x, mouseTrail[i].y);
+		}
+		context.stroke();
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
-		var x = e.clientX;
-		var y = e.clientY;
-
-		if ($TOUCHSTATE === 'isErasing') {
-			var dx = x - offsetX;
-			var dy = y - offsetY;
-		}
+		if ($TOUCHSTATE !== 'isErasing') return;
+		eraserTrail = [...eraserTrail, { x: e.clientX, y: e.clientY }];
+		if (context) drawEraserTrail(eraserTrail, context, 'red');
 	};
 
-	const handleMouseUp = (e: MouseEvent) => {
-		var x = e.clientX;
-		var y = e.clientY;
-		if ($TOUCHSTATE === 'isErasing') {
-			var dx = x - offsetX;
-			var dy = y - offsetY;
-		}
+	const handleMouseUp = () => {
+		if ($TOUCHSTATE !== 'isErasing') return;
+		eraserTrail = [];
 	};
-
-	afterUpdate(() => {
-		context = canvas.getContext('2d');
-
-		if (context) {
-			context.strokeStyle = 'red';
-			drawEraserTrail(eraserTrail, context, 'red');
-		}
-	});
 </script>
 
-<div
-	class="absolute h-full w-full"
-	on:mousedown={handleMouseDown}
-	on:mousemove={handleMouseMove}
-	on:mouseup={handleMouseUp}
->
-	<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
+<div class="absolute h-full w-full" on:mousemove={handleMouseMove} on:mouseup={handleMouseUp}>
+	<canvas style="position: absolute; z-index: 2;" bind:this={canvas} />
 </div>
+<svelte:window
+	on:resize={() => {
+		if (typeof window !== 'undefined') {
+			width = window.innerWidth;
+			height = window.innerHeight;
+			if (canvas) {
+				canvas.width = width;
+				canvas.height = height;
+			}
+		}
+	}}
+/>
