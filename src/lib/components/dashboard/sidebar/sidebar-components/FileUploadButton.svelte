@@ -33,6 +33,6 @@
 				d="M9 1v16M1 9h16"
 			/>
 		</svg>
-		<p class="text-gray-400">Add Data [{$numberOfDatasets.length}]</p>
+		<p class="text-gray-400">Datasets [{$numberOfDatasets.length}]</p>
 	</div>
 </Button>
