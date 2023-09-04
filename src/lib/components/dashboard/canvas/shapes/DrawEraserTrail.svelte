@@ -30,7 +30,7 @@
 	const handleMouseMove = (e: MouseEvent) => {
 		if ($touchState !== 'isErasing') return;
 		eraserTrail = [...eraserTrail, { x: e.clientX, y: e.clientY }];
-		if (context) drawEraserTrail(eraserTrail, context, 'red');
+		if (context) drawEraserTrail(eraserTrail, context, '#9e9e9e');
 	};
 
 	const handleMouseUp = () => {

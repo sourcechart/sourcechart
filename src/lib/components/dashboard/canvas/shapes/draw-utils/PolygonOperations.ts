@@ -39,7 +39,7 @@ const getCursorStyleFromDirection = (direction: string): string | null => {
 };
 
 /**
- * Manhatten Distance of two points with a tolerance
+ * Manhattan Distance of two points with a tolerance
  *
  * @param mouseX
  * @param mouseY
@@ -81,7 +81,7 @@ const getContainingPolygon = (point: Point, polygons: Polygon[]): Polygon | null
 };
 
 /**
- * Create the dynamamic rectangles.
+ * Create the dynamic rectangles.
  *
  * @param polygon
  * @returns
