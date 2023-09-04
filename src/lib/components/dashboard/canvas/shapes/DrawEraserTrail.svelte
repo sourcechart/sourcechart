@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { touchStates } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
+	import { drawEraserTrail } from './draw-utils/Draw';
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -24,22 +25,6 @@
 		const rect = canvas.getBoundingClientRect();
 		offsetX = rect.left;
 		offsetY = Math.abs(rect.top - height);
-	};
-
-	const drawEraserTrail = (
-		mouseTrail: Point[],
-		context: CanvasRenderingContext2D,
-		lineColor: string
-	): void => {
-		if (mouseTrail.length < 2) return;
-		//console.log(mouseTrail);
-		context.beginPath();
-		context.strokeStyle = lineColor;
-		for (let i = 1; i < mouseTrail.length; i++) {
-			context.moveTo(mouseTrail[i - 1].x, mouseTrail[i - 1].y);
-			context.lineTo(mouseTrail[i].x, mouseTrail[i].y);
-			context.stroke();
-		}
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
