@@ -69,7 +69,7 @@
 </script>
 
 <Button pill={false} outline color="light">{$label}</Button>
-<Dropdown class="overflow-y-auto py-1">
+<Dropdown class="overflow-y-auto h-48 py-1">
 	{#each $columns as column}
 		<DropdownItem on:click={() => chooseColumn(column)}>{column}</DropdownItem>
 	{/each}

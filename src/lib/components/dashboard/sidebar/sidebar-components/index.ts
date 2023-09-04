@@ -1,4 +1,3 @@
-import ClearChartOptions from './ClearChartOptions.svelte';
 import DatasetDropDown from './DatasetDropDown.svelte';
 import ColumnDropDrown from './ColumnDropDrown.svelte';
 import Groupby from './Groupby.svelte';
@@ -10,7 +9,6 @@ import Tags from './Tags.svelte';
 
 export {
 	Tags,
-	ClearChartOptions,
 	DatasetDropDown,
 	ColumnDropDrown,
 	Groupby,
