@@ -71,7 +71,7 @@ const drawHandles = (
 		context.globalAlpha = 1.0; // reset the transparency to the original state
 	});
 };
-const drawMouseTrail = (
+const drawEraserTrail = (
 	mouseTrail: Point[],
 	context: CanvasRenderingContext2D,
 	lineColor: string
@@ -144,7 +144,7 @@ const getPlotLeftPosition = (polygon: Polygon) => {
 
 export {
 	drawRectangle,
-	drawMouseTrail,
+	drawEraserTrail,
 	redraw,
 	drawHandles,
 	resizeRectangle,

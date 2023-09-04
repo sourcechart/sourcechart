@@ -3,7 +3,6 @@
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
 	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
-	import { ChartOptions } from '$lib/io/ChartOptions';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	type SideBarVersion = 'WorkFlow' | 'LowCode';
@@ -14,33 +13,33 @@
 	let rectangleCharts: any[] = [
 		{
 			//	icon: '',
-			chartType: ChartOptions.bar
+			chartType: 'bar'
 			//	component: BarPlotButton
 		},
 		{
 			//	icon: '',
-			chartType: ChartOptions.scatter
+			chartType: 'scatter'
 			//	component: ScatterPlotButton
 		},
 		{
 			//	icon: '',
-			chartType: ChartOptions.pie
+			chartType: 'pie'
 			//	component: PiePlotButton
 		},
 		{
 			//	icon: '',
-			chartType: ChartOptions.line
+			chartType: 'line'
 			//		component: LinePlotButton
 		},
 		{
 			//D	icon: '',
-			chartType: ChartOptions.area
+			chartType: 'area'
 			//D	component: AreaPlotButton
 		}
 	];
 
 	if (sideBarVersion === 'WorkFlow') {
-		rectangleCharts = [...rectangleCharts, { chartType: ChartOptions.density }];
+		rectangleCharts = [...rectangleCharts, { chartType: 'density' }];
 	}
 
 	$: i = clickedChartIndex();

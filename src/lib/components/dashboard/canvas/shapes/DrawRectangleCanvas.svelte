@@ -7,7 +7,7 @@
 		activeSidebar
 	} from '$lib/io/Stores';
 	import { isPointInPolygon } from './draw-utils/PolygonOperations';
-	import { drawHandles, drawRectangle, drawMouseTrail } from './draw-utils/Draw';
+	import { drawHandles, drawRectangle } from './draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { touchStates } from '$lib/io/Stores';
+	import { drawEraserTrail } from './draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 
 	export let eraserTrail: Point[];
@@ -8,9 +9,6 @@
 	let offsetY = 0;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
-
-	let plotHeight: number = 0;
-	let plotWidth: number = 0;
 
 	$: TOUCHSTATE = touchStates();
 
@@ -43,12 +41,13 @@
 
 		if (context) {
 			context.strokeStyle = 'red';
+			drawEraserTrail(eraserTrail, context, 'red');
 		}
 	});
 </script>
 
 <div
-	style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
+	class="absolute h-full w-full"
 	on:mousedown={handleMouseDown}
 	on:mousemove={handleMouseMove}
 	on:mouseup={handleMouseUp}
