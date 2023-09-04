@@ -55,15 +55,5 @@
 </script>
 
 <div class="absolute h-full w-full" on:mousemove={handleMouseMove} on:mouseup={handleMouseUp}>
-	<canvas style="position: absolute; z-index: 2;" bind:this={canvas} />
+	<canvas style="position: absolute;" bind:this={canvas} />
 </div>
-<svelte:window
-	on:resize={() => {
-		if (typeof window !== 'undefined') {
-			width = window.innerWidth;
-			height = window.innerHeight;
-			if (canvas) {
-			}
-		}
-	}}
-/>

@@ -60,7 +60,7 @@ const drawHandles = (
 	context: CanvasRenderingContext2D,
 	color: string,
 	side: number
-) => {
+): void => {
 	context.strokeStyle = color;
 	context.lineWidth = 1;
 	vertices.forEach((point) => {
@@ -71,23 +71,25 @@ const drawHandles = (
 		context.globalAlpha = 1.0; // reset the transparency to the original state
 	});
 };
+
+/**
+ * DrawEraserTrail
+ *
+ * @param mouseTrail
+ * @param context
+ * @param lineColor
+ * @returns void
+ */
 const drawEraserTrail = (
 	mouseTrail: Point[],
 	context: CanvasRenderingContext2D,
-	windowWidth: number,
-	windowHeight: number,
 	lineColor: string
 ): void => {
-	console.log(mouseTrail);
-	if (mouseTrail.length < 2) return; // Need at least two points to draw a line
-
-	context.strokeStyle = 'red';
+	if (mouseTrail.length < 2) return;
 	context.beginPath();
-	context.moveTo(0, 0);
-
-	for (let i = 0; i < mouseTrail.length; i++) {
-		//console.log(mouseTrail[i].x, mouseTrail[i].y);
-
+	context.strokeStyle = lineColor;
+	for (let i = 1; i < mouseTrail.length; i++) {
+		context.moveTo(mouseTrail[i - 1].x, mouseTrail[i - 1].y);
 		context.lineTo(mouseTrail[i].x, mouseTrail[i].y);
 		context.stroke();
 	}
@@ -101,7 +103,7 @@ const drawEraserTrail = (
  * @param polygon
  * @param resizeEdge
  */
-const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: string) => {
+const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: string): Polygon => {
 	//0:nw 1:ne 2:se 3:sw
 	if (resizeEdge === 'n') {
 		polygon.vertices[0].y = y;
@@ -139,11 +141,11 @@ const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: str
 	return polygon;
 };
 
-const getPlotTopPosition = (polygon: Polygon) => {
+const getPlotTopPosition = (polygon: Polygon): number => {
 	return Math.min(polygon.vertices[0].y, polygon.vertices[2].y);
 };
 
-const getPlotLeftPosition = (polygon: Polygon) => {
+const getPlotLeftPosition = (polygon: Polygon): number => {
 	return Math.abs(polygon.vertices[0].x - polygon.vertices[2].x);
 };
 
