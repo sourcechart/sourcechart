@@ -41,14 +41,6 @@
 		}
 		$allCharts[$i] = chart;
 	};
-
-	const getTagsOnClick = () => {
-		tags = [];
-		if ($clickChart?.groupbyColumns) {
-			tags = $clickChart.groupbyColumns;
-		}
-		return tags;
-	};
 </script>
 
 <Button pill={false} outline color="light">{ButtonName}</Button>

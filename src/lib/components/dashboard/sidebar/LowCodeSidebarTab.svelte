@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { ColumnDropDrown, Aggregator, Groupby, ChartDropdown, Tags } from './sidebar-components'; //@ts-ignore
+	import {
+		ColumnDropDrown,
+		Aggregator,
+		Groupby,
+		ChartDropdown,
+		Tags,
+		AddFilter
+	} from './sidebar-components'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
 </script>
 
@@ -29,5 +36,11 @@
 			<span>Choose Chart</span>
 		</Label>
 		<ChartDropdown sideBarVersion={'LowCode'} />
+	</div>
+	<div class="flex flex-col space-y-1">
+		<Label class="space-y-2 mb-1">
+			<span>Add Filter</span>
+		</Label>
+		<AddFilter />
 	</div>
 </div>
