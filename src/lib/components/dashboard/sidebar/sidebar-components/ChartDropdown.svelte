@@ -29,6 +29,7 @@
 	if (sideBarVersion === 'WorkFlow') {
 		rectangleCharts = [...rectangleCharts, { chartType: 'Density' }];
 	}
+
 	function capitalizeFirstLetter(string: string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
@@ -42,22 +43,31 @@
 			chosenPlot = 'Bar Chart (Default)';
 		}
 	}
-	const chooseChart = (plot: string) => {
-		chosenPlot = plot;
-		plot = plot.toLowerCase();
-		allCharts.update((charts) => {
-			charts.forEach((chart) => {
-				chart.chartType = plot;
-				if (plot === 'area') {
-					chart.chartOptions.series[0].type = 'line';
-					chart.chartOptions.series[0].areaStyle = {};
-				} else {
-					chart.chartOptions.series[0].type = plot;
-				}
-			});
 
-			return charts;
-		});
+	const chooseChart = (plot: string) => {
+		if (chosenPlot === plot) {
+			chosenPlot = 'Bar Chart (Default)';
+			allCharts.update((charts) => {
+				charts.splice($i, 1);
+				return charts;
+			});
+		} else {
+			chosenPlot = plot;
+			plot = plot.toLowerCase();
+			allCharts.update((charts) => {
+				charts.forEach((chart) => {
+					chart.chartType = plot;
+					if (plot === 'area') {
+						chart.chartOptions.series[0].type = 'line';
+						chart.chartOptions.series[0].areaStyle = {};
+					} else {
+						chart.chartOptions.series[0].type = plot;
+					}
+				});
+
+				return charts;
+			});
+		}
 	};
 </script>
 

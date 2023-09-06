@@ -1,16 +1,16 @@
 <script lang="ts">
+	//@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte';
 	import {
 		getColumnsFromFile,
 		clearChartOptions,
 		allCharts,
 		clickedChart,
-		clickedChartIndex,
-		groupbyColumns
+		clickedChartIndex
 	} from '$lib/io/Stores';
 
 	let tags: Array<string> = [];
-	let selectedButtons: Array<string> = []; // <-- Use an array instead of a single value
+	let selectedButtons: Array<string> = [];
 
 	export let ButtonName: string;
 
@@ -30,18 +30,17 @@
 	}
 
 	const addColumnToGroupBy = (column: string) => {
+		let chart = $allCharts[$i];
 		if (selectedButtons.includes(column)) {
 			selectedButtons = selectedButtons.filter((item) => item !== column);
+			tags = tags.filter((tag) => tag !== column);
+			chart.groupbyColumns = tags;
 		} else {
 			selectedButtons.push(column);
-		}
-
-		let chart = $allCharts[$i];
-		if (column) {
 			tags = [...tags, column];
 			chart.groupbyColumns = tags;
-			$groupbyColumns = tags;
 		}
+
 		$allCharts[$i] = chart;
 	};
 </script>
