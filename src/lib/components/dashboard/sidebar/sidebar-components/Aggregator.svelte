@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { allCharts, clickedChartIndex, clearChartOptions } from '$lib/io/Stores'; //@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte';
 
 	let aggs = ['avg', 'max', 'min', 'sum', 'count'];
 	let selectedAggregator: string | null = 'Aggregator';
@@ -15,10 +15,15 @@
 	}
 
 	const selectAggregator = (agg: string) => {
-		selectedAggregator = agg;
+		// Toggle the selected aggregator
+		if (selectedAggregator === agg) {
+			selectedAggregator = 'Aggregator';
+		} else {
+			selectedAggregator = agg;
+		}
 
 		allCharts.update((charts) => {
-			charts[$i].aggregator = selectedAggregator;
+			charts[$i].aggregator = selectedAggregator === 'Aggregator' ? null : selectedAggregator;
 			return charts;
 		});
 	};
