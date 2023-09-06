@@ -19,25 +19,48 @@
 
 	let max: number = 1;
 	let min: number = 0;
-	let filters = [{ component: Filter, props: { min: min, max: max } }];
+	let filters: any[] = [];
 
 	const addColumnToFilter = async (column: string) => {
 		let chart = $allCharts[$i];
 		if (chart.filename) {
 			var filename = checkNameForSpacesAndHyphens(chart.filename);
 			var correctColumn = checkNameForSpacesAndHyphens(column);
-			const maxResp = await $duckDBInstanceStore.query(
-				`SELECT max(${correctColumn}) as maxValue FROM ${filename}`
-			);
-			const minResp = await $duckDBInstanceStore.query(
-				`SELECT min(${correctColumn}) as minValue FROM ${filename}`
+
+			const randomValue = await $duckDBInstanceStore.query(
+				`SELECT ${correctColumn} as column FROM ${filename} ORDER BY RANDOM() LIMIT 1`
 			);
 
-			var maxObject = formatData(maxResp);
-			var minObject = formatData(minResp);
-			max = maxObject[0].maxValue;
-			min = minObject[0].minValue;
-			console.log(max, min);
+			var formatedData = formatData(randomValue);
+
+			if (typeof formatedData === 'string') {
+				const distinctValues = await $duckDBInstanceStore.query(
+					`SELECT DISTINCT ${correctColumn} as distinctValues FROM ${filename}`
+				);
+				var distinctValuesObject = formatData(distinctValues);
+				filters = [
+					...filters,
+					{
+						component: Dropdown,
+						props: {
+							items: distinctValuesObject.map((value: any) => value.distinctValues)
+						}
+					}
+				];
+			} else if (typeof formatedData === 'number') {
+				const maxResp = await $duckDBInstanceStore.query(
+					`SELECT max(${correctColumn}) as maxValue FROM ${filename}`
+				);
+				const minResp = await $duckDBInstanceStore.query(
+					`SELECT min(${correctColumn}) as minValue FROM ${filename}`
+				);
+
+				var maxObject = formatData(maxResp);
+				var minObject = formatData(minResp);
+				max = maxObject[0].maxValue;
+				min = minObject[0].minValue;
+				filters = [...filters, { component: Filter, props: { min: min, max: max } }];
+			}
 		}
 	};
 
