@@ -35,7 +35,7 @@
 			</div>
 		</Button>
 		{#if showAxis}
-			<div transition:slide>
+			<div transition:slide class="space-y-2">
 				<ColumnDropDrown axis={'X'} />
 				<ColumnDropDrown axis={'Y'} />
 			</div>

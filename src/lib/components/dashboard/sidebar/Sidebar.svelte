@@ -43,32 +43,30 @@
 	<div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 		<div class="outerDiv">
 			<div
-				class="innerDiv bg-gray-800 text-white w-full h-full transition-transform duration-200 ease-in-out rounded-md border-red-50 p-6"
+				class="innerDiv bg-gray-800 text-white w-full h-full transition-transform duration-200 ease-in-out rounded-md border-red-50 p-6 space-y-2 divide-y"
 			>
-				<div class="flex flex-col space-y-1 mt-2 mb-2">
-					<Label class="space-y-2 mb-1">
-						<span>Upload Files</span>
-					</Label>
-					<FileUploadButton />
+				<div>
+					<div class="flex flex-col space-y-1 mt-2 mb-2">
+						<FileUploadButton />
+					</div>
+					<div class="flex flex-col space-y-1">
+						<DatasetDropDown />
+					</div>
 				</div>
-				<div class="flex flex-col space-y-1">
-					<Label class="space-y-2 mb-1">
-						<span>Choose Dataset</span>
-					</Label>
-					<DatasetDropDown />
+				<div>
+					{#if data.session.user.email == 'noreply@gmail.com'}
+						<Tabs style="underline" contentClass="">
+							<TabItem open title="LowCode" on:click={clickBasicTab}>
+								<LowCodeSidebarTab />
+							</TabItem>
+							<TabItem title="Work Flows" on:click={clickClusterTab}>
+								<!--	<WorkflowSidebar /> -->
+							</TabItem>
+						</Tabs>
+					{:else}
+						<LowCodeSidebarTab />
+					{/if}
 				</div>
-				{#if data.session.user.email == 'noreply@gmail.com'}
-					<Tabs style="underline" contentClass="">
-						<TabItem open title="LowCode" on:click={clickBasicTab}>
-							<LowCodeSidebarTab />
-						</TabItem>
-						<TabItem title="Work Flows" on:click={clickClusterTab}>
-							<!--	<WorkflowSidebar /> -->
-						</TabItem>
-					</Tabs>
-				{:else}
-					<LowCodeSidebarTab />
-				{/if}
 			</div>
 		</div>
 	</div>
