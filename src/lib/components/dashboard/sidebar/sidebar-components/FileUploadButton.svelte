@@ -14,6 +14,7 @@
 
 <Button outline color="light" id="multiple_files" on:click={handleClick}>
 	<div class="flex justify-between space-x-2">
+		<p class="text-gray-400">Datasets [{$numberOfDatasets.length}]</p>
 		<svg
 			class="text-gray-700 dark:text-gray-400"
 			x="0px"
@@ -33,6 +34,5 @@
 				d="M9 1v16M1 9h16"
 			/>
 		</svg>
-		<p class="text-gray-400">Datasets [{$numberOfDatasets.length}]</p>
 	</div>
 </Button>
