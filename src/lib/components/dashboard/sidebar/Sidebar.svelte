@@ -42,7 +42,7 @@
 	<div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 		<div class="outerDiv">
 			<div
-				class="bg-gray-800 text-white w-full h-full overflow-y-auto transition-transform duration-200 ease-in-out rounded-md border-red-50 p-6"
+				class="innerDiv bg-gray-800 text-white w-full h-full transition-transform duration-200 ease-in-out rounded-md border-red-50 p-6"
 			>
 				<div class="flex flex-col space-y-1 mt-2 mb-2">
 					<Label class="space-y-2 mb-1">
@@ -87,12 +87,23 @@
 		overflow-y: auto;
 	}
 
-	.scrollbar-hide {
-		-ms-overflow-style: none; /* IE and Edge */
-		scrollbar-width: none; /* Firefox */
+	/* For WebKit (Chrome, Safari) */
+	.innerDiv::-webkit-scrollbar {
+		width: 8px;
 	}
 
-	.scrollbar-hide::-webkit-scrollbar {
-		display: none; /* Chrome, Safari, Opera */
+	.innerDiv::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
+	}
+
+	.innerDiv::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(255, 255, 255, 0.5);
+	}
+
+	/* For Firefox */
+	.innerDiv {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
 	}
 </style>
