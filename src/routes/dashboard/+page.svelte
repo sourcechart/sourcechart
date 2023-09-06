@@ -69,17 +69,14 @@
 	onMount(loadPreviousState);
 </script>
 
-<div class="dark:bg-gray-900 overflow-hidden">
+<div class="dark:bg-gray-900 overflow-y-auto max-h-screen">
 	<div class="flex justify-center items-center mt-3 z-30">
 		<DarkMode />
 		<NavBar />
 	</div>
-	{#if $activeSidebar}
-		<div class="fixed z-30 ml-1">
-			<Sidebar {data} />
-		</div>
-	{/if}
-
+	<div class="fixed z-30 ml-1">
+		<Sidebar {data} />
+	</div>
 	<div class="relative">
 		{#if $activeDropZone}
 			<div class="z-30 absolute inset-0 flex justify-center items-center w-screen h-screen">
