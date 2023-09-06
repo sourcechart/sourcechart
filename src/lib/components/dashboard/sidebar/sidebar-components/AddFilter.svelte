@@ -12,7 +12,7 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { PlusSolid } from 'flowbite-svelte-icons';
 
-	import Filter from './chart-components/Filter.svelte';
+	import FilterRange from './filter-components/FilterRange.svelte';
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
@@ -32,35 +32,42 @@
 			);
 
 			var formatedData = formatData(randomValue);
+			addComponentToFilter(formatedData, correctColumn, filename);
+		}
+	};
 
-			if (typeof formatedData === 'string') {
-				const distinctValues = await $duckDBInstanceStore.query(
-					`SELECT DISTINCT ${correctColumn} as distinctValues FROM ${filename}`
-				);
-				var distinctValuesObject = formatData(distinctValues);
-				filters = [
-					...filters,
-					{
-						component: Dropdown,
-						props: {
-							items: distinctValuesObject.map((value: any) => value.distinctValues)
-						}
+	const addComponentToFilter = async (
+		formatedData: any,
+		correctColumn: string,
+		filename: string
+	) => {
+		if (typeof formatedData === 'string') {
+			const distinctValues = await $duckDBInstanceStore.query(
+				`SELECT DISTINCT ${correctColumn} as distinctValues FROM ${filename}`
+			);
+			var distinctValuesObject = formatData(distinctValues);
+			filters = [
+				...filters,
+				{
+					component: Dropdown,
+					props: {
+						items: distinctValuesObject.map((value: any) => value.distinctValues)
 					}
-				];
-			} else if (typeof formatedData === 'number') {
-				const maxResp = await $duckDBInstanceStore.query(
-					`SELECT max(${correctColumn}) as maxValue FROM ${filename}`
-				);
-				const minResp = await $duckDBInstanceStore.query(
-					`SELECT min(${correctColumn}) as minValue FROM ${filename}`
-				);
+				}
+			];
+		} else if (typeof formatedData === 'number') {
+			const maxResp = await $duckDBInstanceStore.query(
+				`SELECT max(${correctColumn}) as maxValue FROM ${filename}`
+			);
+			const minResp = await $duckDBInstanceStore.query(
+				`SELECT min(${correctColumn}) as minValue FROM ${filename}`
+			);
 
-				var maxObject = formatData(maxResp);
-				var minObject = formatData(minResp);
-				max = maxObject[0].maxValue;
-				min = minObject[0].minValue;
-				filters = [...filters, { component: Filter, props: { min: min, max: max } }];
-			}
+			var maxObject = formatData(maxResp);
+			var minObject = formatData(minResp);
+			max = maxObject[0].maxValue;
+			min = minObject[0].minValue;
+			filters = [...filters, { component: FilterRange, props: { min: min, max: max } }];
 		}
 	};
 
