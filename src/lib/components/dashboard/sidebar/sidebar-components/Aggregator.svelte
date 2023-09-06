@@ -26,6 +26,13 @@
 
 <div class="space-y-1 space-x-1">
 	{#each aggs as agg}
-		<Button pill={false} outline color="light" on:click={selectAggregator}>{agg}</Button>
+		<Button
+			pill={false}
+			outline
+			color={agg === selectedAggregator ? 'primary' : 'light'}
+			on:click={() => selectAggregator(agg)}
+		>
+			{agg}
+		</Button>
 	{/each}
 </div>

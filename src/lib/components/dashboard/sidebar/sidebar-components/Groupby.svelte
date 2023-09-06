@@ -1,9 +1,5 @@
 <script lang="ts">
-	//@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
-
+	import Button from 'flowbite-svelte/Button.svelte';
 	import {
 		getColumnsFromFile,
 		clearChartOptions,
@@ -14,6 +10,7 @@
 	} from '$lib/io/Stores';
 
 	let tags: Array<string> = [];
+	let selectedButtons: Array<string> = []; // <-- Use an array instead of a single value
 
 	export let ButtonName: string;
 
@@ -27,25 +24,39 @@
 
 	$: if ($clearChartOptions && tags.length > 0 && $clickChart?.groupbyColumns) {
 		tags = [];
-		let chart: Chart = $allCharts[$i]; //We are be able to refactor this to a derived store.
-		chart.groupbyColumns = []; //@ts-ignore
+		let chart: Chart = $allCharts[$i];
+		chart.groupbyColumns = [];
 		$allCharts[$i] = chart;
 	}
 
-	const addColumnToGroupBy = (column: string | null) => {
+	const addColumnToGroupBy = (column: string) => {
+		if (selectedButtons.includes(column)) {
+			selectedButtons = selectedButtons.filter((item) => item !== column);
+		} else {
+			selectedButtons.push(column);
+		}
+
 		let chart = $allCharts[$i];
 		if (column) {
-			tags = [...tags, column]; //@ts-ignore
-			chart.groupbyColumns = tags; //@ts-ignore
+			tags = [...tags, column];
+			chart.groupbyColumns = tags;
 			$groupbyColumns = tags;
 		}
 		$allCharts[$i] = chart;
 	};
 </script>
 
-<Button pill={false} outline color="light">{ButtonName}</Button>
-<Dropdown class="overflow-y-auto h-48 py-1">
-	{#each $columns as column}
-		<DropdownItem on:click={() => addColumnToGroupBy(column)}>{column}</DropdownItem>
-	{/each}
-</Dropdown>
+<div>
+	<div class="space-y-1 space-x-1">
+		{#each $columns as column}
+			<Button
+				pill={false}
+				outline
+				color={selectedButtons.includes(column) ? 'primary' : 'light'}
+				on:click={() => addColumnToGroupBy(column)}
+			>
+				{column}
+			</Button>
+		{/each}
+	</div>
+</div>

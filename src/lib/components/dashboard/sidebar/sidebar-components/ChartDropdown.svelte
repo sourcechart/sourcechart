@@ -27,7 +27,7 @@
 	];
 
 	if (sideBarVersion === 'WorkFlow') {
-		rectangleCharts = [...rectangleCharts, { chartType: 'density' }];
+		rectangleCharts = [...rectangleCharts, { chartType: 'Density' }];
 	}
 	function capitalizeFirstLetter(string: string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
@@ -63,8 +63,13 @@
 
 <div class="space-y-1 space-x-1">
 	{#each rectangleCharts as { chartType }, i (i)}
-		<Button pill={false} outline color="light" on:click={() => chooseChart(chartType)}
-			>{chartType}</Button
+		<Button
+			pill={false}
+			outline
+			color={chosenPlot === chartType ? 'primary' : 'light'}
+			on:click={() => chooseChart(chartType)}
 		>
+			{chartType}
+		</Button>
 	{/each}
 </div>
