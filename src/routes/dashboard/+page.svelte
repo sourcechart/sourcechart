@@ -7,7 +7,7 @@
 	//@ts-ignore
 	import DarkMode from 'flowbite-svelte/DarkMode.svelte';
 	import { onMount } from 'svelte';
-	import { allCharts, clickedChartIndex, activeDropZone, activeSidebar } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex, activeDropZone } from '$lib/io/Stores';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { duckDBInstanceStore } from '$lib/io/Stores';
@@ -75,7 +75,7 @@
 		<DarkMode />
 		<NavBar />
 	</div>
-	<div class="absolute z-30 ml-1 overflow-y-visible">
+	<div class="absolute z-30 ml-1">
 		<Sidebar {data} />
 	</div>
 	<div class="relative">
