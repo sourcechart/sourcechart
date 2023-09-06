@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { ChevronDownSolid } from 'flowbite-svelte-icons'; //@ts-ignore
-	import Label from 'flowbite-svelte/Label.svelte';
+	import { ChevronDownSolid, ChevronUpSolid } from 'flowbite-svelte-icons'; //@ts-ignore
 
 	import {
 		ColumnDropDrown,
@@ -30,8 +29,12 @@
 			}}
 		>
 			<div class="flex justify-between items-center w-full">
-				<p class="text-gray-400">Axis</p>
-				<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+				<span>Axis</span>
+				{#if showAxis}
+					<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+				{:else}
+					<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+				{/if}
 			</div>
 		</Button>
 		{#if showAxis}
@@ -52,7 +55,11 @@
 		>
 			<div class="flex justify-between items-center w-full">
 				<span>Groupby</span>
-				<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+				{#if showGroupBy}
+					<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+				{:else}
+					<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+				{/if}
 			</div>
 		</Button>
 		{#if showGroupBy}
@@ -72,7 +79,11 @@
 		>
 			<div class="flex justify-between items-center w-full">
 				<span>Aggregator</span>
-				<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+				{#if showAggregator}
+					<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+				{:else}
+					<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+				{/if}
 			</div>
 		</Button>
 		{#if showAggregator}
@@ -92,7 +103,11 @@
 		>
 			<div class="flex justify-between items-center w-full">
 				<span>Choose Chart</span>
-				<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+				{#if showChart}
+					<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+				{:else}
+					<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+				{/if}
 			</div>
 		</Button>
 		{#if showChart}
@@ -112,7 +127,11 @@
 		>
 			<div class="flex justify-between items-center w-full">
 				<span>Filter</span>
-				<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+				{#if showFilter}
+					<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+				{:else}
+					<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+				{/if}
 			</div>
 		</Button>
 		{#if showFilter}

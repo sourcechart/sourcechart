@@ -18,6 +18,7 @@
 
 	import { ChevronDownSolid } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
+	let isDropdownOpen = false; // <-- Add this line to track dropdown state
 
 	let syncWorker: Worker | undefined = undefined;
 	let selectedDataset: string | null = 'Choose Dataset';
