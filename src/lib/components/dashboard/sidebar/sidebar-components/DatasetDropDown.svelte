@@ -16,6 +16,7 @@
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
+	import { ChevronDownSolid } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 
 	let syncWorker: Worker | undefined = undefined;
@@ -84,7 +85,13 @@
 	onMount(loadWorker);
 </script>
 
-<Button outline color="light">{selectedDataset}</Button>
+<Button outline color="light">
+	<div class="flex justify-between items-center w-full">
+		<span>{selectedDataset}</span>
+		<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+	</div>
+</Button>
+
 <Dropdown class="overflow-y-auto py-1 h-32">
 	{#each $datasets as dataset}
 		{#if dataset !== null}

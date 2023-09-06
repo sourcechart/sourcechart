@@ -8,7 +8,6 @@
 		Aggregator,
 		Groupby,
 		ChartDropdown,
-		Tags,
 		AddFilter
 	} from './sidebar-components'; //@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte';
@@ -22,9 +21,6 @@
 
 <div class="space-y-3 mt-3 flex flex-col">
 	<div class="flex flex-col space-y-1">
-		<Label>
-			<span>Axis</span>
-		</Label>
 		<Button
 			pill={false}
 			outline
@@ -33,8 +29,10 @@
 				showAxis = !showAxis;
 			}}
 		>
-			<p class="text-gray-400">Axis</p>
-			<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+			<div class="flex justify-between items-center w-full">
+				<p class="text-gray-400">Axis</p>
+				<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+			</div>
 		</Button>
 		{#if showAxis}
 			<div transition:slide>
@@ -44,9 +42,6 @@
 		{/if}
 	</div>
 	<div class="flex flex-col space-y-1">
-		<Label>
-			<span>Groupby</span>
-		</Label>
 		<Button
 			pill={false}
 			outline
@@ -55,20 +50,18 @@
 				showGroupBy = !showGroupBy;
 			}}
 		>
-			<p class="text-gray-400">Groupby</p>
-			<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+			<div class="flex justify-between items-center w-full">
+				<span>Groupby</span>
+				<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+			</div>
 		</Button>
 		{#if showGroupBy}
 			<div transition:slide>
 				<Groupby ButtonName={'Attributes'} />
-				<Tags />
 			</div>
 		{/if}
 	</div>
 	<div class="flex flex-col space-y-1">
-		<Label>
-			<span>Aggregator</span>
-		</Label>
 		<Button
 			pill={false}
 			outline
@@ -77,8 +70,10 @@
 				showAggregator = !showAggregator;
 			}}
 		>
-			<p class="text-gray-400">Aggregator</p>
-			<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+			<div class="flex justify-between items-center w-full">
+				<span>Aggregator</span>
+				<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+			</div>
 		</Button>
 		{#if showAggregator}
 			<div transition:slide>
@@ -87,9 +82,6 @@
 		{/if}
 	</div>
 	<div class="flex flex-col space-y-1">
-		<Label>
-			<span>Choose Chart</span>
-		</Label>
 		<Button
 			pill={false}
 			outline
@@ -98,8 +90,10 @@
 				showChart = !showChart;
 			}}
 		>
-			<p class="text-gray-400">Choose Chart</p>
-			<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+			<div class="flex justify-between items-center w-full">
+				<span>Choose Chart</span>
+				<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+			</div>
 		</Button>
 		{#if showChart}
 			<div transition:slide>
@@ -108,9 +102,6 @@
 		{/if}
 	</div>
 	<div class="flex flex-col space-y-1">
-		<Label>
-			<span>Filter</span>
-		</Label>
 		<Button
 			pill={false}
 			outline
@@ -119,8 +110,10 @@
 				showFilter = !showFilter;
 			}}
 		>
-			<p class="text-gray-400">Filter</p>
-			<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+			<div class="flex justify-between items-center w-full">
+				<span>Filter</span>
+				<ChevronDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+			</div>
 		</Button>
 		{#if showFilter}
 			<div transition:slide>
