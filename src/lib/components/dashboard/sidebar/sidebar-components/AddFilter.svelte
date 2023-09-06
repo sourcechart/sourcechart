@@ -13,6 +13,7 @@
 	import { PlusSolid } from 'flowbite-svelte-icons';
 
 	import FilterRange from './filter-components/FilterRange.svelte';
+	import FilterDropdown from './filter-components/FilterDropdown.svelte';
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
@@ -49,7 +50,7 @@
 			filters = [
 				...filters,
 				{
-					component: Dropdown,
+					component: FilterDropdown,
 					props: {
 						items: distinctValuesObject.map((value: any) => value.distinctValues)
 					}

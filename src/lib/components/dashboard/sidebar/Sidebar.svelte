@@ -6,8 +6,6 @@
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
-	import Label from 'flowbite-svelte/Label.svelte';
-	import { PlusSolid } from 'flowbite-svelte-icons'; //@ts-ignore
 
 	//@ts-ignore
 	export let data;
