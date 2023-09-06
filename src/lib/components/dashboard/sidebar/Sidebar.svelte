@@ -40,10 +40,10 @@
 
 {#if $activeSidebar}
 	<div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
-		<div
-			class="bg-gray-800 text-white w-64 overflow-y-scroll transition-transform duration-200 ease-in-out rounded-md border-red-50"
-		>
-			<div class="p-6">
+		<div class="outerDiv">
+			<div
+				class="bg-gray-800 text-white w-full h-full overflow-y-auto transition-transform duration-200 ease-in-out rounded-md border-red-50 p-6"
+			>
 				<div class="flex flex-col space-y-1 mt-2 mb-2">
 					<Label class="space-y-2 mb-1">
 						<span>Upload Files</span>
@@ -61,11 +61,9 @@
 						<TabItem open title="LowCode" on:click={clickBasicTab}>
 							<LowCodeSidebarTab />
 						</TabItem>
-						<!--	
 						<TabItem title="Work Flows" on:click={clickClusterTab}>
-							<WorkflowSidebar />
-						</TabItem> 
-						-->
+							<!--	<WorkflowSidebar /> -->
+						</TabItem>
 					</Tabs>
 				{:else}
 					<LowCodeSidebarTab />
@@ -74,3 +72,27 @@
 		</div>
 	</div>
 {/if}
+
+<style>
+	.outerDiv {
+		position: fixed;
+		width: 300px;
+		height: 75vh;
+		overflow: hidden;
+	}
+
+	.innerDiv {
+		width: 100%;
+		height: 100%;
+		overflow-y: auto;
+	}
+
+	.scrollbar-hide {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none; /* Chrome, Safari, Opera */
+	}
+</style>

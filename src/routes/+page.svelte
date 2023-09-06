@@ -24,7 +24,7 @@
 	];
 </script>
 
-<div class="overflow-auto">
+<div class="overflow-visible">
 	<title>SourceChart</title>
 	<nav class="bg-gray-900 p-4 flex justify-between items-center">
 		<a href="/" class="flex items-center text-white space-x-2">

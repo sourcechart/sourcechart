@@ -84,7 +84,6 @@
 				<FileUploadPanel />
 			</div>
 		{/if}
-
 		<div class="z-0 relative w-screen h-screen">
 			<Canvas />
 		</div>
@@ -93,6 +92,7 @@
 
 <style>
 	.no-scroll {
+		widows: 100vw;
 		height: 100vh;
 		overflow: hidden;
 	}
