@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Tags } from './sidebar-components';
 	import { Groupby, ChartDropdown } from './sidebar-components'; //@ts-ignore
-	import Range from 'flowbite-svelte/Range.svelte';
 	import { epsilonDistance, minimumPointsForCluster } from '$lib/io/Stores'; //@ts-ignore
+	import Range from 'flowbite-svelte/Range.svelte'; //@ts-ignore
 	import NumberInput from 'flowbite-svelte/NumberInput.svelte'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
 
@@ -26,7 +26,7 @@
 	};
 </script>
 
-<div class="space-y-3 mt-3">
+<div class="space-y-3 mt-3 flex flex-col">
 	<div class="flex flex-col space-y-1">
 		<Label class="space-y-2 mb-4">
 			<span>Add Attributes</span>

@@ -3,14 +3,7 @@
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
 	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
-	import {
-		getColumnsFromFile,
-		clearChartOptions,
-		allCharts,
-		clickedChart,
-		clickedChartIndex,
-		groupbyColumns
-	} from '$lib/io/Stores';
+	import { getColumnsFromFile, allCharts, clickedChart, clickedChartIndex } from '$lib/io/Stores';
 
 	let filters = [];
 	$: columns = getColumnsFromFile();
