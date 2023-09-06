@@ -300,6 +300,7 @@
 
 <style>
 	.blur-filter {
+		overflow: hidden;
 		backdrop-filter: blur(10px);
 		position: fixed;
 		top: 0;

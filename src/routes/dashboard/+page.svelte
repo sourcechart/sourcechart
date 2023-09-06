@@ -70,7 +70,7 @@
 	onMount(loadPreviousState);
 </script>
 
-<div class="dark:bg-gray-900 max-h-screen overflow-y-hidden">
+<div class="dark:bg-gray-900 no-scroll">
 	<div class="flex justify-center items-center mt-3 z-30">
 		<DarkMode />
 		<NavBar />
@@ -90,3 +90,10 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.no-scroll {
+		height: 100vh;
+		overflow: hidden;
+	}
+</style>
