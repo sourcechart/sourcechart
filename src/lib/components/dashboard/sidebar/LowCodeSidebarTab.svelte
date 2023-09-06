@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { ChevronDownSolid } from 'flowbite-svelte-icons';
+	import { ChevronDownSolid } from 'flowbite-svelte-icons'; //@ts-ignore
+	import Label from 'flowbite-svelte/Label.svelte';
 
 	import {
 		ColumnDropDrown,
@@ -21,6 +22,9 @@
 
 <div class="space-y-3 mt-3 flex flex-col">
 	<div class="flex flex-col space-y-1">
+		<Label>
+			<span>Axis</span>
+		</Label>
 		<Button
 			pill={false}
 			outline
@@ -40,6 +44,9 @@
 		{/if}
 	</div>
 	<div class="flex flex-col space-y-1">
+		<Label>
+			<span>Groupby</span>
+		</Label>
 		<Button
 			pill={false}
 			outline
@@ -59,6 +66,9 @@
 		{/if}
 	</div>
 	<div class="flex flex-col space-y-1">
+		<Label>
+			<span>Aggregator</span>
+		</Label>
 		<Button
 			pill={false}
 			outline
@@ -77,6 +87,9 @@
 		{/if}
 	</div>
 	<div class="flex flex-col space-y-1">
+		<Label>
+			<span>Choose Chart</span>
+		</Label>
 		<Button
 			pill={false}
 			outline
@@ -95,6 +108,9 @@
 		{/if}
 	</div>
 	<div class="flex flex-col space-y-1">
+		<Label>
+			<span>Filter</span>
+		</Label>
 		<Button
 			pill={false}
 			outline

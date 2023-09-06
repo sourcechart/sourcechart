@@ -63,9 +63,10 @@
 	};
 </script>
 
-<Button pill={false} outline color="light">{chosenPlot}</Button>
-<Dropdown class="overflow-y-auto py-1 h-48">
+<div class="space-y-1 space-x-1">
 	{#each rectangleCharts as { chartType }, i (i)}
-		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>
+		<Button pill={false} outline color="light" on:click={() => chooseChart(chartType)}
+			>{chartType}</Button
+		>
 	{/each}
-</Dropdown>
+</div>
