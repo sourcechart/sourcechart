@@ -41,7 +41,7 @@
 {#if $activeSidebar}
 	<div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
 		<div
-			class="bg-gray-800 text-white w-64 overflow-y-auto max-h-96 overflow-auto transition-transform duration-200 ease-in-out rounded-md border-red-50"
+			class="bg-gray-800 text-white w-64 overflow-y-scroll transition-transform duration-200 ease-in-out rounded-md border-red-50"
 		>
 			<div class="p-6">
 				<div class="flex flex-col space-y-1 mt-2 mb-2">
@@ -61,9 +61,11 @@
 						<TabItem open title="LowCode" on:click={clickBasicTab}>
 							<LowCodeSidebarTab />
 						</TabItem>
+						<!--	
 						<TabItem title="Work Flows" on:click={clickClusterTab}>
-							<!--	<WorkflowSidebar /> -->
-						</TabItem>
+							<WorkflowSidebar />
+						</TabItem> 
+						-->
 					</Tabs>
 				{:else}
 					<LowCodeSidebarTab />

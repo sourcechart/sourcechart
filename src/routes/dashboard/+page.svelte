@@ -4,6 +4,7 @@
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 
+	//@ts-ignore
 	import DarkMode from 'flowbite-svelte/DarkMode.svelte';
 	import { onMount } from 'svelte';
 	import { allCharts, clickedChartIndex, activeDropZone, activeSidebar } from '$lib/io/Stores';
@@ -69,12 +70,12 @@
 	onMount(loadPreviousState);
 </script>
 
-<div class="dark:bg-gray-900 overflow-y-auto max-h-screen">
+<div class="dark:bg-gray-900 max-h-screen overflow-y-hidden">
 	<div class="flex justify-center items-center mt-3 z-30">
 		<DarkMode />
 		<NavBar />
 	</div>
-	<div class="fixed z-30 ml-1">
+	<div class="absolute z-30 ml-1 overflow-y-visible">
 		<Sidebar {data} />
 	</div>
 	<div class="relative">
