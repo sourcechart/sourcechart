@@ -3,40 +3,59 @@
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
 	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
-	import { getColumnsFromFile, allCharts, clickedChart, clickedChartIndex } from '$lib/io/Stores';
+	import {
+		getColumnsFromFile,
+		allCharts,
+		clickedChartIndex,
+		duckDBInstanceStore
+	} from '$lib/io/Stores';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import { PlusSolid } from 'flowbite-svelte-icons';
 
-	let filters = [];
+	import Filter from './chart-components/Filter.svelte';
+
 	$: columns = getColumnsFromFile();
-	$: clickChart = clickedChart();
 	$: i = clickedChartIndex();
 
-	const addColumnToFilter = (column: string | null) => {
+	let max: number = 1;
+	let min: number = 0;
+	let filters = [{ component: Filter, props: { min: min, max: max } }];
+
+	const addColumnToFilter = async (column: string) => {
 		let chart = $allCharts[$i];
+		if (chart.filename) {
+			var filename = checkNameForSpacesAndHyphens(chart.filename);
+			var correctColumn = checkNameForSpacesAndHyphens(column);
+			const maxResp = await $duckDBInstanceStore.query(
+				`SELECT max(${correctColumn}) as maxValue FROM ${filename}`
+			);
+			const minResp = await $duckDBInstanceStore.query(
+				`SELECT min(${correctColumn}) as minValue FROM ${filename}`
+			);
+
+			var maxObject = formatData(maxResp);
+			var minObject = formatData(minResp);
+			max = maxObject[0].maxValue;
+			min = minObject[0].minValue;
+			console.log(max, min);
+		}
 	};
+
+	function formatData(res: any) {
+		const results = JSON.parse(
+			JSON.stringify(
+				res,
+				(_, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+			)
+		);
+		return results;
+	}
 </script>
 
 <Button pill={false} outline color="light">
-	<div class="flex justify-between space-x-2">
-		<svg
-			class="text-gray-700 dark:text-gray-400"
-			x="0px"
-			y="0px"
-			width="18"
-			height="18"
-			aria-hidden="true"
-			xmlns="http://www.w3.org/2000/svg"
-			fill="none"
-			viewBox="0 0 18 18"
-		>
-			<path
-				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M9 1v16M1 9h16"
-			/>
-		</svg>
-		<p class="text-gray-400">Add Filter</p>
+	<div class="flex justify-between items-center w-full">
+		<span>Add Filter</span>
+		<PlusSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
 	</div>
 	<Dropdown class="overflow-y-auto h-48 py-1">
 		{#each $columns as column}
@@ -44,3 +63,6 @@
 		{/each}
 	</Dropdown>
 </Button>
+{#each filters as filter}
+	<svelte:component this={filter.component} {...filter.props} />
+{/each}
