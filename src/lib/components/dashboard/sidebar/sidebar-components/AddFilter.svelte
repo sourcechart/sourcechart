@@ -101,7 +101,5 @@
 	{/each}
 </div>
 {#each selectedColumns as col}
-	<div class="p-3">
-		<FilterRange min={10} max={50} />
-	</div>
+	<svelte:component></svelte:component> 
 {/each}

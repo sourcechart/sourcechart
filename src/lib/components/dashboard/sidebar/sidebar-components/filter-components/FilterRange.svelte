@@ -100,8 +100,8 @@
 			}
 
 			// Log the actual values
-			startValue = (min + start * (max - min)).toFixed(2);
-			endValue = (min + end * (max - min)).toFixed(2);
+			startValue = (min + start * (max - min)).toFixed(2).slice(0, 3);
+			endValue = (min + end * (max - min)).toFixed(2).slice(0, 3);
 		};
 	}
 </script>
