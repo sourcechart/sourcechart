@@ -23,7 +23,7 @@
 		if (selectedColumns.includes(column)) {
 			selectedColumns = selectedColumns.filter((item) => item !== column);
 		} else {
-			selectedColumns.push(column);
+			selectedColumns = [...selectedColumns, column];
 		}
 		handleAsyncOperations(column);
 	};
