@@ -10,7 +10,6 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import FilterRange from './filter-components/FilterRange.svelte';
 	import FilterDropdown from './filter-components/FilterDropdown.svelte';
-	import { Range, Label } from 'flowbite-svelte';
 
 	let minmaxValue = 5;
 	$: columns = getColumnsFromFile();
@@ -103,6 +102,6 @@
 </div>
 {#each selectedColumns as col}
 	<div class="p-3">
-		<FilterRange start={0} end={1} />
+		<FilterRange min={10} max={50} />
 	</div>
 {/each}
