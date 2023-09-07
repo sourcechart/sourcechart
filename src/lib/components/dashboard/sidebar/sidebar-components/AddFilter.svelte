@@ -9,9 +9,13 @@
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import FilterRange from './filter-components/FilterRange.svelte';
-	import FilterDropdown from './filter-components/FilterDropdown.svelte';
+	import FilterDropdown from './filter-components/FilterDropdown.svelte'; //@ts-ignore
+	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
+	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
+	import { ChevronDownSolid, ChevronUpSolid } from 'flowbite-svelte-icons'; //@ts-ignore
+	import { slide } from 'svelte/transition';
 
-	let minmaxValue = 5;
+	let showFilter = false;
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
@@ -47,18 +51,22 @@
 		correctColumn: string,
 		filename: string
 	) => {
-		if (typeof formattedData === 'string') {
+		var dataValue = formattedData[0].column;
+		console.log(dataValue);
+		if (typeof dataValue === 'string') {
 			const distinctValues = await $duckDBInstanceStore.query(
 				`SELECT DISTINCT ${correctColumn} as distinctValues FROM ${filename}`
 			);
-			var distinctValuesObject = formatData(distinctValues);
+			var distinctValuesObject = formatData(distinctValues).map(
+				(value: any) => value.distinctValues
+			);
 			filters[correctColumn] = {
 				component: FilterDropdown,
 				props: {
-					items: distinctValuesObject.map((value: any) => value.distinctValues)
+					items: distinctValuesObject
 				}
 			};
-		} else if (typeof formattedData === 'number') {
+		} else if (typeof dataValue === 'number') {
 			const maxResp = await $duckDBInstanceStore.query(
 				`SELECT max(${correctColumn}) as maxValue FROM ${filename}`
 			);
@@ -88,18 +96,37 @@
 	}
 </script>
 
-<div class="space-y-1 space-x-1">
+<Button
+	pill={false}
+	outline
+	color="light"
+	on:click={() => {
+		showFilter = !showFilter;
+	}}
+>
+	<div class="flex justify-between items-center w-full">
+		<span>Add Filter</span>
+		{#if showFilter}
+			<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+		{:else}
+			<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+		{/if}
+	</div>
+</Button>
+<Dropdown class="overflow-visible">
 	{#each $columns as column}
-		<Button
+		<DropdownItem
 			pill={false}
 			outline
 			color={selectedColumns.includes(column) ? 'primary' : 'light'}
 			on:click={() => addColumnToFilter(column)}
 		>
 			{column}
-		</Button>
+		</DropdownItem>
 	{/each}
-</div>
-{#each selectedColumns as col}
-	<svelte:component></svelte:component> 
+</Dropdown>
+{#each selectedColumns as col (col)}
+	{#if filters[col]}
+		<svelte:component this={filters[col].component} {...filters[col].props} />
+	{/if}
 {/each}

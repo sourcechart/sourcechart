@@ -1,3 +1,4 @@
+<!--
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import { ChevronDownSolid, ChevronUpSolid } from 'flowbite-svelte-icons'; //@ts-ignore
@@ -14,7 +15,6 @@
 	let showAxis = false;
 	let showAggregator = false;
 	let showGroupBy = false;
-	let showFilter = false;
 	let showChart = false;
 </script>
 
@@ -116,28 +116,10 @@
 			</div>
 		{/if}
 	</div>
-	<div class="flex flex-col space-y-1">
-		<Button
-			pill={false}
-			outline
-			color="light"
-			on:click={() => {
-				showFilter = !showFilter;
-			}}
-		>
-			<div class="flex justify-between items-center w-full">
-				<span> Add Filter</span>
-				{#if showFilter}
-					<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
-				{:else}
-					<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-				{/if}
-			</div>
-		</Button>
-		{#if showFilter}
-			<div transition:slide>
-				<AddFilter />
-			</div>
-		{/if}
+	<div class="flex flex-col space-y-1 z-40">
+		<div class="absolute">
+			<AddFilter />
+		</div>
 	</div>
 </div>
+-->

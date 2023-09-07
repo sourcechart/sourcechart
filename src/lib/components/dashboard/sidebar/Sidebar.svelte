@@ -1,14 +1,29 @@
 <script lang="ts">
-	import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
+	//import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
 	import FileUploadButton from './sidebar-components/FileUploadButton.svelte'; //@ts-ignore
-	import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
-	import TabItem from 'flowbite-svelte/TabItem.svelte'; //@ts-ignore
-	import Label from 'flowbite-svelte/Label.svelte';
-
+	import Button from 'flowbite-svelte/Button.svelte';
+	import { fileDropdown } from '$lib/io/Stores';
+	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
+	import { PlusSolid } from 'flowbite-svelte-icons';
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
+	import { slide } from 'svelte/transition';
+	import { ChevronDownSolid, ChevronUpSolid } from 'flowbite-svelte-icons'; //@ts-ignore
 
+	import {
+		ColumnDropDrown,
+		Aggregator,
+		Groupby,
+		ChartDropdown,
+		AddFilter
+	} from './sidebar-components'; //@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte';
+
+	let showAxis = false;
+	let showAggregator = false;
+	let showGroupBy = false;
+	let showChart = false;
 	//@ts-ignore
 	export let data;
 
@@ -37,6 +52,13 @@
 			return charts;
 		});
 	}
+
+	$: numberOfDatasets = fileDropdown();
+
+	const handleClick = () => {
+		activeDropZone.set(true);
+		activeSidebar.set(false);
+	};
 </script>
 
 {#if $activeSidebar}
@@ -46,30 +68,121 @@
 				class="innerDiv bg-gray-800 text-white w-full h-full transition-transform duration-200 ease-in-out rounded-md border-red-50 p-6"
 			>
 				<div class="flex flex-col space-y-1 mt-2 mb-2">
-					<Label class="space-y-2 mb-1">
-						<span>Upload Files</span>
-					</Label>
-					<FileUploadButton />
+					<Button outline color="light" id="multiple_files" on:click={handleClick}>
+						<div class="flex justify-between items-center w-full">
+							<span>Add Dataset [{$numberOfDatasets.length}]</span>
+							<PlusSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+						</div>
+					</Button>
 				</div>
 				<div class="flex flex-col space-y-1">
-					<Label class="space-y-2 mb-1">
-						<span>Choose Dataset</span>
-					</Label>
 					<DatasetDropDown />
 				</div>
 				<div class="divide-y">
-					{#if data.session.user.email == 'noreply@gmail.com'}
-						<Tabs style="underline" contentClass="">
-							<TabItem open title="LowCode" on:click={clickBasicTab}>
-								<LowCodeSidebarTab />
-							</TabItem>
-							<TabItem title="Work Flows" on:click={clickClusterTab}>
-								<!--	<WorkflowSidebar /> -->
-							</TabItem>
-						</Tabs>
-					{:else}
-						<LowCodeSidebarTab />
-					{/if}
+					<div class="space-y-3 mt-3 flex flex-col">
+						<div class="flex flex-col space-y-1">
+							<Button
+								pill={false}
+								outline
+								color="light"
+								on:click={() => {
+									showAxis = !showAxis;
+								}}
+							>
+								<div class="flex justify-between items-center w-full">
+									<span>Axis</span>
+									{#if showAxis}
+										<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+									{:else}
+										<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+									{/if}
+								</div>
+							</Button>
+							{#if showAxis}
+								<div transition:slide class="space-y-2">
+									<ColumnDropDrown axis={'X'} />
+									<ColumnDropDrown axis={'Y'} />
+								</div>
+							{/if}
+						</div>
+						<div class="flex flex-col space-y-1">
+							<Button
+								pill={false}
+								outline
+								color="light"
+								on:click={() => {
+									showGroupBy = !showGroupBy;
+								}}
+							>
+								<div class="flex justify-between items-center w-full">
+									<span>Groupby</span>
+									{#if showGroupBy}
+										<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+									{:else}
+										<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+									{/if}
+								</div>
+							</Button>
+							{#if showGroupBy}
+								<div transition:slide>
+									<Groupby ButtonName={'Attributes'} />
+								</div>
+							{/if}
+						</div>
+						<div class="flex flex-col space-y-1">
+							<Button
+								pill={false}
+								outline
+								color="light"
+								on:click={() => {
+									showAggregator = !showAggregator;
+								}}
+							>
+								<div class="flex justify-between items-center w-full">
+									<span>Aggregator</span>
+									{#if showAggregator}
+										<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+									{:else}
+										<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+									{/if}
+								</div>
+							</Button>
+							{#if showAggregator}
+								<div transition:slide>
+									<Aggregator />
+								</div>
+							{/if}
+						</div>
+						<div class="flex flex-col space-y-1">
+							<Button
+								pill={false}
+								outline
+								color="light"
+								on:click={() => {
+									showChart = !showChart;
+								}}
+							>
+								<div class="flex justify-between items-center w-full">
+									<span>Choose Chart</span>
+									{#if showChart}
+										<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+									{:else}
+										<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+									{/if}
+								</div>
+							</Button>
+							{#if showChart}
+								<div transition:slide>
+									<ChartDropdown sideBarVersion={'LowCode'} />
+								</div>
+							{/if}
+						</div>
+						<div class="flex flex-col space-y-1 z-40">
+							<div class="absolute">
+								<AddFilter />
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
