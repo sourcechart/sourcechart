@@ -1,8 +1,6 @@
 <script lang="ts">
 	//@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
 	import {
 		getColumnsFromFile,
 		allCharts,
@@ -10,8 +8,6 @@
 		duckDBInstanceStore
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { PlusSolid } from 'flowbite-svelte-icons';
-
 	import FilterRange from './filter-components/FilterRange.svelte';
 	import FilterDropdown from './filter-components/FilterDropdown.svelte';
 
@@ -20,18 +16,26 @@
 
 	let max: number = 1;
 	let min: number = 0;
-	let filters: any[] = [];
+	let filters: { [key: string]: { component: any; props: any } } = {};
+	let selectedColumns: string[] = [];
 
-	const addColumnToFilter = async (column: string) => {
+	const addColumnToFilter = (column: string) => {
+		if (selectedColumns.includes(column)) {
+			selectedColumns = selectedColumns.filter((item) => item !== column);
+		} else {
+			selectedColumns.push(column);
+		}
+		handleAsyncOperations(column);
+	};
+
+	const handleAsyncOperations = async (column: string) => {
 		let chart = $allCharts[$i];
 		if (chart.filename) {
 			var filename = checkNameForSpacesAndHyphens(chart.filename);
 			var correctColumn = checkNameForSpacesAndHyphens(column);
-
 			const randomValue = await $duckDBInstanceStore.query(
 				`SELECT ${correctColumn} as column FROM ${filename} ORDER BY RANDOM() LIMIT 1`
 			);
-
 			var formattedData = formatData(randomValue);
 			addComponentToFilter(formattedData, correctColumn, filename);
 		}
@@ -47,15 +51,12 @@
 				`SELECT DISTINCT ${correctColumn} as distinctValues FROM ${filename}`
 			);
 			var distinctValuesObject = formatData(distinctValues);
-			filters = [
-				...filters,
-				{
-					component: FilterDropdown,
-					props: {
-						items: distinctValuesObject.map((value: any) => value.distinctValues)
-					}
+			filters[correctColumn] = {
+				component: FilterDropdown,
+				props: {
+					items: distinctValuesObject.map((value: any) => value.distinctValues)
 				}
-			];
+			};
 		} else if (typeof formattedData === 'number') {
 			const maxResp = await $duckDBInstanceStore.query(
 				`SELECT max(${correctColumn}) as maxValue FROM ${filename}`
@@ -68,7 +69,10 @@
 			var minObject = formatData(minResp);
 			max = maxObject[0].maxValue;
 			min = minObject[0].minValue;
-			filters = [...filters, { component: FilterRange, props: { min: min, max: max } }];
+			filters[correctColumn] = {
+				component: FilterRange,
+				props: { min: min, max: max }
+			};
 		}
 	};
 
@@ -83,17 +87,15 @@
 	}
 </script>
 
-<Button pill={false} outline color="light">
-	<div class="flex justify-between items-center w-full">
-		<span>Add Filter</span>
-		<PlusSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
-	</div>
-	<Dropdown class="overflow-y-auto h-48 py-1">
-		{#each $columns as column}
-			<DropdownItem on:click={() => addColumnToFilter(column)}>{column}</DropdownItem>
-		{/each}
-	</Dropdown>
-</Button>
-{#each filters as filter}
-	<svelte:component this={filter.component} {...filter.props} />
-{/each}
+<div class="space-y-1 space-x-1">
+	{#each $columns as column}
+		<Button
+			pill={false}
+			outline
+			color={selectedColumns.includes(column) ? 'primary' : 'light'}
+			on:click={() => addColumnToFilter(column)}
+		>
+			{column}
+		</Button>
+	{/each}
+</div>

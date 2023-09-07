@@ -126,7 +126,7 @@
 			}}
 		>
 			<div class="flex justify-between items-center w-full">
-				<span>Filter</span>
+				<span> Add Filter</span>
 				{#if showFilter}
 					<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
 				{:else}
