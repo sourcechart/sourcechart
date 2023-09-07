@@ -32,17 +32,17 @@
 				`SELECT ${correctColumn} as column FROM ${filename} ORDER BY RANDOM() LIMIT 1`
 			);
 
-			var formatedData = formatData(randomValue);
-			addComponentToFilter(formatedData, correctColumn, filename);
+			var formattedData = formatData(randomValue);
+			addComponentToFilter(formattedData, correctColumn, filename);
 		}
 	};
 
 	const addComponentToFilter = async (
-		formatedData: any,
+		formattedData: any,
 		correctColumn: string,
 		filename: string
 	) => {
-		if (typeof formatedData === 'string') {
+		if (typeof formattedData === 'string') {
 			const distinctValues = await $duckDBInstanceStore.query(
 				`SELECT DISTINCT ${correctColumn} as distinctValues FROM ${filename}`
 			);
@@ -56,7 +56,7 @@
 					}
 				}
 			];
-		} else if (typeof formatedData === 'number') {
+		} else if (typeof formattedData === 'number') {
 			const maxResp = await $duckDBInstanceStore.query(
 				`SELECT max(${correctColumn}) as maxValue FROM ${filename}`
 			);

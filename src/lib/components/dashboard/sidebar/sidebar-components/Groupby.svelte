@@ -56,17 +56,9 @@
 				color={selectedButtons.includes(column) ? 'primary' : 'light'}
 				on:click={() => {
 					addColumnToGroupBy(column);
-					isDropdownOpen = !isDropdownOpen;
 				}}
 			>
-				<div class="flex justify-between items-center w-full">
-					<span>{column}</span>
-					{#if isDropdownOpen}
-						<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
-					{:else}
-						<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-					{/if}
-				</div>
+				{column}
 			</Button>
 		{/each}
 	</div>
