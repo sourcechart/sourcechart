@@ -3,11 +3,11 @@
 	import FileUploadButton from './sidebar-components/FileUploadButton.svelte'; //@ts-ignore
 	import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
 	import TabItem from 'flowbite-svelte/TabItem.svelte'; //@ts-ignore
+	import Label from 'flowbite-svelte/Label.svelte';
+
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
-	import Label from 'flowbite-svelte/Label.svelte';
-	import { PlusSolid } from 'flowbite-svelte-icons'; //@ts-ignore
 
 	//@ts-ignore
 	export let data;
@@ -81,6 +81,7 @@
 		position: fixed;
 		width: 300px;
 		overflow: hidden;
+		height: 75vh;
 	}
 
 	.innerDiv {

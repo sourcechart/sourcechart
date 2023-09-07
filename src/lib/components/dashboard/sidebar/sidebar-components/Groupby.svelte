@@ -8,11 +8,9 @@
 		clickedChart,
 		clickedChartIndex
 	} from '$lib/io/Stores';
-	import { ChevronUpSolid, ChevronDownSolid } from 'flowbite-svelte-icons';
 
 	let tags: Array<string> = [];
 	let selectedButtons: Array<string> = [];
-	let isDropdownOpen = false; // <-- Add this line to track dropdown state
 
 	export let ButtonName: string;
 
