@@ -23,9 +23,10 @@
 	let dataValue: string | number | object;
 	let selectedColumns: string[] = [];
 	let selectedColumn: string = 'Add Field';
-
 	let showRange = false;
 	let showDropdown = false;
+	let min: number;
+	let max: number;
 
 	const addColumnToFilter = (column: string) => {
 		selectedColumn = column;
@@ -83,15 +84,16 @@
 	}
 
 	function findFrequencies(arr: { [key: number]: number }[], maxBins: number): void {
-		let min: number = Infinity;
-		let max: number = -Infinity;
+		let minRange: number = Infinity;
+		let maxRange: number = -Infinity;
+
 		arr.forEach((item) => {
 			for (let key in item) {
-				if (item[key] < min) min = item[key];
-				if (item[key] > max) max = item[key];
+				if (item[key] < minRange) minRange = item[key];
+				if (item[key] > maxRange) maxRange = item[key];
 			}
 		});
-		let range: number = max - min;
+		let range: number = maxRange - minRange;
 		let binSize: number = range / maxBins;
 		if (maxBins > arr.length) {
 			binSize = range / arr.length;
@@ -117,7 +119,7 @@
 	</div>
 	<div class="mt-4">
 		{#if showRange}
-			<FilterRange min={0} max={10} {frequencies} />
+			<FilterRange {min} {max} {frequencies} />
 		{:else if showDropdown}
 			<FilterDropdown />
 		{/if}

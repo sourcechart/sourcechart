@@ -2,7 +2,8 @@
 	import { Chart } from '$lib/components/dashboard/echarts';
 
 	export let frequencies: { [key: number]: number } = {};
-	console.log(frequencies);
+	export let startValue;
+	export let endValue;
 	let options = {};
 </script>
 

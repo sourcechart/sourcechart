@@ -111,7 +111,7 @@
 </script>
 
 <div>
-	<FilterChart {frequencies} />
+	<FilterChart {frequencies} {startValue} {endValue} />
 	<div class="relative w-full h-2 bg-gray-300" bind:this={slider}>
 		<div
 			class="absolute top-0 bottom-0 bg-blue-500"
