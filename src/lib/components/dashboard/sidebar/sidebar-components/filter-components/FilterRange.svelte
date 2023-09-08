@@ -1,15 +1,17 @@
 <script lang="ts">
-	import { Chart } from '$lib/components/dashboard/echarts';
+	import FilterChart from './FilterChart.svelte';
 
+	export let min: number = 0; // Min value of the slider
+	export let max: number = 100; // Max value of the slider
+	export let frequencies: { [key: number]: number } = {};
+	console.log(frequencies);
+
+	let slider: HTMLElement;
+	let dragging = false;
 	let start: number = 0;
 	let end: number = 1;
 	let startValue = '0';
 	let endValue = '1';
-	export let min: number = 0; // Min value of the slider
-	export let max: number = 100; // Max value of the slider
-
-	let slider: HTMLElement;
-	let dragging = false;
 
 	function draggable(node: HTMLElement) {
 		let x: number;
@@ -109,6 +111,7 @@
 </script>
 
 <div>
+	<FilterChart {frequencies} />
 	<div class="relative w-full h-2 bg-gray-300" bind:this={slider}>
 		<div
 			class="absolute top-0 bottom-0 bg-blue-500"

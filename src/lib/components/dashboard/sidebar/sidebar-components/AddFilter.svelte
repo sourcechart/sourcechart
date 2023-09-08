@@ -17,11 +17,9 @@
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
-	type DataItem = { [key: number]: number };
 
+	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
-	let max: number = 1;
-	let min: number = 0;
 	let dataValue: string | number | object;
 	let selectedColumns: string[] = [];
 	let selectedColumn: string = 'Add Field';
@@ -68,7 +66,6 @@
 			const histResp = await $duckDBInstanceStore.query(
 				`SELECT histogram(${correctColumn}) as hist FROM ${filename}`
 			);
-
 			var histResponse = formatData(histResp).map((value: any) => value.hist);
 			findFrequencies(histResponse, 100);
 			showRange = true;
@@ -85,9 +82,7 @@
 		return results;
 	}
 
-	function findFrequencies(arr: DataItem[], maxBins: number): { [key: string]: number } {
-		let frequencies: { [key: string]: number } = {};
-
+	function findFrequencies(arr: { [key: number]: number }[], maxBins: number): void {
 		let min: number = Infinity;
 		let max: number = -Infinity;
 		arr.forEach((item) => {
@@ -107,7 +102,6 @@
 				frequencies[key] = (frequencies[key] || 0) + 1;
 			}
 		});
-		return frequencies;
 	}
 </script>
 
@@ -123,7 +117,7 @@
 	</div>
 	<div class="mt-4">
 		{#if showRange}
-			<FilterRange min={0} max={10} />
+			<FilterRange min={0} max={10} {frequencies} />
 		{:else if showDropdown}
 			<FilterDropdown />
 		{/if}
