@@ -17,8 +17,8 @@
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
+	type DataItem = { [key: number]: number };
 
-	let histogram: Array<any>;
 	let distinctValuesObject: Array<any>;
 	let max: number = 1;
 	let min: number = 0;
@@ -65,30 +65,12 @@
 			distinctValuesObject = formatData(distinctValues).map((value: any) => value.distinctValues);
 			showDropdown = true;
 		} else if (typeof dataValue === 'number') {
-			const maxResp = await $duckDBInstanceStore.query(
-				`SELECT max(${correctColumn}) as maxValue FROM ${filename}`
-			);
-			const minResp = await $duckDBInstanceStore.query(
-				`SELECT min(${correctColumn}) as minValue FROM ${filename}`
-			);
-
 			const histResp = await $duckDBInstanceStore.query(
 				`SELECT histogram(${correctColumn}) as hist FROM ${filename}`
 			);
 
-			var histResponse: number[] = Object.values(
-				formatData(histResp).map((value: any) => value.hist)
-			);
-			if (histResponse.length > 100) {
-				histogram = computeHistogram(histResponse, 100);
-			} else {
-				histogram = computeHistogram(histResponse, histResponse.length);
-			}
-			console.log(histogram, histResponse);
-			var maxObject = formatData(maxResp);
-			var minObject = formatData(minResp);
-			max = maxObject[0].maxValue;
-			min = minObject[0].minValue;
+			var histResponse = formatData(histResp).map((value: any) => value.hist);
+			findFrequencies(histResponse, 100);
 			showRange = true;
 		}
 	};
@@ -103,36 +85,29 @@
 		return results;
 	}
 
-	function computeHistogram(
-		data: number[],
-		binCount: number
-	): { bin: number; rangeStart: number; rangeEnd: number; frequency: number }[] {
-		data = Object.values(data[0]);
+	function findFrequencies(arr: DataItem[], maxBins: number): { [key: string]: number } {
+		let frequencies: { [key: string]: number } = {};
 
-		let min = Math.min(...data);
-		let max = Math.max(...data);
-
-		let binWidth = (max - min) / binCount;
-
-		let bins = Array(binCount).fill(0);
-		let ranges = Array(binCount)
-			.fill(null)
-			.map((_, index) => ({
-				rangeStart: min + index * binWidth,
-				rangeEnd: min + (index + 1) * binWidth
-			}));
-
-		for (let value of data) {
-			let binIndex = Math.min(Math.floor((value - min) / binWidth), binCount - 1);
-			bins[binIndex]++;
+		let min: number = Infinity;
+		let max: number = -Infinity;
+		arr.forEach((item) => {
+			for (let key in item) {
+				if (item[key] < min) min = item[key];
+				if (item[key] > max) max = item[key];
+			}
+		});
+		let range: number = max - min;
+		let binSize: number = range / maxBins;
+		if (maxBins > arr.length) {
+			binSize = range / arr.length;
 		}
 
-		return bins.map((frequency, index) => ({
-			bin: index,
-			rangeStart: ranges[index].rangeStart,
-			rangeEnd: ranges[index].rangeEnd,
-			frequency
-		}));
+		arr.forEach((item) => {
+			for (let key in item) {
+				frequencies[key] = (frequencies[key] || 0) + 1;
+			}
+		});
+		return frequencies;
 	}
 </script>
 
