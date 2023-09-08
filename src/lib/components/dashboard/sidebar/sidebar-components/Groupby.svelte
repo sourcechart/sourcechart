@@ -12,7 +12,7 @@
 	let tags: Array<string> = [];
 	let selectedButtons: Array<string> = [];
 
-	export let ButtonName: string;
+	//export let ButtonName: string;
 
 	$: columns = getColumnsFromFile();
 	$: clickChart = clickedChart();

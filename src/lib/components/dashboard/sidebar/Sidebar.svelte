@@ -23,12 +23,10 @@
 	let showChart = false;
 	let showFilter = false;
 	//@ts-ignore
-	export let data;
+	//export let data;
+	$: numberOfDatasets = fileDropdown();
 
-	const handleClickInside = () => {
-		$activeSidebar = true;
-	};
-
+	/*
 	function clickClusterTab() {
 		allCharts.update((charts) => {
 			charts.forEach((chart) => {
@@ -50,8 +48,11 @@
 			return charts;
 		});
 	}
+	*/
 
-	$: numberOfDatasets = fileDropdown();
+	const handleClickInside = () => {
+		$activeSidebar = true;
+	};
 
 	const handleClick = () => {
 		activeDropZone.set(true);
