@@ -9,13 +9,9 @@
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import FilterRange from './filter-components/FilterRange.svelte';
-	import FilterDropdown from './filter-components/FilterDropdown.svelte'; //@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
-	import { ChevronDownSolid, ChevronUpSolid } from 'flowbite-svelte-icons'; //@ts-ignore
-	import { slide } from 'svelte/transition';
+	import FilterDropdown from './filter-components/FilterDropdown.svelte';
 
-	let showFilter = false;
+	let minmaxValue = 5;
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
@@ -52,7 +48,6 @@
 		filename: string
 	) => {
 		var dataValue = formattedData[0].column;
-		console.log(dataValue);
 		if (typeof dataValue === 'string') {
 			const distinctValues = await $duckDBInstanceStore.query(
 				`SELECT DISTINCT ${correctColumn} as distinctValues FROM ${filename}`
@@ -96,35 +91,7 @@
 	}
 </script>
 
-<Button
-	pill={false}
-	outline
-	color="light"
-	on:click={() => {
-		showFilter = !showFilter;
-	}}
->
-	<div class="flex justify-between items-center w-full">
-		<span>Add Filter</span>
-		{#if showFilter}
-			<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
-		{:else}
-			<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-		{/if}
-	</div>
-</Button>
-<Dropdown class="overflow-visible">
-	{#each $columns as column}
-		<DropdownItem
-			pill={false}
-			outline
-			color={selectedColumns.includes(column) ? 'primary' : 'light'}
-			on:click={() => addColumnToFilter(column)}
-		>
-			{column}
-		</DropdownItem>
-	{/each}
-</Dropdown>
+<Button pill={false} outline>Add Filter</Button>
 {#each selectedColumns as col (col)}
 	{#if filters[col]}
 		<svelte:component this={filters[col].component} {...filters[col].props} />

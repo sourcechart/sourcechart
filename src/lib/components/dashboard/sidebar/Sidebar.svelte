@@ -1,13 +1,11 @@
 <script lang="ts">
-	//import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
-	import FileUploadButton from './sidebar-components/FileUploadButton.svelte'; //@ts-ignore
+	//@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte';
 	import { fileDropdown } from '$lib/io/Stores';
-	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
 	import { PlusSolid } from 'flowbite-svelte-icons';
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
-	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
+	import { activeDropZone, activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
 	import { slide } from 'svelte/transition';
 	import { ChevronDownSolid, ChevronUpSolid } from 'flowbite-svelte-icons'; //@ts-ignore
 
@@ -18,12 +16,12 @@
 		ChartDropdown,
 		AddFilter
 	} from './sidebar-components'; //@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte';
 
 	let showAxis = false;
 	let showAggregator = false;
 	let showGroupBy = false;
 	let showChart = false;
+	let showFilter = false;
 	//@ts-ignore
 	export let data;
 
@@ -178,9 +176,28 @@
 							{/if}
 						</div>
 						<div class="flex flex-col space-y-1 z-40">
-							<div class="absolute">
-								<AddFilter />
-							</div>
+							<Button
+								pill={false}
+								outline
+								color="light"
+								on:click={() => {
+									showChart = !showChart;
+								}}
+							>
+								<div class="flex justify-between items-center w-full">
+									<span>Add Filter</span>
+									{#if showChart}
+										<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+									{:else}
+										<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+									{/if}
+								</div>
+							</Button>
+							{#if showFilter}
+								<div transition:slide>
+									<AddFilter />
+								</div>
+							{/if}
 						</div>
 					</div>
 				</div>
