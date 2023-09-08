@@ -90,9 +90,13 @@
 								<div class="flex justify-between items-center w-full">
 									<span>Axis</span>
 									{#if showAxis}
-										<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+										<button>
+											<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
+										</button>
 									{:else}
-										<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+										<button>
+											<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+										</button>
 									{/if}
 								</div>
 							</Button>
