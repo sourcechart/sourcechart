@@ -181,12 +181,12 @@
 								outline
 								color="light"
 								on:click={() => {
-									showChart = !showChart;
+									showFilter = !showFilter;
 								}}
 							>
 								<div class="flex justify-between items-center w-full">
 									<span>Add Filter</span>
-									{#if showChart}
+									{#if showFilter}
 										<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
 									{:else}
 										<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />

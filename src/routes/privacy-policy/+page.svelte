@@ -1,5 +1,5 @@
-<script> 
-    import PrivacyPolicy from "$lib/components/landing/homepage/legal/PrivacyPolicy.svelte"
-    
-    </script>
-    <PrivacyPolicy />
+<script>
+	import PrivacyPolicy from '$lib/io/landing/homepage/legal/PrivacyPolicy.svelte';
+</script>
+
+<PrivacyPolicy />

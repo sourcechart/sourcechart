@@ -10,7 +10,9 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import FilterRange from './filter-components/FilterRange.svelte';
 	import FilterDropdown from './filter-components/FilterDropdown.svelte';
+	import Filter from './filter-components/Filter.svelte';
 
+	import Label from 'flowbite-svelte/Label.svelte';
 	let minmaxValue = 5;
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
@@ -91,7 +93,7 @@
 	}
 </script>
 
-<Button pill={false} outline>Add Filter</Button>
+<Filter />
 {#each selectedColumns as col (col)}
 	{#if filters[col]}
 		<svelte:component this={filters[col].component} {...filters[col].props} />
