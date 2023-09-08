@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { Chart } from '$lib/components/dashboard/echarts';
+
 	let start: number = 0;
 	let end: number = 1;
 	let startValue = '0';

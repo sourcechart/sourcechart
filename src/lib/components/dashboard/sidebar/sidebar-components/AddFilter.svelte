@@ -83,9 +83,8 @@
 				histogram = computeHistogram(histResponse, 100);
 			} else {
 				histogram = computeHistogram(histResponse, histResponse.length);
-				//console.log('histogram', histogram, 'histResponse', histResponse);
 			}
-			//console.log(histogram);
+			console.log(histogram, histResponse);
 			var maxObject = formatData(maxResp);
 			var minObject = formatData(minResp);
 			max = maxObject[0].maxValue;
