@@ -18,6 +18,7 @@
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
+	let histogram: Array<any>;
 	let distinctValuesObject: Array<any>;
 	let max: number = 1;
 	let min: number = 0;
@@ -71,6 +72,20 @@
 				`SELECT min(${correctColumn}) as minValue FROM ${filename}`
 			);
 
+			const histResp = await $duckDBInstanceStore.query(
+				`SELECT histogram(${correctColumn}) as hist FROM ${filename}`
+			);
+
+			var histResponse: number[] = Object.values(
+				formatData(histResp).map((value: any) => value.hist)
+			);
+			if (histResponse.length > 100) {
+				histogram = computeHistogram(histResponse, 100);
+			} else {
+				histogram = computeHistogram(histResponse, histResponse.length);
+				//console.log('histogram', histogram, 'histResponse', histResponse);
+			}
+			//console.log(histogram);
 			var maxObject = formatData(maxResp);
 			var minObject = formatData(minResp);
 			max = maxObject[0].maxValue;
@@ -87,6 +102,38 @@
 			)
 		);
 		return results;
+	}
+
+	function computeHistogram(
+		data: number[],
+		binCount: number
+	): { bin: number; rangeStart: number; rangeEnd: number; frequency: number }[] {
+		data = Object.values(data[0]);
+
+		let min = Math.min(...data);
+		let max = Math.max(...data);
+
+		let binWidth = (max - min) / binCount;
+
+		let bins = Array(binCount).fill(0);
+		let ranges = Array(binCount)
+			.fill(null)
+			.map((_, index) => ({
+				rangeStart: min + index * binWidth,
+				rangeEnd: min + (index + 1) * binWidth
+			}));
+
+		for (let value of data) {
+			let binIndex = Math.min(Math.floor((value - min) / binWidth), binCount - 1);
+			bins[binIndex]++;
+		}
+
+		return bins.map((frequency, index) => ({
+			bin: index,
+			rangeStart: ranges[index].rangeStart,
+			rangeEnd: ranges[index].rangeEnd,
+			frequency
+		}));
 	}
 </script>
 

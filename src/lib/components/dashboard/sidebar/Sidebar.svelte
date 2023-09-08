@@ -180,7 +180,7 @@
 								</div>
 							{/if}
 						</div>
-						<div class="flex flex-col space-y-1 z-40">
+						<div class="flex flex-col space-y-1">
 							<Button
 								pill={false}
 								outline
