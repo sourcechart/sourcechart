@@ -38,6 +38,6 @@
 
 <style>
 	.background {
-		background-color: rgb(35, 34, 34);
+		background-color: rgb(38, 38, 39);
 	}
 </style>

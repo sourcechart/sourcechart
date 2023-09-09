@@ -228,7 +228,7 @@
 
 <style>
 	.outerDiv {
-		background-color: rgb(35, 34, 34);
+		background-color: rgb(38, 38, 39);
 		position: fixed;
 		width: 300px;
 		overflow: hidden;
@@ -239,7 +239,7 @@
 		width: 100%;
 		height: 100%;
 		overflow-y: auto;
-		background-color: rgb(35, 34, 34);
+		background-color: rgb(38, 38, 39);
 	}
 
 	/* For WebKit (Chrome, Safari) */

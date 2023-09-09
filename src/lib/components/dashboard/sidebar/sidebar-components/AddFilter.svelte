@@ -65,7 +65,7 @@
 				`SELECT DISTINCT ${correctColumn} as distinctValues FROM ${filename}`
 			);
 			distinctValuesObject = formatData(distinctValues).map((value: any) => value.distinctValues);
-			distinctValuesObject = distinctValuesObject.filter((item) => item != null);
+			distinctValuesObject = distinctValuesObject.filter((item) => item != null && item != '');
 			showDropdown = true;
 		} else if (typeof dataValue === 'number') {
 			const minResp = await $duckDBInstanceStore.query(
