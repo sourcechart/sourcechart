@@ -1,11 +1,9 @@
 <script lang="ts">
-	// import FilterChart from './FilterChart.svelte';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	export let column: string;
 	export let min: number; // Min value of the slider
 	export let max: number; // Max value of the slider
-	//export let frequencies: { [key: number]: number } = {};
 
 	let slider: HTMLElement;
 	let dragging = false;
@@ -151,14 +149,14 @@
 		/>
 	</div>
 	<div class="flex justify-between mt-2">
-		<div class="p-2 border rounded">
-			{lowHandle}
-			<!-- Display the minimum value -->
-		</div>
-		<div class="p-2 border rounded">
-			{highHandle}
-			<!-- Display the maximum value -->
-		</div>
+		{#if lowHandle != '0' && highHandle != '1'}
+			<div class="p-2 border rounded">
+				{lowHandle}
+			</div>
+			<div class="p-2 border rounded">
+				{highHandle}
+			</div>
+		{/if}
 	</div>
 </div>
 

@@ -25,9 +25,8 @@
 	let min: number;
 	let max: number;
 
+	$: console.log(showDropdown);
 	let placement: string = 'bottom';
-
-	$: console.log(addFilterDistance);
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
@@ -66,6 +65,7 @@
 				`SELECT DISTINCT ${correctColumn} as distinctValues FROM ${filename}`
 			);
 			distinctValuesObject = formatData(distinctValues).map((value: any) => value.distinctValues);
+			distinctValuesObject = distinctValuesObject.filter((item) => item != null);
 			showDropdown = true;
 		} else if (typeof dataValue === 'number') {
 			const minResp = await $duckDBInstanceStore.query(
@@ -127,7 +127,7 @@
 			placement={addFilterDistance > 50 || addFilterDistance === 0
 				? (placement = 'top')
 				: (placement = 'bottom')}
-			class="w-48 overflow-y-auto py-1 h-48"
+			class="w-48 overflow-y-auto py-1 {$columns.length > 0 ? 'h-48' : 'hidden'}"
 		>
 			{#each $columns as column}
 				<DropdownItem
@@ -137,14 +137,13 @@
 				>
 			{/each}
 		</Dropdown>
-
 		<CloseButton />
 	</div>
 	<div class="mt-4">
 		{#if showRange}
 			<FilterRange {min} {max} column={selectedColumn} />
 		{:else if showDropdown}
-			<FilterDropdown column={selectedColumn} />
+			<FilterDropdown column={selectedColumn} {addFilterDistance} items={distinctValuesObject} />
 		{/if}
 	</div>
 </div>
