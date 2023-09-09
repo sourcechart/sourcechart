@@ -1,9 +1,6 @@
 <script lang="ts">
 	//@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
-
 	import { onMount } from 'svelte';
 
 	export let items: any[] = [];
@@ -50,7 +47,7 @@
 	});
 </script>
 
-<div bind:this={dropdown} class="dropdown">
+<div>
 	<button
 		on:click={() => {
 			showDropdown = !showDropdown;
