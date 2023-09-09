@@ -69,6 +69,7 @@ export const chartOptions = () =>
 			yColumn: options?.yColumn,
 			columns: options?.columns,
 			groupbyColumns: options?.groupbyColumns,
+			filterColumns: options?.filterColumns,
 			aggregator: options?.aggregator
 		};
 	});

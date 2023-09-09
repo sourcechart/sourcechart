@@ -2,6 +2,7 @@
 	import FilterChart from './FilterChart.svelte';
 	import { clickedChartIndex, allCharts } from '$lib/io/Stores';
 
+	export let column: string;
 	export let min: number; // Min value of the slider
 	export let max: number; // Max value of the slider
 	export let frequencies: { [key: number]: number } = {};
@@ -10,14 +11,11 @@
 	let dragging = false;
 	let start: number = 0;
 	let end: number = 1;
-	let startValue = '0';
-	let endValue = '1';
+
+	export let lowHandle = '0';
+	export let highHandle = '1';
 
 	$: i = clickedChartIndex();
-
-	const updateFilter = (data: any) => {
-		frequencies = data;
-	};
 
 	function draggable(node: HTMLElement) {
 		let x: number;
@@ -110,8 +108,8 @@
 			}
 
 			// Log the actual values
-			startValue = (min + start * (max - min)).toFixed(2).slice(0, 3);
-			endValue = (min + end * (max - min)).toFixed(2).slice(0, 3);
+			lowHandle = (min + start * (max - min)).toFixed(2).slice(0, 3);
+			highHandle = (min + end * (max - min)).toFixed(2).slice(0, 3);
 		};
 	}
 </script>
@@ -138,11 +136,11 @@
 	</div>
 	<div class="flex justify-between mt-2">
 		<div class="p-2 border rounded">
-			{startValue}
+			{lowHandle}
 			<!-- Display the minimum value -->
 		</div>
 		<div class="p-2 border rounded">
-			{endValue}
+			{highHandle}
 			<!-- Display the maximum value -->
 		</div>
 	</div>

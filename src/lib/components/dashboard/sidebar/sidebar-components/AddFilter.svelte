@@ -28,6 +28,9 @@
 	let min: number;
 	let max: number;
 
+	let lowHandle: string;
+	let highHandle: string;
+
 	const addColumnToFilter = (column: string) => {
 		selectedColumn = column;
 		if (selectedColumns.includes(column)) {
@@ -128,7 +131,14 @@
 	</div>
 	<div class="mt-4">
 		{#if showRange}
-			<FilterRange {min} {max} {frequencies} />
+			<FilterRange
+				bind:lowHandle
+				bind:highHandle
+				{min}
+				{max}
+				{frequencies}
+				column={selectedColumn}
+			/>
 		{:else if showDropdown}
 			<FilterDropdown />
 		{/if}

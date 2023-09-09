@@ -20,7 +20,7 @@ type Chart = {
 	datasetID: string | null;
 	columns: Array<string>;
 	groupbyColumns: Array<string>;
-	filterColumns: Array<string>;
+	filterColumns: Array<any>;
 	xColumn: string | null;
 	yColumn: string | null;
 	canvasWidth: number;
@@ -63,7 +63,7 @@ type Queries = {
 			yColumn: { column: string | null | undefined; aggregator: string | null | undefined };
 			from: string | undefined | null;
 			groupbyColumns: string[];
-			filterColumns: string[];
+			filterColumns: any[];
 		};
 		cluster: {
 			attributes: string[];
