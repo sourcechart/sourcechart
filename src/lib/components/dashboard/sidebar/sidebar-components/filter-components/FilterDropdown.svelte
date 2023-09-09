@@ -5,8 +5,12 @@
 	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
+	import { onMount } from 'svelte';
+
 	export let items: any[] = [];
 	export let column: string;
+	let dropdown: HTMLElement;
+	let button: HTMLElement;
 
 	$: i = clickedChartIndex();
 
@@ -27,11 +31,42 @@
 			];
 		}
 	}
+
+	onMount(() => {
+		const checkDropdownPosition = () => {
+			const sidebarBottom = document.querySelector('.outerDiv').getBoundingClientRect().bottom;
+			const dropdownBottom = dropdown.getBoundingClientRect().bottom;
+
+			if (dropdownBottom > sidebarBottom) {
+				dropdown.classList.add('dropdown-up');
+			} else {
+				dropdown.classList.remove('dropdown-up');
+			}
+		};
+
+		button.addEventListener('click', checkDropdownPosition);
+	});
 </script>
 
-<Button>Choose Field</Button>
-<Dropdown>
-	{#each items as item}
-		<DropdownItem on:click={() => updateFilter(item)}>{item}</DropdownItem>
-	{/each}
-</Dropdown>
+<div bind:this={dropdown} class="dropdown">
+	<Button bind:this={button}>Choose Field</Button>
+	<Dropdown>
+		{#each items as item}
+			<DropdownItem on:click={() => updateFilter(item)}>{item}</DropdownItem>
+		{/each}
+	</Dropdown>
+</div>
+
+<style>
+	.dropdown {
+		position: relative;
+	}
+
+	.dropdown-up {
+		bottom: 100%;
+	}
+
+	.dropdown-down {
+		top: 100%;
+	}
+</style>

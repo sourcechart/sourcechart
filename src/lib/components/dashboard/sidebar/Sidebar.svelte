@@ -128,7 +128,7 @@
 							</Button>
 							{#if showGroupBy}
 								<div transition:slide>
-									<Groupby ButtonName={'Attributes'} />
+									<Groupby />
 								</div>
 							{/if}
 						</div>

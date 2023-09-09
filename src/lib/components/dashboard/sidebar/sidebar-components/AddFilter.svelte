@@ -130,7 +130,7 @@
 		{#if showRange}
 			<FilterRange {min} {max} {frequencies} column={selectedColumn} />
 		{:else if showDropdown}
-			<FilterDropdown />
+			<FilterDropdown column={selectedColumn} />
 		{/if}
 	</div>
 </div>
