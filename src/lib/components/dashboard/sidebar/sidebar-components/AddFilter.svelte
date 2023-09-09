@@ -31,6 +31,8 @@
 	let lowHandle: string;
 	let highHandle: string;
 
+	$: console.log(lowHandle, highHandle);
+
 	const addColumnToFilter = (column: string) => {
 		selectedColumn = column;
 		if (selectedColumns.includes(column)) {

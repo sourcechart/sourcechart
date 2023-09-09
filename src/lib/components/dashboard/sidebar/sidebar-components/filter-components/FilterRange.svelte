@@ -1,6 +1,6 @@
 <script lang="ts">
 	import FilterChart from './FilterChart.svelte';
-	import { clickedChartIndex, allCharts } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	export let column: string;
 	export let min: number; // Min value of the slider
@@ -9,13 +9,32 @@
 
 	let slider: HTMLElement;
 	let dragging = false;
-	let start: number = 0;
-	let end: number = 1;
+	let start: number;
+	let end: number;
 
 	export let lowHandle = '0';
 	export let highHandle = '1';
 
 	$: i = clickedChartIndex();
+
+	const updateAllCharts = () => {
+		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
+
+		if (existingFilter) {
+			$allCharts[$i].filterColumns.find((filter) => filter.column === column).value = {
+				min: lowHandle,
+				max: highHandle
+			};
+		} else {
+			$allCharts[$i].filterColumns = [
+				...$allCharts[$i].filterColumns,
+				{
+					column: column,
+					value: { min: lowHandle, max: highHandle }
+				}
+			];
+		}
+	};
 
 	function draggable(node: HTMLElement) {
 		let x: number;
@@ -63,7 +82,7 @@
 
 		function handleMouseup() {
 			dragging = false; // Set dragging to false here
-
+			updateAllCharts();
 			node.dispatchEvent(
 				new CustomEvent('dragend', {
 					detail: { x }
@@ -91,12 +110,9 @@
 		return function (evt: CustomEvent) {
 			const { left, right } = slider.getBoundingClientRect();
 			const parentWidth = right - left;
-			let p = Math.min(Math.max((evt.detail.x - left) / parentWidth, 0), 1);
+			var p = Math.min(Math.max((evt.detail.x - left) / parentWidth, 0), 1);
 
-			// Convert from percentage to actual value in the range [min, max]
-			let actualValue = min + p * (max - min);
-
-			// Convert back to percentage for the visual representation
+			var actualValue = min + p * (max - min);
 			p = (actualValue - min) / (max - min);
 
 			if (which === 'start') {
@@ -107,7 +123,6 @@
 				end = p;
 			}
 
-			// Log the actual values
 			lowHandle = (min + start * (max - min)).toFixed(2).slice(0, 3);
 			highHandle = (min + end * (max - min)).toFixed(2).slice(0, 3);
 		};
