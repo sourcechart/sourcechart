@@ -78,6 +78,7 @@
 					detail: { x }
 				})
 			);
+			updateFilter();
 		}
 
 		function handleMouseup() {
