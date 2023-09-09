@@ -266,7 +266,7 @@
 	};
 </script>
 
-<div class="blur-filter">
+<div class="background">
 	<div
 		class="h-full w-full"
 		style={`cursor: ${$mouseType};`}
@@ -307,5 +307,13 @@
 		width: 100vw;
 		height: 100vh;
 		background-color: rgba(27, 23, 23, 0.605);
+	}
+	.background {
+		background-color: rgb(25, 24, 24);
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		left: 0;
+		position: fixed;
 	}
 </style>
