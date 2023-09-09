@@ -8,7 +8,7 @@
 	export let items: any[] = [];
 </script>
 
-<Button />
+<Button>Choose Field</Button>
 <Dropdown>
 	{#each items as item}
 		<DropdownItem>{item}</DropdownItem>

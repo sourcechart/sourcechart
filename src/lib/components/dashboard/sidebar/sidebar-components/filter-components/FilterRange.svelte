@@ -9,8 +9,8 @@
 
 	let slider: HTMLElement;
 	let dragging = false;
-	let start: number;
-	let end: number;
+	let start: number = 0;
+	let end: number = 1;
 
 	export let lowHandle = '0';
 	export let highHandle = '1';
@@ -130,7 +130,7 @@
 </script>
 
 <div>
-	<FilterChart {frequencies} />
+	<!--<FilterChart {frequencies} /> -->
 	<div class="relative w-full h-2 bg-gray-300" bind:this={slider}>
 		<div
 			class="absolute top-0 bottom-0 bg-blue-500"
