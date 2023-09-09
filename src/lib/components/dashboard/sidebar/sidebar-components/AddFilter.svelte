@@ -64,11 +64,20 @@
 			distinctValuesObject = formatData(distinctValues).map((value: any) => value.distinctValues);
 			showDropdown = true;
 		} else if (typeof dataValue === 'number') {
+			const minResp = await $duckDBInstanceStore.query(
+				`SELECT MIN(${correctColumn}) as min FROM ${filename}`
+			);
+			const maxResp = await $duckDBInstanceStore.query(
+				`SELECT MAX(${correctColumn}) as max FROM ${filename}`
+			);
+
+			min = formatData(minResp)[0].min;
+			max = formatData(maxResp)[0].max;
 			const histResp = await $duckDBInstanceStore.query(
 				`SELECT histogram(${correctColumn}) as hist FROM ${filename}`
 			);
 			var histResponse = formatData(histResp).map((value: any) => value.hist);
-			findFrequencies(histResponse, 100);
+			findFrequencies(histResponse, 20);
 			showRange = true;
 		}
 	};
