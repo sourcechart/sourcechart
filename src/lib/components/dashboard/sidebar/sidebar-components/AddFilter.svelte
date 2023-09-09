@@ -1,13 +1,13 @@
 <script lang="ts">
-	//@ts-ignore
 	import {
 		getColumnsFromFile,
 		allCharts,
 		clickedChartIndex,
 		duckDBInstanceStore
-	} from '$lib/io/Stores'; //@ts-ignore
-	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils'; //@ts-ignore
+	} from '$lib/io/Stores';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
+	import { onMount } from 'svelte';
 	import FilterDropdown from './filter-components/FilterDropdown.svelte';
 	import FilterRange from './filter-components/FilterRange.svelte';
 
@@ -21,6 +21,8 @@
 	let min: number;
 	let max: number;
 	let showFields = false;
+	let dropdownElement: HTMLElement;
+	let buttonElement: HTMLElement;
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
@@ -33,6 +35,21 @@
 			selectedColumns = [...selectedColumns, column];
 		}
 		handleAsyncOperations(column);
+	};
+
+	const checkDropdownPosition = () => {
+		const viewportHeight = window.innerHeight;
+		const dropdownBottom = dropdownElement.getBoundingClientRect().bottom;
+		const sidebarBottom =
+			document.querySelector('.outerDiv')?.getBoundingClientRect().bottom || viewportHeight;
+
+		if (dropdownBottom > viewportHeight || dropdownBottom > sidebarBottom) {
+			dropdownElement.style.bottom = `${buttonElement.getBoundingClientRect().height}px`;
+			dropdownElement.style.top = 'auto';
+		} else {
+			dropdownElement.style.top = `${buttonElement.getBoundingClientRect().height}px`;
+			dropdownElement.style.bottom = 'auto';
+		}
 	};
 
 	const handleAsyncOperations = async (column: string) => {
@@ -111,27 +128,41 @@
 			}
 		});
 	}
+
+	onMount(() => {
+		buttonElement.addEventListener('click', checkDropdownPosition);
+	});
 </script>
 
 <div class="w-full p-4 bg-gray-500">
 	<div class="flex justify-between items-center">
 		<button
+			bind:this={buttonElement}
 			on:click={() => {
 				showFields = !showFields;
-			}}>Choose Field</button
+			}}
 		>
+			Choose Field
+		</button>
 		{#if showFields}
-			{#each $columns as column}
-				<li>
-					<button
-						on:click={() => {
-							addColumnToFilter(column);
-							showDropdown = false;
-						}}
-						>{column}
-					</button>
-				</li>
-			{/each}
+			<ul
+				bind:this={dropdownElement}
+				class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+			>
+				{#each $columns as column}
+					<li>
+						<button
+							on:click={() => {
+								addColumnToFilter(column);
+								showDropdown = false;
+								checkDropdownPosition();
+							}}
+						>
+							{column}
+						</button>
+					</li>
+				{/each}
+			</ul>
 		{/if}
 	</div>
 	<div class="mt-4">
