@@ -5,7 +5,7 @@
 	export let column: string;
 	export let min: number; // Min value of the slider
 	export let max: number; // Max value of the slider
-	export let frequencies: { [key: number]: number } = {};
+	//export let frequencies: { [key: number]: number } = {};
 
 	let slider: HTMLElement;
 	let dragging = false;

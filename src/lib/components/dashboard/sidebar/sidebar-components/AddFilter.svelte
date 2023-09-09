@@ -9,7 +9,11 @@
 
 	import { onMount } from 'svelte';
 	import FilterDropdown from './filter-components/FilterDropdown.svelte';
-	import FilterRange from './filter-components/FilterRange.svelte';
+	import FilterRange from './filter-components/FilterRange.svelte'; //@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
+	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; //@ts-ignore
+	import CloseButton from 'flowbite-svelte/CloseButton.svelte'; //@ts-ignore
 
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
@@ -20,10 +24,12 @@
 	let showDropdown = false;
 	let min: number;
 	let max: number;
-	let showFields = false;
 	let dropdownElement: HTMLElement;
 	let buttonElement: HTMLElement;
 
+	let placement: string = 'bottom';
+
+	let dummyColumns = ['column1', 'column2', 'column3', 'column4', 'column5', 'column6', 'column7'];
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
@@ -43,13 +49,14 @@
 		const dropdownHeight = dropdownElement.getBoundingClientRect().height;
 
 		const spaceAboveButton = buttonRect.top;
+		const spaceBelowButton = viewportHeight - buttonRect.bottom;
 
-		if (spaceAboveButton > dropdownHeight) {
-			dropdownElement.style.bottom = `${viewportHeight - buttonRect.top}px`;
-			dropdownElement.style.top = 'auto';
+		if (spaceAboveButton < dropdownHeight && spaceBelowButton > dropdownHeight) {
+			placement = 'bottom';
+		} else if (spaceAboveButton > dropdownHeight && spaceBelowButton < dropdownHeight) {
+			placement = 'top';
 		} else {
-			dropdownElement.style.top = `${buttonRect.bottom}px`;
-			dropdownElement.style.bottom = 'auto';
+			placement = 'bottom';
 		}
 	};
 
@@ -95,6 +102,7 @@
 			findFrequencies(histResponse, 20);
 			showRange = true;
 		}
+		checkDropdownPosition();
 	};
 
 	function formatData(res: any) {
@@ -129,46 +137,25 @@
 			}
 		});
 	}
-
-	onMount(() => {
-		buttonElement.addEventListener('click', checkDropdownPosition);
-	});
 </script>
 
 <div class="w-full p-4 bg-gray-500">
 	<div class="flex justify-between items-center">
-		<button
-			bind:this={buttonElement}
-			on:click={() => {
-				showFields = !showFields;
-			}}
-		>
-			Choose Field
-		</button>
-		{#if showFields}
-			<ul
-				bind:this={dropdownElement}
-				class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
-			>
-				{#each $columns as column}
-					<li>
-						<button
-							on:click={() => {
-								addColumnToFilter(column);
-								showDropdown = false;
-								checkDropdownPosition();
-							}}
-						>
-							{column}
-						</button>
-					</li>
-				{/each}
-			</ul>
-		{/if}
+		<Button>{selectedColumn}</Button>
+		<Dropdown placement={'top'}>
+			{#each $columns as column}
+				<DropdownItem
+					on:click={() => {
+						addColumnToFilter(column);
+					}}>{column}</DropdownItem
+				>
+			{/each}
+		</Dropdown>
+		<CloseButton />
 	</div>
 	<div class="mt-4">
 		{#if showRange}
-			<FilterRange {min} {max} {frequencies} column={selectedColumn} />
+			<FilterRange {min} {max} column={selectedColumn} />
 		{:else if showDropdown}
 			<FilterDropdown column={selectedColumn} />
 		{/if}

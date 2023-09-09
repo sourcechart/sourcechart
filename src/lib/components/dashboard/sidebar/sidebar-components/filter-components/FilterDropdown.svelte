@@ -29,15 +29,11 @@
 
 	const checkDropdownPosition = () => {
 		const viewportHeight = window.innerHeight;
-		const dropdownTop = dropdownElement.getBoundingClientRect().top;
-		const dropdownHeight = dropdownElement.getBoundingClientRect().height;
+		const dropdownBottom = dropdownElement.getBoundingClientRect().bottom;
 		const sidebarBottom =
 			document.querySelector('.outerDiv')?.getBoundingClientRect().bottom || viewportHeight;
 
-		if (
-			dropdownTop + dropdownHeight > viewportHeight ||
-			dropdownTop + dropdownHeight > sidebarBottom
-		) {
+		if (dropdownBottom > viewportHeight || dropdownBottom > sidebarBottom) {
 			dropdownElement.classList.add('dropdown-up');
 			dropdownElement.classList.remove('dropdown-down');
 		} else {
@@ -71,7 +67,7 @@
 						on:click={() => {
 							updateFilter(item);
 							showDropdown = false;
-							checkDropdownPosition();
+							checkDropdownPosition(); // Add this line
 						}}
 						class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-200"
 					>
@@ -82,18 +78,3 @@
 		</ul>
 	{/if}
 </div>
-
-<style>
-	.dropdown {
-		position: relative;
-	}
-
-	.dropdown-up ul {
-		bottom: 100%;
-		top: auto;
-	}
-
-	.dropdown-down ul {
-		top: 100%;
-	}
-</style>

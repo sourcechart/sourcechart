@@ -23,7 +23,6 @@
 	let showChart = false;
 	let showFilter = false;
 	//@ts-ignore
-	//export let data;
 	$: numberOfDatasets = fileDropdown();
 
 	/*
@@ -186,6 +185,7 @@
 							color="light"
 							on:click={() => {
 								showFilter = !showFilter;
+								console.log(showFilter);
 							}}
 						>
 							<div class="flex justify-between items-center w-full">
