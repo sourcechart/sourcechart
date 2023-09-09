@@ -6,14 +6,14 @@
 		duckDBInstanceStore
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-
-	import { onMount } from 'svelte';
 	import FilterDropdown from './filter-components/FilterDropdown.svelte';
 	import FilterRange from './filter-components/FilterRange.svelte'; //@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
 	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; //@ts-ignore
 	import CloseButton from 'flowbite-svelte/CloseButton.svelte'; //@ts-ignore
+
+	export let addFilterDistance: number;
 
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
@@ -24,12 +24,11 @@
 	let showDropdown = false;
 	let min: number;
 	let max: number;
-	let dropdownElement: HTMLElement;
-	let buttonElement: HTMLElement;
 
 	let placement: string = 'bottom';
 
-	let dummyColumns = ['column1', 'column2', 'column3', 'column4', 'column5', 'column6', 'column7'];
+	$: console.log(addFilterDistance);
+
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
@@ -41,23 +40,6 @@
 			selectedColumns = [...selectedColumns, column];
 		}
 		handleAsyncOperations(column);
-	};
-
-	const checkDropdownPosition = () => {
-		const viewportHeight = window.innerHeight;
-		const buttonRect = buttonElement.getBoundingClientRect();
-		const dropdownHeight = dropdownElement.getBoundingClientRect().height;
-
-		const spaceAboveButton = buttonRect.top;
-		const spaceBelowButton = viewportHeight - buttonRect.bottom;
-
-		if (spaceAboveButton < dropdownHeight && spaceBelowButton > dropdownHeight) {
-			placement = 'bottom';
-		} else if (spaceAboveButton > dropdownHeight && spaceBelowButton < dropdownHeight) {
-			placement = 'top';
-		} else {
-			placement = 'bottom';
-		}
 	};
 
 	const handleAsyncOperations = async (column: string) => {
@@ -102,7 +84,6 @@
 			findFrequencies(histResponse, 20);
 			showRange = true;
 		}
-		checkDropdownPosition();
 	};
 
 	function formatData(res: any) {
@@ -142,7 +123,12 @@
 <div class="w-full p-4 bg-gray-500">
 	<div class="flex justify-between items-center">
 		<Button>{selectedColumn}</Button>
-		<Dropdown placement={'top'}>
+		<Dropdown
+			placement={addFilterDistance > 50 || addFilterDistance === 0
+				? (placement = 'top')
+				: (placement = 'bottom')}
+			class="w-48 overflow-y-auto py-1 h-48"
+		>
 			{#each $columns as column}
 				<DropdownItem
 					on:click={() => {
@@ -151,6 +137,7 @@
 				>
 			{/each}
 		</Dropdown>
+
 		<CloseButton />
 	</div>
 	<div class="mt-4">
@@ -161,3 +148,6 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+</style>

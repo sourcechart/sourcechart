@@ -22,8 +22,11 @@
 	let showGroupBy = false;
 	let showChart = false;
 	let showFilter = false;
-	//@ts-ignore
+
 	$: numberOfDatasets = fileDropdown();
+	let addFilterDistance: number = 0;
+	let addFilterElement: HTMLElement;
+	let sidebarElement: HTMLElement;
 
 	/*
 	function clickClusterTab() {
@@ -57,10 +60,24 @@
 		activeDropZone.set(true);
 		activeSidebar.set(false);
 	};
+
+	const calculateDistanceToBottom = () => {
+		if (addFilterElement && sidebarElement) {
+			const addFilterBottom = addFilterElement.getBoundingClientRect().bottom;
+			const sidebarBottom = sidebarElement.getBoundingClientRect().bottom;
+			addFilterDistance = sidebarBottom - addFilterBottom;
+			return addFilterDistance;
+		}
+		return 0;
+	};
 </script>
 
 {#if $activeSidebar}
-	<div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4 outerDiv">
+	<div
+		bind:this={sidebarElement}
+		use:clickInside={{ clickInside: handleClickInside }}
+		class="space-y-4 outerDiv"
+	>
 		<div
 			class="innerDiv text-white w-full h-full transition-transform duration-200 ease-in-out rounded-md border-red-50 p-6"
 		>
@@ -185,7 +202,7 @@
 							color="light"
 							on:click={() => {
 								showFilter = !showFilter;
-								console.log(showFilter);
+								calculateDistanceToBottom();
 							}}
 						>
 							<div class="flex justify-between items-center w-full">
@@ -198,8 +215,8 @@
 							</div>
 						</Button>
 						{#if showFilter}
-							<div transition:slide>
-								<AddFilter />
+							<div bind:this={addFilterElement} transition:slide>
+								<AddFilter {addFilterDistance} />
 							</div>
 						{/if}
 					</div>
