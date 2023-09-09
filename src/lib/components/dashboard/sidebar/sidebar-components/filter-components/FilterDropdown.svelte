@@ -1,12 +1,10 @@
 <script lang="ts">
 	//@ts-ignore
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
-	import { onMount } from 'svelte';
 
 	export let items: any[] = [];
 	export let column: string;
-	let dropdown: HTMLElement;
-	let button: HTMLElement;
+
 	let showDropdown = false;
 
 	$: i = clickedChartIndex();
@@ -28,23 +26,6 @@
 			];
 		}
 	}
-
-	onMount(() => {
-		const checkDropdownPosition = () => {
-			const sidebarBottom = document.querySelector('.outerDiv').getBoundingClientRect().bottom;
-
-			const dropdownBottom = dropdown.getBoundingClientRect().bottom;
-
-			console.log(sidebarBottom, dropdownBottom);
-			if (dropdownBottom > sidebarBottom) {
-				dropdown.classList.add('dropdown-up');
-			} else {
-				dropdown.classList.remove('dropdown-up');
-			}
-		};
-
-		button.addEventListener('click', checkDropdownPosition);
-	});
 </script>
 
 <div>

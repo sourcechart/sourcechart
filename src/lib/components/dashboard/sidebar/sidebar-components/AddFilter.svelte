@@ -7,10 +7,6 @@
 		duckDBInstanceStore
 	} from '$lib/io/Stores'; //@ts-ignore
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; //@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import CloseButton from 'flowbite-svelte/CloseButton.svelte'; //@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 
 	import FilterDropdown from './filter-components/FilterDropdown.svelte';
 	import FilterRange from './filter-components/FilterRange.svelte';
