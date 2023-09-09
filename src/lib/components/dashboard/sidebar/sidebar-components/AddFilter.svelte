@@ -15,9 +15,6 @@
 	import FilterDropdown from './filter-components/FilterDropdown.svelte';
 	import FilterRange from './filter-components/FilterRange.svelte';
 
-	$: columns = getColumnsFromFile();
-	$: i = clickedChartIndex();
-
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
 	let dataValue: string | number | object;
@@ -28,10 +25,8 @@
 	let min: number;
 	let max: number;
 
-	let lowHandle: string;
-	let highHandle: string;
-
-	$: console.log(lowHandle, highHandle);
+	$: columns = getColumnsFromFile();
+	$: i = clickedChartIndex();
 
 	const addColumnToFilter = (column: string) => {
 		selectedColumn = column;
@@ -133,14 +128,7 @@
 	</div>
 	<div class="mt-4">
 		{#if showRange}
-			<FilterRange
-				bind:lowHandle
-				bind:highHandle
-				{min}
-				{max}
-				{frequencies}
-				column={selectedColumn}
-			/>
+			<FilterRange {min} {max} {frequencies} column={selectedColumn} />
 		{:else if showDropdown}
 			<FilterDropdown />
 		{/if}
