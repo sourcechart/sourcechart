@@ -76,7 +76,7 @@
 		<NavBar />
 	</div>
 	<div class="absolute z-30 ml-1">
-		<Sidebar {data} />
+		<Sidebar />
 	</div>
 	<div class="relative">
 		{#if $activeDropZone}

@@ -3,7 +3,6 @@
 
 	export let frequencies: { [key: number]: number } = {}; //@ts-ignore
 
-	$: console.log(frequencies);
 	let options: any = {
 		xAxis: {
 			type: 'category',
