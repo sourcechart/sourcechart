@@ -24,6 +24,7 @@
 	let showDropdown = false;
 	let min: number;
 	let max: number;
+	let showFields = false;
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
@@ -118,13 +119,24 @@
 
 <div class="w-full p-4 bg-gray-500">
 	<div class="flex justify-between items-center">
-		<Button>{selectedColumn}</Button>
-		<Dropdown>
+		<button
+			on:click={() => {
+				showFields = !showFields;
+			}}>Choose Field</button
+		>
+		{#if showFields}
 			{#each $columns as column}
-				<DropdownItem on:click={() => addColumnToFilter(column)}>{column}</DropdownItem>
+				<li>
+					<button
+						on:click={() => {
+							addColumnToFilter(column);
+							showDropdown = false;
+						}}
+						>{column}
+					</button>
+				</li>
 			{/each}
-		</Dropdown>
-		<CloseButton />
+		{/if}
 	</div>
 	<div class="mt-4">
 		{#if showRange}

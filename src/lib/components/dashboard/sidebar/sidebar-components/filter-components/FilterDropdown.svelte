@@ -1,7 +1,6 @@
 <script lang="ts">
 	//@ts-ignore
 	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
@@ -11,6 +10,7 @@
 	export let column: string;
 	let dropdown: HTMLElement;
 	let button: HTMLElement;
+	let showDropdown = false;
 
 	$: i = clickedChartIndex();
 
@@ -35,8 +35,10 @@
 	onMount(() => {
 		const checkDropdownPosition = () => {
 			const sidebarBottom = document.querySelector('.outerDiv').getBoundingClientRect().bottom;
+
 			const dropdownBottom = dropdown.getBoundingClientRect().bottom;
 
+			console.log(sidebarBottom, dropdownBottom);
 			if (dropdownBottom > sidebarBottom) {
 				dropdown.classList.add('dropdown-up');
 			} else {
@@ -49,12 +51,24 @@
 </script>
 
 <div bind:this={dropdown} class="dropdown">
-	<Button bind:this={button}>Choose Field</Button>
-	<Dropdown>
+	<button
+		on:click={() => {
+			showDropdown = !showDropdown;
+		}}>Choose Field</button
+	>
+	{#if showDropdown}
 		{#each items as item}
-			<DropdownItem on:click={() => updateFilter(item)}>{item}</DropdownItem>
+			<li>
+				<button
+					on:click={() => {
+						updateFilter(item);
+						showDropdown = false;
+					}}
+					>{item}
+				</button>
+			</li>
 		{/each}
-	</Dropdown>
+	{/if}
 </div>
 
 <style>
