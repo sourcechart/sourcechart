@@ -10,7 +10,7 @@
 
 	$: i = clickedChartIndex();
 
-	const addFilterToChart = (item: string) => {
+	function updateFilter(item: string) {
 		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
 
 		if (existingFilter) {
@@ -26,12 +26,12 @@
 				}
 			];
 		}
-	};
+	}
 </script>
 
 <Button>Choose Field</Button>
 <Dropdown>
 	{#each items as item}
-		<DropdownItem on:click={() => addFilterToChart(item)}>{item}</DropdownItem>
+		<DropdownItem on:click={() => updateFilter(item)}>{item}</DropdownItem>
 	{/each}
 </Dropdown>

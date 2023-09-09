@@ -1,5 +1,5 @@
 <script lang="ts">
-	import FilterChart from './FilterChart.svelte';
+	// import FilterChart from './FilterChart.svelte';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	export let column: string;
@@ -17,7 +17,7 @@
 
 	$: i = clickedChartIndex();
 
-	const updateAllCharts = () => {
+	function updateFilter() {
 		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
 
 		if (existingFilter) {
@@ -34,7 +34,7 @@
 				}
 			];
 		}
-	};
+	}
 
 	function draggable(node: HTMLElement) {
 		let x: number;
@@ -82,7 +82,7 @@
 
 		function handleMouseup() {
 			dragging = false; // Set dragging to false here
-			updateAllCharts();
+			updateFilter();
 			node.dispatchEvent(
 				new CustomEvent('dragend', {
 					detail: { x }
@@ -130,7 +130,7 @@
 </script>
 
 <div>
-	<!--<FilterChart {frequencies} /> -->
+	<!--Chart will hopefully go here -->
 	<div class="relative w-full h-2 bg-gray-300" bind:this={slider}>
 		<div
 			class="absolute top-0 bottom-0 bg-blue-500"
