@@ -5,12 +5,34 @@
 
 	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
 
+	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 	export let items: any[] = [];
+
+	export let column: string;
+	$: i = clickedChartIndex();
+
+	const addFilterToChart = (item: string) => {
+		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === item);
+
+		if (existingFilter) {
+			$allCharts[$i].filterColumns.find((filter) => filter.column === item).value = {
+				item: item
+			};
+		} else {
+			$allCharts[$i].filterColumns = [
+				...$allCharts[$i].filterColumns,
+				{
+					column: column,
+					value: { item: item }
+				}
+			];
+		}
+	};
 </script>
 
 <Button>Choose Field</Button>
 <Dropdown>
 	{#each items as item}
-		<DropdownItem>{item}</DropdownItem>
+		<DropdownItem on:click={() => addFilterToChart(item)}>{item}</DropdownItem>
 	{/each}
 </Dropdown>

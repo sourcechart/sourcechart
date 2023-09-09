@@ -44,7 +44,6 @@
 	$: TOUCHSTATE = touchStates();
 	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
 
-	$: console.log($allCharts[chartIndex]);
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
