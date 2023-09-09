@@ -78,7 +78,7 @@
 			</div>
 			<div class="divide-y">
 				<div class="space-y-3 mt-3 flex flex-col">
-					<div class="flex flex-col space-y-1">
+					<div class="flex flex-col space-y-1" id="Axis">
 						<Button
 							pill={false}
 							outline
@@ -107,7 +107,7 @@
 							</div>
 						{/if}
 					</div>
-					<div class="flex flex-col space-y-1">
+					<div class="flex flex-col space-y-1" id="Groupby">
 						<Button
 							pill={false}
 							outline
@@ -131,7 +131,7 @@
 							</div>
 						{/if}
 					</div>
-					<div class="flex flex-col space-y-1">
+					<div class="flex flex-col space-y-1" id="Aggregator">
 						<Button
 							pill={false}
 							outline
@@ -155,7 +155,7 @@
 							</div>
 						{/if}
 					</div>
-					<div class="flex flex-col space-y-1">
+					<div class="flex flex-col space-y-1" id="ChartDropdown">
 						<Button
 							pill={false}
 							outline
@@ -179,7 +179,7 @@
 							</div>
 						{/if}
 					</div>
-					<div class="flex flex-col space-y-1">
+					<div class="flex flex-col space-y-1" id="AddFilter">
 						<Button
 							pill={false}
 							outline

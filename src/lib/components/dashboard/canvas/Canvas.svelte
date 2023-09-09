@@ -299,15 +299,6 @@
 />
 
 <style>
-	.blur-filter {
-		backdrop-filter: blur(10px);
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100vw;
-		height: 100vh;
-		background-color: rgba(27, 23, 23, 0.605);
-	}
 	.background {
 		background-color: rgb(25, 24, 24);
 		width: 100vw;
