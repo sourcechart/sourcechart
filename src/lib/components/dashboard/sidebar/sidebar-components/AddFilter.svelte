@@ -39,15 +39,16 @@
 
 	const checkDropdownPosition = () => {
 		const viewportHeight = window.innerHeight;
-		const dropdownBottom = dropdownElement.getBoundingClientRect().bottom;
-		const sidebarBottom =
-			document.querySelector('.outerDiv')?.getBoundingClientRect().bottom || viewportHeight;
+		const buttonRect = buttonElement.getBoundingClientRect();
+		const dropdownHeight = dropdownElement.getBoundingClientRect().height;
 
-		if (dropdownBottom > viewportHeight || dropdownBottom > sidebarBottom) {
-			dropdownElement.style.bottom = `${buttonElement.getBoundingClientRect().height}px`;
+		const spaceAboveButton = buttonRect.top;
+
+		if (spaceAboveButton > dropdownHeight) {
+			dropdownElement.style.bottom = `${viewportHeight - buttonRect.top}px`;
 			dropdownElement.style.top = 'auto';
 		} else {
-			dropdownElement.style.top = `${buttonElement.getBoundingClientRect().height}px`;
+			dropdownElement.style.top = `${buttonRect.bottom}px`;
 			dropdownElement.style.bottom = 'auto';
 		}
 	};

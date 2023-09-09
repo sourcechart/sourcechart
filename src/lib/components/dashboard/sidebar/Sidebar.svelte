@@ -5,7 +5,7 @@
 	import { PlusSolid } from 'flowbite-svelte-icons';
 	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
-	import { activeDropZone, activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
+	import { activeDropZone, activeSidebar } from '$lib/io/Stores'; //@ts-ignore
 	import { slide } from 'svelte/transition';
 	import { ChevronDownSolid, ChevronUpSolid } from 'flowbite-svelte-icons'; //@ts-ignore
 
