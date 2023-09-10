@@ -59,7 +59,6 @@ export class Query {
 		var selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
 		var queryParts = [selectQuery, groupby, filters];
 		var queryString = queryParts.join(' ');
-		console.log(queryString);
 		return queryString;
 	}
 
