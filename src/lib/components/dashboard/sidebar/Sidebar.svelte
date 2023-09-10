@@ -112,7 +112,7 @@
 					</div>
 				</button>
 				{#if datasetDropdown}
-					<div transition:slide class="space-y-2">
+					<div transition:slide class="space-y-2 divide-x">
 						<DatasetDropDown />
 					</div>
 				{/if}
@@ -142,7 +142,7 @@
 				</button>
 
 				{#if showAxis}
-					<div transition:slide class="space-y-2">
+					<div transition:slide class="space-y-2 divide-x">
 						<ColumnDropDrown axis={'X'} />
 						<ColumnDropDrown axis={'Y'} />
 					</div>
@@ -168,7 +168,7 @@
 					</div>
 				</button>
 				{#if showGroupBy}
-					<div transition:slide>
+					<div transition:slide class="space-y-2">
 						<Groupby />
 					</div>
 				{/if}
@@ -193,7 +193,7 @@
 					</div>
 				</button>
 				{#if showAggregator}
-					<div transition:slide>
+					<div transition:slide class="space-y-2 divide-x">
 						<Aggregator />
 					</div>
 				{/if}
@@ -218,7 +218,7 @@
 					</div>
 				</button>
 				{#if showChart}
-					<div transition:slide>
+					<div transition:slide class="space-y-2 divide-x">
 						<ChartDropdown sideBarVersion={'LowCode'} />
 					</div>
 				{/if}
@@ -243,7 +243,7 @@
 					</div>
 				</button>
 				{#if showFilter}
-					<div transition:slide>
+					<div transition:slide class="space-y-2 divide-x">
 						<AddFilter {addFilterDistance} />
 					</div>
 				{/if}
