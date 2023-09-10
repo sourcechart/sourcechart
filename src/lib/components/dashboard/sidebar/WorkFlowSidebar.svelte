@@ -1,3 +1,5 @@
+<!--
+
 <script lang="ts">
 	import { Tags } from './sidebar-components';
 	import { Groupby, ChartDropdown } from './sidebar-components'; //@ts-ignore
@@ -71,3 +73,4 @@
 		<p class="text-xs">Minimum Cluster Size: {clusterSize}</p>
 	</div>
 </div>
+-->

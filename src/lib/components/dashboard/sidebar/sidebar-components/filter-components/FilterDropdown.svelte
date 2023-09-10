@@ -4,6 +4,8 @@
 	export let addFilterDistance: number = 0;
 	export let items: any[] = [];
 	export let column: string;
+	let filterValues: string[] = [];
+
 	let isDropdownOpen: boolean = false;
 
 	$: i = clickedChartIndex();
@@ -16,6 +18,7 @@
 				item: item
 			};
 		} else {
+			filterValues = [...filterValues, item];
 			$allCharts[$i].filterColumns = [
 				...$allCharts[$i].filterColumns,
 				{

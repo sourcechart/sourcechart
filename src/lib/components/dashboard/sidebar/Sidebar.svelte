@@ -130,7 +130,7 @@
 							}}
 						>
 							<div class="flex justify-between items-center w-full">
-								<span>Groupby</span>
+								<span>GroupBy</span>
 								{#if showGroupBy}
 									<ChevronUpSolid class="w-3 h-3 text-white dark:text-white" />
 								{:else}

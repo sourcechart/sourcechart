@@ -8,7 +8,7 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import FilterDropdown from './FilterDropdown.svelte';
 	import FilterRange from './FilterRange.svelte'; //@ts-ignore
-	import CloseButton from 'flowbite-svelte/CloseButton.svelte'; //@ts-ignore
+	import { CloseButton } from 'flowbite-svelte-icons'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
 
 	export let addFilterDistance: number;
@@ -154,7 +154,23 @@
 				{/each}
 			</div>
 		</div>
-		<CloseButton on:click={handleClose} />
+		<button on:click={handleClose}>
+			<svg
+				class="w-6 h-6 text-gray-800 dark:text-white"
+				aria-hidden="true"
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 14 14"
+			>
+				<path
+					stroke="currentColor"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+				/>
+			</svg>
+		</button>
 	</div>
 	<div class="mt-4">
 		{#if showRange}
