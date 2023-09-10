@@ -136,10 +136,10 @@
 				{selectedColumn}
 			</button>
 			<div
-				class={`scrollBarDiv
-			absolute w-full mt-2 bg-white border
-			border-gray-200 rounded shadow-lg
-    		transform transition-transform origin-top h-48 overflow-y-auto overflow-x-hidden
+				class={`
+			 scrollBarDiv bg-gray-900 absolute w-full mt-2  border
+			 rounded shadow-lg transform transition-transform 
+			 origin-top h-48 overflow-y-auto overflow-x-hidden
     		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 			>
 				{#each $columns as column (column)}

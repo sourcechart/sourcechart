@@ -73,13 +73,11 @@
 
 <div class="space-y-1 space-x-1">
 	{#each rectangleCharts as { chartType }, i (i)}
-		<Button
-			pill={false}
-			outline
-			color={chosenPlot === chartType ? 'primary' : 'light'}
+		<button
+			class="block w-full bg-gray-900 text-left px-3 py-2 dark:text-black hover:bg-gray-200"
 			on:click={() => chooseChart(chartType)}
 		>
 			{chartType}
-		</Button>
+		</button>
 	{/each}
 </div>
