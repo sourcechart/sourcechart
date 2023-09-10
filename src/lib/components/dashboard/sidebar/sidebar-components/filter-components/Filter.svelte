@@ -144,7 +144,8 @@
 			</button>
 			<div
 				class={`absolute w-full mt-2 bg-white border
-						border-gray-200 rounded shadow-lg transform transition-transform origin-top 
+						border-gray-200 rounded shadow-lg 
+						transform transition-transform origin-top h-48 overflow-auto
                         ${
 													isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'
 												}`}
@@ -152,7 +153,9 @@
 				{#each $columns as column (column)}
 					<button
 						class="block w-full text-left px-3 py-2 text-black hover:bg-gray-200"
-						on:click={() => addColumnToFilter(column)}
+						on:click={() => {
+							addColumnToFilter(column);
+						}}
 					>
 						{column}
 					</button>
