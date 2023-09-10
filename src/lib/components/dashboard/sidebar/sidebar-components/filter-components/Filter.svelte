@@ -8,12 +8,17 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import FilterDropdown from './FilterDropdown.svelte';
 	import FilterRange from './FilterRange.svelte'; //@ts-ignore
+	/*
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; //@ts-ignore
+	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; 
+	*/ //@ts-ignore
 	import CloseButton from 'flowbite-svelte/CloseButton.svelte'; //@ts-ignore
+	import Label from 'flowbite-svelte/Label.svelte';
 
 	export let addFilterDistance: number;
+
+	export let itemToRemove: string;
 
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
@@ -26,6 +31,7 @@
 	let max: number;
 
 	let placement: string = 'bottom';
+	let isDropdownOpen: boolean = false;
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
@@ -117,32 +123,82 @@
 			}
 		});
 	}
+
+	const handleClose = () => {
+		showDropdown = false;
+		showRange = false;
+		selectedColumn = 'Add Field';
+		selectedColumns = [];
+	};
+
+	const toggleDropdown = () => {
+		isDropdownOpen = !isDropdownOpen;
+	};
 </script>
 
-<div class="w-full p-4 bg-gray-500">
+<div class="w-full p-4 bg-gray-500 rounded-sm">
 	<div class="flex justify-between items-center">
-		<Button>{selectedColumn}</Button>
-		<Dropdown
-			placement={addFilterDistance > 50 || addFilterDistance === 0
-				? (placement = 'top')
-				: (placement = 'bottom')}
-			class="w-48 overflow-y-auto py-1 {$columns.length > 0 ? 'h-48' : 'hidden'}"
-		>
-			{#each $columns as column}
-				<DropdownItem
-					on:click={() => {
-						addColumnToFilter(column);
-					}}>{column}</DropdownItem
-				>
-			{/each}
-		</Dropdown>
-		<CloseButton />
+		<div class="dropdown" on:click={toggleDropdown} on:keypress={null}>
+			<button>
+				{selectedColumn}
+			</button>
+
+			<div class={`dropdown-menu ${placement} ${isDropdownOpen ? 'open' : ''}`}>
+				{#each $columns as column (column)}
+					<button on:click={() => addColumnToFilter(column)}>
+						{column}
+					</button>
+				{/each}
+			</div>
+			<CloseButton on:click={handleClose} />
+		</div>
 	</div>
 	<div class="mt-4">
 		{#if showRange}
+			<Label>Values Ranges</Label>
 			<FilterRange {min} {max} column={selectedColumn} />
 		{:else if showDropdown}
+			<Label>Select Value</Label>
 			<FilterDropdown column={selectedColumn} {addFilterDistance} items={distinctValuesObject} />
 		{/if}
 	</div>
 </div>
+
+<style>
+	.dropdown {
+		position: relative;
+	}
+
+	.dropdown-menu {
+		display: none;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		padding: 8px;
+		position: absolute;
+		width: 100%;
+		z-index: 1;
+	}
+
+	.dropdown-menu.bottom {
+		top: 100%;
+	}
+
+	.dropdown-menu.top {
+		bottom: 100%;
+	}
+
+	.dropdown-menu a {
+		display: block;
+		padding: 8px;
+		text-decoration: none;
+		color: #333;
+	}
+
+	.dropdown-menu a:hover {
+		background-color: #f5f5f5;
+	}
+
+	.dropdown-menu.open {
+		display: block;
+	}
+</style>

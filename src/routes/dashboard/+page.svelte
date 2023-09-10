@@ -71,11 +71,10 @@
 </script>
 
 <div class="dark:bg-gray-900 no-scroll">
-	<div class="flex justify-center items-center mt-3 z-30">
-		<DarkMode />
+	<div class="flex justify-center items-center mt-6 z-30">
 		<NavBar />
 	</div>
-	<div class="absolute z-30 ml-1">
+	<div class="absolute z-30 ml-6 mt-6">
 		<Sidebar />
 	</div>
 	<div class="relative">
