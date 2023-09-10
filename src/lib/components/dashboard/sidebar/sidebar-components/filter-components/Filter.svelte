@@ -8,11 +8,7 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import FilterDropdown from './FilterDropdown.svelte';
 	import FilterRange from './FilterRange.svelte'; //@ts-ignore
-	import { CloseButton } from 'flowbite-svelte-icons'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
-
-	export let addFilterDistance: number;
-	export let itemToRemove: string;
 
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
@@ -178,7 +174,7 @@
 			<FilterRange {min} {max} column={selectedColumn} />
 		{:else if showDropdown}
 			<Label>Select Value</Label>
-			<FilterDropdown column={selectedColumn} {addFilterDistance} items={distinctValuesObject} />
+			<FilterDropdown column={selectedColumn} items={distinctValuesObject} />
 		{/if}
 	</div>
 </div>

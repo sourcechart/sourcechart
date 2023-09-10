@@ -13,7 +13,6 @@
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
-	import { ChevronDownSolid } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	let isDropdownOpen = false; // <-- Add this line to track dropdown state
 
@@ -84,32 +83,20 @@
 </script>
 
 <div
-	class="relative group"
-	on:click={() => {
-		isDropdownOpen = !isDropdownOpen;
-	}}
-	on:keypress={null}
->
-	<button class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300">
-		<span>{selectedDataset}</span>
-		<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-	</button>
-	<div
-		class={`
+	class={`
 			 scrollBarDiv bg-gray-900 absolute w-full mt-2  border
 			 rounded shadow-lg transform transition-transform 
 			 origin-top h-48 overflow-y-auto overflow-x-hidden
     		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
-	>
-		{#each $datasets as dataset}
-			{#if dataset !== null}
-				<button
-					class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
-					on:click={() => selectFile(dataset)}
-				>
-					{dataset}
-				</button>
-			{/if}
-		{/each}
-	</div>
+>
+	{#each $datasets as dataset}
+		{#if dataset !== null}
+			<button
+				class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+				on:click={() => selectFile(dataset)}
+			>
+				{dataset}
+			</button>
+		{/if}
+	{/each}
 </div>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
-
 	export let column: string;
 	export let min: number; // Min value of the slider
 	export let max: number; // Max value of the slider
@@ -135,6 +134,7 @@
 			class="absolute top-0 bottom-0 bg-blue-500"
 			style="left: {100 * start}%; right: {100 * (1 - end)}%;"
 		/>
+
 		<div
 			class="absolute top-0 bottom-0 w-4 h-4 bg-blue-600 rounded-full cursor-pointer"
 			use:draggable
