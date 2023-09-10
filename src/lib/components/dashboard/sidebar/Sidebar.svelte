@@ -76,7 +76,7 @@
 	<div
 		bind:this={sidebarElement}
 		use:clickInside={{ clickInside: handleClickInside }}
-		class="space-y-4 outerDiv"
+		class="space-y-4 outerDiv rounded-md"
 	>
 		<div
 			class="innerDiv text-white w-full h-full transition-transform duration-200 ease-in-out rounded-md border-red-50 p-6"
