@@ -8,16 +8,10 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import FilterDropdown from './FilterDropdown.svelte';
 	import FilterRange from './FilterRange.svelte'; //@ts-ignore
-	/*
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; 
-	*/ //@ts-ignore
 	import CloseButton from 'flowbite-svelte/CloseButton.svelte'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
 
 	export let addFilterDistance: number;
-
 	export let itemToRemove: string;
 
 	let frequencies: { [key: string]: number } = {};
@@ -30,7 +24,6 @@
 	let min: number;
 	let max: number;
 
-	let placement: string = 'bottom';
 	let isDropdownOpen: boolean = false;
 
 	$: columns = getColumnsFromFile();
@@ -143,16 +136,15 @@
 				{selectedColumn}
 			</button>
 			<div
-				class={`absolute w-full mt-2 bg-white border
-						border-gray-200 rounded shadow-lg 
-						transform transition-transform origin-top h-48 overflow-auto
-                        ${
-													isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'
-												}`}
+				class={`scrollBarDiv
+			absolute w-full mt-2 bg-white border
+			border-gray-200 rounded shadow-lg
+    		transform transition-transform origin-top h-48 overflow-y-auto overflow-x-hidden
+    		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 			>
 				{#each $columns as column (column)}
 					<button
-						class="block w-full text-left px-3 py-2 text-black hover:bg-gray-200"
+						class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
 						on:click={() => {
 							addColumnToFilter(column);
 						}}
@@ -176,40 +168,23 @@
 </div>
 
 <style>
-	.dropdown {
-		position: relative;
+	/* For WebKit (Chrome, Safari) */
+	.scrollBarDiv::-webkit-scrollbar {
+		width: 8px;
 	}
 
-	.dropdown-menu {
-		display: none;
-		border: 1px solid #ccc;
+	.scrollBarDiv::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
 		border-radius: 4px;
-		padding: 8px;
-		position: absolute;
-		width: 100%;
-		z-index: 1;
 	}
 
-	.dropdown-menu.bottom {
-		top: 100%;
+	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(168, 168, 168, 0.5);
 	}
 
-	.dropdown-menu.top {
-		bottom: 100%;
-	}
-
-	.dropdown-menu a {
-		display: block;
-		padding: 8px;
-		text-decoration: none;
-		color: #333;
-	}
-
-	.dropdown-menu a:hover {
-		background-color: #f5f5f5;
-	}
-
-	.dropdown-menu.open {
-		display: block;
+	/* For Firefox */
+	.scrollBarDiv {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
 	}
 </style>
