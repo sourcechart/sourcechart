@@ -1,6 +1,6 @@
 <script lang="ts">
 	//@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte';
+	//import Button from 'flowbite-svelte/Button.svelte';
 	import { fileDropdown } from '$lib/io/Stores';
 	import { PlusSolid } from 'flowbite-svelte-icons';
 	import { DatasetDropDown } from './sidebar-components';
@@ -52,15 +52,6 @@
 	}
 	*/
 
-	const handleClickInside = () => {
-		$activeSidebar = true;
-	};
-
-	const handleClick = () => {
-		activeDropZone.set(true);
-		activeSidebar.set(false);
-	};
-
 	const calculateDistanceToBottom = () => {
 		if (addFilterElement && sidebarElement) {
 			const addFilterBottom = addFilterElement.getBoundingClientRect().bottom;
@@ -75,19 +66,29 @@
 {#if $activeSidebar}
 	<div
 		bind:this={sidebarElement}
-		use:clickInside={{ clickInside: handleClickInside }}
+		use:clickInside={{
+			clickInside: () => {
+				$activeSidebar = true;
+			}
+		}}
 		class="space-y-4 outerDiv rounded-md"
 	>
 		<div
 			class="innerDiv text-white w-full h-full transition-transform duration-200 ease-in-out rounded-md border-red-50 p-6"
 		>
 			<div class="flex flex-col space-y-1 mt-2 mb-2">
-				<Button outline color="light" id="multiple_files" on:click={handleClick}>
+				<button
+					class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300"
+					on:click={() => {
+						activeDropZone.set(true);
+						activeSidebar.set(false);
+					}}
+				>
 					<div class="flex justify-between items-center w-full">
 						<span>Add Dataset [{$numberOfDatasets.length}]</span>
 						<PlusSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
 					</div>
-				</Button>
+				</button>
 			</div>
 			<div class="flex flex-col space-y-1">
 				<DatasetDropDown />
@@ -95,10 +96,8 @@
 			<div class="divide-y">
 				<div class="space-y-3 mt-3 flex flex-col">
 					<div class="flex flex-col space-y-1" id="Axis">
-						<Button
-							pill={false}
-							outline
-							color="light"
+						<button
+							class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300"
 							on:click={() => {
 								showAxis = !showAxis;
 							}}
@@ -115,7 +114,7 @@
 									</button>
 								{/if}
 							</div>
-						</Button>
+						</button>
 						{#if showAxis}
 							<div transition:slide class="space-y-2">
 								<ColumnDropDrown axis={'X'} />
@@ -124,10 +123,8 @@
 						{/if}
 					</div>
 					<div class="flex flex-col space-y-1" id="Groupby">
-						<Button
-							pill={false}
-							outline
-							color="light"
+						<button
+							class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300"
 							on:click={() => {
 								showGroupBy = !showGroupBy;
 							}}
@@ -140,7 +137,7 @@
 									<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
 								{/if}
 							</div>
-						</Button>
+						</button>
 						{#if showGroupBy}
 							<div transition:slide>
 								<Groupby />
@@ -148,10 +145,8 @@
 						{/if}
 					</div>
 					<div class="flex flex-col space-y-1" id="Aggregator">
-						<Button
-							pill={false}
-							outline
-							color="light"
+						<button
+							class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300"
 							on:click={() => {
 								showAggregator = !showAggregator;
 							}}
@@ -164,7 +159,7 @@
 									<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
 								{/if}
 							</div>
-						</Button>
+						</button>
 						{#if showAggregator}
 							<div transition:slide>
 								<Aggregator />
@@ -172,10 +167,8 @@
 						{/if}
 					</div>
 					<div class="flex flex-col space-y-1" id="ChartDropdown">
-						<Button
-							pill={false}
-							outline
-							color="light"
+						<button
+							class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300"
 							on:click={() => {
 								showChart = !showChart;
 							}}
@@ -188,7 +181,7 @@
 									<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
 								{/if}
 							</div>
-						</Button>
+						</button>
 						{#if showChart}
 							<div transition:slide>
 								<ChartDropdown sideBarVersion={'LowCode'} />
@@ -196,10 +189,8 @@
 						{/if}
 					</div>
 					<div class="flex flex-col space-y-1" id="AddFilter">
-						<Button
-							pill={false}
-							outline
-							color="light"
+						<button
+							class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300"
 							on:click={() => {
 								showFilter = !showFilter;
 								calculateDistanceToBottom();
@@ -213,7 +204,7 @@
 									<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
 								{/if}
 							</div>
-						</Button>
+						</button>
 						{#if showFilter}
 							<div bind:this={addFilterElement} transition:slide>
 								<AddFilter {addFilterDistance} />

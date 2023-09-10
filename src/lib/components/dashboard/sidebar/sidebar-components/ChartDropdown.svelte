@@ -1,6 +1,5 @@
 <script lang="ts">
 	//@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	type SideBarVersion = 'WorkFlow' | 'LowCode';

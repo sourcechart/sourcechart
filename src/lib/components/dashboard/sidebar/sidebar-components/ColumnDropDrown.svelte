@@ -70,7 +70,7 @@
 </script>
 
 <div class="relative group" on:click={toggleDropdown} on:keypress={null}>
-	<button class="bg-gray-200 px-3 py-2 rounded text-black hover:bg-gray-300">
+	<button class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300">
 		{$label}
 	</button>
 	<div
@@ -82,7 +82,7 @@
 	>
 		{#each $columns as column (column)}
 			<button
-				class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+				class="block w-full text-left bg-gray-900 px-3 py-2 dark:text-black hover:bg-gray-200"
 				on:click={() => {
 					chooseColumn(column);
 				}}

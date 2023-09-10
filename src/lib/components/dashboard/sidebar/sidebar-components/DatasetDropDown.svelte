@@ -81,13 +81,15 @@
 	};
 
 	onMount(loadWorker);
-
-	const toggleDropdown = () => {
-		isDropdownOpen = !isDropdownOpen;
-	};
 </script>
 
-<div class="relative group" on:click={toggleDropdown} on:keypress={null}>
+<div
+	class="relative group"
+	on:click={() => {
+		isDropdownOpen = !isDropdownOpen;
+	}}
+	on:keypress={null}
+>
 	<button class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300">
 		<span>{selectedDataset}</span>
 		<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />

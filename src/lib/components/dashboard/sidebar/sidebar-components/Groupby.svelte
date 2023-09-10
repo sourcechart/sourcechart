@@ -45,19 +45,17 @@
 	};
 </script>
 
-<div>
-	<div class="space-y-1 space-x-1">
-		{#each $columns as column}
-			<Button
-				pill={false}
-				outline
-				color={selectedButtons.includes(column) ? 'primary' : 'light'}
-				on:click={() => {
-					addColumnToGroupBy(column);
-				}}
-			>
-				{column}
-			</Button>
-		{/each}
-	</div>
+<div class="space-y-1 space-x-1">
+	{#each $columns as column}
+		<Button
+			pill={false}
+			outline
+			color={selectedButtons.includes(column) ? 'primary' : 'light'}
+			on:click={() => {
+				addColumnToGroupBy(column);
+			}}
+		>
+			{column}
+		</Button>
+	{/each}
 </div>
