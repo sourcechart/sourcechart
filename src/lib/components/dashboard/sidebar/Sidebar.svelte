@@ -1,6 +1,5 @@
 <script lang="ts">
 	//@ts-ignore
-	//import Button from 'flowbite-svelte/Button.svelte';
 	import { fileDropdown } from '$lib/io/Stores';
 	import { PlusSolid } from 'flowbite-svelte-icons';
 	import { DatasetDropDown } from './sidebar-components';
@@ -86,14 +85,14 @@
 						activeSidebar.set(false);
 					}}
 				>
-					<div class="flex justify-between items-center w-full">
+					<div class="flex space-x-2 w-full">
 						<span>Add Dataset [{$numberOfDatasets.length}]</span>
 						<PlusSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
 					</div>
 				</button>
 			</div>
 			<!-- Dataset Dropdown-->
-			<div class="flex flex-col space-y-1">
+			<div class="flex flex-col space-y-1" id="DatasetDropDown">
 				<button
 					class="h-6 px-4 text-white hover:bg-gray-700"
 					on:click={() => {
@@ -101,22 +100,24 @@
 					}}
 					on:keypress={null}
 				>
-					<div class="flex justify-between items-center w-full">
-						<span>Select Dataset</span>
-						{#if datasetDropdown}
-							<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-						{:else}
-							<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-						{/if}
+					<div class="flex items-center justify-between w-full">
+						<div class="flex items-center space-x-2">
+							{#if datasetDropdown}
+								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+							{:else}
+								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
+							{/if}
+							<span>Select Dataset</span>
+						</div>
 					</div>
 				</button>
 				{#if datasetDropdown}
-					<div transition:slide>
+					<div transition:slide class="space-y-2">
 						<DatasetDropDown />
 					</div>
 				{/if}
 			</div>
-			<!--<div class="space-y-3 mt-3 flex flex-col"> -->
+			<!--Show Axis -->
 			<div class="flex flex-col space-y-1" id="Axis">
 				<button
 					class="h-6 px-4 text-white hover:bg-gray-700"
@@ -124,19 +125,22 @@
 						showAxis = !showAxis;
 					}}
 				>
-					<div class="flex justify-between items-center w-full">
-						<span>Axis</span>
-						{#if showAxis}
-							<button>
-								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-							</button>
-						{:else}
-							<button>
-								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-							</button>
-						{/if}
+					<div class="flex items-center justify-between w-full">
+						<div class="flex items-center space-x-2">
+							{#if showAxis}
+								<button>
+									<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+								</button>
+							{:else}
+								<button>
+									<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
+								</button>
+							{/if}
+							<span>Axis</span>
+						</div>
 					</div>
 				</button>
+
 				{#if showAxis}
 					<div transition:slide class="space-y-2">
 						<ColumnDropDrown axis={'X'} />
@@ -144,6 +148,7 @@
 					</div>
 				{/if}
 			</div>
+			<!--Show GroupBy -->
 			<div class="flex flex-col space-y-1" id="Groupby">
 				<button
 					class="h-6 px-4 text-white hover:bg-gray-700"
@@ -151,13 +156,15 @@
 						showGroupBy = !showGroupBy;
 					}}
 				>
-					<div class="flex justify-between items-center w-full">
-						<span>GroupBy</span>
-						{#if showGroupBy}
-							<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-						{:else}
-							<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-						{/if}
+					<div class="flex items-center justify-between w-full">
+						<div class="flex items-center space-x-2">
+							{#if showGroupBy}
+								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+							{:else}
+								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
+							{/if}
+							<span>GroupBy</span>
+						</div>
 					</div>
 				</button>
 				{#if showGroupBy}
@@ -166,6 +173,7 @@
 					</div>
 				{/if}
 			</div>
+			<!--Show Aggregator -->
 			<div class="flex flex-col space-y-1" id="Aggregator">
 				<button
 					class="h-6 px-4 text-white hover:bg-gray-700"
@@ -173,13 +181,15 @@
 						showAggregator = !showAggregator;
 					}}
 				>
-					<div class="flex justify-between items-center w-full">
-						<span>Aggregator</span>
-						{#if showAggregator}
-							<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-						{:else}
-							<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-						{/if}
+					<div class="flex items-center justify-between w-full">
+						<div class="flex items-center space-x-2">
+							{#if showAggregator}
+								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+							{:else}
+								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
+							{/if}
+							<span>Aggregator</span>
+						</div>
 					</div>
 				</button>
 				{#if showAggregator}
@@ -188,6 +198,7 @@
 					</div>
 				{/if}
 			</div>
+			<!--Show Chart -->
 			<div class="flex flex-col space-y-1" id="ChartDropdown">
 				<button
 					class="h-6 px-4 text-white hover:bg-gray-700"
@@ -195,13 +206,15 @@
 						showChart = !showChart;
 					}}
 				>
-					<div class="flex justify-between items-center w-full">
-						<span>Choose Chart</span>
-						{#if showChart}
-							<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-						{:else}
-							<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-						{/if}
+					<div class="flex items-center justify-between w-full">
+						<div class="flex items-center space-x-2">
+							{#if showChart}
+								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+							{:else}
+								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
+							{/if}
+							<span>Choose Chart</span>
+						</div>
 					</div>
 				</button>
 				{#if showChart}
@@ -210,6 +223,7 @@
 					</div>
 				{/if}
 			</div>
+			<!--Show Filter -->
 			<div class="flex flex-col space-y-1" id="AddFilter">
 				<button
 					class="h-6 px-4 text-white hover:bg-gray-700"
@@ -217,13 +231,15 @@
 						showFilter = !showFilter;
 					}}
 				>
-					<div class="flex justify-between items-center w-full">
-						<span>Add Filter</span>
-						{#if showFilter}
-							<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-						{:else}
-							<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-						{/if}
+					<div class="flex items-center justify-between w-full">
+						<div class="flex items-center space-x-2">
+							{#if showFilter}
+								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+							{:else}
+								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
+							{/if}
+							<span>Add Filter</span>
+						</div>
 					</div>
 				</button>
 				{#if showFilter}
