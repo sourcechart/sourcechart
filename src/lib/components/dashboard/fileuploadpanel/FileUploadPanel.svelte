@@ -23,10 +23,10 @@
 			<CloseButton class="close-button" on:click={handleClick} />
 		</div>
 		<Tabs style="underline" contentClass="p-4 rounded-lg mt-4">
-			<TabItem title="Load Files text-gray-300" open>
+			<TabItem title="Load Files" open>
 				<DropZone />
 			</TabItem>
-			<TabItem title="External Datasets text-gray-300">
+			<TabItem title="External Datasets">
 				<ExternalDatasets />
 			</TabItem>
 		</Tabs>

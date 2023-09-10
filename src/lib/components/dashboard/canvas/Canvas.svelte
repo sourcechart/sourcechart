@@ -266,9 +266,9 @@
 	};
 </script>
 
-<div class="blur-filter">
+<div class="background">
 	<div
-		class="h-full w-full relative"
+		class="h-full w-full"
 		style={`cursor: ${$mouseType};`}
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
@@ -299,14 +299,12 @@
 />
 
 <style>
-	.blur-filter {
-		backdrop-filter: blur(10px);
-		position: fixed;
+	.background {
+		background-color: rgb(18, 18, 18);
+		width: 100vw;
+		height: 100vh;
 		top: 0;
 		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(27, 23, 23, 0.605);
-		z-index: 1000;
+		position: fixed;
 	}
 </style>

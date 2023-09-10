@@ -24,7 +24,8 @@ class DataIO {
 						xColumn: { column: chart?.xColumn },
 						yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
 						from: chart?.filename,
-						groupbyColumns: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])]
+						groupbyColumns: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])],
+						filterColumns: [...(chart?.filterColumns ? chart.filterColumns : [])]
 					},
 					cluster: {
 						attributes: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])],

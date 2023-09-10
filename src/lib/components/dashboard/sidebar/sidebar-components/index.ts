@@ -6,6 +6,7 @@ import FileUploadButton from './FileUploadButton.svelte';
 import ChartDropdown from './ChartDropdown.svelte';
 import ChooseIDColumn from './ChooseIDColumn.svelte';
 import Tags from './Tags.svelte';
+import AddFilter from './AddFilter.svelte';
 
 export {
 	Tags,
@@ -15,5 +16,6 @@ export {
 	Aggregator,
 	FileUploadButton,
 	ChartDropdown,
-	ChooseIDColumn
+	ChooseIDColumn,
+	AddFilter
 };

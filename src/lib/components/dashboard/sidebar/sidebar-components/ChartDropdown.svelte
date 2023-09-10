@@ -1,8 +1,5 @@
 <script lang="ts">
 	//@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	type SideBarVersion = 'WorkFlow' | 'LowCode';
@@ -29,8 +26,9 @@
 	];
 
 	if (sideBarVersion === 'WorkFlow') {
-		rectangleCharts = [...rectangleCharts, { chartType: 'density' }];
+		rectangleCharts = [...rectangleCharts, { chartType: 'Density' }];
 	}
+
 	function capitalizeFirstLetter(string: string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
@@ -44,28 +42,41 @@
 			chosenPlot = 'Bar Chart (Default)';
 		}
 	}
-	const chooseChart = (plot: string) => {
-		chosenPlot = plot;
-		plot = plot.toLowerCase();
-		allCharts.update((charts) => {
-			charts.forEach((chart) => {
-				chart.chartType = plot;
-				if (plot === 'area') {
-					chart.chartOptions.series[0].type = 'line';
-					chart.chartOptions.series[0].areaStyle = {};
-				} else {
-					chart.chartOptions.series[0].type = plot;
-				}
-			});
 
-			return charts;
-		});
+	const chooseChart = (plot: string) => {
+		if (chosenPlot === plot) {
+			chosenPlot = 'Bar Chart (Default)';
+			allCharts.update((charts) => {
+				charts.splice($i, 1);
+				return charts;
+			});
+		} else {
+			chosenPlot = plot;
+			plot = plot.toLowerCase();
+			allCharts.update((charts) => {
+				charts.forEach((chart) => {
+					chart.chartType = plot;
+					if (plot === 'area') {
+						chart.chartOptions.series[0].type = 'line';
+						chart.chartOptions.series[0].areaStyle = {};
+					} else {
+						chart.chartOptions.series[0].type = plot;
+					}
+				});
+
+				return charts;
+			});
+		}
 	};
 </script>
 
-<Button pill={false} outline color="light">{chosenPlot}</Button>
-<Dropdown class="overflow-y-auto py-1 h-48">
+<div class="space-y-1 space-x-1">
 	{#each rectangleCharts as { chartType }, i (i)}
-		<DropdownItem on:click={() => chooseChart(chartType)}>{chartType}</DropdownItem>
+		<button
+			class="block w-full bg-gray-900 text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+			on:click={() => chooseChart(chartType)}
+		>
+			{chartType}
+		</button>
 	{/each}
-</Dropdown>
+</div>

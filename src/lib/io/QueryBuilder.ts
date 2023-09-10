@@ -42,19 +42,23 @@ export class Query {
 	}
 
 	private getBasicQuery() {
-		let selectBlock = this.checkSelectBlock();
-		let y = selectBlock.yColumn;
-		let groupby = this.constructGroupBy();
-		let aggregator = this.queryObject.queries.select.basic.yColumn.aggregator;
-		let groupbyColumns = this.queryObject.queries.select.basic.groupbyColumns;
+		var selectBlock = this.checkSelectBlock();
+		var y = selectBlock.yColumn;
+		var groupby = this.constructGroupBy();
+		var aggregator = this.queryObject.queries.select.basic.yColumn.aggregator;
+		var groupbyColumns = this.queryObject.queries.select.basic.groupbyColumns;
+		var filterColumns = this.queryObject.queries.select.basic.filterColumns;
+		let filters = '';
 
 		if (aggregator && groupbyColumns)
 			y = this.checkAggregator(y, aggregator, this.queryObject.queries.select.basic.groupbyColumns);
 
-		let selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
-		let queryParts = [selectQuery, groupby];
-		let queryString = queryParts.join(' ');
-
+		if (filterColumns.length > 0) {
+			filters = this.constructFilters(filterColumns);
+		}
+		var selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
+		var queryParts = [selectQuery, groupby, filters];
+		var queryString = queryParts.join(' ');
 		return queryString;
 	}
 
@@ -112,6 +116,25 @@ export class Query {
 			return column;
 		}
 		return yColumn;
+	}
+
+	private constructFilters(conditions: any[]): string {
+		const clauses = conditions.map((condition) => {
+			if ('min' in condition.value && 'max' in condition.value) {
+				return `${checkNameForSpacesAndHyphens(condition.column)} BETWEEN ${
+					condition.value.min
+				} AND ${condition.value.max}`;
+			} else if ('item' in condition.value) {
+				return `${checkNameForSpacesAndHyphens(condition.column)} = '${condition.value.item}'`;
+			}
+			return '';
+		});
+
+		const filteredClauses = clauses.filter(Boolean);
+		if (filteredClauses.length === 0) {
+			return ''; // Return an empty string if there are no valid conditions
+		}
+		return 'WHERE ' + filteredClauses.join(' AND ');
 	}
 
 	private constructSelect(

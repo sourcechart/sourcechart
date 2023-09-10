@@ -25,6 +25,7 @@ export const minimumPointsForCluster = writable<number>();
 export const duckDBInstanceStore = writable<DuckDBClient>();
 export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
+export const filters = writable<any[]>([]);
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -69,6 +70,7 @@ export const chartOptions = () =>
 			yColumn: options?.yColumn,
 			columns: options?.columns,
 			groupbyColumns: options?.groupbyColumns,
+			filterColumns: options?.filterColumns,
 			aggregator: options?.aggregator
 		};
 	});

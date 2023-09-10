@@ -11,6 +11,7 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 		columns: [],
 		workflow: 'basic',
 		groupbyColumns: [],
+		filterColumns: [],
 		xColumn: null,
 		polygon: polygon,
 		yColumn: null,

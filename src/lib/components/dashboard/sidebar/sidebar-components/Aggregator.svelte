@@ -1,10 +1,5 @@
 <script lang="ts">
-	import { allCharts, clickedChartIndex, clearChartOptions } from '$lib/io/Stores';
-
-	//@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte';
+	import { allCharts, clickedChartIndex, clearChartOptions } from '$lib/io/Stores'; //@ts-ignore
 
 	let aggs = ['avg', 'max', 'min', 'sum', 'count'];
 	let selectedAggregator: string | null = 'Aggregator';
@@ -19,20 +14,26 @@
 	}
 
 	const selectAggregator = (agg: string) => {
-		selectedAggregator = agg;
+		// Toggle the selected aggregator
+		if (selectedAggregator === agg) {
+			selectedAggregator = 'Aggregator';
+		} else {
+			selectedAggregator = agg;
+		}
 
 		allCharts.update((charts) => {
-			charts[$i].aggregator = selectedAggregator;
+			charts[$i].aggregator = selectedAggregator === 'Aggregator' ? null : selectedAggregator;
 			return charts;
 		});
 	};
 </script>
 
-<Button pill={false} outline color="light">{selectedAggregator}</Button>
-<Dropdown
-	class="text-center font-medium inline-flex items-center justify-center text-sm text-black dark:bg-gray-700 dark:text-gray-600 hover:text-blue-700 focus:text-blue-700 dark:focus:text-gray-800"
->
+<div class="space-y-1 space-x-1">
 	{#each aggs as agg}
-		<DropdownItem on:click={() => selectAggregator(agg)}>{agg}</DropdownItem>
+		<button
+			class="block w-full bg-gray-900 text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+			on:click={() => selectAggregator(agg)}
+		/>
+		{agg}
 	{/each}
-</Dropdown>
+</div>

@@ -9,14 +9,12 @@
 	} from '$lib/io/Stores';
 
 	//@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; //@ts-ignore
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	import { onMount } from 'svelte';
+	let isDropdownOpen = false; // <-- Add this line to track dropdown state
 
 	let syncWorker: Worker | undefined = undefined;
 	let selectedDataset: string | null = 'Choose Dataset';
@@ -84,11 +82,21 @@
 	onMount(loadWorker);
 </script>
 
-<Button outline color="light">{selectedDataset}</Button>
-<Dropdown class="overflow-y-auto py-1 h-32">
+<div
+	class={`
+			 scrollBarDiv bg-gray-900 absolute w-full mt-2  border
+			 rounded shadow-lg transform transition-transform 
+			 origin-top h-48 overflow-y-auto overflow-x-hidden
+    		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
+>
 	{#each $datasets as dataset}
 		{#if dataset !== null}
-			<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
+			<button
+				class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+				on:click={() => selectFile(dataset)}
+			>
+				{dataset}
+			</button>
 		{/if}
 	{/each}
-</Dropdown>
+</div>

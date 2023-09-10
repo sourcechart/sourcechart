@@ -210,7 +210,7 @@
 	style="position: absolute; left: {Math.min(
 		polygon.vertices[0].x,
 		polygon.vertices[2].x
-	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
+	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px; border:thin"
 >
 	<div
 		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
