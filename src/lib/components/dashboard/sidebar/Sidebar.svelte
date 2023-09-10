@@ -7,7 +7,7 @@
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores'; //@ts-ignore
 	import { slide } from 'svelte/transition';
-	import { ChevronDownSolid, ChevronUpSolid, ChevronRightSolid } from 'flowbite-svelte-icons'; //@ts-ignore
+	import { ChevronDownSolid, ChevronRightSolid } from 'flowbite-svelte-icons'; //@ts-ignore
 
 	import {
 		ColumnDropDrown,
@@ -26,8 +26,8 @@
 
 	$: numberOfDatasets = fileDropdown();
 	let addFilterDistance: number = 0;
-	let addFilterElement: HTMLElement;
 	let sidebarElement: HTMLElement;
+	//let addFilterElement: HTMLElement;
 
 	/*
 	function clickClusterTab() {
