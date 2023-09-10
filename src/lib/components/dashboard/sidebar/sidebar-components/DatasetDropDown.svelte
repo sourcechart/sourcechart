@@ -9,9 +9,6 @@
 	} from '$lib/io/Stores';
 
 	//@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; //@ts-ignore
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
@@ -84,19 +81,33 @@
 	};
 
 	onMount(loadWorker);
+
+	const toggleDropdown = () => {
+		isDropdownOpen = !isDropdownOpen;
+	};
 </script>
 
-<Button outline color="light">
-	<div class="flex justify-between items-center w-full">
+<div class="relative group" on:click={toggleDropdown} on:keypress={null}>
+	<button class="bg-gray-200 px-3 py-2 rounded text-black hover:bg-gray-300">
 		<span>{selectedDataset}</span>
 		<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
+	</button>
+	<div
+		class={`scrollBarDiv
+			absolute w-full mt-2 bg-white border
+			border-gray-200 rounded shadow-lg
+    		transform transition-transform origin-top h-48 overflow-y-auto overflow-x-hidden
+    		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
+	>
+		{#each $datasets as dataset}
+			{#if dataset !== null}
+				<button
+					class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+					on:click={() => selectFile(dataset)}
+				>
+					{dataset}
+				</button>
+			{/if}
+		{/each}
 	</div>
-</Button>
-
-<Dropdown class="overflow-y-auto py-1 h-32">
-	{#each $datasets as dataset}
-		{#if dataset !== null}
-			<DropdownItem on:click={() => selectFile(dataset)}>{dataset}</DropdownItem>
-		{/if}
-	{/each}
-</Dropdown>
+</div>

@@ -6,11 +6,7 @@
 		chartOptions,
 		allCharts
 	} from '$lib/io/Stores'; //@ts-ignore
-	/*
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
-	import Dropdown from 'flowbite-svelte/Dropdown.svelte'; //@ts-ignore
-	import DropdownItem from 'flowbite-svelte/DropdownItem.svelte'; //@ts-ignore
-	*/
+
 	export let axis = '';
 	let tags: Array<string | null> = [];
 	let isDropdownOpen: boolean = false;
