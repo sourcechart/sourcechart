@@ -8,6 +8,7 @@
 	} from '$lib/io/Stores'; //@ts-ignore
 
 	export let axis = '';
+
 	let tags: Array<string | null> = [];
 	let isDropdownOpen: boolean = false;
 

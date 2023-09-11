@@ -43,7 +43,7 @@
 		>
 			<button
 				class="w-full transform h-10 shadow-md transition-transform buttonColor px-2 border-1"
-				on:click={() => (showAxis = !showAxis)}
+				on:click={() => (showAxis = !showFilter)}
 			>
 				<div class="flex items-center justify-between text-xl text-gray-300 hover:text-gray-100">
 					<span class="mr-4 hover:underline text-sm">Choose Axis</span>
@@ -72,8 +72,8 @@
 						<div class="flex flex-col">
 							<button
 								class="h-10 w-full rounded-md border border-gray-700 bg-gray-900 px-2 text-left text-gray-300 shadow-sm hover:border-gray-500 hover:bg-gray-950"
-								>Input</button
-							>
+								>Input
+							</button>
 						</div>
 					</div>
 				</div>
