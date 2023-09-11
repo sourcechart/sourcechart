@@ -73,6 +73,32 @@
 					</div>
 				</div>
 			{/if}
+			<!-- Chart Dropdown -->
+			<button
+				class="w-full transform h-10 shadow-md transition-transform buttonColor px-2"
+				on:click={() => (showChart = !showChart)}
+			>
+				<div class="flex items-center justify-between text-xl text-gray-300 hover:text-gray-100">
+					<span class="mr-4 hover:underline text-sm">Choose Axis</span>
+					{#if showAxis}
+						<ChevronDownSolid class="w-4 h-4" />
+					{:else}
+						<ChevronRightSolid class="w-4 h-4" />
+					{/if}
+				</div>
+			</button>
+			{#if showAxis}
+				<div transition:slide>
+					<div class="rounded-t-none px-6 py-4 selectedButtonColor">
+						<div class="mb-2 text-left font-medium text-gray-400">
+							<p class="text-sm">X Axis</p>
+						</div>
+						<div class="mb-4 flex flex-col">
+							<ChartDropdown sideBarVersion={'LowCode'} />
+						</div>
+					</div>
+				</div>
+			{/if}
 		</div>
 	</div>
 {/if}
