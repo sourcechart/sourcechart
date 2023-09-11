@@ -71,7 +71,9 @@
 </script>
 
 <div class="relative group" on:click={toggleDropdown} on:keypress={null}>
-	<button class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300">
+	<button
+		class="h-10 w-full rounded-md border border-gray-700 bg-gray-900 px-2 text-left text-gray-300 shadow-sm hover:border-gray-500 hover:bg-gray-950"
+	>
 		{$label}
 	</button>
 	<div
