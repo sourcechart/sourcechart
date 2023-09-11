@@ -70,24 +70,13 @@
 	};
 </script>
 
-<div class="relative group" on:click={toggleDropdown} on:keypress={null}>
-	<button class="h-8 w-full button px-2 text-left text-gray-300 shadow-sm">
+<div class="relative dropdown-container">
+	<button class="dropdown-button">
 		{$label}
 	</button>
-	<div
-		class={`
-			 scrollBarDiv absolute w-full mt-2 border
-			 rounded shadow-lg transform transition-transform 
-			 origin-top h-48 overflow-y-auto overflow-x-hidden
-    		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
-	>
+	<div class={`dropdown-content ${isDropdownOpen ? 'visible' : ''}`}>
 		{#each $columns as column (column)}
-			<button
-				class="block w-full text-left button px-3 py-2 text-white"
-				on:click={() => {
-					chooseColumn(column);
-				}}
-			>
+			<button class="dropdown-item" on:click={() => chooseColumn(column)}>
 				{column}
 			</button>
 		{/each}
@@ -117,5 +106,50 @@
 
 	.button {
 		background-color: #2a2a2a;
+	}
+	.dropdown-container {
+		position: relative;
+	}
+
+	.dropdown-button {
+		background-color: #2a2a2a;
+		border: none;
+		padding: 0.5rem 1rem;
+		color: #fff;
+		cursor: pointer;
+	}
+
+	.dropdown-content {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		width: 100%;
+		border: 1px solid #333;
+		border-radius: 4px;
+		background-color: #1c1c1c;
+		opacity: 0;
+		transform: translateY(-10px);
+		transition: opacity 0.3s, transform 0.3s;
+		overflow-y: auto;
+		max-height: 200px;
+	}
+
+	.dropdown-content.visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.dropdown-item {
+		padding: 0.5rem 1rem;
+		color: #fff;
+		background-color: #2a2a2a;
+		border: none;
+		width: 100%;
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.dropdown-item:hover {
+		background-color: #333;
 	}
 </style>
