@@ -16,247 +16,76 @@
 		AddFilter
 	} from './sidebar-components'; //@ts-ignore
 
-	let showAxis = false;
+	let showAxis = true;
 	let showAggregator = false;
 	let showGroupBy = false;
 	let showChart = false;
-	let datasetDropdown = false;
+	let datasetDropdown = true;
 	let showFilter = false;
 
 	$: numberOfDatasets = fileDropdown();
 	let addFilterDistance: number = 0;
-	let sidebarElement: HTMLElement;
-	//let addFilterElement: HTMLElement;
 
-	/*
-	function clickClusterTab() {
-		allCharts.update((charts) => {
-			charts.forEach((chart) => {
-				if (chart.chartID === $mostRecentChartID) {
-					chart.workflow = 'cluster';
-				}
-			});
-			return charts;
-		});
-	}
-
-	function clickBasicTab() {
-		allCharts.update((charts) => {
-			charts.forEach((chart) => {
-				if (chart.chartID === $mostRecentChartID) {
-					chart.workflow = 'basic';
-				}
-			});
-			return charts;
-		});
-	}
-
-	const calculateDistanceToBottom = () => {
-		if (addFilterElement && sidebarElement) {
-			const addFilterBottom = addFilterElement.getBoundingClientRect().bottom;
-			const sidebarBottom = sidebarElement.getBoundingClientRect().bottom;
-			addFilterDistance = sidebarBottom - addFilterBottom;
-			return addFilterDistance;
-		}
-		return 0;
-	};
-	*/
+	$: console.log(showAxis);
 </script>
 
 {#if $activeSidebar}
 	<div
-		bind:this={sidebarElement}
 		use:clickInside={{
 			clickInside: () => {
 				$activeSidebar = true;
 			}
 		}}
-		class="space-y-4 outerDiv rounded-md"
+		class="space-y-4 outerDiv rounded-md shadow-xl"
 	>
 		<div
-			class="innerDiv text-white w-full h-full space-y-2 transition-transform duration-200 ease-in-out rounded-md border-red-50 p-6"
+			class="innerDiv text-gray-200 px-3 h-full space-y-2 transition-transform duration-200 ease-in-out rounded-md py-6"
 		>
-			<!-- Add Datasets Section-->
-			<div class="flex flex-col space-y-1">
-				<button
-					class="h-6 px-4 text-white hover:bg-gray-700"
-					on:click={() => {
-						activeDropZone.set(true);
-						activeSidebar.set(false);
-					}}
-				>
-					<div class="flex space-x-2 w-full">
-						<span>Add Dataset [{$numberOfDatasets.length}]</span>
-						<PlusSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
-					</div>
-				</button>
-			</div>
-			<!-- Dataset Dropdown-->
-			<div class="flex flex-col space-y-1" id="DatasetDropDown">
-				<button
-					class="h-6 px-4 text-white hover:bg-gray-700"
-					on:click={() => {
-						datasetDropdown = !datasetDropdown;
-					}}
-					on:keypress={null}
-				>
-					<div class="flex items-center justify-between w-full">
-						<div class="flex items-center space-x-2">
-							{#if datasetDropdown}
-								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-							{:else}
-								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-							{/if}
-							<span>Select Dataset</span>
+			<button
+				class="w-full transform h-10 shadow-md transition-transform buttonColor px-2 border-1"
+				on:click={() => (showAxis = !showAxis)}
+			>
+				<div class="flex items-center justify-between text-xl text-gray-300 hover:text-gray-100">
+					<span class="mr-4 hover:underline text-sm">Choose Axis</span>
+					{#if showAxis}
+						<ChevronDownSolid class="w-4 h-4" />
+					{:else}
+						<ChevronRightSolid class="w-4 h-4" />
+					{/if}
+				</div>
+			</button>
+			{#if showAxis}
+				<div transition:slide>
+					<div class="rounded-t-none bg-[#252830] px-6 py-4">
+						<div class="mb-2 text-left font-medium text-gray-400">
+							<p class="text-sm">X Axis</p>
+						</div>
+						<div class="mb-4 flex flex-col">
+							<button
+								class="h-10 w-full rounded-md border border-gray-700 bg-gray-900 px-2 text-left text-gray-300 shadow-sm hover:border-gray-500 hover:bg-gray-950"
+								>Input</button
+							>
+						</div>
+						<div class="mb-2 text-left font-medium text-gray-400">
+							<p class="text-sm">Y Axis</p>
+						</div>
+						<div class="flex flex-col">
+							<button
+								class="h-10 w-full rounded-md border border-gray-700 bg-gray-900 px-2 text-left text-gray-300 shadow-sm hover:border-gray-500 hover:bg-gray-950"
+								>Input</button
+							>
 						</div>
 					</div>
-				</button>
-				{#if datasetDropdown}
-					<div transition:slide class="space-y-2 divide-x">
-						<DatasetDropDown />
-					</div>
-				{/if}
-			</div>
-			<!--Show Axis -->
-			<div class="flex flex-col space-y-1" id="Axis">
-				<button
-					class="h-6 px-4 text-white hover:bg-gray-700"
-					on:click={() => {
-						showAxis = !showAxis;
-					}}
-				>
-					<div class="flex items-center justify-between w-full">
-						<div class="flex items-center space-x-2">
-							{#if showAxis}
-								<button>
-									<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-								</button>
-							{:else}
-								<button>
-									<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-								</button>
-							{/if}
-							<span>Axis</span>
-						</div>
-					</div>
-				</button>
-
-				{#if showAxis}
-					<div transition:slide class="space-y-2 divide-x">
-						<ColumnDropDrown axis={'X'} />
-						<ColumnDropDrown axis={'Y'} />
-					</div>
-				{/if}
-			</div>
-			<!--Show GroupBy -->
-			<div class="flex flex-col space-y-1" id="Groupby">
-				<button
-					class="h-6 px-4 text-white hover:bg-gray-700"
-					on:click={() => {
-						showGroupBy = !showGroupBy;
-					}}
-				>
-					<div class="flex items-center justify-between w-full">
-						<div class="flex items-center space-x-2">
-							{#if showGroupBy}
-								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-							{:else}
-								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-							{/if}
-							<span>GroupBy</span>
-						</div>
-					</div>
-				</button>
-				{#if showGroupBy}
-					<div transition:slide class="space-y-2">
-						<Groupby />
-					</div>
-				{/if}
-			</div>
-			<!--Show Aggregator -->
-			<div class="flex flex-col space-y-1" id="Aggregator">
-				<button
-					class="h-6 px-4 text-white hover:bg-gray-700"
-					on:click={() => {
-						showAggregator = !showAggregator;
-					}}
-				>
-					<div class="flex items-center justify-between w-full">
-						<div class="flex items-center space-x-2">
-							{#if showAggregator}
-								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-							{:else}
-								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-							{/if}
-							<span>Aggregator</span>
-						</div>
-					</div>
-				</button>
-				{#if showAggregator}
-					<div transition:slide class="space-y-2 divide-x">
-						<Aggregator />
-					</div>
-				{/if}
-			</div>
-			<!--Show Chart -->
-			<div class="flex flex-col space-y-1" id="ChartDropdown">
-				<button
-					class="h-6 px-4 text-white hover:bg-gray-700"
-					on:click={() => {
-						showChart = !showChart;
-					}}
-				>
-					<div class="flex items-center justify-between w-full">
-						<div class="flex items-center space-x-2">
-							{#if showChart}
-								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-							{:else}
-								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-							{/if}
-							<span>Choose Chart</span>
-						</div>
-					</div>
-				</button>
-				{#if showChart}
-					<div transition:slide class="space-y-2 divide-x">
-						<ChartDropdown sideBarVersion={'LowCode'} />
-					</div>
-				{/if}
-			</div>
-			<!--Show Filter -->
-			<div class="flex flex-col space-y-1" id="AddFilter">
-				<button
-					class="h-6 px-4 text-white hover:bg-gray-700"
-					on:click={() => {
-						showFilter = !showFilter;
-					}}
-				>
-					<div class="flex items-center justify-between w-full">
-						<div class="flex items-center space-x-2">
-							{#if showFilter}
-								<ChevronDownSolid class="w-3 h-3 text-white dark:text-white" />
-							{:else}
-								<ChevronRightSolid class="w-3 h-3 text-white dark:text-white" />
-							{/if}
-							<span>Add Filter</span>
-						</div>
-					</div>
-				</button>
-				{#if showFilter}
-					<div transition:slide class="space-y-2 divide-x">
-						<AddFilter {addFilterDistance} />
-					</div>
-				{/if}
-			</div>
+				</div>
+			{/if}
 		</div>
 	</div>
 {/if}
 
 <style>
 	.outerDiv {
-		background-color: rgb(38, 38, 39);
 		position: fixed;
-		width: 300px;
+		width: 250px;
 		overflow: hidden;
 		height: 75vh;
 	}
@@ -265,7 +94,7 @@
 		width: 100%;
 		height: 100%;
 		overflow-y: auto;
-		background-color: rgb(38, 38, 39);
+		background-color: #2a2a2a;
 	}
 
 	/* For WebKit (Chrome, Safari) */
@@ -286,5 +115,22 @@
 	.innerDiv {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
+	}
+
+	.hoverOptionColor:hover {
+		background-color: rgba(61, 61, 61);
+		border-radius: 4px;
+	}
+
+	.buttonColor {
+		border-color: rgba(61, 61, 61);
+		border-width: 1px;
+		background-color: #1c1c1c;
+		border-radius: 1px;
+	}
+
+	.buttonColor:hover {
+		border-color: rgba(255, 255, 255, 0.3);
+		border-width: 1px;
 	}
 </style>

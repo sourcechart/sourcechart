@@ -31,7 +31,7 @@
 <div class="space-y-1 space-x-1">
 	{#each aggs as agg}
 		<button
-			class="block w-full bg-gray-900 text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+			class="block w-full bg-gray-900 text-left dark:text-black hover:bg-gray-200"
 			on:click={() => selectAggregator(agg)}
 		/>
 		{agg}

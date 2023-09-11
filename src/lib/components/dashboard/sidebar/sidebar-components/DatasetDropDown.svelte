@@ -8,7 +8,6 @@
 		duckDBInstanceStore
 	} from '$lib/io/Stores';
 
-	//@ts-ignore
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
@@ -82,6 +81,14 @@
 	onMount(loadWorker);
 </script>
 
+<button
+	class="h-6 bg-gray-800 rounded-none"
+	on:click={() => {
+		isDropdownOpen = !isDropdownOpen;
+	}}
+>
+	{selectedDataset}
+</button>
 <div
 	class={`
 			 scrollBarDiv bg-gray-900 absolute w-full mt-2  border
