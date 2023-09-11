@@ -112,16 +112,11 @@
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
 	}
 
-	.hoverOptionColor:hover {
-		background-color: rgba(61, 61, 61);
-		border-radius: 4px;
-	}
-
 	.buttonColor {
 		border-color: rgba(61, 61, 61);
 		border-width: 1px;
 		background-color: #1c1c1c;
-		border-radius: 1px;
+		border-radius: 2px;
 	}
 
 	.selectedButtonColor {
@@ -135,10 +130,6 @@
 
 	.buttonColor:hover {
 		border-color: rgba(255, 255, 255, 0.3);
-		border-width: 1px;
-	}
-
-	.buttonCard {
-		background-color: #1c1c1c;
+		border-radius: 2px;
 	}
 </style>

@@ -71,21 +71,19 @@
 </script>
 
 <div class="relative group" on:click={toggleDropdown} on:keypress={null}>
-	<button
-		class="h-10 w-full rounded-md border border-gray-700 bg-gray-900 px-2 text-left text-gray-300 shadow-sm hover:border-gray-500 hover:bg-gray-950"
-	>
+	<button class="h-8 w-full button px-2 text-left text-gray-300 shadow-sm">
 		{$label}
 	</button>
 	<div
 		class={`
-			 scrollBarDiv bg-gray-900 absolute w-full mt-2  border
+			 scrollBarDiv absolute w-full mt-2 border
 			 rounded shadow-lg transform transition-transform 
 			 origin-top h-48 overflow-y-auto overflow-x-hidden
     		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 	>
 		{#each $columns as column (column)}
 			<button
-				class="block w-full text-left bg-gray-900 px-3 py-2 dark:text-black hover:bg-gray-200"
+				class="block w-full text-left button px-3 py-2 text-white"
 				on:click={() => {
 					chooseColumn(column);
 				}}
@@ -115,5 +113,9 @@
 	.scrollBarDiv {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+	}
+
+	.button {
+		background-color: #2a2a2a;
 	}
 </style>
