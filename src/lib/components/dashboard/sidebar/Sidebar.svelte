@@ -9,19 +9,19 @@
 	import { ChevronDownSolid, ChevronRightSolid } from 'flowbite-svelte-icons'; //@ts-ignore
 
 	import {
-		ColumnDropDrown,
+		ColumnDropDown,
 		Aggregator,
 		Groupby,
 		ChartDropdown,
 		AddFilter
 	} from './sidebar-components'; //@ts-ignore
 
-	let showAxis = false;
-	let showAggregator = false;
-	let showGroupBy = false;
-	let showChart = false;
+	let showAxis = true;
+	let showAggregator = true;
+	let showGroupBy = true;
+	let showChart = true;
 	let datasetDropdown = true;
-	let showFilter = false;
+	let showFilter = true;
 
 	$: numberOfDatasets = fileDropdown();
 	let addFilterDistance: number = 0;
@@ -33,37 +33,38 @@
 			<!-- Choose Axis -->
 			<div>
 				<button
-					class="w-full transform h-10 shadow-md transition-transform buttonColor px-2"
-					on:click={() => (showAxis = !showAxis)}
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 button"
+					on:click={() => {
+						showAxis = !showAxis;
+					}}
 				>
-					<div class="flex items-center justify-between text-xl text-gray-300 hover:text-gray-100">
-						<span class="mr-4 hover:underline text-xs">Axis</span>
-						{#if showAxis}
-							<ChevronDownSolid class="w-4 h-4" />
-						{:else}
-							<ChevronRightSolid class="w-4 h-4" />
-						{/if}
-					</div>
+					<span class="mr-4 text-xs">Axis</span>
+					{#if showAxis}
+						<ChevronDownSolid class="w-2 h-2" />
+					{:else}
+						<ChevronRightSolid class="w-2 h-2" />
+					{/if}
 				</button>
 				{#if showAxis}
 					<div transition:slide>
 						<div class="rounded-t-none px-6 py-4 selectedButtonColor">
-							<div class="mb-2 text-left font-medium text-gray-400">
+							<div
+								class="mb-2 text-left font-medium text-gray-400 flex items-center justify-between"
+							>
 								<p class="text-xs">X Axis</p>
+								<ColumnDropDown axis="x" />
 							</div>
-							<div class="mb-4 flex flex-col">
-								<ColumnDropDrown axis="x" />
-							</div>
-							<div class="mb-2 text-left font-medium text-gray-400">
+							<div
+								class="mb-2 text-left font-medium text-gray-400 flex items-center justify-between"
+							>
 								<p class="text-xs">Y Axis</p>
-							</div>
-							<div class="flex flex-col">
-								<ColumnDropDrown axis="y" />
+								<ColumnDropDown axis="y" />
 							</div>
 						</div>
 					</div>
 				{/if}
 			</div>
+
 			<!-- Group By -->
 			<div>
 				<button
@@ -197,7 +198,7 @@
 
 	/* Scrollbar styles */
 	.sidebar-inner::-webkit-scrollbar {
-		width: 8px;
+		width: 4px;
 	}
 
 	.sidebar-inner::-webkit-scrollbar-thumb {
@@ -214,14 +215,8 @@
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
 	}
 
-	.button {
-		background-color: #1c1c1c;
-		border: 1px solid rgba(61, 61, 61, 0.5);
-		border-radius: 4px;
-		transition: border-color 0.3s;
-	}
-
 	.button:hover {
-		border-color: rgba(255, 255, 255, 0.3);
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
 	}
 </style>
