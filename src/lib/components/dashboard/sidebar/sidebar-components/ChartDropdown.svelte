@@ -4,9 +4,11 @@
 
 	type SideBarVersion = 'WorkFlow' | 'LowCode';
 	export let sideBarVersion: SideBarVersion;
+	import Tags from '$lib/components/ui/tags/Tags.svelte';
 
+	let tags: string[] = [];
 	let chosenPlot: string = 'Bar Chart (Default)';
-
+	let isChartDropdownOpen: boolean = false;
 	let rectangleCharts: any[] = [
 		{
 			chartType: 'Bar'
@@ -68,15 +70,63 @@
 			});
 		}
 	};
+
+	const removeTag = (tag: string) => {
+		tags = tags.filter((item) => item !== tag);
+		chooseChart(tag);
+	};
+
+	const addChartToTags = (chart: string) => {
+		if (tags.includes(chart)) {
+			tags = tags.filter((item) => item !== chart);
+		} else {
+			tags = [...tags, chart];
+		}
+		chooseChart(chart); // Updated function call
+	};
+
+	const closeChartDropdown = () => {
+		isChartDropdownOpen = false;
+	};
+
+	const toggleChartDropdown = () => {
+		isChartDropdownOpen = !isChartDropdownOpen;
+	};
 </script>
 
-<div class="space-y-1 space-x-1 flex flex-row overflow-x-auto">
-	{#each rectangleCharts as { chartType }, i (i)}
+<div class="w-full p-4 rounded-sm relative selectFieldColor">
+	<button
+		class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+		on:click={toggleChartDropdown}
+	>
+		<span class="text-sm ml-2"> Chart Types </span>
+	</button>
+
+	{#if isChartDropdownOpen}
 		<button
-			class="block rounded-lg border-2 border-gray-500 text-left p-1 dark:text-black hover:bg-gray-200"
-			on:click={() => chooseChart(chartType)}
+			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
+			on:click|stopPropagation={closeChartDropdown}
 		>
-			{chartType}
+			{#each rectangleCharts as { chartType }, i (i)}
+				<button
+					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+					on:click={() => {
+						addChartToTags(chartType);
+					}}
+				>
+					{chartType}
+				</button>
+			{/each}
 		</button>
-	{/each}
+	{/if}
+	<div class="mt-4 flex-grow">
+		<span class="text-sm"> Selected Charts </span>
+		<Tags items={tags} removeItem={removeTag} />
+	</div>
 </div>
+
+<style>
+	.selectFieldColor {
+		background-color: #33333d;
+	}
+</style>

@@ -73,7 +73,7 @@
 
 <div class="relative dropdown-container">
 	<button
-		class="dropdown-button border-2 text-sm bg-gray-900 text-white p-2 rounded hover:bg-gray-800 transition duration-150 ease-in-out"
+		class="dropdown-button border-2 text-sm buttonColor text-white p-2 rounded hover:bg-gray-800 transition duration-150 ease-in-out"
 		on:click={toggleDropdown}
 	>
 		Select Column
@@ -113,5 +113,9 @@
 	.dropdown-content {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+	}
+
+	.buttonColor {
+		background-color: #353f46;
 	}
 </style>

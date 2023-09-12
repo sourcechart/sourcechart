@@ -126,7 +126,7 @@
 	};
 </script>
 
-<div class="w-full p-4 selectFieldColor rounded-sm">
+<div class="w-full p-4 selectFieldColor rounded-sm shadow-xl">
 	<div class="flex justify-between items-center">
 		<button class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center">
 			<span class="text-sm ml-2">
@@ -143,7 +143,7 @@
 		>
 			{#each $columns as column (column)}
 				<button
-					class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
 					on:click={() => {
 						addColumnToFilter(column);
 					}}
@@ -187,6 +187,6 @@
 	}
 
 	.selectFieldColor {
-		background-color: rgb(18, 18, 18);
+		background-color: #33333d;
 	}
 </style>
