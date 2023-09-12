@@ -72,10 +72,21 @@
 </script>
 
 <div class="relative dropdown-container">
-	<button class="dropdown-button"> Select Column </button>
-	<div class={`dropdown-content ${isDropdownOpen ? 'visible' : ''}`}>
+	<button
+		class="dropdown-button border-2 text-sm bg-gray-900 text-white p-1 rounded hover:border-gray-600 transition duration-150 ease-in-out"
+	>
+		Select Column
+	</button>
+	<div
+		class={`dropdown-content mt-2 bg-gray-800 rounded border border-gray-700 shadow-lg ${
+			isDropdownOpen ? 'block' : 'hidden'
+		}`}
+	>
 		{#each $columns as column (column)}
-			<button class="dropdown-item" on:click={() => chooseColumn(column)}>
+			<button
+				class="dropdown-item w-full text-left px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out"
+				on:click={() => chooseColumn(column)}
+			>
 				{column}
 			</button>
 		{/each}
