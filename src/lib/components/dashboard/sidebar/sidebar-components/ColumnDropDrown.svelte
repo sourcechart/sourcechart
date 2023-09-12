@@ -7,62 +7,43 @@
 		allCharts
 	} from '$lib/io/Stores'; //@ts-ignore
 
-	export let axis = '';
+	import Tags from '$lib/components/ui/tags/Tags.svelte';
+	//export let axis = '';
 
-	let tags: Array<string | null> = [];
+	let tags: Array<{ label: string; value: string }> = []; // Updated tags to contain label (X/Y) and value (column)
 	let isDropdownOpen: boolean = false;
 
 	$: i = clickedChartIndex();
-	$: drawerOptions = chartOptions();
+	//$: drawerOptions = chartOptions();
 	$: columns = getColumnsFromFile();
-	$: label = columnLabel(axis);
-
-	$: if ($drawerOptions.xColumn && $drawerOptions.yColumn && tags.length == 0) {
-		tags = getTagsOnClick();
-	}
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
-		if (axis.toUpperCase() === 'X') {
-			tags = $allCharts[$i]?.xColumn ? [$allCharts[$i].xColumn] : [];
-		} else if (axis.toUpperCase() === 'Y') {
-			tags = $allCharts[$i]?.yColumn ? [$allCharts[$i].yColumn] : [];
-		}
+		tags = [
+			{ label: 'X', value: $allCharts[$i]?.xColumn || '' },
+			{ label: 'Y', value: $allCharts[$i]?.yColumn || '' }
+		];
 	}
 
-	const getTagsOnClick = () => {
-		tags = [];
-		if (axis.toUpperCase() === 'X') {
-			if ($drawerOptions?.xColumn) {
-				tags = [$drawerOptions?.xColumn];
-			} else {
-				tags = [];
+	const chooseColumn = (label: string, column: string) => {
+		allCharts.update((charts) => {
+			if (label === 'X') {
+				charts[$i].xColumn = column;
 			}
-		}
-		if (axis.toUpperCase() === 'Y') {
-			if ($drawerOptions?.yColumn) {
-				tags = [$drawerOptions?.yColumn];
-			} else {
-				tags = [];
+			if (label === 'Y') {
+				charts[$i].yColumn = column;
 			}
-		}
-		return tags;
+			return charts;
+		});
+		tags = tags.map((tag) => (tag.label === label ? { label, value: column } : tag));
+		toggleDropdown();
 	};
 
-	const chooseColumn = (column: string | null) => {
-		if (column) {
-			allCharts.update((charts) => {
-				if (axis.toUpperCase() === 'X') {
-					charts[$i].xColumn = column;
-					tags = [column];
-				}
-				if (axis.toUpperCase() === 'Y') {
-					charts[$i].yColumn = column;
-					tags = [column];
-				}
-				return charts;
-			});
-		} else {
-			tags = [];
+	const removeTag = (label: string) => {
+		if (label === 'X') {
+			chooseColumn(label, '');
+		}
+		if (label === 'Y') {
+			chooseColumn(label, '');
 		}
 	};
 
@@ -71,27 +52,61 @@
 	};
 </script>
 
-<div class="relative dropdown-container">
-	<button
-		class="dropdown-button border-2 text-sm buttonColor text-white p-2 rounded hover:bg-gray-800 transition duration-150 ease-in-out"
-		on:click={toggleDropdown}
-	>
-		Select Column
-	</button>
-	<div
-		class={`dropdown-content mt-2 bg-gray-800 rounded border border-gray-700 shadow-lg overflow-y-auto max-h-48 ${
-			isDropdownOpen ? 'block' : 'hidden'
-		}`}
-	>
-		{#each $columns as column (column)}
-			<button
-				class="dropdown-item w-full text-left px-4 py-2 text-white hover:bg-gray-700 transition duration-150 ease-in-out"
-				on:click={() => chooseColumn(column)}
-			>
-				{column}
-			</button>
-		{/each}
+<div class="w-full px-4 py-2 rounded-sm relative selectFieldColor">
+	<div class="flex-grow">
+		<span class="text-sm"> X Axis </span>
+		<button
+			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			on:click={toggleDropdown}
+		>
+			<span class="text-sm ml-2"> Select Column </span>
+		</button>
 	</div>
+
+	{#if isDropdownOpen}
+		<button
+			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
+			on:click|stopPropagation={toggleDropdown}
+		>
+			<!--
+			{#each ['X', 'Y'] as axisLabel}
+				<button
+					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+					on:click={() => chooseColumn(axisLabel, column)}
+				>
+					{axisLabel}: {column}
+				</button>
+			{/each}
+			-->
+		</button>
+	{/if}
+
+	<div class="flex-grow">
+		<span class="text-sm"> Y Axis </span>
+		<button
+			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			on:click={toggleDropdown}
+		>
+			<span class="text-sm ml-2"> Select Column </span>
+		</button>
+	</div>
+	{#if isDropdownOpen}
+		<button
+			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
+			on:click|stopPropagation={toggleDropdown}
+		>
+			<!--
+			{#each ['X', 'Y'] as axisLabel}
+				<button
+					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+					on:click={() => chooseColumn(axisLabel, column)}
+				>
+					{axisLabel}: {column}
+				</button>
+			{/each}
+			-->
+		</button>
+	{/if}
 </div>
 
 <style>
@@ -117,5 +132,9 @@
 
 	.buttonColor {
 		background-color: #353f46;
+	}
+
+	.selectFieldColor {
+		background-color: #33333d;
 	}
 </style>

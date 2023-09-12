@@ -43,14 +43,7 @@
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
-						<p class="text-xs">X Axis</p>
-						<ColumnDropDrown axis={'x'} />
-					</div>
-					<div
-						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
-					>
-						<p class="text-xs">Y Axis</p>
-						<ColumnDropDown axis={'y'} />
+						<ColumnDropDrown />
 					</div>
 				</div>
 			</div>
