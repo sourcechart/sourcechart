@@ -70,10 +70,10 @@
 	};
 </script>
 
-<div class="space-y-1 space-x-1">
+<div class="space-y-1 space-x-1 flex flex-row overflow-x-auto">
 	{#each rectangleCharts as { chartType }, i (i)}
 		<button
-			class="block w-full bg-gray-900 text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+			class="block w-full rounded-lg bg-gray-600 text-left px-2 py-1 dark:text-black hover:bg-gray-200"
 			on:click={() => chooseChart(chartType)}
 		>
 			{chartType}

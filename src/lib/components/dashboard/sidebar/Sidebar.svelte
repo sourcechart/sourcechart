@@ -73,10 +73,7 @@
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
-						<Button size="xs">Chart One</Button>
-						<Button size="xs">Chart Two</Button>
-						<Button size="xs">Chart Three</Button>
-						<Button size="xs">Chart Four</Button>
+						<ChartDropdown sideBarVersion={'LowCode'} />
 					</div>
 				</div>
 			</div>
@@ -106,7 +103,7 @@
 
 				<div class="rounded-t-none selectedButtonColor">
 					<div
-						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
+						class="text-center font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
 						<AddFilter />
 					</div>
