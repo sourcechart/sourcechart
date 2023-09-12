@@ -1,10 +1,7 @@
 <script lang="ts">
-	//@ts-ignore
-	//import Button from 'flowbite-svelte/Button.svelte';
 	import Filter from './filter-components/Filter.svelte';
 	import { PlusSolid } from 'flowbite-svelte-icons';
 
-	let showDropdown: boolean = false;
 	export let addFilterDistance: number = 0;
 	let components: { component: any; distance: number }[] = [];
 
