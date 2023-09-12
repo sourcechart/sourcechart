@@ -35,33 +35,29 @@
 	});
 </script>
 
-<div class="flex justify-center items-center">
-	<div
-		class="flex items-center rounded-full bg-white shadow px-4 py-2 w-64 border border-gray-300 text-base"
-	>
-		{#each items as item, i (i)}
+<div class="flex justify-start items-center mt-2 overflow-x-auto">
+	{#each items as item, i (i)}
+		<div
+			role="button"
+			class="mr-2 mb-2 rounded-sm bg-gray-700 text-white px-4 py-1 text-sm cursor-pointer hover:bg-gray-600 transition duration-150 ease-in-out"
+			tabindex="0"
+			on:click={() => selectItem(i)}
+			on:keydown={(e) => {
+				if (e.key === 'Enter') selectItem(i);
+			}}
+		>
+			{item}
 			<div
 				role="button"
-				class="mr-2 rounded-full bg-blue-600 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-500"
+				class="inline-block ml-2 text-xs cursor-pointer hover:text-gray-400"
 				tabindex="0"
-				on:click={() => selectItem(i)}
-				on:keydown={(e) => {
-					if (e.key === 'Enter') selectItem(i);
+				on:click|stopPropagation={() => removeItem(item)}
+				on:keydown|stopPropagation={(e) => {
+					if (e.key === 'Enter') removeItem(item);
 				}}
 			>
-				{item}
-				<div
-					role="button"
-					class="inline-block ml-2 text-xs cursor-pointer"
-					tabindex="0"
-					on:click|stopPropagation={() => removeItem(item)}
-					on:keydown|stopPropagation={(e) => {
-						if (e.key === 'Enter') removeItem(item);
-					}}
-				>
-					x
-				</div>
+				×
 			</div>
-		{/each}
-	</div>
+		</div>
+	{/each}
 </div>

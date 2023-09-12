@@ -9,9 +9,13 @@
 		clickedChartIndex
 	} from '$lib/io/Stores';
 
+	import Tags from '$lib/components/ui/tags/Tags.svelte';
+
 	let tags: Array<string> = [];
 	let selectedButtons: Array<string> = [];
 	let isGroupByOpen: boolean = false;
+
+	let testItems = ['test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8'];
 	//export let ButtonName: string;
 
 	$: columns = getColumnsFromFile();
@@ -41,6 +45,13 @@
 			chart.groupbyColumns = tags;
 		}
 
+		$allCharts[$i] = chart;
+	};
+
+	const removeTag = (tag: string) => {
+		tags = tags.filter((item) => item !== tag);
+		let chart = $allCharts[$i];
+		chart.groupbyColumns = tags;
 		$allCharts[$i] = chart;
 	};
 </script>
@@ -74,6 +85,7 @@
 		</button>
 	{/each}
 </div>
+<Tags items={testItems} removeItem={removeTag} />
 
 <style>
 	/* For WebKit (Chrome, Safari) */
