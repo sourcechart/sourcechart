@@ -92,8 +92,10 @@
 		</button>
 	{/if}
 	<div class="mt-4 flex-grow">
-		<span class="text-sm"> Columns </span>
-		<Tags items={tags} removeItem={removeTag} />
+		{#if tags.length > 0}
+			<span class="text-sm"> Columns </span>
+			<Tags items={tags} removeItem={removeTag} />
+		{/if}
 	</div>
 </div>
 

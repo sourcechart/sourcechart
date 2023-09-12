@@ -100,10 +100,7 @@
 
 			<!-- Filter -->
 			<div class="mb-4">
-				<div
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
-				/>
-				<div class="w-full font-medium flex items-center justify-between">
+				<div class="w-full font-medium">
 					<AddFilter />
 				</div>
 			</div>

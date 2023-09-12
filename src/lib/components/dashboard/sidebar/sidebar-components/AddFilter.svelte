@@ -5,16 +5,15 @@
 	let components: { component: any }[] = [];
 
 	const addFilterToSidebar = () => {
-		components = [...components, { component: Filter }];
+		components = [{ component: Filter }, ...components]; // Add new filter to the beginning of the array
 	};
 </script>
 
 {#each components as { component: Component }}
-	<div class="py-2">
+	<div class="py-2 flex">
 		<svelte:component this={Component} />
 	</div>
 {/each}
-
 <button on:click={addFilterToSidebar} on:keydown={null}>
 	<div
 		class="flex w-full selectFieldColor shadow-md text-left px-3 py-1 dark:text-black hover:bg-gray-200"
