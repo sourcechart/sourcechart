@@ -114,13 +114,6 @@
 		});
 	}
 
-	const handleClose = () => {
-		showDropdown = false;
-		showRange = false;
-		selectedColumn = 'Add Field';
-		selectedColumns = [];
-	};
-
 	const toggleDropdown = () => {
 		isDropdownOpen = !isDropdownOpen;
 	};
@@ -128,7 +121,10 @@
 
 <div class="w-full p-4 selectFieldColor rounded-sm shadow-xl">
 	<div class="flex justify-between items-center">
-		<button class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center">
+		<button
+			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			on:click={toggleDropdown}
+		>
 			<span class="text-sm ml-2">
 				{selectedColumn}
 			</span>
@@ -155,11 +151,10 @@
 	</div>
 	<div class="mt-4">
 		{#if showRange}
-			<Label>Values Ranges</Label>
+			<span> Values Ranges</span>
 			<FilterRange {min} {max} column={selectedColumn} />
 		{:else if showDropdown}
-			<span class="text-sm" />
-			<Label>Select Value</Label>
+			<span class="text-sm"> Select Value</span>
 			<FilterDropdown column={selectedColumn} items={distinctValuesObject} />
 		{/if}
 	</div>

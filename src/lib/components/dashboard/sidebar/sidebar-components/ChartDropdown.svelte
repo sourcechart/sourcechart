@@ -1,30 +1,17 @@
 <script lang="ts">
-	//@ts-ignore
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	type SideBarVersion = 'WorkFlow' | 'LowCode';
 	export let sideBarVersion: SideBarVersion;
-	import Tags from '$lib/components/ui/tags/Tags.svelte';
 
-	let tags: string[] = [];
 	let chosenPlot: string = 'Bar Chart (Default)';
 	let isChartDropdownOpen: boolean = false;
 	let rectangleCharts: any[] = [
-		{
-			chartType: 'Bar'
-		},
-		{
-			chartType: 'Scatter'
-		},
-		{
-			chartType: 'Pie'
-		},
-		{
-			chartType: 'Line'
-		},
-		{
-			chartType: 'Area'
-		}
+		{ chartType: 'Bar' },
+		{ chartType: 'Scatter' },
+		{ chartType: 'Pie' },
+		{ chartType: 'Line' },
+		{ chartType: 'Area' }
 	];
 
 	if (sideBarVersion === 'WorkFlow') {
@@ -46,43 +33,20 @@
 	}
 
 	const chooseChart = (plot: string) => {
-		if (chosenPlot === plot) {
-			chosenPlot = 'Bar Chart (Default)';
-			allCharts.update((charts) => {
-				charts.splice($i, 1);
-				return charts;
+		chosenPlot = plot;
+		plot = plot.toLowerCase();
+		allCharts.update((charts) => {
+			charts.forEach((chart) => {
+				chart.chartType = plot;
+				if (plot === 'area') {
+					chart.chartOptions.series[0].type = 'line';
+					chart.chartOptions.series[0].areaStyle = {};
+				} else {
+					chart.chartOptions.series[0].type = plot;
+				}
 			});
-		} else {
-			chosenPlot = plot;
-			plot = plot.toLowerCase();
-			allCharts.update((charts) => {
-				charts.forEach((chart) => {
-					chart.chartType = plot;
-					if (plot === 'area') {
-						chart.chartOptions.series[0].type = 'line';
-						chart.chartOptions.series[0].areaStyle = {};
-					} else {
-						chart.chartOptions.series[0].type = plot;
-					}
-				});
-
-				return charts;
-			});
-		}
-	};
-
-	const removeTag = (tag: string) => {
-		tags = tags.filter((item) => item !== tag);
-		chooseChart(tag);
-	};
-
-	const addChartToTags = (chart: string) => {
-		if (tags.includes(chart)) {
-			tags = tags.filter((item) => item !== chart);
-		} else {
-			tags = [...tags, chart];
-		}
-		chooseChart(chart); // Updated function call
+			return charts;
+		});
 	};
 
 	const closeChartDropdown = () => {
@@ -111,7 +75,7 @@
 				<button
 					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
 					on:click={() => {
-						addChartToTags(chartType);
+						chooseChart(chartType);
 					}}
 				>
 					{chartType}
@@ -119,10 +83,6 @@
 			{/each}
 		</button>
 	{/if}
-	<div class="mt-4 flex-grow">
-		<span class="text-sm"> Selected Charts </span>
-		<Tags items={tags} removeItem={removeTag} />
-	</div>
 </div>
 
 <style>

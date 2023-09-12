@@ -82,7 +82,7 @@
             ${isGroupByOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 			on:click|stopPropagation={closeDropdown}
 		>
-			{#each testColumns as column (column)}
+			{#each $columns as column (column)}
 				<button
 					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
 					on:click={() => {

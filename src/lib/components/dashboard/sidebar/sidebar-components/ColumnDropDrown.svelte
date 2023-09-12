@@ -53,7 +53,7 @@
 
 	{#if xDropdownOpen}
 		<button
-			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
+			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			on:click|stopPropagation={() => toggleDropdown('X')}
 		>
 			{#each $columns as column}
@@ -79,7 +79,7 @@
 
 	{#if yDropdownOpen}
 		<button
-			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
+			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			on:click|stopPropagation={() => toggleDropdown('Y')}
 		>
 			{#each $columns as column}
@@ -95,30 +95,6 @@
 </div>
 
 <style>
-	/* For WebKit (Chrome, Safari) */
-	.dropdown-content::-webkit-scrollbar {
-		width: 8px;
-	}
-
-	.dropdown-content::-webkit-scrollbar-thumb {
-		background-color: rgba(255, 255, 255, 0.3);
-		border-radius: 4px;
-	}
-
-	.dropdown-content::-webkit-scrollbar-thumb:hover {
-		background-color: rgba(168, 168, 168, 0.5);
-	}
-
-	/* For Firefox */
-	.dropdown-content {
-		scrollbar-width: thin;
-		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
-	}
-
-	.buttonColor {
-		background-color: #353f46;
-	}
-
 	.selectFieldColor {
 		background-color: #33333d;
 	}
