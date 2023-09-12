@@ -68,11 +68,8 @@
 				>
 					<span class="mr-4 text-sm">Groupby</span>
 				</button>
-
-				<div class="rounded-t-none selectedButtonColor">
-					<div class="font-medium text-gray-400 w-full justify-items-center">
-						<Button size="xs">Groupby Dropdown</Button>
-					</div>
+				<div class="font-medium text-gray-400 w-full justify-items-center">
+					<Groupby />
 				</div>
 			</div>
 
