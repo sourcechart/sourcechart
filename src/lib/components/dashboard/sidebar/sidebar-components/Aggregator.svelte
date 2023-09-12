@@ -28,10 +28,10 @@
 	};
 </script>
 
-<div class="space-y-1 space-x-1">
+<div class="space-y-1 space-x-1 flex flex-row overflow-x-auto">
 	{#each aggs as agg}
 		<button
-			class="block w-full bg-gray-900 text-left dark:text-black hover:bg-gray-200"
+			class="block w-4 rounded-lg bg-gray-600 text-left dark:text-black hover:bg-gray-200"
 			on:click={() => selectAggregator(agg)}
 		/>
 		{agg}

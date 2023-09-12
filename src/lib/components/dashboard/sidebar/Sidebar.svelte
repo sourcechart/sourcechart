@@ -20,6 +20,22 @@
 {#if $activeSidebar}
 	<div use:clickInside={{ clickInside: () => ($activeSidebar = true) }} class="sidebar-outer">
 		<div class="sidebar-inner">
+			<!-- Chart Dropdown -->
+			<div class="mb-4">
+				<button
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Chart</span>
+				</button>
+
+				<div class="rounded-t-none selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
+					>
+						<ChartDropdown sideBarVersion={'LowCode'} />
+					</div>
+				</div>
+			</div>
 			<!-- Choose Axis -->
 			<div class="mb-4">
 				<button
@@ -43,13 +59,12 @@
 					</div>
 				</div>
 			</div>
-
 			<!-- Group By -->
 			<div class="mb-4">
 				<button
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
-					<span class="mr-4 text-sm">GroupBy</span>
+					<span class="mr-4 text-sm">Groupby</span>
 				</button>
 
 				<div class="rounded-t-none selectedButtonColor">
@@ -57,23 +72,6 @@
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
 						<Button size="xs">Groupby Dropdown</Button>
-					</div>
-				</div>
-			</div>
-
-			<!-- Chart Dropdown -->
-			<div class="mb-4">
-				<button
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
-				>
-					<span class="mr-4 text-sm">Chart</span>
-				</button>
-
-				<div class="rounded-t-none selectedButtonColor">
-					<div
-						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
-					>
-						<ChartDropdown sideBarVersion={'LowCode'} />
 					</div>
 				</div>
 			</div>
@@ -88,7 +86,7 @@
 
 				<div class="rounded-t-none selectedButtonColor">
 					<div class="w-full font-medium text-gray-400 flex items-center justify-between">
-						<Button size="xs">Aggregator</Button>
+						<Aggregator />
 					</div>
 				</div>
 			</div>
