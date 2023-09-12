@@ -9,6 +9,7 @@
 	import FilterDropdown from './FilterDropdown.svelte';
 	import FilterRange from './FilterRange.svelte'; //@ts-ignore
 	import Label from 'flowbite-svelte/Label.svelte';
+	import { CloseSolid } from 'flowbite-svelte-icons';
 
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
@@ -127,46 +128,30 @@
 
 <div class="w-full p-4 selectFieldColor rounded-sm">
 	<div class="flex justify-between items-center">
-		<div class="relative group" on:click={toggleDropdown} on:keypress={null}>
-			<button class="bg-gray-200 px-3 py-2 rounded text-black hover:bg-gray-300">
+		<button class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center">
+			<span class="text-sm ml-2">
 				{selectedColumn}
-			</button>
-			<div
-				class={`
-			 scrollBarDiv bg-gray-900 absolute w-full mt-2  border
+			</span>
+		</button>
+		<CloseSolid role="button" color="white" class="ml-2 py-1" />
+		<div
+			class={`
+			 scrollBarDiv bg-gray-900 absolute w-full mt-2 border
 			 rounded shadow-lg transform transition-transform 
 			 origin-top h-48 overflow-y-auto overflow-x-hidden
     		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
-			>
-				{#each $columns as column (column)}
-					<button
-						class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
-						on:click={() => {
-							addColumnToFilter(column);
-						}}
-					>
-						{column}
-					</button>
-				{/each}
-			</div>
+		>
+			{#each $columns as column (column)}
+				<button
+					class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+					on:click={() => {
+						addColumnToFilter(column);
+					}}
+				>
+					{column}
+				</button>
+			{/each}
 		</div>
-		<button on:click={handleClose}>
-			<svg
-				class="w-6 h-6 text-gray-800 dark:text-white"
-				aria-hidden="true"
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 14 14"
-			>
-				<path
-					stroke="currentColor"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-				/>
-			</svg>
-		</button>
 	</div>
 	<div class="mt-4">
 		{#if showRange}

@@ -10,6 +10,7 @@
 	} from '$lib/io/Stores';
 
 	import Tags from '$lib/components/ui/tags/Tags.svelte';
+	import { CloseSolid } from 'flowbite-svelte-icons';
 
 	let tags: Array<string> = [];
 	let selectedButtons: Array<string> = [];
