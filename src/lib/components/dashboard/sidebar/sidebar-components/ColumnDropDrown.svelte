@@ -1,54 +1,42 @@
 <script lang="ts">
-	import {
-		columnLabel,
-		getColumnsFromFile,
-		clickedChartIndex,
-		chartOptions,
-		allCharts
-	} from '$lib/io/Stores'; //@ts-ignore
+	import { getColumnsFromFile, clickedChartIndex, allCharts } from '$lib/io/Stores';
 
-	import Tags from '$lib/components/ui/tags/Tags.svelte';
-	//export let axis = '';
-
-	let tags: Array<{ label: string; value: string }> = []; // Updated tags to contain label (X/Y) and value (column)
-	let isDropdownOpen: boolean = false;
-
+	let currentAxis = ''; // To differentiate between the X and Y axis buttons
+	let xAxisValue = 'Select Column for X Axis';
+	let yAxisValue = 'Select Column for Y Axis';
+	let xDropdownOpen = false;
+	let yDropdownOpen = false;
 	$: i = clickedChartIndex();
-	//$: drawerOptions = chartOptions();
 	$: columns = getColumnsFromFile();
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
-		tags = [
-			{ label: 'X', value: $allCharts[$i]?.xColumn || '' },
-			{ label: 'Y', value: $allCharts[$i]?.yColumn || '' }
-		];
+		xAxisValue = $allCharts[$i]?.xColumn || 'Select Column for X Axis';
+		yAxisValue = $allCharts[$i]?.yColumn || 'Select Column for Y Axis';
 	}
 
-	const chooseColumn = (label: string, column: string) => {
+	const toggleDropdown = (axis: string) => {
+		currentAxis = axis;
+		if (axis === 'X') {
+			xDropdownOpen = !xDropdownOpen;
+		}
+		if (axis === 'Y') {
+			yDropdownOpen = !yDropdownOpen;
+		}
+	};
+
+	const chooseColumn = (column: string) => {
 		allCharts.update((charts) => {
-			if (label === 'X') {
+			toggleDropdown(currentAxis);
+			if (currentAxis === 'X') {
 				charts[$i].xColumn = column;
+				xAxisValue = column;
 			}
-			if (label === 'Y') {
+			if (currentAxis === 'Y') {
 				charts[$i].yColumn = column;
+				yAxisValue = column;
 			}
 			return charts;
 		});
-		tags = tags.map((tag) => (tag.label === label ? { label, value: column } : tag));
-		toggleDropdown();
-	};
-
-	const removeTag = (label: string) => {
-		if (label === 'X') {
-			chooseColumn(label, '');
-		}
-		if (label === 'Y') {
-			chooseColumn(label, '');
-		}
-	};
-
-	const toggleDropdown = () => {
-		isDropdownOpen = !isDropdownOpen;
 	};
 </script>
 
@@ -57,54 +45,51 @@
 		<span class="text-sm"> X Axis </span>
 		<button
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-			on:click={toggleDropdown}
+			on:click={() => toggleDropdown('X')}
 		>
-			<span class="text-sm ml-2"> Select Column </span>
+			<span class="text-sm ml-2"> {xAxisValue} </span>
 		</button>
 	</div>
 
-	{#if isDropdownOpen}
+	{#if xDropdownOpen}
 		<button
 			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
-			on:click|stopPropagation={toggleDropdown}
+			on:click|stopPropagation={() => toggleDropdown('X')}
 		>
-			<!--
-			{#each ['X', 'Y'] as axisLabel}
+			{#each $columns as column}
 				<button
 					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-					on:click={() => chooseColumn(axisLabel, column)}
+					on:click={() => chooseColumn(column)}
 				>
-					{axisLabel}: {column}
+					{column}
 				</button>
 			{/each}
-			-->
 		</button>
 	{/if}
 
-	<div class="flex-grow">
+	<div class="flex-grow mt-4">
 		<span class="text-sm"> Y Axis </span>
 		<button
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-			on:click={toggleDropdown}
+			on:click={() => toggleDropdown('Y')}
 		>
-			<span class="text-sm ml-2"> Select Column </span>
+			<span class="text-sm ml-2"> {yAxisValue} </span>
 		</button>
 	</div>
-	{#if isDropdownOpen}
+
+	{#if yDropdownOpen}
 		<button
 			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
-			on:click|stopPropagation={toggleDropdown}
+			on:click|stopPropagation={() => toggleDropdown('Y')}
 		>
-			<!--
-			{#each ['X', 'Y'] as axisLabel}
+			{#each $columns as column}
 				<button
 					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-					on:click={() => chooseColumn(axisLabel, column)}
+					on:click={() => chooseColumn(column)}
 				>
-					{axisLabel}: {column}
+					{column}
 				</button>
 			{/each}
-			-->
 		</button>
 	{/if}
 </div>
