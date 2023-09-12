@@ -124,7 +124,7 @@
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 			on:click={toggleDropdown}
 		>
-			<span class="text-sm ml-2">
+			<span class="text-sm text-gray-400 ml-2">
 				{selectedColumn}
 			</span>
 		</button>
@@ -133,7 +133,7 @@
 			class={`
 			 scrollBarDiv bg-gray-900 absolute w-full mt-2 border
 			 rounded shadow-lg transform transition-transform 
-			 origin-top overflow-y-auto overflow-x-hidden
+			  overflow-y-auto overflow-x-hidden
     		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 		>
 			{#each $columns as column (column)}

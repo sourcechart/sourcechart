@@ -63,7 +63,7 @@
 		class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 		on:click={toggleChartDropdown}
 	>
-		<span class="text-sm ml-2"> Chart Types </span>
+		<span class="text-sm ml-2"> {chosenPlot} </span>
 	</button>
 
 	{#if isChartDropdownOpen}
