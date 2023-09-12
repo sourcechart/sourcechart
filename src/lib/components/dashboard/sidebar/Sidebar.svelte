@@ -1,12 +1,8 @@
 <script lang="ts">
 	//@ts-ignore
 	import { fileDropdown } from '$lib/io/Stores';
-	import { PlusSolid } from 'flowbite-svelte-icons';
-	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores'; //@ts-ignore
-	import { slide } from 'svelte/transition';
-	import { ChevronDownSolid, ChevronRightSolid } from 'flowbite-svelte-icons'; //@ts-ignore
 
 	import {
 		ColumnDropDown,
@@ -15,13 +11,6 @@
 		ChartDropdown,
 		AddFilter
 	} from './sidebar-components'; //@ts-ignore
-
-	let showAxis = true;
-	let showAggregator = true;
-	let showGroupBy = true;
-	let showChart = true;
-	let datasetDropdown = true;
-	let showFilter = true;
 
 	$: numberOfDatasets = fileDropdown();
 	let addFilterDistance: number = 0;
@@ -33,138 +22,97 @@
 			<!-- Choose Axis -->
 			<div>
 				<button
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 button"
-					on:click={() => {
-						showAxis = !showAxis;
-					}}
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
-					<span class="mr-4 text-xs">Axis</span>
-					{#if showAxis}
-						<ChevronDownSolid class="w-2 h-2" />
-					{:else}
-						<ChevronRightSolid class="w-2 h-2" />
-					{/if}
+					<span class="mr-4 text-sm">Axis</span>
 				</button>
-				{#if showAxis}
-					<div transition:slide>
-						<div class="rounded-t-none px-6 py-4 selectedButtonColor">
-							<div
-								class="mb-2 text-left font-medium text-gray-400 flex items-center justify-between"
-							>
-								<p class="text-xs">X Axis</p>
-								<ColumnDropDown axis="x" />
-							</div>
-							<div
-								class="mb-2 text-left font-medium text-gray-400 flex items-center justify-between"
-							>
-								<p class="text-xs">Y Axis</p>
-								<ColumnDropDown axis="y" />
-							</div>
-						</div>
+
+				<div class="rounded-t-none selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
+					>
+						<p class="text-xs">X Axis</p>
+						<ColumnDropDown axis="x" />
 					</div>
-				{/if}
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
+					>
+						<p class="text-xs">Y Axis</p>
+						<ColumnDropDown axis="y" />
+					</div>
+				</div>
 			</div>
 
 			<!-- Group By -->
-			<div>
+			<div class="mb-6">
 				<button
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 button"
-					on:click={() => (showGroupBy = !showGroupBy)}
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
-					<span class="mr-4 text-xs">GroupBy</span>
-					{#if showGroupBy}
-						<ChevronDownSolid class="w-2 h-2" />
-					{:else}
-						<ChevronRightSolid class="w-2 h-2" />
-					{/if}
+					<span class="mr-4 text-sm">GroupBy</span>
 				</button>
-				{#if showGroupBy}
-					<div transition:slide>
-						<div class="rounded-t-none px-6 py-4 selectedButtonColor">
-							<div class="mb-2 text-left font-medium text-gray-400" />
-							<div class="mb-4 flex flex-col">
-								<Groupby />
-							</div>
-						</div>
+
+				<div class="rounded-t-none py-4 selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
+					>
+						<p class="text-xs">GroupBy</p>
+						<Groupby />
 					</div>
-				{/if}
+				</div>
 			</div>
 
 			<!-- Chart Dropdown -->
-			<div>
+			<div class="mb-6">
 				<button
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 button"
-					on:click={() => (showChart = !showChart)}
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
-					<span class="mr-4 text-xs">Chart</span>
-					{#if showChart}
-						<ChevronDownSolid class="w-2 h-2" />
-					{:else}
-						<ChevronRightSolid class="w-2 h-2" />
-					{/if}
+					<span class="mr-4 text-sm">Chart</span>
 				</button>
-				{#if showChart}
-					<div transition:slide>
-						<div class="rounded-t-none px-6 py-4 selectedButtonColor">
-							<div class="mb-2 text-left font-medium text-gray-400" />
-							<div class="mb-4 flex flex-col">
-								<ChartDropdown sideBarVersion={'LowCode'} />
-							</div>
-						</div>
+
+				<div class="rounded-t-none py-4 selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
+					>
+						<p class="text-xs">Chart Type</p>
+						<ChartDropdown sideBarVersion={'LowCode'} />
 					</div>
-				{/if}
+				</div>
 			</div>
 
 			<!-- Aggregator -->
-			<div>
+			<div class="mb-6">
 				<button
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 button"
-					on:click={() => (showAggregator = !showAggregator)}
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
-					<span class="mr-4 text-xs">Aggregator</span>
-					{#if showAggregator}
-						<ChevronDownSolid class="w-2 h-2" />
-					{:else}
-						<ChevronRightSolid class="w-2 h-2" />
-					{/if}
+					<span class="mr-4 text-sm">Aggregator</span>
 				</button>
-				{#if showAggregator}
-					<div transition:slide>
-						<div class="rounded-t-none px-6 py-4 selectedButtonColor">
-							<div class="mb-2 text-left font-medium text-gray-400" />
-							<div class="mb-4 flex flex-col">
-								<Aggregator />
-							</div>
-						</div>
+
+				<div class="rounded-t-none py-4 selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
+					>
+						<p class="text-xs">Aggregator</p>
+						<Aggregator />
 					</div>
-				{/if}
+				</div>
 			</div>
 
 			<!-- Filter -->
-			<div>
+			<div class="mb-6">
 				<button
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 button"
-					on:click={() => {
-						showFilter = !showFilter;
-					}}
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
-					<span class="mr-4 text-xs">Filters</span>
-					{#if showFilter}
-						<ChevronDownSolid class="w-2 h-2" />
-					{:else}
-						<ChevronRightSolid class="w-2 h-2" />
-					{/if}
+					<span class="mr-4 text-sm">Filters</span>
 				</button>
-				{#if showFilter}
-					<div transition:slide>
-						<div class="rounded-t-none px-6 py-4 selectedButtonColor">
-							<div class="mb-2 text-left font-medium text-gray-400" />
-							<div class="mb-4 flex flex-col">
-								<AddFilter />
-							</div>
-						</div>
+
+				<div class="rounded-t-none py-4 selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
+					>
+						<p class="text-xs">Add Filter</p>
+						<AddFilter />
 					</div>
-				{/if}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -205,9 +153,5 @@
 	.sidebar-inner {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
-	}
-
-	.button:hover {
-		background-color: rgba(255, 255, 255, 0.3);
 	}
 </style>
