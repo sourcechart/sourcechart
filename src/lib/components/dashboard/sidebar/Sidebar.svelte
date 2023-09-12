@@ -3,6 +3,7 @@
 	import { fileDropdown } from '$lib/io/Stores';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores'; //@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte';
 
 	import {
 		ColumnDropDown,
@@ -20,7 +21,7 @@
 	<div use:clickInside={{ clickInside: () => ($activeSidebar = true) }} class="sidebar-outer">
 		<div class="sidebar-inner">
 			<!-- Choose Axis -->
-			<div>
+			<div class="mb-4">
 				<button
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
@@ -32,84 +33,81 @@
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
 						<p class="text-xs">X Axis</p>
-						<ColumnDropDown axis="x" />
+						<Button size="xs">Column X Test</Button>
 					</div>
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
 						<p class="text-xs">Y Axis</p>
-						<ColumnDropDown axis="y" />
+						<Button size="xs">Column Y Test</Button>
 					</div>
 				</div>
 			</div>
 
 			<!-- Group By -->
-			<div class="mb-6">
+			<div class="mb-4">
 				<button
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
 					<span class="mr-4 text-sm">GroupBy</span>
 				</button>
 
-				<div class="rounded-t-none py-4 selectedButtonColor">
+				<div class="rounded-t-none selectedButtonColor">
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
-						<p class="text-xs">GroupBy</p>
-						<Groupby />
+						<Button size="xs">Groupby Dropdown</Button>
 					</div>
 				</div>
 			</div>
 
 			<!-- Chart Dropdown -->
-			<div class="mb-6">
+			<div class="mb-4">
 				<button
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
 					<span class="mr-4 text-sm">Chart</span>
 				</button>
 
-				<div class="rounded-t-none py-4 selectedButtonColor">
+				<div class="rounded-t-none selectedButtonColor">
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
-						<p class="text-xs">Chart Type</p>
-						<ChartDropdown sideBarVersion={'LowCode'} />
+						<Button size="xs">Chart One</Button>
+						<Button size="xs">Chart Two</Button>
+						<Button size="xs">Chart Three</Button>
+						<Button size="xs">Chart Four</Button>
 					</div>
 				</div>
 			</div>
 
 			<!-- Aggregator -->
-			<div class="mb-6">
+			<div class="mb-4">
 				<button
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
 					<span class="mr-4 text-sm">Aggregator</span>
 				</button>
 
-				<div class="rounded-t-none py-4 selectedButtonColor">
-					<div
-						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
-					>
-						<p class="text-xs">Aggregator</p>
-						<Aggregator />
+				<div class="rounded-t-none selectedButtonColor">
+					<div class="w-full font-medium text-gray-400 flex items-center justify-between">
+						<Button size="xs">Aggregator</Button>
 					</div>
 				</div>
 			</div>
 
 			<!-- Filter -->
-			<div class="mb-6">
+			<div>
 				<button
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
 					<span class="mr-4 text-sm">Filters</span>
 				</button>
 
-				<div class="rounded-t-none py-4 selectedButtonColor">
+				<div class="rounded-t-none selectedButtonColor">
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
-						<p class="text-xs">Add Filter</p>
 						<AddFilter />
 					</div>
 				</div>
