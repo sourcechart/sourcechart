@@ -12,6 +12,8 @@
 		ChartDropdown,
 		AddFilter
 	} from './sidebar-components'; //@ts-ignore
+	import DropDownButton from '$lib/components/ui/dropdown/DropDownButton.svelte';
+	import ColumnDropDrown from './sidebar-components/ColumnDropDrown.svelte';
 
 	$: numberOfDatasets = fileDropdown();
 	let addFilterDistance: number = 0;
@@ -49,13 +51,13 @@
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
 						<p class="text-xs">X Axis</p>
-						<Button size="xs">Column X Test</Button>
+						<ColumnDropDrown axis={'x'} />
 					</div>
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
 						<p class="text-xs">Y Axis</p>
-						<Button size="xs">Column Y Test</Button>
+						<ColumnDropDown axis={'y'} />
 					</div>
 				</div>
 			</div>
@@ -68,9 +70,7 @@
 				</button>
 
 				<div class="rounded-t-none selectedButtonColor">
-					<div
-						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
-					>
+					<div class="font-medium text-gray-400 w-full justify-items-center">
 						<Button size="xs">Groupby Dropdown</Button>
 					</div>
 				</div>
