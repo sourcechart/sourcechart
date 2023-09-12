@@ -65,15 +65,14 @@
 			tags = [];
 		}
 	};
+
 	const toggleDropdown = () => {
 		isDropdownOpen = !isDropdownOpen;
 	};
 </script>
 
 <div class="relative dropdown-container">
-	<button class="dropdown-button">
-		{$label}
-	</button>
+	<button class="dropdown-button"> Select Column </button>
 	<div class={`dropdown-content ${isDropdownOpen ? 'visible' : ''}`}>
 		{#each $columns as column (column)}
 			<button class="dropdown-item" on:click={() => chooseColumn(column)}>
@@ -102,54 +101,5 @@
 	.scrollBarDiv {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
-	}
-
-	.button {
-		background-color: #2a2a2a;
-	}
-	.dropdown-container {
-		position: relative;
-	}
-
-	.dropdown-button {
-		background-color: #2a2a2a;
-		border: none;
-		padding: 0.5rem 1rem;
-		color: #fff;
-		cursor: pointer;
-	}
-
-	.dropdown-content {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		width: 100%;
-		border: 1px solid #333;
-		border-radius: 4px;
-		background-color: #1c1c1c;
-		opacity: 0;
-		transform: translateY(-10px);
-		transition: opacity 0.3s, transform 0.3s;
-		overflow-y: auto;
-		max-height: 200px;
-	}
-
-	.dropdown-content.visible {
-		opacity: 1;
-		transform: translateY(0);
-	}
-
-	.dropdown-item {
-		padding: 0.5rem 1rem;
-		color: #fff;
-		background-color: #2a2a2a;
-		border: none;
-		width: 100%;
-		text-align: left;
-		cursor: pointer;
-	}
-
-	.dropdown-item:hover {
-		background-color: #333;
 	}
 </style>

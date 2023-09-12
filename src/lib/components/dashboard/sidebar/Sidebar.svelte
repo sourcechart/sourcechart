@@ -68,17 +68,15 @@
 			<!-- Group By -->
 			<div>
 				<button
-					class="w-full transform h-10 shadow-md transition-transform buttonColor px-2"
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 button"
 					on:click={() => (showGroupBy = !showGroupBy)}
 				>
-					<div class="flex items-center justify-between text-xl text-gray-300 hover:text-gray-100">
-						<span class="mr-4 hover:underline text-xs">GroupBy</span>
-						{#if showGroupBy}
-							<ChevronDownSolid class="w-4 h-4" />
-						{:else}
-							<ChevronRightSolid class="w-4 h-4" />
-						{/if}
-					</div>
+					<span class="mr-4 text-xs">GroupBy</span>
+					{#if showGroupBy}
+						<ChevronDownSolid class="w-2 h-2" />
+					{:else}
+						<ChevronRightSolid class="w-2 h-2" />
+					{/if}
 				</button>
 				{#if showGroupBy}
 					<div transition:slide>
@@ -95,17 +93,15 @@
 			<!-- Chart Dropdown -->
 			<div>
 				<button
-					class="w-full transform h-10 shadow-md transition-transform buttonColor px-2"
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 button"
 					on:click={() => (showChart = !showChart)}
 				>
-					<div class="flex items-center justify-between text-xl text-gray-300 hover:text-gray-100">
-						<span class="mr-4 hover:underline text-xs">Chart</span>
-						{#if showChart}
-							<ChevronDownSolid class="w-4 h-4" />
-						{:else}
-							<ChevronRightSolid class="w-4 h-4" />
-						{/if}
-					</div>
+					<span class="mr-4 text-xs">Chart</span>
+					{#if showChart}
+						<ChevronDownSolid class="w-2 h-2" />
+					{:else}
+						<ChevronRightSolid class="w-2 h-2" />
+					{/if}
 				</button>
 				{#if showChart}
 					<div transition:slide>
@@ -122,17 +118,15 @@
 			<!-- Aggregator -->
 			<div>
 				<button
-					class="w-full transform h-10 shadow-md transition-transform buttonColor px-2"
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 button"
 					on:click={() => (showAggregator = !showAggregator)}
 				>
-					<div class="flex items-center justify-between text-xl text-gray-300 hover:text-gray-100">
-						<span class="mr-4 hover:underline text-xs">Aggregator</span>
-						{#if showAggregator}
-							<ChevronDownSolid class="w-4 h-4" />
-						{:else}
-							<ChevronRightSolid class="w-4 h-4" />
-						{/if}
-					</div>
+					<span class="mr-4 text-xs">Aggregator</span>
+					{#if showAggregator}
+						<ChevronDownSolid class="w-2 h-2" />
+					{:else}
+						<ChevronRightSolid class="w-2 h-2" />
+					{/if}
 				</button>
 				{#if showAggregator}
 					<div transition:slide>
@@ -149,19 +143,17 @@
 			<!-- Filter -->
 			<div>
 				<button
-					class="w-full transform h-10 shadow-md transition-transform buttonColor px-2"
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 button"
 					on:click={() => {
 						showFilter = !showFilter;
 					}}
 				>
-					<div class="flex items-center justify-between text-xl text-gray-300 hover:text-gray-100">
-						<span class="mr-4 hover:underline text-xs">Filters</span>
-						{#if showFilter}
-							<ChevronDownSolid class="w-4 h-4" />
-						{:else}
-							<ChevronRightSolid class="w-4 h-4" />
-						{/if}
-					</div>
+					<span class="mr-4 text-xs">Filters</span>
+					{#if showFilter}
+						<ChevronDownSolid class="w-2 h-2" />
+					{:else}
+						<ChevronRightSolid class="w-2 h-2" />
+					{/if}
 				</button>
 				{#if showFilter}
 					<div transition:slide>
@@ -217,6 +209,5 @@
 
 	.button:hover {
 		background-color: rgba(255, 255, 255, 0.3);
-		border-radius: 4px;
 	}
 </style>
