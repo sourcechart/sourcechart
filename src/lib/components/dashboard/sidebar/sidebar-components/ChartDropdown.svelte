@@ -59,12 +59,16 @@
 </script>
 
 <div class="w-full p-4 rounded-sm relative selectFieldColor">
-	<button
-		class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-		on:click={toggleChartDropdown}
-	>
-		<span class="text-sm ml-2"> {chosenPlot} </span>
-	</button>
+	<div class="flex justify-between items-center">
+		<button
+			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			on:click={toggleChartDropdown}
+		>
+			<span class="text-sm ml-2">
+				{chosenPlot}
+			</span>
+		</button>
+	</div>
 
 	{#if isChartDropdownOpen}
 		<button
