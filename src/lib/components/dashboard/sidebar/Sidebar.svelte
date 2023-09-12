@@ -3,7 +3,6 @@
 	import { fileDropdown } from '$lib/io/Stores';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores'; //@ts-ignore
-
 	import {
 		ColumnDropDown,
 		Aggregator,
@@ -20,14 +19,12 @@
 {#if $activeSidebar}
 	<div use:clickInside={{ clickInside: () => ($activeSidebar = true) }} class="sidebar-outer">
 		<div class="sidebar-inner">
-			<!-- Chart Dropdown -->
 			<div class="mb-4">
-				<button
+				<div
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
 					<span class="mr-4 text-sm">Chart</span>
-				</button>
-
+				</div>
 				<div class="rounded-t-none selectedButtonColor">
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
@@ -36,14 +33,12 @@
 					</div>
 				</div>
 			</div>
-			<!-- Choose Axis -->
 			<div class="mb-4">
-				<button
+				<div
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
 					<span class="mr-4 text-sm">Axis</span>
-				</button>
-
+				</div>
 				<div class="rounded-t-none selectedButtonColor">
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
@@ -59,25 +54,21 @@
 					</div>
 				</div>
 			</div>
-			<!-- Group By -->
 			<div class="mb-4">
-				<button
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
-				>
+				<div class="w-full flex items-center justify-between text-gray-300 hover:text-gray-100">
 					<span class="mr-4 text-sm">Groupby</span>
-				</button>
+				</div>
 				<div class="font-medium text-gray-400 w-full justify-items-center">
 					<Groupby />
 				</div>
 			</div>
 
-			<!-- Aggregator -->
 			<div class="mb-4">
-				<button
+				<div
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
 					<span class="mr-4 text-sm">Aggregator</span>
-				</button>
+				</div>
 
 				<div class="rounded-t-none selectedButtonColor">
 					<div class="w-full font-medium text-gray-400 flex items-center justify-between">
@@ -87,20 +78,17 @@
 			</div>
 
 			<!-- Filter -->
-			<div>
-				<button
+			<div class="mb-4">
+				<div
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
 					<span class="mr-4 text-sm">Filters</span>
-				</button>
-
-				<div class="rounded-t-none selectedButtonColor">
-					<div
-						class="text-center font-medium text-gray-400 flex items-center justify-between space-x-4"
-					>
-						<AddFilter />
-					</div>
 				</div>
+				<button
+					class="block rounded-lg bg-gray-600 text-left p-1 dark:text-black hover:bg-gray-200"
+				>
+					click
+				</button>
 			</div>
 		</div>
 	</div>

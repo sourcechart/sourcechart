@@ -31,9 +31,7 @@
 <div class="space-y-1 space-x-1 flex flex-row overflow-x-auto">
 	{#each aggs as agg}
 		<button
-			class={`block px-4 py-2 rounded-lg text-white ${
-				selectedAggregator === agg ? 'bg-blue-500' : 'bg-gray-700'
-			} hover:bg-gray-600 transition duration-150 ease-in-out`}
+			class="block rounded-lg bg-gray-600 text-left p-1 dark:text-black hover:bg-gray-200"
 			on:click={() => selectAggregator(agg)}
 		>
 			{agg}
