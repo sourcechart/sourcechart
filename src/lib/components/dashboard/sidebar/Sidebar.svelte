@@ -3,7 +3,6 @@
 	import { fileDropdown } from '$lib/io/Stores';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores'; //@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte';
 
 	import {
 		ColumnDropDown,
@@ -12,7 +11,6 @@
 		ChartDropdown,
 		AddFilter
 	} from './sidebar-components'; //@ts-ignore
-	import DropDownButton from '$lib/components/ui/dropdown/DropDownButton.svelte';
 	import ColumnDropDrown from './sidebar-components/ColumnDropDrown.svelte';
 
 	$: numberOfDatasets = fileDropdown();

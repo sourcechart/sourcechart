@@ -73,18 +73,19 @@
 
 <div class="relative dropdown-container">
 	<button
-		class="dropdown-button border-2 text-sm bg-gray-900 text-white p-1 rounded hover:border-gray-600 transition duration-150 ease-in-out"
+		class="dropdown-button border-2 text-sm bg-gray-900 text-white p-2 rounded hover:bg-gray-800 transition duration-150 ease-in-out"
+		on:click={toggleDropdown}
 	>
 		Select Column
 	</button>
 	<div
-		class={`dropdown-content mt-2 bg-gray-800 rounded border border-gray-700 shadow-lg ${
+		class={`dropdown-content mt-2 bg-gray-800 rounded border border-gray-700 shadow-lg overflow-y-auto max-h-48 ${
 			isDropdownOpen ? 'block' : 'hidden'
 		}`}
 	>
 		{#each $columns as column (column)}
 			<button
-				class="dropdown-item w-full text-left px-4 py-2 hover:bg-gray-700 transition duration-150 ease-in-out"
+				class="dropdown-item w-full text-left px-4 py-2 text-white hover:bg-gray-700 transition duration-150 ease-in-out"
 				on:click={() => chooseColumn(column)}
 			>
 				{column}
@@ -95,21 +96,21 @@
 
 <style>
 	/* For WebKit (Chrome, Safari) */
-	.scrollBarDiv::-webkit-scrollbar {
+	.dropdown-content::-webkit-scrollbar {
 		width: 8px;
 	}
 
-	.scrollBarDiv::-webkit-scrollbar-thumb {
+	.dropdown-content::-webkit-scrollbar-thumb {
 		background-color: rgba(255, 255, 255, 0.3);
 		border-radius: 4px;
 	}
 
-	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
+	.dropdown-content::-webkit-scrollbar-thumb:hover {
 		background-color: rgba(168, 168, 168, 0.5);
 	}
 
 	/* For Firefox */
-	.scrollBarDiv {
+	.dropdown-content {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
 	}
