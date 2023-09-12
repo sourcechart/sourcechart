@@ -99,7 +99,7 @@
 			</div>
 
 			<!-- Filter -->
-			<div class="mb-4">
+			<div>
 				<div class="w-full font-medium">
 					<AddFilter />
 				</div>
