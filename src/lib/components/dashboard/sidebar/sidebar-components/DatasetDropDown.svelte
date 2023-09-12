@@ -11,11 +11,26 @@
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	let isDropdownOpen = false;
 	let syncWorker: Worker | undefined = undefined;
 	let selectedDataset: string | null = 'Choose Dataset';
+	let dropdownContainer: HTMLElement;
+
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+			isDropdownOpen = false;
+		}
+	};
+
+	$: {
+		if (isDropdownOpen) {
+			document.addEventListener('click', handleOutsideClick);
+		} else {
+			document.removeEventListener('click', handleOutsideClick);
+		}
+	}
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
 		selectedDataset = $allCharts[$i]?.filename ? $allCharts[$i].filename : 'Choose Dataset';
@@ -81,10 +96,13 @@
 		isDropdownOpen = !isDropdownOpen;
 	};
 
+	onDestroy(() => {
+		document.removeEventListener('click', handleOutsideClick);
+	});
 	onMount(loadWorker);
 </script>
 
-<div class="w-full p-4 rounded-sm relative selectFieldColor">
+<div bind:this={dropdownContainer} class="w-full p-4 rounded-sm relative selectFieldColor">
 	<div class="flex justify-between items-center">
 		<button
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
@@ -103,7 +121,10 @@
 				{#if dataset !== null}
 					<button
 						class="w-full text-left px-3 py-2 selectFieldColor dark:text-black hover:bg-gray-200"
-						on:click={() => selectFile(dataset)}
+						on:click={() => {
+							selectFile(dataset);
+							isDropdownOpen = false;
+						}}
 					>
 						{dataset}
 					</button>
