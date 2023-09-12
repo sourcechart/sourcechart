@@ -125,7 +125,7 @@
 	};
 </script>
 
-<div class="w-full p-4 bg-gray-500 rounded-sm">
+<div class="w-full p-4 selectFieldColor rounded-sm">
 	<div class="flex justify-between items-center">
 		<div class="relative group" on:click={toggleDropdown} on:keypress={null}>
 			<button class="bg-gray-200 px-3 py-2 rounded text-black hover:bg-gray-300">
@@ -173,6 +173,7 @@
 			<Label>Values Ranges</Label>
 			<FilterRange {min} {max} column={selectedColumn} />
 		{:else if showDropdown}
+			<span class="text-sm" />
 			<Label>Select Value</Label>
 			<FilterDropdown column={selectedColumn} items={distinctValuesObject} />
 		{/if}
@@ -198,5 +199,9 @@
 	.scrollBarDiv {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+	}
+
+	.selectFieldColor {
+		background-color: rgb(18, 18, 18);
 	}
 </style>

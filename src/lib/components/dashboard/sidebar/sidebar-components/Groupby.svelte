@@ -53,38 +53,42 @@
 		chart.groupbyColumns = tags;
 		$allCharts[$i] = chart;
 	};
+
+	const toggleDropdown = () => {
+		isGroupByOpen = !isGroupByOpen;
+	};
 </script>
 
 <!-- Dropdown Button -->
-<button
-	class="h-6 w-full bg-gray-700 text-white rounded hover:bg-gray-600 transition duration-150 ease-in-out"
-	on:click={() => {
-		isGroupByOpen = !isGroupByOpen;
-	}}
->
-	Choose Field
-</button>
 
-<!-- Dropdown Content -->
-<div
-	class={`
-			 scrollBarDiv bg-gray-800 absolute w-full mt-2 border border-gray-700
+<div class="w-full p-4 selectFieldColor rounded-sm">
+	<div class="flex justify-between items-center">
+		<div class="relative group" on:click={toggleDropdown} on:keypress={null}>
+			<button class="bg-gray-200 px-3 py-2 rounded text-black hover:bg-gray-300"> foo </button>
+			<div
+				class={`
+			 scrollBarDiv bg-gray-900 absolute  mt-2  border
 			 rounded shadow-lg transform transition-transform 
-			 origin-top overflow-y-auto overflow-x-hidden
+			 origin-top h-48 overflow-y-auto overflow-x-hidden
     		${isGroupByOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
->
-	{#each $columns as column}
-		<button
-			class="block w-full text-left text-white hover:bg-gray-700 transition duration-150 ease-in-out"
-			on:click={() => {
-				addColumnToGroupBy(column);
-			}}
-		>
-			{column}
-		</button>
-	{/each}
+			>
+				{#each $columns as column (column)}
+					<button
+						class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+						on:click={() => {
+							column;
+						}}
+					>
+						{column}
+					</button>
+				{/each}
+			</div>
+		</div>
+	</div>
+	<div class="mt-4">
+		<Tags items={tags} removeItem={removeTag} />
+	</div>
 </div>
-<Tags items={tags} removeItem={removeTag} />
 
 <style>
 	/* For WebKit (Chrome, Safari) */
@@ -105,5 +109,9 @@
 	.scrollBarDiv {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+	}
+
+	.selectFieldColor {
+		background-color: rgba(18, 18, 19);
 	}
 </style>

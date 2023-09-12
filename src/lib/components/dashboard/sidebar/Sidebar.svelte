@@ -84,11 +84,9 @@
 				>
 					<span class="mr-4 text-sm">Filters</span>
 				</div>
-				<button
-					class="block rounded-lg bg-gray-600 text-left p-1 dark:text-black hover:bg-gray-200"
-				>
-					click
-				</button>
+				<div class="rounded-t-none selectedButtonColor">
+					<AddFilter {addFilterDistance} />
+				</div>
 			</div>
 		</div>
 	</div>
