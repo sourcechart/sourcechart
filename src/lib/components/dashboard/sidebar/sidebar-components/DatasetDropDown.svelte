@@ -11,10 +11,9 @@
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-
 	import { onMount } from 'svelte';
-	let isDropdownOpen = false; // <-- Add this line to track dropdown state
 
+	let isDropdownOpen = false;
 	let syncWorker: Worker | undefined = undefined;
 	let selectedDataset: string | null = 'Choose Dataset';
 
@@ -78,32 +77,46 @@
 		}
 	};
 
+	const toggleDropdown = () => {
+		isDropdownOpen = !isDropdownOpen;
+	};
+
 	onMount(loadWorker);
 </script>
 
-<button
-	class="h-6 bg-gray-800 rounded-none"
-	on:click={() => {
-		isDropdownOpen = !isDropdownOpen;
-	}}
->
-	{selectedDataset}
-</button>
-<div
-	class={`
-			 scrollBarDiv bg-gray-900 absolute w-full mt-2  border
+<div class="w-full p-4 selectFieldColor rounded-sm shadow-xl">
+	<div class="flex justify-between items-center">
+		<button
+			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			on:click={toggleDropdown}
+		>
+			<span class="text-sm ml-2">
+				{selectedDataset}
+			</span>
+		</button>
+	</div>
+	<div
+		class={`
+			 scrollBarDiv absolute w-full mt-2 border
 			 rounded shadow-lg transform transition-transform 
-			 origin-top h-48 overflow-y-auto overflow-x-hidden
+			 origin-top overflow-y-auto overflow-x-hidden
     		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
->
-	{#each $datasets as dataset}
-		{#if dataset !== null}
-			<button
-				class="block w-full text-left px-3 py-2 dark:text-black hover:bg-gray-200"
-				on:click={() => selectFile(dataset)}
-			>
-				{dataset}
-			</button>
-		{/if}
-	{/each}
+	>
+		{#each $datasets as dataset}
+			{#if dataset !== null}
+				<button
+					class="w-full text-left px-3 py-2 selectFieldColor dark:text-black hover:bg-gray-200"
+					on:click={() => selectFile(dataset)}
+				>
+					{dataset}
+				</button>
+			{/if}
+		{/each}
+	</div>
 </div>
+
+<style>
+	.selectFieldColor {
+		background-color: #33333d;
+	}
+</style>

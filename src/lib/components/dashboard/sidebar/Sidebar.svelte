@@ -1,16 +1,16 @@
 <script lang="ts">
-	//@ts-ignore
 	import { fileDropdown } from '$lib/io/Stores';
 	import { clickInside } from '$lib/actions/MouseActions';
-	import { activeSidebar } from '$lib/io/Stores'; //@ts-ignore
+	import { activeSidebar } from '$lib/io/Stores';
 	import {
-		ColumnDropDown,
 		Aggregator,
 		Groupby,
 		ChartDropdown,
-		AddFilter
-	} from './sidebar-components'; //@ts-ignore
-	import ColumnDropDrown from './sidebar-components/ColumnDropDrown.svelte';
+		AddFilter,
+		ColumnDropDown,
+		FileUploadButton,
+		DatasetDropDown
+	} from './sidebar-components';
 
 	$: numberOfDatasets = fileDropdown();
 	let addFilterDistance: number = 0;
@@ -19,6 +19,34 @@
 {#if $activeSidebar}
 	<div use:clickInside={{ clickInside: () => ($activeSidebar = true) }} class="sidebar-outer">
 		<div class="sidebar-inner">
+			<div class="mb-4">
+				<div
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Upload Files</span>
+				</div>
+				<div class="rounded-t-none selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4 shadow-md"
+					>
+						<FileUploadButton />
+					</div>
+				</div>
+			</div>
+			<div class="mb-4">
+				<div
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Choose Dataset</span>
+				</div>
+				<div class="rounded-t-none selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4 shadow-md"
+					>
+						<DatasetDropDown />
+					</div>
+				</div>
+			</div>
 			<div class="mb-4">
 				<div
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
@@ -43,7 +71,7 @@
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
 					>
-						<ColumnDropDrown />
+						<ColumnDropDown />
 					</div>
 				</div>
 			</div>
@@ -78,7 +106,7 @@
 					<span class="mr-4 text-sm">Filters</span>
 				</div>
 				<div class="rounded-t-none selectedButtonColor mb-4">
-					<AddFilter {addFilterDistance} />
+					<AddFilter />
 				</div>
 			</div>
 		</div>

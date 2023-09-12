@@ -2,17 +2,16 @@
 	import Filter from './filter-components/Filter.svelte';
 	import { PlusSolid } from 'flowbite-svelte-icons';
 
-	export let addFilterDistance: number = 0;
-	let components: { component: any; distance: number }[] = [];
+	let components: { component: any }[] = [];
 
 	const addFilterToSidebar = () => {
-		components = [...components, { component: Filter, distance: addFilterDistance }];
+		components = [...components, { component: Filter }];
 	};
 </script>
 
-{#each components as { component: Component, distance }}
+{#each components as { component: Component }}
 	<div class="py-2">
-		<svelte:component this={Component} addFilterDistance={distance} />
+		<svelte:component this={Component} />
 	</div>
 {/each}
 

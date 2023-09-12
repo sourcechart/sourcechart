@@ -8,7 +8,6 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import FilterDropdown from './FilterDropdown.svelte';
 	import FilterRange from './FilterRange.svelte'; //@ts-ignore
-	import Label from 'flowbite-svelte/Label.svelte';
 	import { CloseSolid } from 'flowbite-svelte-icons';
 
 	let frequencies: { [key: string]: number } = {};
@@ -134,7 +133,7 @@
 			class={`
 			 scrollBarDiv bg-gray-900 absolute w-full mt-2 border
 			 rounded shadow-lg transform transition-transform 
-			 origin-top h-48 overflow-y-auto overflow-x-hidden
+			 origin-top overflow-y-auto overflow-x-hidden
     		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 		>
 			{#each $columns as column (column)}
