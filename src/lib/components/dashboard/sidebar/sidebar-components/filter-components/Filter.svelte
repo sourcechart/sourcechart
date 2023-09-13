@@ -27,7 +27,6 @@
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
-	$: console.log($columns);
 	$: {
 		if (filterData.column) {
 			selectedColumn = filterData.column;
@@ -57,7 +56,6 @@
 	};
 
 	const addColumnToFilter = (column: string) => {
-		console.log(column);
 		selectedColumn = column;
 		if (selectedColumns.includes(column)) {
 			selectedColumns = selectedColumns.filter((item) => item !== column);
@@ -187,10 +185,10 @@
 	</div>
 	<div class="mt-4">
 		{#if showRange}
-			<span class="text-sm dark:text-gray-400">Values Ranges</span>
+			<span class="text-sm text-gray-400">Values Ranges</span>
 			<FilterRange {min} {max} column={selectedColumn} prevData={filterData.value} />
 		{:else if showValueDropdown}
-			<span class="text-sm"> Select Value</span>
+			<span class="text-sm text-gray-400"> Select Value</span>
 			<FilterDropdown column={selectedColumn} items={distinctValuesObject} />
 		{/if}
 	</div>

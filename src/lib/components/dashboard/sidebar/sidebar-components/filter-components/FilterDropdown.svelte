@@ -9,14 +9,43 @@
 	let isDropdownOpen: boolean = false;
 
 	$: i = clickedChartIndex();
+	$: {
+		filterValues =
+			$allCharts[$i] && $allCharts[$i].filterColumns
+				? $allCharts[$i].filterColumns.filter((f) => f.column === column).map((f) => f.value)
+				: [];
+	}
 
 	function updateFilter(item: string) {
+		// Check if column is null or undefined before proceeding
+		if (!column) {
+			console.warn('Column is not defined. Filter update skipped.');
+			return;
+		}
+
+		// Look for existing filter by column name
 		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
 
 		if (existingFilter) {
-			$allCharts[$i].filterColumns.find((filter) => filter.column === column).value.item;
+			existingFilter.value = item;
+		} else {
+			const nullFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === null);
+
+			if (nullFilter) {
+				nullFilter.column = column;
+				nullFilter.value = item;
+			} else {
+				$allCharts[$i].filterColumns = [
+					...$allCharts[$i].filterColumns,
+					{
+						column,
+						value: item
+					}
+				];
+			}
 		}
 
+		// Update the filterValues if the item is not already included
 		if (!filterValues.includes(item)) {
 			filterValues = [...filterValues, item];
 		}
@@ -48,12 +77,12 @@
 			 origin-top h-48 overflow-y-auto overflow-x-hidden
     		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 	>
-		{#each items as item (item)}
+		{#each items as item}
 			<button
-				class="block w-full bg-gray-900 text-left px-3 py-2 dark:text-gray-400 hover:bg-gray-200"
+				class="block w-full bg-gray-900 text-left text-gray-400 px-3 py-2 dark:text-gray-400 hover:bg-gray-200"
 				on:click={() => updateFilter(item)}
 			>
-				{column}
+				{item}
 			</button>
 		{/each}
 	</div>
