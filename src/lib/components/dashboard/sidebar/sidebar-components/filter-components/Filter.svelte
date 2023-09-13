@@ -39,6 +39,13 @@
 		}
 	}
 
+	$: {
+		if (filterData !== undefined) {
+			selectedColumn = filterData.column;
+			handleAsyncOperations(selectedColumn);
+		}
+	}
+
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
 			showFieldDropdown = false;

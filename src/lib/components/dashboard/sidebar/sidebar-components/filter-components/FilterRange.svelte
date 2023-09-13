@@ -10,13 +10,22 @@
 	let end: number = 1;
 
 	export let prevData: any;
-	export let lowHandle = '0';
-	export let highHandle = '1';
+	export let lowHandle: string;
+	export let highHandle: string;
+
+	let handlesDragged = false;
 
 	$: console.log(prevData);
-	$: if (prevData) {
-		lowHandle = prevData.min;
-		highHandle = prevData.max;
+	$: {
+		if (!handlesDragged) {
+			if (prevData) {
+				lowHandle = String(prevData.min);
+				highHandle = String(prevData.max);
+			} else {
+				lowHandle = '0';
+				highHandle = '1';
+			}
+		}
 	}
 
 	$: i = clickedChartIndex();
@@ -44,6 +53,8 @@
 		let x: number;
 
 		function handleMousedown(event: MouseEvent | TouchEvent) {
+			console.log('handleMousedown called'); // <- Add this line
+
 			dragging = true; // Set dragging to true here
 
 			if (event.type === 'touchstart') {
@@ -67,6 +78,8 @@
 		}
 
 		function handleMousemove(event: MouseEvent | TouchEvent) {
+			console.log('handleMousemove called'); // <- Add this line
+
 			if (!dragging) return; // If not dragging, exit the function
 
 			if (event.type === 'touchmove') {
@@ -115,10 +128,11 @@
 		return function (evt: CustomEvent) {
 			const { left, right } = slider.getBoundingClientRect();
 			const parentWidth = right - left;
-			var p = Math.min(Math.max((evt.detail.x - left) / parentWidth, 0), 1);
 
+			var p = Math.min(Math.max((evt.detail.x - left) / parentWidth, 0), 1);
 			var actualValue = min + p * (max - min);
 			p = (actualValue - min) / (max - min);
+			console.log('p value: ', p);
 
 			if (which === 'start') {
 				start = p;
@@ -128,8 +142,18 @@
 				end = p;
 			}
 
-			lowHandle = (min + start * (max - min)).toFixed(2).slice(0, 3);
-			highHandle = (min + end * (max - min)).toFixed(2).slice(0, 3);
+			console.log('Start & End values: ', start, end); // <-- Logging the start and end values
+
+			const calculatedLowHandle = (min + start * (max - min)).toFixed(2).slice(0, 3);
+			const calculatedHighHandle = (min + end * (max - min)).toFixed(2).slice(0, 3);
+
+			console.log('Calculated Handles: ', calculatedLowHandle, calculatedHighHandle); // <-- Logging the calculated handles
+
+			lowHandle = calculatedLowHandle;
+			highHandle = calculatedHighHandle;
+			console.log(lowHandle, highHandle);
+
+			handlesDragged = true; // Set the flag
 		};
 	}
 </script>
@@ -156,8 +180,8 @@
 		/>
 	</div>
 	<div class="flex justify-between mt-2">
-		{#if lowHandle != '0' && highHandle != '1'}
-			<div class="p-2 border rounded">
+		{#if lowHandle !== '0' || highHandle !== '1'}
+			<div class=" p-2 border rounded">
 				{lowHandle}
 			</div>
 			<div class="p-2 border rounded">
