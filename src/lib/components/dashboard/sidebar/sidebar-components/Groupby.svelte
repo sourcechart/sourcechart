@@ -97,7 +97,7 @@
 			class={`
             scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
             rounded shadow-lg transform transition-transform 
-            origin-top overflow-y-auto overflow-x-hidden z-10 h-48
+            origin-top overflow-y-auto overflow-x-hidden z-10 
             ${isGroupByOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 			on:click|stopPropagation={closeDropdown}
 		>
