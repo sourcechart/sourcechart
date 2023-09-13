@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { CloseSolid } from 'flowbite-svelte-icons';
 
 	export let items: Array<string> = [];
 	export let removeItem: (item: string) => void;
@@ -35,18 +36,18 @@
 	});
 </script>
 
-<div class="flex justify-start items-center mt-2 overflow-x-auto bg-gray-900">
+<div class="flex justify-start items-center rounded-md overflow-x-auto tagsColor">
 	{#each items as item, i (i)}
 		<div
 			role="button"
-			class="mr-2 mb-2 rounded-sm bg-gray-700 text-white px-4 py-1 text-sm cursor-pointer hover:bg-gray-600 transition duration-150 ease-in-out"
+			class="flex items-center m-2 rounded-sm bg-gray-700 text-white px-4 py-1 text-sm cursor-pointer hover:bg-gray-600 transition duration-150 ease-in-out"
 			tabindex="0"
 			on:click={() => selectItem(i)}
 			on:keydown={(e) => {
 				if (e.key === 'Enter') selectItem(i);
 			}}
 		>
-			{item}
+			<span class="mr-2">{item}</span>
 			<div
 				role="button"
 				class="inline-block ml-2 text-xs cursor-pointer hover:text-gray-400"
@@ -56,7 +57,7 @@
 					if (e.key === 'Enter') removeItem(item);
 				}}
 			>
-				×
+				<CloseSolid class="w-2 h-2" color="white" />
 			</div>
 		</div>
 	{/each}
@@ -80,5 +81,9 @@
 	.sidebar-inner {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
+	}
+
+	.tagsColor {
+		background-color: rgb(18, 18, 18);
 	}
 </style>
