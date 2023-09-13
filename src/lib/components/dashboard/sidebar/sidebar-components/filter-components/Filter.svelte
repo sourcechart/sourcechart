@@ -20,7 +20,7 @@
 	let selectedColumn: string = 'Add Field';
 	let showRange = false;
 	let showValueDropdown = false;
-	let showFieldDropdown = false;
+	let isFieldDropdown = false;
 	let min: number;
 	let max: number;
 
@@ -32,7 +32,7 @@
 	}
 
 	$: {
-		if (showFieldDropdown) {
+		if (isFieldDropdown) {
 			document.addEventListener('click', handleOutsideClick);
 		} else {
 			document.removeEventListener('click', handleOutsideClick);
@@ -57,7 +57,7 @@
 
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
-			showFieldDropdown = false;
+			isFieldDropdown = false;
 		}
 	};
 
@@ -153,36 +153,43 @@
 	});
 </script>
 
-<div class="w-full p-4 selectFieldColor rounded-sm shadow-xl relative">
+<div class="w-full p-4 selectFieldColor rounded-sm shadow-xl">
 	<div class="flex justify-between items-center text-gray-400">
-		<button
-			bind:this={dropdownContainer}
-			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-			on:click={() => {
-				showFieldDropdown = !showFieldDropdown;
-			}}
-		>
-			<span class="text-smml-2"> {selectedColumn}</span>
-		</button>
+		<div class="relative flex-grow w-full">
+			<!-- Added this wrapper -->
+			<button
+				bind:this={dropdownContainer}
+				class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex items-center"
+				on:click={() => {
+					isFieldDropdown = !isFieldDropdown;
+				}}
+			>
+				<span class="text-sm ml-2"> {selectedColumn}</span>
+			</button>
+
+			{#if isFieldDropdown}
+				<div
+					class="scrollBarDiv bg-gray-900 absolute top-full left-0 w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
+				>
+					{#each $columns as column (column)}
+						<button
+							class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+							on:click={() => {
+								addColumnToFilter(column);
+								isFieldDropdown = false;
+							}}
+						>
+							{column}
+						</button>
+					{/each}
+				</div>
+			{/if}
+		</div>
+		<!-- End of wrapper -->
+
 		<button class="ml-2" on:click={removeFilter}>
 			<CloseSolid class="w-4 h-4" />
 		</button>
-		{#if showFieldDropdown}
-			<div
-				class="scrollBarDiv bg-gray-900 absolute left-0 w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-			>
-				{#each $columns as column (column)}
-					<button
-						class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-						on:click={() => {
-							addColumnToFilter(column);
-						}}
-					>
-						{column}
-					</button>
-				{/each}
-			</div>
-		{/if}
 	</div>
 	<div class="mt-4">
 		{#if showRange}
