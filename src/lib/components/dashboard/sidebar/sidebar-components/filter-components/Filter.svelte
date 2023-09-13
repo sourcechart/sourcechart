@@ -12,7 +12,6 @@
 	import { CloseSolid } from 'flowbite-svelte-icons';
 
 	let dropdownContainer: HTMLElement;
-	let testColumns = ['test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8'];
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
 	let dataValue: string | number | object;
@@ -142,7 +141,7 @@
 				showFieldDropdown = !showFieldDropdown;
 			}}
 		>
-			<span class="text-smml-2"> Add Field </span>
+			<span class="text-smml-2"> {selectedColumn}</span>
 		</button>
 		{#if showFieldDropdown}
 			<div

@@ -6,7 +6,6 @@
 	export let removeItem: (item: string) => void;
 
 	let selectedItem: number | null = null;
-	let value: string = '';
 
 	function selectItem(index: number) {
 		removeItem(items[index]);

@@ -2,12 +2,13 @@
 	import { getColumnsFromFile, clickedChartIndex, allCharts } from '$lib/io/Stores';
 	import { onDestroy } from 'svelte';
 
-	let currentAxis = ''; // To differentiate between the X and Y axis buttons
+	let currentAxis = '';
 	let xAxisValue = 'Select Column for X Axis';
 	let yAxisValue = 'Select Column for Y Axis';
 	let xDropdownOpen = false;
 	let yDropdownOpen = false;
-	let dropdownContainer: HTMLElement;
+	let xDropdownContainer: HTMLElement;
+	let yDropdownContainer: HTMLElement;
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
@@ -19,12 +20,8 @@
 
 	const toggleDropdown = (axis: string) => {
 		currentAxis = axis;
-		if (axis === 'X') {
-			xDropdownOpen = !xDropdownOpen;
-		}
-		if (axis === 'Y') {
-			yDropdownOpen = !yDropdownOpen;
-		}
+		xDropdownOpen = axis === 'X' ? !xDropdownOpen : false;
+		yDropdownOpen = axis === 'Y' ? !yDropdownOpen : false;
 	};
 
 	const chooseColumn = (column: string) => {
@@ -42,7 +39,12 @@
 	};
 
 	const handleOutsideClick = (event: MouseEvent) => {
-		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+		if (
+			xDropdownContainer &&
+			!xDropdownContainer.contains(event.target as Node) &&
+			yDropdownContainer &&
+			!yDropdownContainer.contains(event.target as Node)
+		) {
 			xDropdownOpen = false;
 			yDropdownOpen = false;
 		}
@@ -65,7 +67,7 @@
 	<div class="flex-grow">
 		<span class="text-sm"> X Axis </span>
 		<button
-			bind:this={dropdownContainer}
+			bind:this={xDropdownContainer}
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 			on:click={() => toggleDropdown('X')}
 		>
@@ -92,7 +94,7 @@
 	<div class="flex-grow mt-4">
 		<span class="text-sm"> Y Axis </span>
 		<button
-			bind:this={dropdownContainer}
+			bind:this={yDropdownContainer}
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 			on:click={() => toggleDropdown('Y')}
 		>
