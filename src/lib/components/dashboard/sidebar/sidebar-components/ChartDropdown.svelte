@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
+	import { onDestroy } from 'svelte';
 
 	type SideBarVersion = 'WorkFlow' | 'LowCode';
 	export let sideBarVersion: SideBarVersion;
+	let dropdownContainer: HTMLElement;
 
 	let chosenPlot: string = 'Bar Chart (Default)';
 	let isChartDropdownOpen: boolean = false;
@@ -18,8 +20,12 @@
 		rectangleCharts = [...rectangleCharts, { chartType: 'Density' }];
 	}
 
-	function capitalizeFirstLetter(string: string) {
-		return string.charAt(0).toUpperCase() + string.slice(1);
+	$: {
+		if (isChartDropdownOpen) {
+			document.addEventListener('click', handleOutsideClick);
+		} else {
+			document.removeEventListener('click', handleOutsideClick);
+		}
 	}
 
 	$: i = clickedChartIndex();
@@ -30,6 +36,10 @@
 		} else {
 			chosenPlot = 'Bar Chart (Default)';
 		}
+	}
+
+	function capitalizeFirstLetter(string: string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 
 	const chooseChart = (plot: string) => {
@@ -56,11 +66,22 @@
 	const toggleChartDropdown = () => {
 		isChartDropdownOpen = !isChartDropdownOpen;
 	};
+
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+			closeChartDropdown();
+		}
+	};
+
+	onDestroy(() => {
+		document.removeEventListener('click', handleOutsideClick);
+	});
 </script>
 
 <div class="w-full p-4 rounded-sm relative selectFieldColor">
 	<div class="flex justify-between items-center">
 		<button
+			bind:this={dropdownContainer}
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 			on:click={toggleChartDropdown}
 		>
@@ -80,6 +101,7 @@
 					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
 					on:click={() => {
 						chooseChart(chartType);
+						isChartDropdownOpen = false;
 					}}
 				>
 					{chartType}

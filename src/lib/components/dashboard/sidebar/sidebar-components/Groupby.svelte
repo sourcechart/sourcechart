@@ -8,7 +8,10 @@
 		clickedChartIndex
 	} from '$lib/io/Stores';
 
+	import { onDestroy } from 'svelte';
 	import Tags from '$lib/components/ui/tags/Tags.svelte';
+
+	let dropdownContainer: HTMLElement;
 
 	let tags: Array<string> = [];
 	let selectedButtons: Array<string> = [];
@@ -27,6 +30,20 @@
 		let chart: Chart = $allCharts[$i];
 		chart.groupbyColumns = [];
 		$allCharts[$i] = chart;
+	}
+
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+			closeDropdown();
+		}
+	};
+
+	$: {
+		if (isGroupByOpen) {
+			document.addEventListener('click', handleOutsideClick);
+		} else {
+			document.removeEventListener('click', handleOutsideClick);
+		}
 	}
 
 	const addColumnToGroupBy = (column: string) => {
@@ -58,12 +75,17 @@
 	const closeDropdown = () => {
 		isGroupByOpen = false;
 	};
+
+	onDestroy(() => {
+		document.removeEventListener('click', handleOutsideClick);
+	});
 </script>
 
 <!-- Dropdown Button -->
 
 <div class="w-full p-4 rounded-sm relative selectFieldColor">
 	<button
+		bind:this={dropdownContainer}
 		class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 		on:click={toggleDropdown}
 	>

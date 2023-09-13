@@ -99,12 +99,14 @@
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
+
 	onMount(loadWorker);
 </script>
 
-<div bind:this={dropdownContainer} class="w-full p-4 rounded-sm relative selectFieldColor">
+<div class="w-full p-4 rounded-sm relative selectFieldColor">
 	<div class="flex justify-between items-center">
 		<button
+			bind:this={dropdownContainer}
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 			on:click={toggleDropdown}
 		>
