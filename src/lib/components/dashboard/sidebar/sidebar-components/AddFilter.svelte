@@ -1,17 +1,20 @@
 <script lang="ts">
 	import Filter from './filter-components/Filter.svelte';
 	import { PlusSolid } from 'flowbite-svelte-icons';
+	import { clickedChart } from '$lib/io/Stores';
 
-	let components: { component: any }[] = [];
+	$: chart = clickedChart();
+	$: filterColumns = $chart?.filterColumns ? $chart.filterColumns : [];
+	let components: { component: any }[] = []; // Modify this line
 
 	const addFilterToSidebar = () => {
-		components = [{ component: Filter }, ...components]; // Add new filter to the beginning of the array
+		components = [{ component: Filter }, ...components];
 	};
 </script>
 
-{#each components as { component: Component }}
+{#each filterColumns as filterData}
 	<div class="py-2 flex">
-		<svelte:component this={Component} />
+		<svelte:component this={Filter} {filterData} />
 	</div>
 {/each}
 <button on:click={addFilterToSidebar} on:keydown={null}>

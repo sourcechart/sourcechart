@@ -9,8 +9,15 @@
 	let start: number = 0;
 	let end: number = 1;
 
+	export let prevData: any;
 	export let lowHandle = '0';
 	export let highHandle = '1';
+
+	$: console.log(prevData);
+	$: if (prevData) {
+		lowHandle = prevData.min;
+		highHandle = prevData.max;
+	}
 
 	$: i = clickedChartIndex();
 

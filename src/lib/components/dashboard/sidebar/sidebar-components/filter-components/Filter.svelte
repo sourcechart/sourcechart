@@ -11,6 +11,7 @@
 	import { onDestroy } from 'svelte';
 	import { CloseSolid } from 'flowbite-svelte-icons';
 
+	export let filterData: any;
 	let dropdownContainer: HTMLElement;
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
@@ -25,6 +26,10 @@
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
+
+	$: if (filterData !== undefined) {
+		selectedColumn = filterData.column;
+	}
 
 	$: {
 		if (showFieldDropdown) {
@@ -164,7 +169,7 @@
 	<div class="mt-4">
 		{#if showRange}
 			<span> Values Ranges</span>
-			<FilterRange {min} {max} column={selectedColumn} />
+			<FilterRange {min} {max} column={selectedColumn} prevData={filterData.value} />
 		{:else if showValueDropdown}
 			<span class="text-sm"> Select Value</span>
 			<FilterDropdown column={selectedColumn} items={distinctValuesObject} />
