@@ -7,8 +7,11 @@
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import FilterDropdown from './FilterDropdown.svelte';
-	import FilterRange from './FilterRange.svelte'; //@ts-ignore
+	import FilterRange from './FilterRange.svelte';
+	import { onDestroy } from 'svelte';
 	import { CloseSolid } from 'flowbite-svelte-icons';
+
+	let dropdownContainer: HTMLElement;
 
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
@@ -24,6 +27,24 @@
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
+
+	$: {
+		if (showDropdown) {
+			document.addEventListener('click', handleOutsideClick);
+		} else {
+			document.removeEventListener('click', handleOutsideClick);
+		}
+	}
+
+	onDestroy(() => {
+		document.removeEventListener('click', handleOutsideClick);
+	});
+
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+			isDropdownOpen = false;
+		}
+	};
 
 	const addColumnToFilter = (column: string) => {
 		selectedColumn = column;
@@ -121,6 +142,7 @@
 <div class="w-full p-4 selectFieldColor rounded-sm shadow-xl">
 	<div class="flex justify-between items-center">
 		<button
+			bind:this={dropdownContainer}
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 			on:click={toggleDropdown}
 		>
@@ -128,25 +150,23 @@
 				{selectedColumn}
 			</span>
 		</button>
-		<CloseSolid role="button" color="white" class="ml-2 py-1" />
-		<div
-			class={`
-			 scrollBarDiv bg-gray-900 absolute w-full mt-2 border
-			 rounded shadow-lg transform transition-transform 
-			  overflow-y-auto overflow-x-hidden
-    		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
-		>
-			{#each $columns as column (column)}
-				<button
-					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-					on:click={() => {
-						addColumnToFilter(column);
-					}}
-				>
-					{column}
-				</button>
-			{/each}
-		</div>
+		{#if isDropdownOpen}
+			<button
+				class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
+				on:click|stopPropagation={toggleDropdown}
+			>
+				{#each $columns as column (column)}
+					<button
+						class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+						on:click={() => {
+							addColumnToFilter(column);
+						}}
+					>
+						{column}
+					</button>
+				{/each}
+			</button>
+		{/if}
 	</div>
 	<div class="mt-4">
 		{#if showRange}
