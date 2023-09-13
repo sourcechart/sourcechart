@@ -39,6 +39,15 @@
 		}
 	}
 
+	const removeFilter = () => {
+		allCharts.update((charts) => {
+			charts[$i].filterColumns = charts[$i].filterColumns.filter(
+				(item) => item.column !== selectedColumn
+			);
+			return charts;
+		});
+	};
+
 	$: {
 		if (filterData !== undefined) {
 			selectedColumn = filterData.column;
@@ -145,7 +154,7 @@
 </script>
 
 <div class="w-full p-4 selectFieldColor rounded-sm shadow-xl relative">
-	<div class="justify-between items-center text-gray-400">
+	<div class="flex justify-between items-center text-gray-400">
 		<button
 			bind:this={dropdownContainer}
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
@@ -154,6 +163,9 @@
 			}}
 		>
 			<span class="text-smml-2"> {selectedColumn}</span>
+		</button>
+		<button class="ml-2" on:click={removeFilter}>
+			<CloseSolid class="w-4 h-4" />
 		</button>
 		{#if showFieldDropdown}
 			<div
@@ -172,10 +184,9 @@
 			</div>
 		{/if}
 	</div>
-
 	<div class="mt-4">
 		{#if showRange}
-			<span> Values Ranges</span>
+			<span class="text-sm dark:text-gray-400">Values Ranges</span>
 			<FilterRange {min} {max} column={selectedColumn} prevData={filterData.value} />
 		{:else if showValueDropdown}
 			<span class="text-sm"> Select Value</span>

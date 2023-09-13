@@ -6,16 +6,22 @@
 
 	let slider: HTMLElement;
 	let dragging = false;
-	let start: number = 0;
-	let end: number = 1;
+	let start: number;
+	let end: number;
 
 	export let prevData: any;
 	export let lowHandle: string;
 	export let highHandle: string;
 
 	let handlesDragged = false;
+	if (prevData) {
+		start = (Number(prevData.min) - min) / (max - min);
+		end = (Number(prevData.max) - min) / (max - min);
+	} else {
+		start = 0;
+		end = 1;
+	}
 
-	$: console.log(prevData);
 	$: {
 		if (!handlesDragged) {
 			if (prevData) {
@@ -27,8 +33,15 @@
 			}
 		}
 	}
-
 	$: i = clickedChartIndex();
+
+	function syncHandlesWithStartEnd() {
+		const calculatedLowHandle = (min + start * (max - min)).toFixed(2).slice(0, 3);
+		const calculatedHighHandle = (min + end * (max - min)).toFixed(2).slice(0, 3);
+
+		lowHandle = calculatedLowHandle;
+		highHandle = calculatedHighHandle;
+	}
 
 	function updateFilter() {
 		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
@@ -124,67 +137,70 @@
 		};
 	}
 
+	function updateHandlePositions(newStart, newEnd) {
+		start = newStart;
+		end = newEnd;
+
+		const calculatedLowHandle = (min + start * (max - min)).toFixed(2).slice(0, 3);
+		const calculatedHighHandle = (min + end * (max - min)).toFixed(2).slice(0, 3);
+
+		lowHandle = calculatedLowHandle;
+		highHandle = calculatedHighHandle;
+
+		handlesDragged = true;
+	}
+
 	function setHandlePosition(which: 'start' | 'end') {
 		return function (evt: CustomEvent) {
 			const { left, right } = slider.getBoundingClientRect();
 			const parentWidth = right - left;
-
 			var p = Math.min(Math.max((evt.detail.x - left) / parentWidth, 0), 1);
 			var actualValue = min + p * (max - min);
 			p = (actualValue - min) / (max - min);
-			console.log('p value: ', p);
+
+			let newStart = start;
+			let newEnd = end;
 
 			if (which === 'start') {
-				start = p;
-				end = Math.max(end, p);
+				newStart = p;
+				newEnd = Math.max(end, p);
 			} else {
-				start = Math.min(p, start);
-				end = p;
+				newStart = Math.min(p, start);
+				newEnd = p;
 			}
 
-			console.log('Start & End values: ', start, end); // <-- Logging the start and end values
-
-			const calculatedLowHandle = (min + start * (max - min)).toFixed(2).slice(0, 3);
-			const calculatedHighHandle = (min + end * (max - min)).toFixed(2).slice(0, 3);
-
-			console.log('Calculated Handles: ', calculatedLowHandle, calculatedHighHandle); // <-- Logging the calculated handles
-
-			lowHandle = calculatedLowHandle;
-			highHandle = calculatedHighHandle;
-			console.log(lowHandle, highHandle);
-
-			handlesDragged = true; // Set the flag
+			updateHandlePositions(newStart, newEnd);
 		};
 	}
 </script>
 
 <div>
 	<!--Chart will hopefully go here -->
-	<div class="relative w-full h-2 bg-gray-300" bind:this={slider}>
+	<div class="relative w-full h-4 bg-gray-300 rounded" bind:this={slider}>
 		<div
-			class="absolute top-0 bottom-0 bg-blue-500"
+			class="absolute top-0 bottom-0 bg-blue-500 rounded"
 			style="left: {100 * start}%; right: {100 * (1 - end)}%;"
 		/>
 
 		<div
-			class="absolute top-0 bottom-0 w-4 h-4 bg-blue-600 rounded-full cursor-pointer"
+			class="absolute top-1/2 transform -translate-y-1/2 w-6 h-6 bg-blue-600 rounded-full cursor-pointer shadow-md"
 			use:draggable
 			on:dragmove|preventDefault|stopPropagation={setHandlePosition('start')}
-			style="left: calc({100 * start}% - 0.5rem);"
+			style="left: calc({100 * start}% - 0.75rem);"
 		/>
 		<div
-			class="absolute top-0 bottom-0 w-4 h-4 bg-blue-600 rounded-full cursor-pointer"
+			class="absolute top-1/2 transform -translate-y-1/2 w-6 h-6 bg-blue-600 rounded-full cursor-pointer shadow-md"
 			use:draggable
 			on:dragmove|preventDefault|stopPropagation={setHandlePosition('end')}
-			style="left: calc({100 * end}% - 0.5rem);"
+			style="left: calc({100 * end}% - 0.75rem);"
 		/>
 	</div>
-	<div class="flex justify-between mt-2">
+	<div class="flex justify-between mt-2 text-gray-400">
 		{#if lowHandle !== '0' || highHandle !== '1'}
-			<div class=" p-2 border rounded">
+			<div class="p-2 border rounded shadow-sm">
 				{lowHandle}
 			</div>
-			<div class="p-2 border rounded">
+			<div class="p-2 border rounded shadow-sm">
 				{highHandle}
 			</div>
 		{/if}

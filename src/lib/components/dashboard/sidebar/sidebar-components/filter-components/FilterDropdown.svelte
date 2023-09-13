@@ -47,7 +47,7 @@
 	>
 		{#each items as item (item)}
 			<button
-				class="block w-full bg-gray-900 text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+				class="block w-full bg-gray-900 text-left px-3 py-2 dark:text-gray-400 hover:bg-gray-200"
 				on:click={() => updateFilter(item)}
 			>
 				{column}
