@@ -5,15 +5,20 @@
 
 	$: i = clickedChartIndex();
 	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
+	$: console.log(filterColumns);
+
+	let filterIDCounter = 0; // Add this line at the top
 
 	const addFilterToSidebar = () => {
+		filterIDCounter += 1;
 		allCharts.update((charts) => {
-			charts[$i].filterColumns = [...filterColumns, { column: null, value: null }];
+			charts[$i].filterColumns = [
+				...$allCharts[$i].filterColumns,
+				{ column: null, value: null, id: filterIDCounter }
+			];
 			return charts;
 		});
 	};
-
-	$: console.log(filterColumns);
 </script>
 
 {#each filterColumns as filterData}

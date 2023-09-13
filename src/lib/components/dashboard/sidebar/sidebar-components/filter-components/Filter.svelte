@@ -27,6 +27,7 @@
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
+	$: console.log($columns);
 	$: {
 		if (filterData.column) {
 			selectedColumn = filterData.column;
@@ -43,7 +44,7 @@
 	const removeFilter = () => {
 		allCharts.update((charts) => {
 			charts[$i].filterColumns = charts[$i].filterColumns.filter(
-				(item) => item.column !== selectedColumn
+				(item) => item.id !== filterData.id
 			);
 			return charts;
 		});

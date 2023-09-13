@@ -1,19 +1,21 @@
 <script lang="ts">
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
-	export let column: string;
-	export let min: number; // Min value of the slider
-	export let max: number; // Max value of the slider
 
-	let slider: HTMLElement;
-	let dragging = false;
-	let start: number;
-	let end: number;
+	export let column: string;
+	export let min: number = 0;
+	export let max: number = 1;
 
 	export let prevData: any;
 	export let lowHandle: string;
 	export let highHandle: string;
 
+	let slider: HTMLElement;
+	let dragging = false;
+	let start: number;
+	let end: number;
 	let handlesDragged = false;
+
+	// Set initial values based on previous data
 	if (prevData) {
 		start = (Number(prevData.min) - min) / (max - min);
 		end = (Number(prevData.max) - min) / (max - min);
@@ -24,25 +26,51 @@
 
 	$: {
 		if (!handlesDragged) {
-			if (prevData) {
-				lowHandle = String(prevData.min);
-				highHandle = String(prevData.max);
-			} else {
-				lowHandle = '0';
-				highHandle = '1';
-			}
+			lowHandle = prevData ? String(prevData.min) : '0';
+			highHandle = prevData ? String(prevData.max) : '1';
 		}
 	}
+
 	$: i = clickedChartIndex();
 
 	function updateFilter() {
+		// Check if column is null or undefined before proceeding
+		if (!column) {
+			console.warn('Column is not defined. Filter update skipped.');
+			return;
+		}
+
+		// Check for existing filter by column name
 		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
 
+		// Check for a filter with a null column value
+		const nullFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === null);
+
 		if (existingFilter) {
-			$allCharts[$i].filterColumns.find((filter) => filter.column === column).value = {
+			// Update the existing filter by column name
+			existingFilter.value = {
 				min: lowHandle,
 				max: highHandle
 			};
+		} else if (nullFilter) {
+			// Update the filter that has a null column value
+			nullFilter.column = column;
+			nullFilter.value = {
+				min: lowHandle,
+				max: highHandle
+			};
+		} else {
+			// If no matching filter, append a new filter
+			$allCharts[$i].filterColumns = [
+				...$allCharts[$i].filterColumns,
+				{
+					column,
+					value: {
+						min: lowHandle,
+						max: highHandle
+					}
+				}
+			];
 		}
 	}
 
@@ -116,7 +144,7 @@
 		};
 	}
 
-	function updateHandlePositions(newStart, newEnd) {
+	function updateHandlePositions(newStart: number, newEnd: number) {
 		start = newStart;
 		end = newEnd;
 
