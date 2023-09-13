@@ -29,7 +29,6 @@
 
 	const chooseColumn = (column: string) => {
 		allCharts.update((charts) => {
-			toggleDropdown(currentAxis);
 			if (currentAxis === 'X') {
 				charts[$i].xColumn = column;
 				xAxisValue = column;

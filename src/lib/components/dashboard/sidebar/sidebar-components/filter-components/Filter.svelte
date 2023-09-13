@@ -12,37 +12,32 @@
 	import { CloseSolid } from 'flowbite-svelte-icons';
 
 	let dropdownContainer: HTMLElement;
-
+	let testColumns = ['test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8'];
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
 	let dataValue: string | number | object;
 	let selectedColumns: string[] = [];
 	let selectedColumn: string = 'Add Field';
 	let showRange = false;
-	let showDropdown = false;
+	let showValueDropdown = false;
+	let showFieldDropdown = false;
 	let min: number;
 	let max: number;
-
-	let isDropdownOpen: boolean = false;
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
 	$: {
-		if (showDropdown) {
+		if (showFieldDropdown) {
 			document.addEventListener('click', handleOutsideClick);
 		} else {
 			document.removeEventListener('click', handleOutsideClick);
 		}
 	}
 
-	onDestroy(() => {
-		document.removeEventListener('click', handleOutsideClick);
-	});
-
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
-			isDropdownOpen = false;
+			showFieldDropdown = false;
 		}
 	};
 
@@ -81,7 +76,7 @@
 			);
 			distinctValuesObject = formatData(distinctValues).map((value: any) => value.distinctValues);
 			distinctValuesObject = distinctValuesObject.filter((item) => item != null && item != '');
-			showDropdown = true;
+			showValueDropdown = true;
 		} else if (typeof dataValue === 'number') {
 			const minResp = await $duckDBInstanceStore.query(
 				`SELECT MIN(${correctColumn}) as min FROM ${filename}`
@@ -133,27 +128,25 @@
 			}
 		});
 	}
-
-	const toggleDropdown = () => {
-		isDropdownOpen = !isDropdownOpen;
-	};
+	onDestroy(() => {
+		document.removeEventListener('click', handleOutsideClick);
+	});
 </script>
 
-<div class="w-full p-4 selectFieldColor rounded-sm shadow-xl">
-	<div class="flex justify-between items-center">
+<div class="w-full p-4 selectFieldColor rounded-sm shadow-xl relative">
+	<div class="justify-between items-center text-gray-400">
 		<button
 			bind:this={dropdownContainer}
 			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-			on:click={toggleDropdown}
+			on:click={() => {
+				showFieldDropdown = !showFieldDropdown;
+			}}
 		>
-			<span class="text-sm text-gray-400 ml-2">
-				{selectedColumn}
-			</span>
+			<span class="text-smml-2"> Add Field </span>
 		</button>
-		{#if isDropdownOpen}
-			<button
-				class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
-				on:click|stopPropagation={toggleDropdown}
+		{#if showFieldDropdown}
+			<div
+				class="scrollBarDiv bg-gray-900 absolute left-0 w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			>
 				{#each $columns as column (column)}
 					<button
@@ -165,14 +158,15 @@
 						{column}
 					</button>
 				{/each}
-			</button>
+			</div>
 		{/if}
 	</div>
+
 	<div class="mt-4">
 		{#if showRange}
 			<span> Values Ranges</span>
 			<FilterRange {min} {max} column={selectedColumn} />
-		{:else if showDropdown}
+		{:else if showValueDropdown}
 			<span class="text-sm"> Select Value</span>
 			<FilterDropdown column={selectedColumn} items={distinctValuesObject} />
 		{/if}

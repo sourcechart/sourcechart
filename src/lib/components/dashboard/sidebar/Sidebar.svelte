@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { fileDropdown } from '$lib/io/Stores';
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores';
 	import {
@@ -11,9 +10,6 @@
 		FileUploadButton,
 		DatasetDropDown
 	} from './sidebar-components';
-
-	$: numberOfDatasets = fileDropdown();
-	let addFilterDistance: number = 0;
 </script>
 
 {#if $activeSidebar}
@@ -99,7 +95,7 @@
 			</div>
 
 			<!-- Filter -->
-			<div>
+			<div class="mb-4">
 				<div class="w-full font-medium">
 					<AddFilter />
 				</div>
