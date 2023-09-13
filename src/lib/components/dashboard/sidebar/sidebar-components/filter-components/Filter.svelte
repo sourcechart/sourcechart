@@ -11,7 +11,6 @@
 	import { onDestroy } from 'svelte';
 	import { CloseSolid } from 'flowbite-svelte-icons';
 
-	export let filterData: any;
 	let dropdownContainer: HTMLElement;
 	let frequencies: { [key: string]: number } = {};
 	let distinctValuesObject: Array<any>;
@@ -23,20 +22,22 @@
 	let isFieldDropdown = false;
 	let min: number;
 	let max: number;
+	export let filterData: any;
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
-	$: if (filterData !== undefined) {
-		selectedColumn = filterData.column;
+	$: {
+		if (filterData.column) {
+			selectedColumn = filterData.column;
+			handleAsyncOperations(selectedColumn);
+		}
 	}
 
-	$: {
-		if (isFieldDropdown) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
+	$: if (isFieldDropdown) {
+		document.addEventListener('click', handleOutsideClick);
+	} else {
+		document.removeEventListener('click', handleOutsideClick);
 	}
 
 	const removeFilter = () => {
@@ -48,13 +49,6 @@
 		});
 	};
 
-	$: {
-		if (filterData !== undefined) {
-			selectedColumn = filterData.column;
-			handleAsyncOperations(selectedColumn);
-		}
-	}
-
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
 			isFieldDropdown = false;
@@ -62,6 +56,7 @@
 	};
 
 	const addColumnToFilter = (column: string) => {
+		console.log(column);
 		selectedColumn = column;
 		if (selectedColumns.includes(column)) {
 			selectedColumns = selectedColumns.filter((item) => item !== column);
@@ -148,6 +143,7 @@
 			}
 		});
 	}
+
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});

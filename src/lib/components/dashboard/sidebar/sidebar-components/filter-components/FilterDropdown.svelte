@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
-	//import Tags from '$lib/components/ui/tags/Tags.svelte';
+	import Tags from '$lib/components/ui/tags/Tags.svelte';
 
 	export let items: any[] = [];
 	export let column: string;
@@ -14,18 +14,21 @@
 		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
 
 		if (existingFilter) {
-			$allCharts[$i].filterColumns.find((filter) => filter.column === column).value = {
-				item: item
-			};
-		} else {
+			$allCharts[$i].filterColumns.find((filter) => filter.column === column).value.item;
+		}
+
+		if (!filterValues.includes(item)) {
 			filterValues = [...filterValues, item];
-			$allCharts[$i].filterColumns = [
-				...$allCharts[$i].filterColumns,
-				{
-					column: column,
-					value: { item: item }
-				}
-			];
+		}
+	}
+
+	function removeSelectedTag(item: string) {
+		filterValues = filterValues.filter((val) => val !== item);
+		const filterIndex = $allCharts[$i].filterColumns.findIndex(
+			(filter) => filter.column === column && filter.value.item === item
+		);
+		if (filterIndex > -1) {
+			$allCharts[$i].filterColumns.splice(filterIndex, 1);
 		}
 	}
 
@@ -55,15 +58,7 @@
 		{/each}
 	</div>
 	{#if filterValues.length > 0}
-		<!--
-		<Tags
-			items={filterValues}
-			on:removeItem={() => {
-				filterValues = [];
-				$allCharts[$i].filterColumns = [];
-			}}
-		/>
-		-->
+		<Tags items={filterValues} removeItem={removeSelectedTag} />
 	{/if}
 </div>
 

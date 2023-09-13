@@ -43,14 +43,6 @@
 				min: lowHandle,
 				max: highHandle
 			};
-		} else {
-			$allCharts[$i].filterColumns = [
-				...$allCharts[$i].filterColumns,
-				{
-					column: column,
-					value: { min: lowHandle, max: highHandle }
-				}
-			];
 		}
 	}
 
