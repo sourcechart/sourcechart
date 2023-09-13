@@ -156,7 +156,6 @@
 <div class="w-full p-4 selectFieldColor rounded-sm shadow-xl">
 	<div class="flex justify-between items-center text-gray-400">
 		<div class="relative flex-grow w-full">
-			<!-- Added this wrapper -->
 			<button
 				bind:this={dropdownContainer}
 				class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex items-center"
@@ -185,8 +184,6 @@
 				</div>
 			{/if}
 		</div>
-		<!-- End of wrapper -->
-
 		<button class="ml-2" on:click={removeFilter}>
 			<CloseSolid class="w-4 h-4" />
 		</button>

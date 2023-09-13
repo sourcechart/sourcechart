@@ -35,14 +35,6 @@
 	}
 	$: i = clickedChartIndex();
 
-	function syncHandlesWithStartEnd() {
-		const calculatedLowHandle = (min + start * (max - min)).toFixed(2).slice(0, 3);
-		const calculatedHighHandle = (min + end * (max - min)).toFixed(2).slice(0, 3);
-
-		lowHandle = calculatedLowHandle;
-		highHandle = calculatedHighHandle;
-	}
-
 	function updateFilter() {
 		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
 
@@ -66,10 +58,7 @@
 		let x: number;
 
 		function handleMousedown(event: MouseEvent | TouchEvent) {
-			console.log('handleMousedown called'); // <- Add this line
-
 			dragging = true; // Set dragging to true here
-
 			if (event.type === 'touchstart') {
 				event = event as TouchEvent;
 				x = event.touches[0].clientX;
@@ -91,8 +80,6 @@
 		}
 
 		function handleMousemove(event: MouseEvent | TouchEvent) {
-			console.log('handleMousemove called'); // <- Add this line
-
 			if (!dragging) return; // If not dragging, exit the function
 
 			if (event.type === 'touchmove') {
