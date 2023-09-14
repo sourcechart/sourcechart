@@ -40,4 +40,7 @@
 	.background {
 		background-color: rgb(38, 38, 39);
 	}
+	.selected {
+		background-color: #9d99dc;
+	}
 </style>

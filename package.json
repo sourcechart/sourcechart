@@ -51,6 +51,7 @@
     "@supabase/auth-ui-svelte": "^0.2.2",
     "@supabase/supabase-js": "^2.32.0",
     "@vercel/analytics": "^1.0.1",
+    "bootstrap-icons": "^1.11.0",
     "flowbite-svelte-icons": "^0.4.3",
     "sqlite-wasm-esm": "^0.0.30",
     "tailwind-merge": "^1.14.0"

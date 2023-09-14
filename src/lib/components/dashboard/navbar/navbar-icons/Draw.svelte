@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { navBarState } from '$lib/io/Stores';
+	import square from 'bootstrap-icons/icons/square.svg';
 
 	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
@@ -12,25 +13,27 @@
 
 <button
 	on:click={clickButton}
-	class={mode === 'drawRectangle' ? 'dark:bg-gray-700' : 'dark:bg-gray-800'}
+	class=" w-6 h-6 flex flex-col justify-center items-center {mode === 'drawRectangle'
+		? 'button select'
+		: 'dark:bg-gray-800'}"
 >
-	<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-		><g id="SVGRepo_bgCarrier" stroke-width="0" /><g
-			id="SVGRepo_tracerCarrier"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		/><g id="SVGRepo_iconCarrier">
-			<rect
-				x="4"
-				y="4"
-				width="16"
-				height="16"
-				rx="2"
-				stroke="#9ca3af"
-				stroke-width="1"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-			/>
-		</g></svg
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="16"
+		height="16"
+		viewBox="0 0 448 512"
+		fill="#9CA3AF"
+		><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path
+			d="M384 80c8.8 0 16 7.2 16 16V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V96c0-8.8 7.2-16 16-16H384zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"
+		/></svg
 	>
 </button>
+
+<style>
+	.button {
+		border-radius: 0.375rem;
+	}
+	.select {
+		background-color: #9d99dc77;
+	}
+</style>
