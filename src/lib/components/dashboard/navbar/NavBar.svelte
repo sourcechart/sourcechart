@@ -28,7 +28,7 @@
 	<div class="flex items-center justify-between space-x-4 ml-1 mr-1">
 		{#each icons as { name, component } (name)}
 			<div class="flex items-center justify-between mx-1 rounded-md overflow-hidden">
-				<div class="relative flex align-center justify-items-center items-center flex-col">
+				<div class="relative flex flex-row justify-items-center">
 					<svelte:component this={component} on:mode={setMode} />
 				</div>
 			</div>

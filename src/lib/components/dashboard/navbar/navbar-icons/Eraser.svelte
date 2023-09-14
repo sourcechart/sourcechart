@@ -2,7 +2,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { navBarState } from '$lib/io/Stores';
-	import eraser from 'bootstrap-icons/icons/eraser.svg';
 
 	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
