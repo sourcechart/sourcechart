@@ -81,8 +81,6 @@
 	});
 </script>
 
-<!-- Dropdown Button -->
-
 <div class="w-full p-4 rounded-sm relative selectFieldColor">
 	<button
 		bind:this={dropdownContainer}

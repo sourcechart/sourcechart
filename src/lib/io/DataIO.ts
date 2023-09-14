@@ -31,133 +31,150 @@ class DataIO {
 						attributes: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])],
 						from: chart.filename
 					}
-					/*on: { column1: null, column2: null, HOW: null }
-                            filters: [
-                                { column: null, filter: null },
-                                { column: null, filter: null }
-                            ],
-                            having: [{ column: null, filter: null }],
-                    */
 				}
 			}
 		};
 	}
 
+	private createChartTitle(queryObject: QueryObject): string {
+		const basicQuery = queryObject.queries.select.basic;
+		const titleParts = [];
+
+		if (basicQuery.from) {
+			titleParts.push(`Data from ${basicQuery.from}`);
+		}
+
+		if (basicQuery.yColumn.aggregator) {
+			titleParts.push(`${basicQuery.yColumn.aggregator} of ${basicQuery.yColumn.column}`);
+		} else {
+			titleParts.push(basicQuery.yColumn.column);
+		}
+
+		if (basicQuery.xColumn.column) {
+			titleParts.push(`vs ${basicQuery.xColumn.column}`);
+		}
+
+		if (basicQuery.groupbyColumns && basicQuery.groupbyColumns.length) {
+			titleParts.push(`Grouped by ${basicQuery.groupbyColumns.join(', ')}`);
+		}
+
+		if (basicQuery.filterColumns && basicQuery.filterColumns.length) {
+			titleParts.push(`Filtered by ${basicQuery.filterColumns.map((fc) => fc.column).join(', ')}`);
+		}
+
+		return titleParts.join(' - ');
+	}
+
 	private query() {
-		let queryObject = this.getQueryObject(this.chart);
+		const queryObject = this.getQueryObject(this.chart);
 		const query = new Query(queryObject, this.chart.workflow);
-		let queryString = query.build();
-		return queryString;
+		return query.build();
+	}
+
+	public async queryExportCSV() {
+		const queryObject = this.getQueryObject(this.chart);
+		const query = new Query(queryObject, this.chart.workflow);
+		const queryString = query.getExportQuery();
+		const data = await this.getMultiDimensionalData(queryString);
+		this.downloadTSV(data, 'export.tsv');
 	}
 
 	private updateBasicChart(results: any[], chart: Chart) {
-		var xColumn = this.getColumn(chart.xColumn);
-		var yColumn = this.getColumn(chart.yColumn);
-		var x = results.map((item) => item[xColumn]);
-		var y = results.map((item) => item[yColumn]);
+		const xColumn = this.getColumn(chart.xColumn);
+		const yColumn = this.getColumn(chart.yColumn);
+		const x = results.map((item) => item[xColumn]);
+		const y = results.map((item) => item[yColumn]);
 		chart.chartOptions.xAxis.data = x;
 		chart.chartOptions.series[0].data = y;
 		return chart;
 	}
 
-	private getColumn = (column: string | null) => {
-		if (column) {
-			return column.toString();
-		} else {
-			return '';
-		}
-	};
+	private getColumn(column: string | null): string {
+		return column ? column.toString() : '';
+	}
+
+	private downloadTSV(data: any[], filename: string) {
+		const tsv = this.dataToTSV(data);
+		const blob = new Blob([tsv], { type: 'text/tsv' });
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.setAttribute('hidden', '');
+		a.setAttribute('href', url);
+		a.setAttribute('download', filename);
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+	}
+
+	private dataToTSV(data: any[]): string {
+		const header = Object.keys(data[0]).join('\t');
+		const rows = data.map((row) => {
+			return Object.values(row)
+				.map((val) => {
+					if (
+						typeof val === 'string' &&
+						(val.includes(',') || val.includes('\n') || val.includes('"'))
+					) {
+						return '"' + val.replace(/"/g, '""') + '"';
+					}
+					return val;
+				})
+				.join('\t');
+		});
+
+		return `${header}\n${rows.join('\n')}`;
+	}
 
 	public async updateChart() {
-		let queryString = this.query();
-		let results = await this.getDataResults(this.db, queryString);
+		const queryString = this.query();
+		const results = await this.getDataResults(this.db, queryString);
 		if (this.chart.workflow === 'basic') {
 			return this.updateBasicChart(results, this.chart);
 		} else if (this.chart.workflow === 'cluster' && this.chart.chartType === 'density') {
-			//let embedding = this.getDensityResults(results);
-			//return this.updateDensityChart(embedding, this.chart);
-		} else if (
-			this.chart.workflow === 'cluster' &&
-			this.chart.chartType !== 'density' &&
-			this.chart.chartType
-		) {
-			let chartResults = this.getAudienceSegmentationResult(results);
+			// Handle logic for clustering and density
+		} else if (this.chart.workflow === 'cluster' && this.chart.chartType) {
+			const chartResults = this.getAudienceSegmentationResult(results);
 			return this.updateAudienceSegmentationChart(chartResults, this.chart);
 		}
 	}
 
 	private getDensityResults(results: any) {
-		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
+		const multidimensialArray = results.map((obj: any) => Object.values(obj));
 		if (this.epsilon && this.minPoints) {
 			const dbscan = new DBSCAN(multidimensialArray, this.epsilon, this.minPoints, 'euclidean');
-			var clusters = dbscan.run().getClusters();
+			const clusters = dbscan.run().getClusters();
 			if (multidimensialArray.length > 1000) {
-				//	const umap = new UMAP({
-				//		nComponents: 2,
-				//		nEpochs: 1,
-				//			nNeighbors: 2
-				//		});
-				//		const embedding = umap.fit(clusters);
-				//	return embedding;
+				// Handle larger datasets
 				return;
 			} else {
-				return multidimensialArray;
+				// Handle smaller datasets
+				return clusters;
 			}
 		} else {
-			return multidimensialArray;
+			throw new Error('Epsilon and minPoints should be set for density analysis.');
 		}
 	}
 
-	private formatData(res: any) {
-		const results = JSON.parse(
-			JSON.stringify(
-				res,
-				(_, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
-			)
-		);
+	private getAudienceSegmentationResult(results: any): any[] {
+		const multidimensialArray = results.map((obj: any) => Object.values(obj));
+		// Logic to handle audience segmentation results
+		return multidimensialArray;
+	}
+
+	private updateAudienceSegmentationChart(results: any[], chart: Chart) {
+		// Logic to update chart based on audience segmentation results
+		return chart;
+	}
+
+	public async getDataResults(db: DuckDBClient, queryString: string): Promise<any[]> {
+		const results = await db.query(queryString);
+
 		return results;
 	}
 
-	private async getDataResults(db: DuckDBClient, query: string) {
-		var results = await db.query(query);
-		return this.formatData(results);
-	}
-
-	private getAudienceSegmentationResult(results: any): {
-		centroid: number[][];
-		clusterSize: number;
-		clusterLabel: number;
-	} {
-		let multidimensialArray: number[][] = results.map((obj: any) => Object.values(obj));
-		const dbscan = new DBSCAN(multidimensialArray, this.epsilon, this.minPoints, 'euclidean');
-		var clusters = dbscan.run().getAudienceSegments();
-		return clusters;
-	}
-
-	private updateAudienceSegmentationChart(
-		results: {
-			centroid: number[][];
-			clusterSize: number;
-			clusterLabel: number;
-		},
-		chart: Chart
-	) {
-		var label = results.centroid.join(' ');
-		chart.chartOptions.xAxis.data = label;
-		chart.chartOptions.series[0].data = [results.clusterSize];
-		return chart;
-	}
-
-	private updateDensityChart(embedding: number[][], chart: Chart) {
-		chart.chartOptions.xAxis = {};
-		chart.chartOptions.yAxis = {};
-		chart.chartOptions.series[0] = {
-			data: embedding,
-			type: 'scatter',
-			symbolSize: 10
-		};
-
-		return chart;
+	public async getMultiDimensionalData(queryString: string): Promise<any[]> {
+		const results = await this.getDataResults(this.db, queryString);
+		return results.map((row) => Object.values(row));
 	}
 }
 

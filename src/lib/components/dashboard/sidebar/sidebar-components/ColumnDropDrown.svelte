@@ -33,6 +33,15 @@
 			if (currentAxis === 'Y') {
 				charts[$i].yColumn = column;
 				yAxisValue = column;
+
+				const selectedColumnSchema = $allCharts[$i].schema.find(
+					(item: { name: string }) => item.name === column
+				);
+
+				if (selectedColumnSchema && selectedColumnSchema.type === 'number') {
+					charts[$i].aggregator = 'count'; //@ts-ignore
+					if (charts[$i].xColumn) charts[$i].groupbyColumns = [charts[$i].xColumn];
+				}
 			}
 			return charts;
 		});

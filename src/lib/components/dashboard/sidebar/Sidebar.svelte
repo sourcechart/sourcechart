@@ -1,15 +1,23 @@
 <script lang="ts">
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores';
-	import {
-		Aggregator,
-		Groupby,
-		ChartDropdown,
-		AddFilter,
-		ColumnDropDown,
-		FileUploadButton,
-		DatasetDropDown
-	} from './sidebar-components';
+	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
+	import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
+	import Groupby from './sidebar-components/Groupby.svelte';
+	import Aggregator from './sidebar-components/Aggregator.svelte';
+	import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
+	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
+	import AddFilter from './sidebar-components/AddFilter.svelte';
+	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
+	import { onMount } from 'svelte';
+
+	let syncWorker: Worker | undefined = undefined;
+
+	const loadWorker = async () => {
+		const SyncWorker = await import('$lib/io/web.worker?worker');
+		syncWorker = new SyncWorker.default();
+	};
+	onMount(loadWorker);
 </script>
 
 {#if $activeSidebar}
@@ -103,6 +111,17 @@
 				</div>
 				<div class="w-full font-medium">
 					<AddFilter />
+				</div>
+			</div>
+
+			<div class="mb-4">
+				<div
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Export</span>
+				</div>
+				<div class="w-full font-medium">
+					<ExportToCSV />
 				</div>
 			</div>
 		</div>

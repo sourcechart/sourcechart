@@ -5,7 +5,6 @@
 
 	$: i = clickedChartIndex();
 	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
-	$: console.log(filterColumns);
 
 	let filterIDCounter = 0; // Add this line at the top
 
@@ -38,5 +37,8 @@
 <style>
 	.selectFieldColor {
 		background-color: #cd9f34;
+	}
+	.selectFieldColor:hover {
+		background-color: #fccb59;
 	}
 </style>

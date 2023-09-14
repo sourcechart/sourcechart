@@ -35,7 +35,7 @@
 	});
 </script>
 
-<div class="flex justify-start items-center rounded-md overflow-x-auto tagsColor">
+<div class=" scrollBarDiv flex justify-start items-center rounded-md overflow-x-auto tagsColor">
 	{#each items as item, i (i)}
 		<div
 			role="button"
@@ -84,5 +84,26 @@
 
 	.tagsColor {
 		background-color: rgb(18, 18, 18);
+	}
+
+	.scrollBarDiv::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.scrollBarDiv::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
+	}
+
+	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(168, 168, 168, 0.5);
+	}
+
+	/* For Firefox */
+	.scrollBarDiv {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+		max-height: 200px; /* Adjust this value to your desired maximum height */
+		overflow-y: auto;
 	}
 </style>

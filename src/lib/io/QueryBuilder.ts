@@ -15,6 +15,8 @@ export class Query {
 			return this.getBasicQuery();
 		} else if (this.workFlow === 'cluster') {
 			return this.getClusterQuery();
+		} else if (this.workFlow === 'export') {
+			return this.getExportQuery();
 		} else {
 			return '';
 		}
@@ -54,7 +56,11 @@ export class Query {
 			y = this.checkAggregator(y, aggregator, this.queryObject.queries.select.basic.groupbyColumns);
 
 		if (filterColumns.length > 0) {
-			filters = this.constructFilters(filterColumns);
+			if (groupbyColumns.length > 0) {
+				filters = this.constructFilters(filterColumns, true);
+			} else {
+				filters = this.constructFilters(filterColumns, false);
+			}
 		}
 		var selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
 		var queryParts = [selectQuery, groupby, filters];
@@ -104,6 +110,32 @@ export class Query {
 		}
 	}
 
+	private getAllColumnsQuery(): string {
+		const columns = [
+			...this.queryObject.queries.select.basic.groupbyColumns,
+			this.queryObject.queries.select.basic.xColumn.column,
+			this.queryObject.queries.select.basic.yColumn.column
+		];
+		const uniqueColumns = [...new Set(columns)]; // To ensure unique columns.
+		return uniqueColumns.join(', ');
+	}
+
+	public getExportQuery(): string {
+		const columns = this.getAllColumnsQuery();
+		let file: string = '';
+		if (this.queryObject.queries.select.basic.from) {
+			file = checkNameForSpacesAndHyphens(this.queryObject.queries.select.basic.from);
+		}
+		let filters = '';
+
+		if (this.queryObject.queries.select.basic.filterColumns.length > 0) {
+			filters = this.constructFilters(this.queryObject.queries.select.basic.filterColumns, false);
+		}
+
+		const queryParts = [`SELECT ${columns} FROM ${file}`, filters];
+		return queryParts.join(' ').trim();
+	}
+
 	private checkAggregator(
 		yColumn: string | null,
 		aggregator: string | number | null,
@@ -118,7 +150,7 @@ export class Query {
 		return yColumn;
 	}
 
-	private constructFilters(conditions: any[]): string {
+	private constructFilters(conditions: any[], hasGroupBy: boolean): string {
 		const clauses = conditions.map((condition) => {
 			if ('min' in condition.value && 'max' in condition.value) {
 				return `${checkNameForSpacesAndHyphens(condition.column)} BETWEEN ${
@@ -134,7 +166,7 @@ export class Query {
 		if (filteredClauses.length === 0) {
 			return ''; // Return an empty string if there are no valid conditions
 		}
-		return 'WHERE ' + filteredClauses.join(' AND ');
+		return (hasGroupBy ? 'HAVING ' : 'WHERE ') + filteredClauses.join(' AND ');
 	}
 
 	private constructSelect(
