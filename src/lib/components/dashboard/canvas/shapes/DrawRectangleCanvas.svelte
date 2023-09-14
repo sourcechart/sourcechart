@@ -10,6 +10,7 @@
 	import { drawHandles, drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
+	import ContextMenu from './components/ContextMenu.svelte';
 
 	export let polygon: Polygon;
 
@@ -27,6 +28,8 @@
 	let points: LookupTable = {};
 	let plotHeight: number = 0;
 	let plotWidth: number = 0;
+	let contextMenuPos = { x: 0, y: 0 };
+	let showContextMenu = false;
 
 	let options: any = {
 		xAxis: {
@@ -170,6 +173,23 @@
 		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
 	};
 
+	const handleRightClick = (e: MouseEvent) => {
+		e.preventDefault();
+		const rect = canvas.getBoundingClientRect();
+		contextMenuPos.x = e.clientX - rect.left;
+		contextMenuPos.y = e.clientY - rect.top;
+		showContextMenu = true;
+	};
+
+	const closeContextMenu = () => {
+		showContextMenu = false;
+	};
+
+	const handleMenuItemSelect = (e) => {
+		console.log(`Selected context menu item: ${e.detail}`);
+		showContextMenu = false;
+	};
+
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
 		var startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
@@ -203,11 +223,6 @@
 
 	$: plotWidth = getPlotWidth();
 	$: plotHeight = getPlotHeight();
-
-	const handleRightClick = (e: MouseEvent) => {
-		e.preventDefault();
-		console.log('Right-clicked on canvas!');
-	};
 </script>
 
 <div
@@ -226,7 +241,15 @@
 	>
 		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
 		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1">
+			<ContextMenu
+				bind:show={showContextMenu}
+				x={contextMenuPos.x}
+				y={contextMenuPos.y}
+				on:select={handleMenuItemSelect}
+			/>
 			<Chart {options} renderer={'svg'} />
 		</div>
 	</div>
 </div>
+
+<svelte:window on:click={closeContextMenu} />
