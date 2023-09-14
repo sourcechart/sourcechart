@@ -12,7 +12,7 @@
 
 <button
 	on:click={handleClick}
-	class=" w-6 h-6 flex flex-col items-center justify-center {mode === 'select'
+	class=" w-8 h-8 flex flex-col items-center justify-center {mode === 'select'
 		? 'button select'
 		: 'dark:bg-gray-800'}"
 >

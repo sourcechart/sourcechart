@@ -12,7 +12,7 @@
 
 <button
 	on:click={clickButton}
-	class=" w-6 h-6 flex flex-col justify-center items-center {mode === 'drawRectangle'
+	class=" w-8 h-8 flex flex-col justify-center items-center {mode === 'drawRectangle'
 		? 'button select'
 		: 'dark:bg-gray-800'}"
 >

@@ -10,6 +10,7 @@
 	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
+	import { onMount } from 'svelte';
 
 	export let polygon: Polygon;
 
@@ -47,6 +48,18 @@
 	$: TOUCHSTATE = touchStates();
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
+
+	onMount(() => {
+		// Add global event listeners
+		window.addEventListener('mousemove', handleMouseMove);
+		window.addEventListener('mouseup', handleMouseUp);
+
+		return () => {
+			// Cleanup the global event listeners
+			window.removeEventListener('mousemove', handleMouseMove);
+			window.removeEventListener('mouseup', handleMouseUp);
+		};
+	});
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
 		var vertices: LookupTable = {

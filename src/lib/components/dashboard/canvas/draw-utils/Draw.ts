@@ -78,14 +78,17 @@ const drawHandles = (
  * @param mouseTrail
  * @param context
  * @param lineColor
+ * @param lineWidth   // <-- Add this parameter
  * @returns void
  */
 const drawEraserTrail = (
 	mouseTrail: Point[],
 	context: CanvasRenderingContext2D,
-	lineColor: string
+	lineColor: string,
+	lineWidth: number = 5 // <-- Set a default width of 5, you can adjust this value as needed
 ): void => {
 	if (mouseTrail.length < 2) return;
+	context.lineWidth = lineWidth; // <-- Set the line width here
 	context.beginPath();
 	context.strokeStyle = lineColor;
 	for (let i = 1; i < mouseTrail.length; i++) {
