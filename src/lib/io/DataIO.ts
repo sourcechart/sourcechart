@@ -167,7 +167,6 @@ class DataIO {
 	}
 
 	public async getDataResults(db: DuckDBClient, queryString: string): Promise<any[]> {
-		console.log(db, queryString);
 		const results = await db.query(queryString);
 
 		return results;
