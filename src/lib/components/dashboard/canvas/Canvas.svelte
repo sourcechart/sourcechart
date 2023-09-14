@@ -300,7 +300,7 @@
 
 <style>
 	.background {
-		background-color: rgb(18, 18, 18);
+		background-color: #121212;
 		width: 100vw;
 		height: 100vh;
 		top: 0;

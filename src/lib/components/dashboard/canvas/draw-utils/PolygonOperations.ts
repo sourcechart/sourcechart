@@ -59,7 +59,7 @@ const isNearPoint = (
 	mouseY: number,
 	pointX: number,
 	pointY: number,
-	tolerance: number = 5
+	tolerance: number = 20
 ): boolean => {
 	// Calculate the absolute differences
 	const diffX = Math.abs(mouseX - pointX);
@@ -107,26 +107,31 @@ const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 	return vertices.concat(midPoints);
 };
 
-/**
- * ### Get the cursor for this position
- *
- * @param currentMousePosition
- * @param polygon
- * @param tolerance
- * @returns
- */
+const isWithinHandle = (
+	mouseX: number,
+	mouseY: number,
+	rectX: number,
+	rectY: number,
+	width: number,
+	height: number
+): boolean => {
+	return mouseX > rectX && mouseX < rectX + width && mouseY > rectY && mouseY < rectY + height;
+};
 const getHandlesHovered = (
 	currentMousePosition: Point,
 	polygon: Polygon,
-	tolerance: number
+	tolerance: number = 30
 ): HandlePosition => {
+	const handleSize = 10;
+
 	const { x, y } = currentMousePosition;
 	let handles = calculateRectangleHandles(polygon);
 
 	for (let i = 0; i < handles.length; i++) {
-		let dx = x - handles[i].x;
-		let dy = y - handles[i].y;
-		if (Math.sqrt(dx * dx + dy * dy) < tolerance) {
+		const rectX = handles[i].x - handleSize / 2;
+		const rectY = handles[i].y - handleSize / 2;
+
+		if (isWithinHandle(x, y, rectX, rectY, handleSize, handleSize)) {
 			switch (i) {
 				case 0:
 					return 'nw'; // top left

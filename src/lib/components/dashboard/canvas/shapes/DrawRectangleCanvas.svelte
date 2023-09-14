@@ -7,7 +7,7 @@
 		activeSidebar
 	} from '$lib/io/Stores';
 	import { isPointInPolygon } from '../draw-utils/PolygonOperations';
-	import { drawHandles, drawRectangle } from '../draw-utils/Draw';
+	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
 
@@ -88,24 +88,6 @@
 		}
 	};
 
-	const getAllHandlePositions = (points: LookupTable): Point[] => {
-		var handlePositions = ['tl', 'tr', 'br', 'bl', 'mt', 'mr', 'mb', 'ml'];
-		var vertices: Point[] = [];
-		for (var i = 0; i < handlePositions.length; i++) {
-			vertices.push(points[handlePositions[i]]);
-		}
-		return vertices;
-	};
-
-	const drawRectangleHandles = (
-		points: LookupTable,
-		context: CanvasRenderingContext2D,
-		color: string
-	) => {
-		var vertices = getAllHandlePositions(points);
-		drawHandles(vertices, context, color, 5);
-	};
-
 	const handleMouseMove = (e: MouseEvent) => {
 		if (!dragging) return;
 		var x = e.clientX;
@@ -171,11 +153,12 @@
 	};
 
 	function generateHandleRectangles(points: LookupTable) {
+		const handleSize = 10;
 		return Object.values(points).map((point) => ({
-			x: point.x - 5, // subtract half the width of the handle to center it
-			y: point.y - 5, // subtract half the height of the handle to center it
-			width: 10,
-			height: 10
+			x: point.x - handleSize / 2,
+			y: point.y - handleSize / 2,
+			width: handleSize,
+			height: handleSize
 		}));
 	}
 
@@ -218,7 +201,7 @@
 <div
 	id={polygon.id}
 	style="position: absolute; left: {Math.min(
-		polygon.vertices[0].x + 5,
+		polygon.vertices[0].x,
 		polygon.vertices[2].x
 	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px; border:thin"
 >
@@ -227,6 +210,7 @@
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
+		class="rounded-sm"
 	>
 		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
 		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1">
@@ -238,10 +222,10 @@
 		>
 			<!-- Draw rectangle -->
 			<rect
-				x={points.ml.x}
-				y={points.mt.y}
-				width={points.mr.x - points.ml.x}
-				height={points.mb.y - points.mt.y}
+				x={points.tl.x}
+				y={points.tl.y}
+				width={points.br.x - points.tl.x}
+				height={points.br.y - points.tl.y}
 				fill="transparent"
 				stroke="red"
 			/>
@@ -251,8 +235,10 @@
 					y={handle.y}
 					width={handle.width}
 					height={handle.height}
-					fill="blue"
-					stroke="black"
+					fill="#121212"
+					stroke="red"
+					rx="3"
+					ry="3"
 				/>
 			{/each}
 		</svg>
