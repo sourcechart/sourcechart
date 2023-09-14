@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { navBarState } from '$lib/io/Stores';
-	import cursor from 'bootstrap-icons/icons/cursor.svg';
 
 	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();

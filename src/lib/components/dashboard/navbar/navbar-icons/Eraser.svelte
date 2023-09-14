@@ -1,4 +1,3 @@
-<!-- Eraser icon by Arthur Shlain from Usefulicons.com -->
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { navBarState } from '$lib/io/Stores';
