@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { touchStates } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
-	import { drawEraserTrail } from './draw-utils/Draw';
+	import { drawEraserTrail } from '../draw-utils/Draw';
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;

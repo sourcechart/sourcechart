@@ -34,16 +34,14 @@
 				charts[$i].yColumn = column;
 				yAxisValue = column;
 
-				// Check if the selected column is of type 'number'
 				const selectedColumnSchema = $allCharts[$i].schema.find(
-					(item: string) => item.name === column
+					(item: { name: string }) => item.name === column
 				);
 
 				if (selectedColumnSchema && selectedColumnSchema.type === 'number') {
-					charts[$i].aggregator = 'count';
+					charts[$i].aggregator = 'count'; //@ts-ignore
 					if (charts[$i].xColumn) charts[$i].groupbyColumns = [charts[$i].xColumn];
 				}
-				console.log(charts[$i]);
 			}
 			return charts;
 		});

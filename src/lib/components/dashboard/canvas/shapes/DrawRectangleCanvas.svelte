@@ -6,8 +6,8 @@
 		getChartOptions,
 		activeSidebar
 	} from '$lib/io/Stores';
-	import { isPointInPolygon } from './draw-utils/PolygonOperations';
-	import { drawHandles, drawRectangle } from './draw-utils/Draw';
+	import { isPointInPolygon } from '../draw-utils/PolygonOperations';
+	import { drawHandles, drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
 
@@ -203,6 +203,11 @@
 
 	$: plotWidth = getPlotWidth();
 	$: plotHeight = getPlotHeight();
+
+	const handleRightClick = (e: MouseEvent) => {
+		e.preventDefault();
+		console.log('Right-clicked on canvas!');
+	};
 </script>
 
 <div
@@ -217,6 +222,7 @@
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
+		on:contextmenu={handleRightClick}
 	>
 		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
 		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1">

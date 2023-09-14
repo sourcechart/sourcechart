@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
 	import DrawEraserTrail from './shapes/DrawEraserTrail.svelte';
-	import * as PolyOps from './shapes/draw-utils/PolygonOperations';
+	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
 		navBarState,
 		mouseEventState,
@@ -14,7 +14,7 @@
 		activeDropZone
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
-	import { resizeRectangle } from './shapes/draw-utils/Draw';
+	import { resizeRectangle } from './draw-utils/Draw';
 	import { generateID } from '$lib/io/GenerateID';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
