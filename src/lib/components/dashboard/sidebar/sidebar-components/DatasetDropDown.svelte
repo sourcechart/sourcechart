@@ -59,12 +59,14 @@
 		const db = await DuckDBClient.of([dataObject]);
 		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
 		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
-		var columns = resp.schema.map((item) => item['name']);
+		var schema = resp.schema; //@ts-ignore
+		var columns = schema.map((item) => item['name']);
 
 		duckDBInstanceStore.set(db);
 
 		allCharts.update((charts) => {
 			let chart = charts[$i];
+			chart.schema = schema;
 			chart.columns = columns;
 			return charts;
 		});
