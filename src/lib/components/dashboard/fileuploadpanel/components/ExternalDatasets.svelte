@@ -3,6 +3,8 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { onMount } from 'svelte';
 	import { activeDropZone, createFileStore } from '$lib/io/Stores'; //@ts-ignore
+	import { ChervonDoubleDownSolid, ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
+
 	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
 	import TableHead from 'flowbite-svelte/TableHead.svelte'; //@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
@@ -75,6 +77,10 @@
 		activeDropZone.set(false);
 	};
 
+	const downloadRawDataset = async (dataset: ExternalDataset) => {
+		const response = await fetch(dataset.url);
+	};
+
 	onMount(loadWorker);
 </script>
 
@@ -95,6 +101,11 @@
 					<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
 						>Add Dataset</Button
 					>
+				</TableBodyCell>
+				<TableBodyCell>
+					<button on:click={() => downloadRawDataset(dataset)}>
+						<ChevronDoubleDownOutline class="h-4 w-4 hover:bg-gray-300" />
+					</button>
 				</TableBodyCell>
 			</TableBodyRow>
 		{/each}
