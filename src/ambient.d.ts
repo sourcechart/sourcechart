@@ -20,6 +20,7 @@ type Chart = {
 	datasetID: string | null;
 	columns: Array<string>;
 	groupbyColumns: Array<string>;
+	schema: any;
 	filterColumns: Array<any>;
 	xColumn: string | null;
 	yColumn: string | null;

@@ -15,7 +15,7 @@
 </script>
 
 <div
-	class="relative dark:bg-gray-700 bg-white px-6 pb-8 pt-10 shadow-xl ring-1 ring-gray-900/5 w-auto sm:mx-auto sm:max-w-xl sm:rounded-lg sm:px-10 overflow-hidden"
+	class="relative filePanelBackground px-6 pb-8 pt-10 shadow-xl ring-1 ring-gray-900/5 w-auto sm:mx-auto sm:max-w-xl sm:rounded-lg sm:px-10 overflow-hidden"
 >
 	<div class="mx-auto max-w-full">
 		<h1 class="text-xl dark:text-gray-300">Add Data to Plot</h1>
@@ -38,5 +38,8 @@
 		position: absolute;
 		top: 10px;
 		right: 10px;
+	}
+	.filePanelBackground {
+		background-color: #2c2d2d;
 	}
 </style>

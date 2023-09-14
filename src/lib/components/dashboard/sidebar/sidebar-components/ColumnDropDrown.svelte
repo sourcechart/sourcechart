@@ -1,100 +1,129 @@
 <script lang="ts">
-	import {
-		columnLabel,
-		getColumnsFromFile,
-		clickedChartIndex,
-		chartOptions,
-		allCharts
-	} from '$lib/io/Stores'; //@ts-ignore
+	import { getColumnsFromFile, clickedChartIndex, allCharts } from '$lib/io/Stores';
+	import { onDestroy } from 'svelte';
 
-	export let axis = '';
-	let tags: Array<string | null> = [];
-	let isDropdownOpen: boolean = false;
+	let currentAxis = '';
+	let xAxisValue = 'Select Column for X Axis';
+	let yAxisValue = 'Select Column for Y Axis';
+	let xDropdownOpen = false;
+	let yDropdownOpen = false;
+	let xDropdownContainer: HTMLElement;
+	let yDropdownContainer: HTMLElement;
 
 	$: i = clickedChartIndex();
-	$: drawerOptions = chartOptions();
 	$: columns = getColumnsFromFile();
-	$: label = columnLabel(axis);
-
-	$: if ($drawerOptions.xColumn && $drawerOptions.yColumn && tags.length == 0) {
-		tags = getTagsOnClick();
-	}
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
-		if (axis.toUpperCase() === 'X') {
-			tags = $allCharts[$i]?.xColumn ? [$allCharts[$i].xColumn] : [];
-		} else if (axis.toUpperCase() === 'Y') {
-			tags = $allCharts[$i]?.yColumn ? [$allCharts[$i].yColumn] : [];
+		xAxisValue = $allCharts[$i]?.xColumn || 'Select Column for X Axis';
+		yAxisValue = $allCharts[$i]?.yColumn || 'Select Column for Y Axis';
+	}
+
+	const toggleDropdown = (axis: string) => {
+		currentAxis = axis;
+		xDropdownOpen = axis === 'X' ? !xDropdownOpen : false;
+		yDropdownOpen = axis === 'Y' ? !yDropdownOpen : false;
+	};
+
+	const chooseColumn = (column: string) => {
+		allCharts.update((charts) => {
+			if (currentAxis === 'X') {
+				charts[$i].xColumn = column;
+				xAxisValue = column;
+			}
+			if (currentAxis === 'Y') {
+				charts[$i].yColumn = column;
+				yAxisValue = column;
+			}
+			return charts;
+		});
+	};
+
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (
+			xDropdownContainer &&
+			!xDropdownContainer.contains(event.target as Node) &&
+			yDropdownContainer &&
+			!yDropdownContainer.contains(event.target as Node)
+		) {
+			xDropdownOpen = false;
+			yDropdownOpen = false;
+		}
+	};
+
+	$: {
+		if (xDropdownOpen || yDropdownOpen) {
+			document.addEventListener('click', handleOutsideClick);
+		} else {
+			document.removeEventListener('click', handleOutsideClick);
 		}
 	}
 
-	const getTagsOnClick = () => {
-		tags = [];
-		if (axis.toUpperCase() === 'X') {
-			if ($drawerOptions?.xColumn) {
-				tags = [$drawerOptions?.xColumn];
-			} else {
-				tags = [];
-			}
-		}
-		if (axis.toUpperCase() === 'Y') {
-			if ($drawerOptions?.yColumn) {
-				tags = [$drawerOptions?.yColumn];
-			} else {
-				tags = [];
-			}
-		}
-		return tags;
-	};
-
-	const chooseColumn = (column: string | null) => {
-		if (column) {
-			allCharts.update((charts) => {
-				if (axis.toUpperCase() === 'X') {
-					charts[$i].xColumn = column;
-					tags = [column];
-				}
-				if (axis.toUpperCase() === 'Y') {
-					charts[$i].yColumn = column;
-					tags = [column];
-				}
-				return charts;
-			});
-		} else {
-			tags = [];
-		}
-	};
-	const toggleDropdown = () => {
-		isDropdownOpen = !isDropdownOpen;
-	};
+	onDestroy(() => {
+		document.removeEventListener('click', handleOutsideClick);
+	});
 </script>
 
-<div class="relative group" on:click={toggleDropdown} on:keypress={null}>
-	<button class="bg-gray-900 px-3 py-2 rounded text-black hover:bg-gray-300">
-		{$label}
-	</button>
-	<div
-		class={`
-			 scrollBarDiv bg-gray-900 absolute w-full mt-2  border
-			 rounded shadow-lg transform transition-transform 
-			 origin-top h-48 overflow-y-auto overflow-x-hidden
-    		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
-	>
-		{#each $columns as column (column)}
-			<button
-				class="block w-full text-left bg-gray-900 px-3 py-2 dark:text-black hover:bg-gray-200"
-				on:click={() => {
-					chooseColumn(column);
-				}}
-			>
-				{column}
-			</button>
-		{/each}
+<div class="w-full px-4 py-2 rounded-sm relative selectFieldColor">
+	<div class="flex-grow">
+		<span class="text-sm"> X Axis </span>
+		<button
+			bind:this={xDropdownContainer}
+			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			on:click={() => toggleDropdown('X')}
+		>
+			<span class="text-sm ml-2"> {xAxisValue} </span>
+		</button>
 	</div>
+
+	{#if xDropdownOpen}
+		<button
+			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			on:click|stopPropagation={() => toggleDropdown('X')}
+		>
+			{#each $columns as column}
+				<button
+					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+					on:click={() => chooseColumn(column)}
+				>
+					{column}
+				</button>
+			{/each}
+		</button>
+	{/if}
+
+	<div class="flex-grow mt-4">
+		<span class="text-sm"> Y Axis </span>
+		<button
+			bind:this={yDropdownContainer}
+			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			on:click={() => toggleDropdown('Y')}
+		>
+			<span class="text-sm ml-2"> {yAxisValue} </span>
+		</button>
+	</div>
+
+	{#if yDropdownOpen}
+		<button
+			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			on:click|stopPropagation={() => toggleDropdown('Y')}
+		>
+			{#each $columns as column}
+				<button
+					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+					on:click={() => chooseColumn(column)}
+				>
+					{column}
+				</button>
+			{/each}
+		</button>
+	{/if}
 </div>
 
 <style>
-	/* For WebKit (Chrome, Safari) */
+	.selectFieldColor {
+		background-color: #33333d;
+	}
+
 	.scrollBarDiv::-webkit-scrollbar {
 		width: 8px;
 	}
@@ -112,5 +141,11 @@
 	.scrollBarDiv {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+		max-height: 200px; /* Adjust this value to your desired maximum height */
+		overflow-y: auto;
+	}
+
+	.selectFieldColor {
+		background-color: #33333d;
 	}
 </style>
