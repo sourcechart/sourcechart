@@ -15,6 +15,8 @@ export class Query {
 			return this.getBasicQuery();
 		} else if (this.workFlow === 'cluster') {
 			return this.getClusterQuery();
+		} else if (this.workFlow === 'export') {
+			return this.getExportQuery();
 		} else {
 			return '';
 		}
@@ -106,6 +108,32 @@ export class Query {
 		} else {
 			return '';
 		}
+	}
+
+	private getAllColumnsQuery(): string {
+		const columns = [
+			...this.queryObject.queries.select.basic.groupbyColumns,
+			this.queryObject.queries.select.basic.xColumn.column,
+			this.queryObject.queries.select.basic.yColumn.column
+		];
+		const uniqueColumns = [...new Set(columns)]; // To ensure unique columns.
+		return uniqueColumns.join(', ');
+	}
+
+	public getExportQuery(): string {
+		const columns = this.getAllColumnsQuery();
+		let file: string = '';
+		if (this.queryObject.queries.select.basic.from) {
+			file = checkNameForSpacesAndHyphens(this.queryObject.queries.select.basic.from);
+		}
+		let filters = '';
+
+		if (this.queryObject.queries.select.basic.filterColumns.length > 0) {
+			filters = this.constructFilters(this.queryObject.queries.select.basic.filterColumns, false);
+		}
+
+		const queryParts = [`SELECT ${columns} FROM ${file}`, filters];
+		return queryParts.join(' ').trim();
 	}
 
 	private checkAggregator(

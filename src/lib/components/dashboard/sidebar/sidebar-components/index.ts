@@ -7,6 +7,7 @@ import ChartDropdown from './ChartDropdown.svelte';
 import ChooseIDColumn from './ChooseIDColumn.svelte';
 import Tags from './Tags.svelte';
 import AddFilter from './AddFilter.svelte';
+import ExportToCSV from './ExportToCSV.svelte';
 
 export {
 	Tags,

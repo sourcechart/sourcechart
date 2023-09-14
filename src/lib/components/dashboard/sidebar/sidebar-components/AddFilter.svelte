@@ -38,4 +38,7 @@
 	.selectFieldColor {
 		background-color: #cd9f34;
 	}
+	.selectFieldColor:hover {
+		background-color: #fccb59;
+	}
 </style>
