@@ -3,6 +3,8 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { onMount } from 'svelte';
 	import { activeDropZone, createFileStore } from '$lib/io/Stores'; //@ts-ignore
+	import { ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
+	//@ts-ignore
 	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
 	import TableHead from 'flowbite-svelte/TableHead.svelte'; //@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
@@ -75,6 +77,33 @@
 		activeDropZone.set(false);
 	};
 
+	function downloadRawCSV(csvData: string, filename: string) {
+		const blob = new Blob([csvData], { type: 'text/csv' });
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement('a');
+
+		a.setAttribute('hidden', '');
+		a.setAttribute('href', url);
+		a.setAttribute('download', filename);
+
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+	}
+
+	const downloadRawDataset = async (dataset: ExternalDataset) => {
+		try {
+			const response = await fetch(dataset.url);
+			console.log(response);
+			const data = await response.text(); // Assuming the data is in JSON format
+			console.log(data);
+
+			downloadRawCSV(data, 'dataset.csv');
+		} catch (error) {
+			console.error('Error downloading dataset:', error);
+		}
+	};
+
 	onMount(loadWorker);
 </script>
 
@@ -95,6 +124,11 @@
 					<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
 						>Add Dataset</Button
 					>
+				</TableBodyCell>
+				<TableBodyCell>
+					<button on:click={() => downloadRawDataset(dataset)}>
+						<ChevronDoubleDownOutline class="h-4 w-4 hover:bg-gray-300" />
+					</button>
 				</TableBodyCell>
 			</TableBodyRow>
 		{/each}

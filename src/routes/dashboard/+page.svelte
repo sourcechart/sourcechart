@@ -4,9 +4,10 @@
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 
-	import DarkMode from 'flowbite-svelte/DarkMode.svelte';
+	//@ts-ignore
+	//import DarkMode from 'flowbite-svelte/DarkMode.svelte';
 	import { onMount } from 'svelte';
-	import { allCharts, clickedChartIndex, activeDropZone, activeSidebar } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex, activeDropZone } from '$lib/io/Stores';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { duckDBInstanceStore } from '$lib/io/Stores';
@@ -69,26 +70,29 @@
 	onMount(loadPreviousState);
 </script>
 
-<div class="dark:bg-gray-900 overflow-hidden">
-	<div class="flex justify-center items-center mt-3 z-30">
-		<DarkMode />
+<div class="dark:bg-gray-900 no-scroll">
+	<div class="flex justify-center items-center mt-6 z-30">
 		<NavBar />
 	</div>
-	{#if $activeSidebar}
-		<div class="fixed z-30 ml-1">
-			<Sidebar {data} />
-		</div>
-	{/if}
-
+	<div class="absolute z-30 ml-6 mt-6">
+		<Sidebar />
+	</div>
 	<div class="relative">
 		{#if $activeDropZone}
 			<div class="z-30 absolute inset-0 flex justify-center items-center w-screen h-screen">
 				<FileUploadPanel />
 			</div>
 		{/if}
-
 		<div class="z-0 relative w-screen h-screen">
 			<Canvas />
 		</div>
 	</div>
 </div>
+
+<style>
+	.no-scroll {
+		widows: 100vw;
+		height: 100vh;
+		overflow: hidden;
+	}
+</style>

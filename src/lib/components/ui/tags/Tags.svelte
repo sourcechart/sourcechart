@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { CloseSolid } from 'flowbite-svelte-icons';
 
 	export let items: Array<string> = [];
 	export let removeItem: (item: string) => void;
 
 	let selectedItem: number | null = null;
-	let value: string = '';
 
 	function selectItem(index: number) {
 		removeItem(items[index]);
@@ -35,33 +35,75 @@
 	});
 </script>
 
-<div class="flex justify-center items-center">
-	<div
-		class="flex items-center rounded-full bg-white shadow px-4 py-2 w-64 border border-gray-300 text-base"
-	>
-		{#each items as item, i (i)}
+<div class=" scrollBarDiv flex justify-start items-center rounded-md overflow-x-auto tagsColor">
+	{#each items as item, i (i)}
+		<div
+			role="button"
+			class="flex items-center m-2 rounded-sm bg-gray-700 text-white px-4 py-1 text-sm cursor-pointer hover:bg-gray-600 transition duration-150 ease-in-out"
+			tabindex="0"
+			on:click={() => selectItem(i)}
+			on:keydown={(e) => {
+				if (e.key === 'Enter') selectItem(i);
+			}}
+		>
+			<span class="mr-2">{item}</span>
 			<div
 				role="button"
-				class="mr-2 rounded-full bg-blue-600 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-500"
+				class="inline-block ml-2 text-xs cursor-pointer hover:text-gray-400"
 				tabindex="0"
-				on:click={() => selectItem(i)}
-				on:keydown={(e) => {
-					if (e.key === 'Enter') selectItem(i);
+				on:click|stopPropagation={() => removeItem(item)}
+				on:keydown|stopPropagation={(e) => {
+					if (e.key === 'Enter') removeItem(item);
 				}}
 			>
-				{item}
-				<div
-					role="button"
-					class="inline-block ml-2 text-xs cursor-pointer"
-					tabindex="0"
-					on:click|stopPropagation={() => removeItem(item)}
-					on:keydown|stopPropagation={(e) => {
-						if (e.key === 'Enter') removeItem(item);
-					}}
-				>
-					x
-				</div>
+				<CloseSolid class="w-2 h-2" color="white" />
 			</div>
-		{/each}
-	</div>
+		</div>
+	{/each}
 </div>
+
+<style>
+	/* Scrollbar styles */
+	.sidebar-inner::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	.sidebar-inner::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
+	}
+
+	.sidebar-inner::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(255, 255, 255, 0.5);
+	}
+
+	.sidebar-inner {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
+	}
+
+	.tagsColor {
+		background-color: rgb(18, 18, 18);
+	}
+
+	.scrollBarDiv::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.scrollBarDiv::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
+	}
+
+	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(168, 168, 168, 0.5);
+	}
+
+	/* For Firefox */
+	.scrollBarDiv {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+		max-height: 200px; /* Adjust this value to your desired maximum height */
+		overflow-y: auto;
+	}
+</style>

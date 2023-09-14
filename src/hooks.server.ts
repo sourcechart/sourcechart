@@ -24,6 +24,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return session;
 	};
 
+	/*
+
 	if (event.url.pathname.startsWith('/dashboard')) {
 		const session = await event.locals.getSession();
 		if (!session) {
@@ -32,6 +34,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
+
 	if (event.url.pathname.startsWith('/dashboard') && event.request.method === 'GET') {
 		const session = await event.locals.getSession();
 		if (!session) {
@@ -39,6 +42,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			throw error(303, '/login');
 		}
 	}
+	*/
 
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {

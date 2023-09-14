@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { clearChartOptions } from '$lib/io/Stores'; //@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte';
+	//import Button from 'flowbite-svelte/Button.svelte';
 
 	function clearUpdatedChartObject() {
 		$clearChartOptions = true;
@@ -10,6 +10,8 @@
 	}
 </script>
 
+<!--
 <Button on:click={clearUpdatedChartObject} type="button" pill={false} outline={false}>
 	Clear Choices
 </Button>
+-->

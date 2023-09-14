@@ -6,14 +6,15 @@
 		getChartOptions,
 		activeSidebar
 	} from '$lib/io/Stores';
-	import { isPointInPolygon } from './draw-utils/PolygonOperations';
-	import { drawHandles, drawRectangle } from './draw-utils/Draw';
+	import { isPointInPolygon } from '../draw-utils/PolygonOperations';
+	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
+	import { onMount } from 'svelte';
 
 	export let polygon: Polygon;
 
-	const highlightcolor: string = 'red';
+	const highlightcolor: string = 'transparent';
 	const defaultcolor: string = 'transparent';
 
 	let offsetX = 0;
@@ -48,6 +49,18 @@
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
 
+	onMount(() => {
+		// Add global event listeners
+		window.addEventListener('mousemove', handleMouseMove);
+		window.addEventListener('mouseup', handleMouseUp);
+
+		return () => {
+			// Cleanup the global event listeners
+			window.removeEventListener('mousemove', handleMouseMove);
+			window.removeEventListener('mouseup', handleMouseUp);
+		};
+	});
+
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
 		var vertices: LookupTable = {
 			tl: { x: shrink, y: shrink }, // top-left
@@ -68,7 +81,7 @@
 		context: CanvasRenderingContext2D,
 		color: string
 	) => {
-		var rectangleVertices: string[] = ['tl', 'tr', 'br', 'bl'];
+		var rectangleVertices: string[] = ['mt', 'mr', 'mb', 'ml'];
 		var vertices: Point[] = [];
 		for (var i = 0; i < rectangleVertices.length; i++) {
 			vertices.push(points[rectangleVertices[i]]);
@@ -86,24 +99,6 @@
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;
 		}
-	};
-
-	const getAllHandlePositions = (points: LookupTable): Point[] => {
-		var handlePositions = ['tl', 'tr', 'br', 'bl', 'mt', 'mr', 'mb', 'ml'];
-		var vertices: Point[] = [];
-		for (var i = 0; i < handlePositions.length; i++) {
-			vertices.push(points[handlePositions[i]]);
-		}
-		return vertices;
-	};
-
-	const drawRectangleHandles = (
-		points: LookupTable,
-		context: CanvasRenderingContext2D,
-		color: string
-	) => {
-		var vertices = getAllHandlePositions(points);
-		drawHandles(vertices, context, color, 5);
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
@@ -170,6 +165,16 @@
 		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
 	};
 
+	function generateHandleRectangles(points: LookupTable) {
+		const handleSize = 10;
+		return Object.values(points).map((point) => ({
+			x: point.x - handleSize / 2,
+			y: point.y - handleSize / 2,
+			width: handleSize,
+			height: handleSize
+		}));
+	}
+
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
 		var startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
@@ -196,12 +201,13 @@
 			plotWidth = getPlotWidth();
 			plotHeight = getPlotHeight();
 
-			drawRectangleHandles(points, context, color);
 			drawRectangleCanvas(points, context, color);
 		}
 	});
 
 	$: plotWidth = getPlotWidth();
+	$: points = calculateVertices(rectWidth, rectHeight, 5);
+	$: handles = generateHandleRectangles(points);
 	$: plotHeight = getPlotHeight();
 </script>
 
@@ -210,17 +216,44 @@
 	style="position: absolute; left: {Math.min(
 		polygon.vertices[0].x,
 		polygon.vertices[2].x
-	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
+	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px; border:thin"
 >
 	<div
 		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
+		class="rounded-sm"
 	>
 		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
 		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1">
 			<Chart {options} renderer={'svg'} />
 		</div>
+		<svg
+			style="position: absolute; width: {plotWidth}px; height: {plotHeight}px;"
+			viewBox={`0 0 ${plotWidth} ${plotHeight}`}
+		>
+			<!-- Draw rectangle -->
+			<rect
+				x={points.tl.x}
+				y={points.tl.y}
+				width={points.br.x - points.tl.x}
+				height={points.br.y - points.tl.y}
+				fill="transparent"
+				stroke="#C874D9"
+			/>
+			{#each handles as handle}
+				<rect
+					x={handle.x}
+					y={handle.y}
+					width={handle.width}
+					height={handle.height}
+					fill="#121212"
+					stroke="#9d99dc"
+					rx="3"
+					ry="3"
+				/>
+			{/each}
+		</svg>
 	</div>
 </div>

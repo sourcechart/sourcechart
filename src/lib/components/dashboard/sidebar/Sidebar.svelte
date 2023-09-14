@@ -1,68 +1,167 @@
 <script lang="ts">
-	import LowCodeSidebarTab from './LowCodeSidebarTab.svelte';
-	import FileUploadButton from './sidebar-components/FileUploadButton.svelte'; //@ts-ignore
-	import Tabs from 'flowbite-svelte/Tabs.svelte'; //@ts-ignore
-	import TabItem from 'flowbite-svelte/TabItem.svelte'; //@ts-ignore
-	import { SidebarWrapper } from '$lib/components/ui'; //@ts-ignore
-	import { DatasetDropDown } from './sidebar-components';
 	import { clickInside } from '$lib/actions/MouseActions';
-	import { activeSidebar, allCharts, mostRecentChartID } from '$lib/io/Stores'; //@ts-ignore
-	import Label from 'flowbite-svelte/Label.svelte';
+	import { activeSidebar } from '$lib/io/Stores';
+	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
+	import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
+	import Groupby from './sidebar-components/Groupby.svelte';
+	import Aggregator from './sidebar-components/Aggregator.svelte';
+	import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
+	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
+	import AddFilter from './sidebar-components/AddFilter.svelte';
+	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
+	import { onMount } from 'svelte';
 
-	export let data;
+	let syncWorker: Worker | undefined = undefined;
 
-	const handleClickInside = () => {
-		$activeSidebar = true;
+	const loadWorker = async () => {
+		const SyncWorker = await import('$lib/io/web.worker?worker');
+		syncWorker = new SyncWorker.default();
 	};
-
-	function clickClusterTab() {
-		allCharts.update((charts) => {
-			charts.forEach((chart) => {
-				if (chart.chartID === $mostRecentChartID) {
-					chart.workflow = 'cluster';
-				}
-			});
-			return charts;
-		});
-	}
-
-	function clickBasicTab() {
-		allCharts.update((charts) => {
-			charts.forEach((chart) => {
-				if (chart.chartID === $mostRecentChartID) {
-					chart.workflow = 'basic';
-				}
-			});
-			return charts;
-		});
-	}
+	onMount(loadWorker);
 </script>
 
-<div use:clickInside={{ clickInside: handleClickInside }} class="space-y-4">
-	<SidebarWrapper bind:open={$activeSidebar} id="sidebar">
-		<div class="flex flex-col space-y-1 mt-2 mb-2">
-			<Label class="space-y-2 mb-1">
-				<span>Upload Files</span>
-			</Label>
-			<FileUploadButton />
+{#if $activeSidebar}
+	<div use:clickInside={{ clickInside: () => ($activeSidebar = true) }} class="sidebar-outer">
+		<div class="sidebar-inner">
+			<div class="mb-4">
+				<div
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Upload Files</span>
+				</div>
+				<div class="rounded-t-none selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4 shadow-md"
+					>
+						<FileUploadButton />
+					</div>
+				</div>
+			</div>
+			<div class="mb-4">
+				<div
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Choose Dataset</span>
+				</div>
+				<div class="rounded-t-none selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4 shadow-md"
+					>
+						<DatasetDropDown />
+					</div>
+				</div>
+			</div>
+			<div class="mb-4">
+				<div
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Chart</span>
+				</div>
+				<div class="rounded-t-none selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4 shadow-md"
+					>
+						<ChartDropdown sideBarVersion={'LowCode'} />
+					</div>
+				</div>
+			</div>
+			<div class="mb-4">
+				<div
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Axis</span>
+				</div>
+				<div class="rounded-t-none selectedButtonColor">
+					<div
+						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
+					>
+						<ColumnDropDown />
+					</div>
+				</div>
+			</div>
+			<div class="mb-4">
+				<div class="w-full flex items-center justify-between text-gray-300 hover:text-gray-100">
+					<span class="mr-4 text-sm">Groupby</span>
+				</div>
+				<div class="font-medium text-gray-400 w-full justify-items-center shadow-md">
+					<Groupby />
+				</div>
+			</div>
+
+			<div class="mb-4">
+				<div
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Aggregator</span>
+				</div>
+
+				<div class="rounded-t-none selectedButtonColor">
+					<div class="w-full font-medium text-gray-400 flex items-center justify-between shadow-md">
+						<Aggregator />
+					</div>
+				</div>
+			</div>
+
+			<!-- Filter -->
+			<div class="mb-4">
+				<div
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Filters</span>
+				</div>
+				<div class="w-full font-medium">
+					<AddFilter />
+				</div>
+			</div>
+
+			<div class="mb-4">
+				<div
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+				>
+					<span class="mr-4 text-sm">Export</span>
+				</div>
+				<div class="w-full font-medium">
+					<ExportToCSV />
+				</div>
+			</div>
 		</div>
-		<div class="flex flex-col space-y-1">
-			<Label class="space-y-2 mb-1">
-				<span>Choose Dataset</span>
-			</Label>
-			<DatasetDropDown />
-		</div>
-		{#if data.session.user.email == 'noreply@gmail.com'}
-			<Tabs style="underline" contentClass="">
-				<TabItem open title="LowCode" on:click={clickBasicTab}>
-					<LowCodeSidebarTab />
-				</TabItem>
-				<TabItem title="Work Flows" on:click={clickClusterTab}>
-					<!--	<WorkflowSidebar /> -->
-				</TabItem>
-			</Tabs>
-		{:else}
-			<LowCodeSidebarTab />
-		{/if}
-	</SidebarWrapper>
-</div>
+	</div>
+{/if}
+
+<style>
+	.sidebar-outer {
+		position: fixed;
+		width: 250px;
+		overflow: hidden;
+		height: 75vh;
+		background-color: #262627;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.sidebar-inner {
+		width: 100%;
+		height: 100%;
+		overflow-y: auto;
+		padding: 1rem;
+	}
+
+	/* Scrollbar styles */
+	.sidebar-inner::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	.sidebar-inner::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
+	}
+
+	.sidebar-inner::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(255, 255, 255, 0.5);
+	}
+
+	.sidebar-inner {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
+	}
+</style>

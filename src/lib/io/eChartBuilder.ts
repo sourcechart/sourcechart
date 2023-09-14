@@ -6,7 +6,7 @@ export class EChartBuilder {
 	private xAxisType: string;
 
 	constructor(
-		chartOption: ChartType = 'bar',
+		chartOption: ChartType = 'Bar',
 		xData: Array<any> = [],
 		yData: Array<any> = [],
 		xType: string | null = 'category'

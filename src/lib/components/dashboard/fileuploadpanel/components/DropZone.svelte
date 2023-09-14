@@ -91,7 +91,14 @@
 	onMount(loadWorker);
 </script>
 
-<Dropzone id="dropzone" on:drop={dropHandle} on:dragover={dragOver} on:change={handleChange}>
+<Dropzone
+	defaultClass="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed  selectFieldColor cursor-pointer dark:hover:bg-bray-800  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
+"
+	id="dropzone"
+	on:drop={dropHandle}
+	on:dragover={dragOver}
+	on:change={handleChange}
+>
 	<svg
 		aria-hidden="true"
 		class="mb-3 w-10 h-10 text-gray-400"
@@ -115,3 +122,9 @@
 		<p>{showFiles(value)}</p>
 	{/if}
 </Dropzone>
+
+<style>
+	.selectFieldColor {
+		background-color: #33333d;
+	}
+</style>
