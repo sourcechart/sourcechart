@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { navBarState } from '$lib/io/Stores';
-	import square from 'bootstrap-icons/icons/square.svg';
 
 	$: mode = $navBarState;
 	const dispatch = createEventDispatcher();
