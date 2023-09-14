@@ -77,9 +77,8 @@
 		activeDropZone.set(false);
 	};
 
-	function downloadCSV(data: any[], filename: string) {
-		const csv = dataToCSV(data);
-		const blob = new Blob([csv], { type: 'text/csv' });
+	function downloadRawCSV(csvData: string, filename: string) {
+		const blob = new Blob([csvData], { type: 'text/csv' });
 		const url = window.URL.createObjectURL(blob);
 		const a = document.createElement('a');
 
@@ -95,33 +94,15 @@
 	const downloadRawDataset = async (dataset: ExternalDataset) => {
 		try {
 			const response = await fetch(dataset.url);
-			const data = await response.json(); // Assuming the data is in JSON format
-			downloadCSV(data, 'dataset.csv');
+			console.log(response);
+			const data = await response.text(); // Assuming the data is in JSON format
+			console.log(data);
+
+			downloadRawCSV(data, 'dataset.csv');
 		} catch (error) {
 			console.error('Error downloading dataset:', error);
 		}
 	};
-
-	function dataToCSV(data: any[]): string {
-		if (!data.length) return '';
-
-		const header = Object.keys(data[0]).join('\t');
-		const rows = data.map((row) => {
-			return Object.values(row)
-				.map((val) => {
-					if (
-						typeof val === 'string' &&
-						(val.includes(',') || val.includes('\n') || val.includes('"'))
-					) {
-						val = '"' + val.replace(/"/g, '""') + '"';
-					}
-					return val;
-				})
-				.join('\t');
-		});
-
-		return header + '\n' + rows.join('\n');
-	}
 
 	onMount(loadWorker);
 </script>
