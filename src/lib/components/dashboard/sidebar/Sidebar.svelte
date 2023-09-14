@@ -9,6 +9,15 @@
 	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
+	import { onMount } from 'svelte';
+
+	let syncWorker: Worker | undefined = undefined;
+
+	const loadWorker = async () => {
+		const SyncWorker = await import('$lib/io/web.worker?worker');
+		syncWorker = new SyncWorker.default();
+	};
+	onMount(loadWorker);
 </script>
 
 {#if $activeSidebar}
