@@ -227,7 +227,7 @@
 				width={points.br.x - points.tl.x}
 				height={points.br.y - points.tl.y}
 				fill="transparent"
-				stroke="red"
+				stroke="#C874D9"
 			/>
 			{#each handles as handle}
 				<rect
@@ -236,7 +236,7 @@
 					width={handle.width}
 					height={handle.height}
 					fill="#121212"
-					stroke="red"
+					stroke="#9d99dc"
 					rx="3"
 					ry="3"
 				/>
