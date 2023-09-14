@@ -120,7 +120,7 @@ const isWithinHandle = (
 const getHandlesHovered = (
 	currentMousePosition: Point,
 	polygon: Polygon,
-	tolerance: number = 30
+	tolerance: number = 20
 ): HandlePosition => {
 	const handleSize = 10;
 
@@ -128,8 +128,8 @@ const getHandlesHovered = (
 	let handles = calculateRectangleHandles(polygon);
 
 	for (let i = 0; i < handles.length; i++) {
-		const rectX = handles[i].x - handleSize / 2;
-		const rectY = handles[i].y - handleSize / 2;
+		const rectX = handles[i].x - tolerance / 2;
+		const rectY = handles[i].y - tolerance / 2;
 
 		if (isWithinHandle(x, y, rectX, rectY, handleSize, handleSize)) {
 			switch (i) {
