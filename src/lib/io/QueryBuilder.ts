@@ -54,7 +54,11 @@ export class Query {
 			y = this.checkAggregator(y, aggregator, this.queryObject.queries.select.basic.groupbyColumns);
 
 		if (filterColumns.length > 0) {
-			filters = this.constructFilters(filterColumns);
+			if (groupbyColumns.length > 0) {
+				filters = this.constructFilters(filterColumns, true);
+			} else {
+				filters = this.constructFilters(filterColumns, false);
+			}
 		}
 		var selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
 		var queryParts = [selectQuery, groupby, filters];
@@ -118,7 +122,7 @@ export class Query {
 		return yColumn;
 	}
 
-	private constructFilters(conditions: any[]): string {
+	private constructFilters(conditions: any[], hasGroupBy: boolean): string {
 		const clauses = conditions.map((condition) => {
 			if ('min' in condition.value && 'max' in condition.value) {
 				return `${checkNameForSpacesAndHyphens(condition.column)} BETWEEN ${
@@ -134,7 +138,7 @@ export class Query {
 		if (filteredClauses.length === 0) {
 			return ''; // Return an empty string if there are no valid conditions
 		}
-		return 'WHERE ' + filteredClauses.join(' AND ');
+		return (hasGroupBy ? 'HAVING ' : 'WHERE ') + filteredClauses.join(' AND ');
 	}
 
 	private constructSelect(
