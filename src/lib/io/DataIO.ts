@@ -43,6 +43,40 @@ class DataIO {
 		};
 	}
 
+	private createChartTitle(queryObject: QueryObject): string {
+		const basicQuery = queryObject.queries.select.basic;
+		let titleParts = [];
+
+		// Add the filename (if it exists) as the initial title.
+		if (basicQuery.from) {
+			titleParts.push(`Data from ${basicQuery.from}`);
+		}
+
+		// Handle the aggregation.
+		if (basicQuery.yColumn.aggregator) {
+			titleParts.push(`${basicQuery.yColumn.aggregator} of ${basicQuery.yColumn.column}`);
+		} else {
+			titleParts.push(basicQuery.yColumn.column);
+		}
+
+		// Handle the x-axis column.
+		if (basicQuery.xColumn.column) {
+			titleParts.push(`vs ${basicQuery.xColumn.column}`);
+		}
+
+		// Handle the groupby columns.
+		if (basicQuery.groupbyColumns && basicQuery.groupbyColumns.length) {
+			titleParts.push(`Grouped by ${basicQuery.groupbyColumns.join(', ')}`);
+		}
+
+		// Handle the filter columns.
+		if (basicQuery.filterColumns && basicQuery.filterColumns.length) {
+			titleParts.push(`Filtered by ${basicQuery.filterColumns.map((fc) => fc.column).join(', ')}`);
+		}
+
+		return titleParts.join(' - ');
+	}
+
 	private query() {
 		let queryObject = this.getQueryObject(this.chart);
 		const query = new Query(queryObject, this.chart.workflow);
