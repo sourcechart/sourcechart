@@ -3,8 +3,8 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { onMount } from 'svelte';
 	import { activeDropZone, createFileStore } from '$lib/io/Stores'; //@ts-ignore
-	import { ChervonDoubleDownSolid, ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
-
+	import { ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
+	//@ts-ignore
 	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
 	import TableHead from 'flowbite-svelte/TableHead.svelte'; //@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
@@ -77,9 +77,51 @@
 		activeDropZone.set(false);
 	};
 
+	function downloadCSV(data: any[], filename: string) {
+		const csv = dataToCSV(data);
+		const blob = new Blob([csv], { type: 'text/csv' });
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement('a');
+
+		a.setAttribute('hidden', '');
+		a.setAttribute('href', url);
+		a.setAttribute('download', filename);
+
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+	}
+
 	const downloadRawDataset = async (dataset: ExternalDataset) => {
-		const response = await fetch(dataset.url);
+		try {
+			const response = await fetch(dataset.url);
+			const data = await response.json(); // Assuming the data is in JSON format
+			downloadCSV(data, 'dataset.csv');
+		} catch (error) {
+			console.error('Error downloading dataset:', error);
+		}
 	};
+
+	function dataToCSV(data: any[]): string {
+		if (!data.length) return '';
+
+		const header = Object.keys(data[0]).join('\t');
+		const rows = data.map((row) => {
+			return Object.values(row)
+				.map((val) => {
+					if (
+						typeof val === 'string' &&
+						(val.includes(',') || val.includes('\n') || val.includes('"'))
+					) {
+						val = '"' + val.replace(/"/g, '""') + '"';
+					}
+					return val;
+				})
+				.join('\t');
+		});
+
+		return header + '\n' + rows.join('\n');
+	}
 
 	onMount(loadWorker);
 </script>
