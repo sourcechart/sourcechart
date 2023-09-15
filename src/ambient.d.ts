@@ -10,6 +10,7 @@ type DistanceFunction = (a: number[], b: number[]) => number;
 type PointVector = number[];
 
 type Chart = {
+	title: string;
 	chartShape: string;
 	chartType: string | null;
 	chartID: string;

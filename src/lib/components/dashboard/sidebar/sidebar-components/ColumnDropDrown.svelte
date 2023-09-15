@@ -14,7 +14,8 @@
 	$: columns = getColumnsFromFile();
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
-		xAxisValue = $allCharts[$i]?.xColumn || 'Select Column for X Axis';
+		//@ts-ignore
+		xAxisValue = $allCharts[$i]?.xColumn || 'Select Column for X Axis'; //@ts-ignore
 		yAxisValue = $allCharts[$i]?.yColumn || 'Select Column for Y Axis';
 	}
 
@@ -27,10 +28,12 @@
 	const chooseColumn = (column: string) => {
 		allCharts.update((charts) => {
 			if (currentAxis === 'X') {
+				//@ts-ignore
 				charts[$i].xColumn = column;
 				xAxisValue = column;
 			}
 			if (currentAxis === 'Y') {
+				//@ts-ignore
 				charts[$i].yColumn = column;
 				yAxisValue = column;
 
@@ -38,7 +41,7 @@
 					(item: { name: string }) => item.name === column
 				);
 
-				if (selectedColumnSchema && selectedColumnSchema.type === 'number') {
+				if (selectedColumnSchema && selectedColumnSchema.type === 'string') {
 					charts[$i].aggregator = 'count'; //@ts-ignore
 					if (charts[$i].xColumn) charts[$i].groupbyColumns = [charts[$i].xColumn];
 				}

@@ -18,5 +18,6 @@ export {
 	FileUploadButton,
 	ChartDropdown,
 	ChooseIDColumn,
-	AddFilter
+	AddFilter,
+	ExportToCSV
 };

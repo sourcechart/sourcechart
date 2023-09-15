@@ -1,6 +1,7 @@
 import type { DuckDBClient } from './DuckDBClient';
 import { Query } from '$lib/io/QueryBuilder';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
+import dayjs from 'dayjs';
 
 class DataIO {
 	private db: DuckDBClient;
@@ -35,34 +36,51 @@ class DataIO {
 			}
 		};
 	}
-
-	private createChartTitle(queryObject: QueryObject): string {
+	private createChartTitle(): {
+		text: string;
+		subtext: string;
+		left: string;
+	} {
+		const queryObject = this.getQueryObject(this.chart);
 		const basicQuery = queryObject.queries.select.basic;
-		const titleParts = [];
 
-		if (basicQuery.from) {
-			titleParts.push(`Data from ${basicQuery.from}`);
-		}
+		const mainTitleParts: string[] = [];
+		const subTitleParts: string[] = [];
 
+		// Define the Main Subject based on aggregator and yColumn
 		if (basicQuery.yColumn.aggregator) {
-			titleParts.push(`${basicQuery.yColumn.aggregator} of ${basicQuery.yColumn.column}`);
-		} else {
-			titleParts.push(basicQuery.yColumn.column);
+			mainTitleParts.push(`${basicQuery.yColumn.aggregator} of ${basicQuery.yColumn.column}`);
+		} else if (basicQuery.yColumn.column) {
+			mainTitleParts.push(basicQuery.yColumn.column);
 		}
 
+		// Determine X axis context
 		if (basicQuery.xColumn.column) {
-			titleParts.push(`vs ${basicQuery.xColumn.column}`);
+			mainTitleParts.push(`by ${basicQuery.xColumn.column}`);
 		}
 
+		// Determine Grouping Context
 		if (basicQuery.groupbyColumns && basicQuery.groupbyColumns.length) {
-			titleParts.push(`Grouped by ${basicQuery.groupbyColumns.join(', ')}`);
+			mainTitleParts.push(`Grouped by ${basicQuery.groupbyColumns.join(', ')}`);
 		}
 
+		// Add Filter Context
 		if (basicQuery.filterColumns && basicQuery.filterColumns.length) {
-			titleParts.push(`Filtered by ${basicQuery.filterColumns.map((fc) => fc.column).join(', ')}`);
+			mainTitleParts.push(
+				`Filtered by ${basicQuery.filterColumns.map((fc) => fc.column).join(', ')}`
+			);
 		}
 
-		return titleParts.join(' - ');
+		// Data source or origin as subtext
+		if (basicQuery.from) {
+			subTitleParts.push(`Data from ${basicQuery.from}`);
+		}
+
+		return {
+			text: mainTitleParts.join(' - '),
+			subtext: subTitleParts.join(' - '),
+			left: 'left'
+		};
 	}
 
 	private query() {
@@ -82,10 +100,19 @@ class DataIO {
 	private updateBasicChart(results: any[], chart: Chart) {
 		const xColumn = this.getColumn(chart.xColumn);
 		const yColumn = this.getColumn(chart.yColumn);
-		const x = results.map((item) => item[xColumn]);
+		let x = results.map((item) => item[xColumn]);
 		const y = results.map((item) => item[yColumn]);
+		const inferredFormat = this.inferDateFormat(x);
+		const allowedFormats = new Set(['HH:mm:ss', 'HH:mm', 'MM-DD', 'MMM YYYY', 'YYYY']);
+
+		if (typeof inferredFormat === 'string' && allowedFormats.has(inferredFormat)) {
+			x = x.map((dateString) => dayjs(dateString).format(inferredFormat));
+		}
+
+		var title = this.createChartTitle();
 		chart.chartOptions.xAxis.data = x;
 		chart.chartOptions.series[0].data = y;
+		chart.chartOptions.title = title;
 		return chart;
 	}
 
@@ -157,7 +184,6 @@ class DataIO {
 
 	private getAudienceSegmentationResult(results: any): any[] {
 		const multidimensialArray = results.map((obj: any) => Object.values(obj));
-		// Logic to handle audience segmentation results
 		return multidimensialArray;
 	}
 
@@ -167,15 +193,48 @@ class DataIO {
 	}
 
 	public async getDataResults(db: DuckDBClient, queryString: string): Promise<any[]> {
-		const results = await db.query(queryString);
-
-		return results;
+		try {
+			const results = await db.query(queryString);
+			return results;
+		} catch (error) {
+			return [];
+		}
 	}
-
 	public async getMultiDimensionalData(queryString: string): Promise<any[]> {
 		const results = await this.getDataResults(this.db, queryString);
 		return results.map((row) => Object.values(row));
 	}
-}
 
+	private inferDateFormat(dates: string[]): string | string[] {
+		// FOR whatever reason... this makes the dom significantly slower
+		//if (!dates.length) return [];
+
+		const dateObjects = dates.map((dateString) => dayjs(dateString, 'YYYY-MM-DD', true));
+		const allValid = dates.every((date) => dayjs(date.toString()).isValid());
+		if (!allValid) {
+			return dates; // Return original strings if any date is invalid
+		}
+
+		const minDate = dateObjects.reduce((a, b) => (a.isBefore(b) ? a : b));
+		const maxDate = dateObjects.reduce((a, b) => (a.isAfter(b) ? a : b));
+
+		const rangeInDays = maxDate.diff(minDate, 'day');
+		const rangeInHours = maxDate.diff(minDate, 'hour');
+		const rangeInMinutes = maxDate.diff(minDate, 'minute');
+		const rangeInYears = maxDate.diff(minDate, 'year');
+
+		// Decide format based on range
+		if (rangeInMinutes < 60) {
+			return 'HH:mm:ss'; // Hours, minutes, seconds
+		} else if (rangeInHours < 24) {
+			return 'HH:mm';
+		} else if (rangeInDays < 30) {
+			return 'MM-DD'; // Month-Day
+		} else if (rangeInYears < 1) {
+			return 'MM YYYY'; // Month abbreviation and Year
+		} else {
+			return 'YYYY'; // Just the year
+		}
+	}
+}
 export { DataIO };

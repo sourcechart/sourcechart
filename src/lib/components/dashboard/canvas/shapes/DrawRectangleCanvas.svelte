@@ -42,7 +42,10 @@
 				data: [],
 				type: 'bar'
 			}
-		]
+		],
+		title: {
+			left: 'left'
+		}
 	};
 
 	$: TOUCHSTATE = touchStates();
@@ -233,7 +236,6 @@
 			style="position: absolute; width: {plotWidth}px; height: {plotHeight}px;"
 			viewBox={`0 0 ${plotWidth} ${plotHeight}`}
 		>
-			<!-- Draw rectangle -->
 			<rect
 				x={points.tl.x}
 				y={points.tl.y}
