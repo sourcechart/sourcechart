@@ -5,6 +5,7 @@
 - Added Erase
 - Redid landing page
 - Fixed bug in choosing datasets
+- Added Filter Columns and More External Datasets
 
 ## August 2023
 
