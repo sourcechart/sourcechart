@@ -229,7 +229,10 @@
 		class="rounded-sm"
 	>
 		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
-		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1">
+		<div
+			style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1"
+			class="overflow-vis"
+		>
 			<Chart {options} renderer={'svg'} />
 		</div>
 		<svg
@@ -242,7 +245,9 @@
 				width={points.br.x - points.tl.x}
 				height={points.br.y - points.tl.y}
 				fill="transparent"
-				stroke="#C874D9"
+				stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
+					? '#9d99dc'
+					: 'transparent'}
 			/>
 			{#each handles as handle}
 				<rect
@@ -251,7 +256,9 @@
 					width={handle.width}
 					height={handle.height}
 					fill="#121212"
-					stroke="#9d99dc"
+					stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
+						? '#9d99dc'
+						: 'transparent'}
 					rx="3"
 					ry="3"
 				/>
