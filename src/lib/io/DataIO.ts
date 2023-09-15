@@ -206,7 +206,8 @@ class DataIO {
 	}
 
 	private inferDateFormat(dates: string[]): string | string[] {
-		//if (!dates.length) return []; // FOR whatever reason... this makes the dom signifcantly slower
+		// FOR whatever reason... this makes the dom significantly slower
+		//if (!dates.length) return [];
 
 		const dateObjects = dates.map((dateString) => dayjs(dateString, 'YYYY-MM-DD', true));
 		const allValid = dates.every((date) => dayjs(date.toString()).isValid());
