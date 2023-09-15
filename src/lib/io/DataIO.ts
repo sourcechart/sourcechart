@@ -85,11 +85,13 @@ class DataIO {
 		const yColumn = this.getColumn(chart.yColumn);
 		let x = results.map((item) => item[xColumn]);
 		const y = results.map((item) => item[yColumn]);
-
 		const inferredFormat = this.inferDateFormat(x);
-		if (typeof inferredFormat === 'string') {
+		const allowedFormats = new Set(['HH:mm:ss', 'HH:mm', 'MM-DD', 'MMM YYYY', 'YYYY']);
+
+		if (typeof inferredFormat === 'string' && allowedFormats.has(inferredFormat)) {
 			x = x.map((dateString) => dayjs(dateString).format(inferredFormat));
 		}
+
 		chart.chartOptions.xAxis.data = x;
 		chart.chartOptions.series[0].data = y;
 		return chart;
@@ -163,7 +165,6 @@ class DataIO {
 
 	private getAudienceSegmentationResult(results: any): any[] {
 		const multidimensialArray = results.map((obj: any) => Object.values(obj));
-		// Logic to handle audience segmentation results
 		return multidimensialArray;
 	}
 
@@ -184,21 +185,15 @@ class DataIO {
 	}
 
 	private inferDateFormat(dates: string[]): string | string[] {
-		// Convert date strings to dayjs objects and check validity
 		const dateObjects = dates.map((dateString) => dayjs(dateString, 'YYYY-MM-DD', true));
-
-		// Check if all dates are valid
-		const allValid = dateObjects.every((date) => date.isValid());
-
+		const allValid = dates.every((date) => dayjs(date.toString()).isValid());
 		if (!allValid) {
 			return dates; // Return original strings if any date is invalid
 		}
 
-		// Find earliest and latest dates
 		const minDate = dateObjects.reduce((a, b) => (a.isBefore(b) ? a : b));
 		const maxDate = dateObjects.reduce((a, b) => (a.isAfter(b) ? a : b));
 
-		// Calculate the range in various units
 		const rangeInDays = maxDate.diff(minDate, 'day');
 		const rangeInHours = maxDate.diff(minDate, 'hour');
 		const rangeInMinutes = maxDate.diff(minDate, 'minute');

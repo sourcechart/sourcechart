@@ -13,8 +13,6 @@
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
 
-	$: console.log($allCharts[$i]);
-
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
 		//@ts-ignore
 		xAxisValue = $allCharts[$i]?.xColumn || 'Select Column for X Axis'; //@ts-ignore
@@ -43,7 +41,6 @@
 					(item: { name: string }) => item.name === column
 				);
 
-				console.log('selectedColumnSchema', selectedColumnSchema);
 				if (selectedColumnSchema && selectedColumnSchema.type === 'string') {
 					charts[$i].aggregator = 'count'; //@ts-ignore
 					if (charts[$i].xColumn) charts[$i].groupbyColumns = [charts[$i].xColumn];
