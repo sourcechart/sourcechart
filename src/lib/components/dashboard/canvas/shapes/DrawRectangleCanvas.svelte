@@ -42,7 +42,10 @@
 				data: [],
 				type: 'bar'
 			}
-		]
+		],
+		title: {
+			left: 'left'
+		}
 	};
 
 	$: TOUCHSTATE = touchStates();
@@ -209,8 +212,6 @@
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
 	$: handles = generateHandleRectangles(points);
 	$: plotHeight = getPlotHeight();
-
-	$: console.log(options);
 </script>
 
 <div

@@ -3,6 +3,7 @@ import { mostRecentChartID, allCharts } from '$lib/io/Stores';
 const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => {
 	let chartMetaData: Chart = {
 		chartID: id,
+		title: '',
 		chartType: null,
 		chartShape: shape,
 		filename: null,

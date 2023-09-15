@@ -36,34 +36,51 @@ class DataIO {
 			}
 		};
 	}
-
-	private createChartTitle(queryObject: QueryObject): string {
+	private createChartTitle(): {
+		text: string;
+		subtext: string;
+		left: string;
+	} {
+		const queryObject = this.getQueryObject(this.chart);
 		const basicQuery = queryObject.queries.select.basic;
-		const titleParts = [];
 
-		if (basicQuery.from) {
-			titleParts.push(`Data from ${basicQuery.from}`);
-		}
+		const mainTitleParts: string[] = [];
+		const subTitleParts: string[] = [];
 
+		// Define the Main Subject based on aggregator and yColumn
 		if (basicQuery.yColumn.aggregator) {
-			titleParts.push(`${basicQuery.yColumn.aggregator} of ${basicQuery.yColumn.column}`);
-		} else {
-			titleParts.push(basicQuery.yColumn.column);
+			mainTitleParts.push(`${basicQuery.yColumn.aggregator} of ${basicQuery.yColumn.column}`);
+		} else if (basicQuery.yColumn.column) {
+			mainTitleParts.push(basicQuery.yColumn.column);
 		}
 
+		// Determine X axis context
 		if (basicQuery.xColumn.column) {
-			titleParts.push(`vs ${basicQuery.xColumn.column}`);
+			mainTitleParts.push(`by ${basicQuery.xColumn.column}`);
 		}
 
+		// Determine Grouping Context
 		if (basicQuery.groupbyColumns && basicQuery.groupbyColumns.length) {
-			titleParts.push(`Grouped by ${basicQuery.groupbyColumns.join(', ')}`);
+			mainTitleParts.push(`Grouped by ${basicQuery.groupbyColumns.join(', ')}`);
 		}
 
+		// Add Filter Context
 		if (basicQuery.filterColumns && basicQuery.filterColumns.length) {
-			titleParts.push(`Filtered by ${basicQuery.filterColumns.map((fc) => fc.column).join(', ')}`);
+			mainTitleParts.push(
+				`Filtered by ${basicQuery.filterColumns.map((fc) => fc.column).join(', ')}`
+			);
 		}
 
-		return titleParts.join(' - ');
+		// Data source or origin as subtext
+		if (basicQuery.from) {
+			subTitleParts.push(`Data from ${basicQuery.from}`);
+		}
+
+		return {
+			text: mainTitleParts.join(' - '),
+			subtext: subTitleParts.join(' - '),
+			left: 'left'
+		};
 	}
 
 	private query() {
@@ -92,8 +109,10 @@ class DataIO {
 			x = x.map((dateString) => dayjs(dateString).format(inferredFormat));
 		}
 
+		var title = this.createChartTitle();
 		chart.chartOptions.xAxis.data = x;
 		chart.chartOptions.series[0].data = y;
+		chart.chartOptions.title = title;
 		return chart;
 	}
 
@@ -174,17 +193,21 @@ class DataIO {
 	}
 
 	public async getDataResults(db: DuckDBClient, queryString: string): Promise<any[]> {
-		const results = await db.query(queryString);
-
-		return results;
+		try {
+			const results = await db.query(queryString);
+			return results;
+		} catch (error) {
+			return [];
+		}
 	}
-
 	public async getMultiDimensionalData(queryString: string): Promise<any[]> {
 		const results = await this.getDataResults(this.db, queryString);
 		return results.map((row) => Object.values(row));
 	}
 
 	private inferDateFormat(dates: string[]): string | string[] {
+		//if (!dates.length) return []; // FOR whatever reason... this makes the dom signifcantly slower
+
 		const dateObjects = dates.map((dateString) => dayjs(dateString, 'YYYY-MM-DD', true));
 		const allValid = dates.every((date) => dayjs(date.toString()).isValid());
 		if (!allValid) {
@@ -213,5 +236,4 @@ class DataIO {
 		}
 	}
 }
-
 export { DataIO };
