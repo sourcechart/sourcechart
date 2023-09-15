@@ -255,7 +255,7 @@
 			<TableHeadCell />
 		</TableHead>
 	</Table>
-	<TableBody class="divide-y">
+	<TableBody class="divide-y overflow-y-auto">
 		{#each datasets as dataset}
 			<TableBodyRow>
 				<TableBodyCell>{dataset.name}</TableBodyCell>
