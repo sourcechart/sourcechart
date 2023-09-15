@@ -209,6 +209,8 @@
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
 	$: handles = generateHandleRectangles(points);
 	$: plotHeight = getPlotHeight();
+
+	$: console.log(options);
 </script>
 
 <div
@@ -233,7 +235,6 @@
 			style="position: absolute; width: {plotWidth}px; height: {plotHeight}px;"
 			viewBox={`0 0 ${plotWidth} ${plotHeight}`}
 		>
-			<!-- Draw rectangle -->
 			<rect
 				x={points.tl.x}
 				y={points.tl.y}

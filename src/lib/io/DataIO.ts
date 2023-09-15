@@ -1,6 +1,7 @@
 import type { DuckDBClient } from './DuckDBClient';
 import { Query } from '$lib/io/QueryBuilder';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
+import dayjs from 'dayjs';
 
 class DataIO {
 	private db: DuckDBClient;
@@ -82,8 +83,13 @@ class DataIO {
 	private updateBasicChart(results: any[], chart: Chart) {
 		const xColumn = this.getColumn(chart.xColumn);
 		const yColumn = this.getColumn(chart.yColumn);
-		const x = results.map((item) => item[xColumn]);
+		let x = results.map((item) => item[xColumn]);
 		const y = results.map((item) => item[yColumn]);
+
+		const inferredFormat = this.inferDateFormat(x);
+		if (typeof inferredFormat === 'string') {
+			x = x.map((dateString) => dayjs(dateString).format(inferredFormat));
+		}
 		chart.chartOptions.xAxis.data = x;
 		chart.chartOptions.series[0].data = y;
 		return chart;
@@ -175,6 +181,41 @@ class DataIO {
 	public async getMultiDimensionalData(queryString: string): Promise<any[]> {
 		const results = await this.getDataResults(this.db, queryString);
 		return results.map((row) => Object.values(row));
+	}
+
+	private inferDateFormat(dates: string[]): string | string[] {
+		// Convert date strings to dayjs objects and check validity
+		const dateObjects = dates.map((dateString) => dayjs(dateString, 'YYYY-MM-DD', true));
+
+		// Check if all dates are valid
+		const allValid = dateObjects.every((date) => date.isValid());
+
+		if (!allValid) {
+			return dates; // Return original strings if any date is invalid
+		}
+
+		// Find earliest and latest dates
+		const minDate = dateObjects.reduce((a, b) => (a.isBefore(b) ? a : b));
+		const maxDate = dateObjects.reduce((a, b) => (a.isAfter(b) ? a : b));
+
+		// Calculate the range in various units
+		const rangeInDays = maxDate.diff(minDate, 'day');
+		const rangeInHours = maxDate.diff(minDate, 'hour');
+		const rangeInMinutes = maxDate.diff(minDate, 'minute');
+		const rangeInYears = maxDate.diff(minDate, 'year');
+
+		// Decide format based on range
+		if (rangeInMinutes < 60) {
+			return 'HH:mm:ss'; // Hours, minutes, seconds
+		} else if (rangeInHours < 24) {
+			return 'HH:mm';
+		} else if (rangeInDays < 30) {
+			return 'MM-DD'; // Month-Day
+		} else if (rangeInYears < 1) {
+			return 'MM YYYY'; // Month abbreviation and Year
+		} else {
+			return 'YYYY'; // Just the year
+		}
 	}
 }
 
