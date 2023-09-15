@@ -238,7 +238,7 @@
 			const data = await response.text(); // Assuming the data is in JSON format
 			console.log(data);
 
-			downloadRawCSV(data, 'dataset.csv');
+			downloadRawCSV(data, dataset.url.split('/').pop() + '');
 		} catch (error) {
 			console.error('Error downloading dataset:', error);
 		}
