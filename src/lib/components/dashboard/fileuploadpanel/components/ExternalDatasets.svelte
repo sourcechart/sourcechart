@@ -4,21 +4,24 @@
 	import { onMount } from 'svelte';
 	import { activeDropZone, createFileStore } from '$lib/io/Stores'; //@ts-ignore
 	import { ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
-	//@ts-ignore
-	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
-	import TableHead from 'flowbite-svelte/TableHead.svelte'; //@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
-	import TableBody from 'flowbite-svelte/TableBody.svelte'; //@ts-ignore
-	import TableBodyCell from 'flowbite-svelte/TableBodyCell.svelte'; //@ts-ignore
-	import TableBodyRow from 'flowbite-svelte/TableBodyRow.svelte'; //@ts-ignore
-	import TableHeadCell from 'flowbite-svelte/TableHeadCell.svelte';
+	import { readable } from 'svelte/store';
+	import { createTable, Subscribe, Render } from 'svelte-headless-table';
 
 	let syncWorker: Worker | undefined = undefined;
 	let fileextension: string | undefined = '';
 	let filename: string | undefined = '';
 	let size: number = 0;
 
-	const datasets: ExternalDataset[] = [
+	interface DataColumn {
+		key: string;
+		title: string;
+		value: (v: ExternalDataset) => any;
+		sortable: boolean;
+		renderValue?: (v: ExternalDataset) => string;
+		filterOptions?: any[] | ((rows: ExternalDataset[]) => any[]);
+		filterValue?: (v: ExternalDataset) => any;
+	}
+	const datasets = readable([
 		{
 			name: 'ElectionList',
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
@@ -174,7 +177,26 @@
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/urban-development_hun.csv',
 			description: 'Urban Development Hungary'
 		}
-	];
+	]);
+
+	const table = createTable(datasets);
+
+	const columns = table.createColumns([
+		table.column({
+			header: 'Name',
+			accessor: 'name'
+		}),
+		table.column({
+			header: 'URL',
+			accessor: 'url'
+		}),
+		table.column({
+			header: 'Description',
+			accessor: 'description'
+		})
+	]);
+
+	const { headerRows, rows, tableAttrs, tableBodyAttrs } = table.createViewModel(columns);
 
 	const loadWorker = async () => {
 		const SyncWorker = await import('$lib/io/web.worker?worker');
@@ -247,30 +269,78 @@
 	onMount(loadWorker);
 </script>
 
-<div class="w-full">
-	<Table>
-		<TableHead>
-			<TableHeadCell>Dataset</TableHeadCell>
-			<TableHeadCell>Description</TableHeadCell>
-			<TableHeadCell />
-		</TableHead>
-	</Table>
-	<TableBody class="divide-y overflow-y-auto">
-		{#each datasets as dataset}
-			<TableBodyRow>
-				<TableBodyCell>{dataset.name}</TableBodyCell>
-				<TableBodyCell>{dataset.description}</TableBodyCell>
-				<TableBodyCell>
-					<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
-						>Add Dataset</Button
-					>
-				</TableBodyCell>
-				<TableBodyCell>
-					<button on:click={() => downloadRawDataset(dataset)}>
-						<ChevronDoubleDownOutline class="h-4 w-4 hover:bg-gray-300" />
-					</button>
-				</TableBodyCell>
-			</TableBodyRow>
+<table {...$tableAttrs}>
+	<thead>
+		{#each $headerRows as headerRow (headerRow.id)}
+			<Subscribe rowAttrs={headerRow.attrs()} let:rowAttrs>
+				<tr {...rowAttrs}>
+					{#each headerRow.cells as cell (cell.id)}
+						<Subscribe attrs={cell.attrs()} let:attrs>
+							<th {...attrs}>
+								<Render of={cell.render()} />
+							</th>
+						</Subscribe>
+					{/each}
+				</tr>
+			</Subscribe>
 		{/each}
-	</TableBody>
-</div>
+	</thead>
+	<tbody {...$tableBodyAttrs}>
+		{#each $rows as row (row.id)}
+			<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
+				<tr {...rowAttrs}>
+					{#each row.cells as cell (cell.id)}
+						<Subscribe attrs={cell.attrs()} let:attrs>
+							<td {...attrs}>
+								<Render of={cell.render()} />
+							</td>
+						</Subscribe>
+					{/each}
+				</tr>
+			</Subscribe>
+		{/each}
+	</tbody>
+</table>
+
+<style>
+	/* Styles for the table */
+	table {
+		width: 100vw;
+		background-color: white;
+		border-collapse: collapse;
+	}
+
+	/* Styles for headers */
+	th {
+		padding: 0.5rem 1rem;
+		text-align: left;
+		background-color: white;
+		color: #4a4a4a;
+		border-left: 1px solid #e0e0e0;
+		border-top: 1px solid #e0e0e0;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
+	/* Remove border for the last header cell */
+	th:last-child {
+		border-right: 1px solid #e0e0e0;
+	}
+
+	/* Styles for table cells */
+	td {
+		padding: 0.5rem 1rem;
+		border-left: 1px solid #e0e0e0;
+	}
+
+	/* Remove border for the last table cell in each row */
+	tr td:last-child {
+		border-right: 1px solid #e0e0e0;
+	}
+
+	/* Scrollable container */
+	.scrollable-table {
+		max-width: 100%;
+		max-height: 300px; /* You can adjust this value as needed */
+		overflow: auto;
+	}
+</style>
