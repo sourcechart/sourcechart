@@ -4,24 +4,21 @@
 	import { onMount } from 'svelte';
 	import { activeDropZone, createFileStore } from '$lib/io/Stores'; //@ts-ignore
 	import { ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
-	import { readable } from 'svelte/store';
-	import { createTable, Subscribe, Render } from 'svelte-headless-table';
+	//@ts-ignore
+	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
+	import TableHead from 'flowbite-svelte/TableHead.svelte'; //@ts-ignore
+	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
+	import TableBody from 'flowbite-svelte/TableBody.svelte'; //@ts-ignore
+	import TableBodyCell from 'flowbite-svelte/TableBodyCell.svelte'; //@ts-ignore
+	import TableBodyRow from 'flowbite-svelte/TableBodyRow.svelte'; //@ts-ignore
+	import TableHeadCell from 'flowbite-svelte/TableHeadCell.svelte';
 
 	let syncWorker: Worker | undefined = undefined;
 	let fileextension: string | undefined = '';
 	let filename: string | undefined = '';
 	let size: number = 0;
 
-	interface DataColumn {
-		key: string;
-		title: string;
-		value: (v: ExternalDataset) => any;
-		sortable: boolean;
-		renderValue?: (v: ExternalDataset) => string;
-		filterOptions?: any[] | ((rows: ExternalDataset[]) => any[]);
-		filterValue?: (v: ExternalDataset) => any;
-	}
-	const datasets = readable([
+	const datasets: ExternalDataset[] = [
 		{
 			name: 'ElectionList',
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
@@ -177,26 +174,7 @@
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/urban-development_hun.csv',
 			description: 'Urban Development Hungary'
 		}
-	]);
-
-	const table = createTable(datasets);
-
-	const columns = table.createColumns([
-		table.column({
-			header: 'Name',
-			accessor: 'name'
-		}),
-		table.column({
-			header: 'URL',
-			accessor: 'url'
-		}),
-		table.column({
-			header: 'Description',
-			accessor: 'description'
-		})
-	]);
-
-	const { headerRows, rows, tableAttrs, tableBodyAttrs } = table.createViewModel(columns);
+	];
 
 	const loadWorker = async () => {
 		const SyncWorker = await import('$lib/io/web.worker?worker');
@@ -269,78 +247,65 @@
 	onMount(loadWorker);
 </script>
 
-<table {...$tableAttrs}>
-	<thead>
-		{#each $headerRows as headerRow (headerRow.id)}
-			<Subscribe rowAttrs={headerRow.attrs()} let:rowAttrs>
-				<tr {...rowAttrs}>
-					{#each headerRow.cells as cell (cell.id)}
-						<Subscribe attrs={cell.attrs()} let:attrs>
-							<th {...attrs}>
-								<Render of={cell.render()} />
-							</th>
-						</Subscribe>
-					{/each}
-				</tr>
-			</Subscribe>
+<div class="table-container scrollBarDiv">
+	<Table>
+		<TableHead>
+			<TableHeadCell>Dataset</TableHeadCell>
+			<TableHeadCell>Description</TableHeadCell>
+			<TableHeadCell />
+			<TableBodyCell />
+		</TableHead>
+	</Table>
+	<TableBody>
+		{#each datasets as dataset}
+			<TableBodyRow>
+				<TableBodyCell>{dataset.name}</TableBodyCell>
+				<TableBodyCell>{dataset.description}</TableBodyCell>
+
+				<TableBodyCell>
+					<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
+						>Add Dataset</Button
+					>
+				</TableBodyCell>
+				<TableBodyCell>
+					<Button pill={false} outline on:click={() => downloadRawDataset(dataset)}>
+						<div class="flex flex-row justify-between items-center">
+							<span class="mr-2">Download Raw CSV</span>
+							<!-- Added the `mr-2` for right margin -->
+							<ChevronDoubleDownOutline class="h-4 w-4 " />
+						</div>
+					</Button>
+				</TableBodyCell>
+			</TableBodyRow>
 		{/each}
-	</thead>
-	<tbody {...$tableBodyAttrs}>
-		{#each $rows as row (row.id)}
-			<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-				<tr {...rowAttrs}>
-					{#each row.cells as cell (cell.id)}
-						<Subscribe attrs={cell.attrs()} let:attrs>
-							<td {...attrs}>
-								<Render of={cell.render()} />
-							</td>
-						</Subscribe>
-					{/each}
-				</tr>
-			</Subscribe>
-		{/each}
-	</tbody>
-</table>
+	</TableBody>
+</div>
 
 <style>
-	/* Styles for the table */
-	table {
-		width: 100vw;
-		background-color: white;
-		border-collapse: collapse;
+	.table-container {
+		height: 300px; /* Adjust this height as per your needs */
+		overflow-y: auto;
+		overflow-x: auto;
 	}
 
-	/* Styles for headers */
-	th {
-		padding: 0.5rem 1rem;
-		text-align: left;
-		background-color: white;
-		color: #4a4a4a;
-		border-left: 1px solid #e0e0e0;
-		border-top: 1px solid #e0e0e0;
-		border-bottom: 1px solid #e0e0e0;
+	.scrollBarDiv::-webkit-scrollbar {
+		width: 8px;
 	}
 
-	/* Remove border for the last header cell */
-	th:last-child {
-		border-right: 1px solid #e0e0e0;
+	.scrollBarDiv::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
 	}
 
-	/* Styles for table cells */
-	td {
-		padding: 0.5rem 1rem;
-		border-left: 1px solid #e0e0e0;
+	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(168, 168, 168, 0.5);
 	}
 
-	/* Remove border for the last table cell in each row */
-	tr td:last-child {
-		border-right: 1px solid #e0e0e0;
-	}
-
-	/* Scrollable container */
-	.scrollable-table {
-		max-width: 100%;
-		max-height: 300px; /* You can adjust this value as needed */
-		overflow: auto;
+	/* For Firefox */
+	.scrollBarDiv {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+		max-height: 200px; /* Adjust this value to your desired maximum height */
+		overflow-y: auto;
 	}
 </style>
