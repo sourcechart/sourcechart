@@ -6,8 +6,8 @@
 	export let max: number = 1;
 
 	export let prevData: any;
-	export let lowHandle: string;
-	export let highHandle: string;
+	let lowHandle: string;
+	let highHandle: string;
 
 	let slider: HTMLElement;
 	let dragging = false;
@@ -40,10 +40,10 @@
 			return;
 		}
 
-		// Check for existing filter by column name
+		//@ts-ignore
 		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
 
-		// Check for a filter with a null column value
+		//@ts-ignore
 		const nullFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === null);
 
 		if (existingFilter) {
@@ -60,8 +60,9 @@
 				max: highHandle
 			};
 		} else {
-			// If no matching filter, append a new filter
+			//@ts-ignore
 			$allCharts[$i].filterColumns = [
+				//@ts-ignore
 				...$allCharts[$i].filterColumns,
 				{
 					column,

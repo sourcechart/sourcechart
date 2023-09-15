@@ -3,7 +3,7 @@
 	import { PlusSolid } from 'flowbite-svelte-icons';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
-	$: i = clickedChartIndex();
+	$: i = clickedChartIndex(); //@ts-ignore
 	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
 
 	let filterIDCounter = 0; // Add this line at the top
@@ -11,8 +11,10 @@
 	const addFilterToSidebar = () => {
 		filterIDCounter += 1;
 		allCharts.update((charts) => {
+			//@ts-ignore
 			charts[$i].filterColumns = [
-				...$allCharts[$i].filterColumns,
+				//@ts-ignore
+				...$allCharts[$i].filterColumns, //@ts-ignore
 				{ column: null, value: null, id: filterIDCounter }
 			];
 			return charts;
