@@ -35,7 +35,10 @@
 			type: 'category'
 		},
 		yAxis: {
-			type: 'value'
+			type: 'value',
+			axisLabel: {
+				padding: [0, 20, 10, 20] // Increased padding
+			}
 		},
 		series: [
 			{
@@ -45,6 +48,9 @@
 		],
 		title: {
 			left: 'left'
+		},
+		grid: {
+			left: '15%' // Adjust the percentage as needed
 		}
 	};
 
@@ -219,7 +225,7 @@
 	style="position: absolute; left: {Math.min(
 		polygon.vertices[0].x,
 		polygon.vertices[2].x
-	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px; border:thin"
+	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px; "
 >
 	<div
 		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
@@ -266,3 +272,11 @@
 		</svg>
 	</div>
 </div>
+
+<style>
+	.overflow-vis {
+		overflow: visible;
+		width: 100%;
+		height: 100%;
+	}
+</style>

@@ -113,6 +113,9 @@ class DataIO {
 		chart.chartOptions.xAxis.data = x;
 		chart.chartOptions.series[0].data = y;
 		chart.chartOptions.title = title;
+		chart.chartOptions.grid = {
+			left: '15%'
+		};
 		return chart;
 	}
 
