@@ -15,7 +15,6 @@ type Chart = {
 	chartType: string | null;
 	chartID: string;
 	workflow: WorkFlow;
-	polygon: Polygon;
 	filename: string | null;
 	aggregator: string | null;
 	datasetID: string | null;
@@ -25,9 +24,19 @@ type Chart = {
 	filterColumns: Array<any>;
 	xColumn: string | null;
 	yColumn: string | null;
+
+	//Maybe I should seperate this out to a different store.
 	canvasWidth: number;
 	canvasHeight: number;
+	polygon: Polygon;
+
 	chartOptions: any;
+};
+
+type Canvas = {
+	canvasWidth: number;
+	canvasHeight: number;
+	polygon: Polygon;
 };
 
 type ColumnName = {
