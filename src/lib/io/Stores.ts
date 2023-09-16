@@ -124,7 +124,7 @@ export const clickedChartIndex = () =>
 		return i;
 	});
 
-export const drawingBehavior = () => {
+export const canvasBehavior = () => {
 	return derived(
 		[navBarState, touchState, mouseType],
 		([$navBarState, $touchState, $mouseType]) => {
@@ -154,7 +154,7 @@ export const drawingBehavior = () => {
 			} else if ($navBarState === 'drawArrow' && $touchState === 'isTouching') {
 				touchState = 'isDrawingArrow';
 			} else {
-				return 'isHovering';
+				return 'default';
 			}
 			return touchState;
 		}

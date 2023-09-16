@@ -11,7 +11,7 @@
 		activeSidebar,
 		allCharts,
 		touchState,
-		drawingBehavior,
+		canvasBehavior,
 		activeDropZone
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
@@ -42,8 +42,8 @@
 	const tolerance: number = 5;
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
-	$: DRAWINGBEHAVIOR = drawingBehavior();
-	$: if ($DRAWINGBEHAVIOR) controlSidebar($DRAWINGBEHAVIOR);
+	$: CANVASBEHAVIOR = canvasBehavior();
+	$: if ($CANVASBEHAVIOR) controlSidebar($CANVASBEHAVIOR);
 
 	if (browser) {
 		onMount(() => {
@@ -109,7 +109,7 @@
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 
-		if ($DRAWINGBEHAVIOR === 'isDrawing') {
+		if ($CANVASBEHAVIOR === 'isDrawing') {
 			let targetId = generateID();
 			const polygon = {
 				id: targetId,
@@ -134,7 +134,7 @@
 	 * @param e MouseEvent
 	 */
 	const handleMouseMove = (e: MouseEvent) => {
-		if ($DRAWINGBEHAVIOR === 'isHovering') {
+		if ($CANVASBEHAVIOR === 'isHovering') {
 			handleMouseMoveUp(e.clientX, e.clientY);
 		} else {
 			handleMouseMoveDown(e.clientX, e.clientY);
@@ -249,8 +249,7 @@
 	const handleMouseMoveDown = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
-
-		switch ($touchState) {
+		switch ($CANVASBEHAVIOR) {
 			case 'isDrawing':
 				handleCreateShapes(x, y);
 				break;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { drawingBehavior } from '$lib/io/Stores';
+	import { canvasBehavior } from '$lib/io/Stores';
 	import rough from 'roughjs/bin/rough';
 
 	let canvas: HTMLCanvasElement;
@@ -12,7 +12,7 @@
 	let width: number = 0;
 	let height: number = 0;
 
-	$: DRAWINGBEHAVIOR = drawingBehavior();
+	$: CANVASBEHAVIOR = canvasBehavior();
 
 	onMount(() => {
 		roughCanvas = rough.canvas(canvas);
@@ -59,11 +59,12 @@
 		} else if (e instanceof MouseEvent) {
 			startX = e.clientX;
 			startY = e.clientY;
+			console.log(startX, startY);
 		}
 	};
 
 	const handleMove = (e: MouseEvent | TouchEvent): void => {
-		if ($DRAWINGBEHAVIOR !== 'drawArrow') return;
+		if ($CANVASBEHAVIOR !== 'isDrawingArrow') return;
 
 		if (e instanceof TouchEvent && e.touches.length) {
 			endX = e.touches[0].clientX;
@@ -78,7 +79,6 @@
 	};
 </script>
 
-<!--
 <div
 	class="absolute h-full w-full"
 	on:mousedown={handleStart}
@@ -100,4 +100,3 @@
 		}
 	}}
 />
--->
