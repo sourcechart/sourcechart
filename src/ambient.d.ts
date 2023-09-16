@@ -131,9 +131,10 @@ type MouseEvents =
 	| 'isTranslating'
 	| 'isResizing'
 	| 'isDrawing'
-	| 'isErasing';
+	| 'isErasing'
+	| 'isDrawingArrow';
 type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
-type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
+type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'drawArrow' | 'textbox';
 
 interface Rectangle {
 	x: number;

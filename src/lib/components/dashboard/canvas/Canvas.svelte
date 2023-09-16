@@ -1,6 +1,7 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
 	import DrawEraserTrail from './shapes/DrawEraserTrail.svelte';
+	import DrawArrow from './shapes/DrawArrow.svelte';
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
 		navBarState,

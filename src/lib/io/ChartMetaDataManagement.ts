@@ -23,9 +23,9 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 		But... If I use a derived store, it would do that anyway. Maybe I need to do some composition instead.
 
 		*/
-		//polygon: polygon,
-		//canvasHeight: 0,
-		//canvasWidth: 0,
+		polygon: polygon,
+		canvasHeight: 0,
+		canvasWidth: 0,
 
 		chartOptions: {
 			xAxis: { data: [], type: 'category' },
