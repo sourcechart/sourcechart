@@ -24,12 +24,12 @@
 	let scrollY: number = 0;
 	let width: number = 0;
 	let height: number = 0;
-	let newPolygon: Polygon[] = [];
+	let newPolygon: Polygon[] = []; //@ts-ignore
 	let eraserTrail: Point[] = [];
 
-	let startPosition: Point = { x: 0, y: 0 };
-	let currentMousePosition: Point = { x: 0, y: 0 };
-	let currentTouchPosition: Point = { x: 0, y: 0 };
+	let startPosition = { x: 0, y: 0 };
+	let currentMousePosition = { x: 0, y: 0 };
+	let currentTouchPosition = { x: 0, y: 0 };
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;

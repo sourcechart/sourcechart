@@ -6,7 +6,7 @@
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let width: number = 0;
-	let height: number = 0;
+	let height: number = 0; //@ts-ignore
 	let eraserTrail: Point[] = [];
 	let CANVASBEHAVIOR = canvasBehavior();
 	let offsetX: number = 0;
