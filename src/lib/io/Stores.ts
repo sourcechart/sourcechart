@@ -18,6 +18,7 @@ export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fil
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
 export const polygons = writable<Polygon[]>([]);
+export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrows', []));
 export const mouseType = writable<string | null>();
 export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
@@ -190,6 +191,7 @@ export const columnLabel = (axis: string) =>
 
 storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');
+storeToLocalStorage(arrows, 'arrows');
 
 export const dropdownStore = createDropdownStore();
 export const createFileStore = (filename: string, fileSize: number, dataID: string) => {

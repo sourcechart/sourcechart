@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { canvasBehavior } from '$lib/io/Stores';
+	import { canvasBehavior, arrows } from '$lib/io/Stores';
 	import rough from 'roughjs/bin/rough';
 
 	let canvas: HTMLCanvasElement;
@@ -22,33 +22,33 @@
 		canvas.height = height;
 	});
 
-	const drawArrow = (): void => {
+	const drawAllArrows = (): void => {
 		const context = canvas.getContext('2d');
 		if (!context) return;
 
-		// Clear canvas
 		context.clearRect(0, 0, canvas.width, canvas.height);
 
-		// Draw the arrow shaft using rough.js
-		roughCanvas.line(startX, startY, endX, endY, {
-			stroke: 'white',
-			strokeWidth: 0.5,
-			roughness: 0.4
-		});
+		$arrows.forEach((arrow) => {
+			roughCanvas.line(arrow.start.x, arrow.start.y, arrow.end.x, arrow.end.y, {
+				stroke: 'white',
+				strokeWidth: 0.5,
+				roughness: 0.4
+			});
 
-		const angle: number = Math.atan2(endY - startY, endX - startX);
-		const arrowLength: number = 10;
-		const headX1: number = endX - arrowLength * Math.cos(angle + Math.PI / 6);
-		const headY1: number = endY - arrowLength * Math.sin(angle + Math.PI / 6);
-		const headX2: number = endX - arrowLength * Math.cos(angle - Math.PI / 6);
-		const headY2: number = endY - arrowLength * Math.sin(angle - Math.PI / 6);
+			const angle: number = Math.atan2(arrow.end.y - arrow.start.y, arrow.end.x - arrow.start.x);
+			const arrowLength: number = 10;
+			const headX1: number = arrow.end.x - arrowLength * Math.cos(angle + Math.PI / 6);
+			const headY1: number = arrow.end.y - arrowLength * Math.sin(angle + Math.PI / 6);
+			const headX2: number = arrow.end.x - arrowLength * Math.cos(angle - Math.PI / 6);
+			const headY2: number = arrow.end.y - arrowLength * Math.sin(angle - Math.PI / 6);
 
-		const pathString: string = `M ${endX} ${endY} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
-		roughCanvas.path(pathString, {
-			stroke: 'white',
-			fill: 'white',
-			strokeWidth: 0.5,
-			roughness: 0.4
+			const pathString: string = `M ${arrow.end.x} ${arrow.end.y} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
+			roughCanvas.path(pathString, {
+				stroke: 'white',
+				fill: 'white',
+				strokeWidth: 0.5,
+				roughness: 0.4
+			});
 		});
 	};
 
@@ -63,6 +63,29 @@
 		}
 	};
 
+	const drawArrow = (arrow: { startX: number; startY: number; endX: number; endY: number }) => {
+		roughCanvas.line(arrow.startX, arrow.startY, arrow.endX, arrow.endY, {
+			stroke: 'white',
+			strokeWidth: 0.5,
+			roughness: 0.4
+		});
+
+		const angle: number = Math.atan2(arrow.endY - arrow.startY, arrow.endX - arrow.startX);
+		const arrowLength: number = 10;
+		const headX1: number = arrow.endX - arrowLength * Math.cos(angle + Math.PI / 6);
+		const headY1: number = arrow.endY - arrowLength * Math.sin(angle + Math.PI / 6);
+		const headX2: number = arrow.endX - arrowLength * Math.cos(angle - Math.PI / 6);
+		const headY2: number = arrow.endY - arrowLength * Math.sin(angle - Math.PI / 6);
+
+		const pathString: string = `M ${arrow.endX} ${arrow.endY} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
+		roughCanvas.path(pathString, {
+			stroke: 'white',
+			fill: 'white',
+			strokeWidth: 0.5,
+			roughness: 0.4
+		});
+	};
+
 	const handleMove = (e: MouseEvent | TouchEvent): void => {
 		if ($CANVASBEHAVIOR !== 'isDrawingArrow') return;
 
@@ -72,19 +95,35 @@
 		} else if (e instanceof MouseEvent) {
 			endX = e.clientX;
 			endY = e.clientY;
-
-			console.log('endX: ', endX, endY);
 		}
-		drawArrow();
+
+		// Clear the canvas and redraw saved arrows.
+		const context = canvas.getContext('2d');
+		if (context) {
+			context.clearRect(0, 0, canvas.width, canvas.height);
+		}
+		drawAllArrows();
+
+		// Draw the current arrow
+		drawArrow({ startX, startY, endX, endY });
+	};
+
+	const handleEnd = (): void => {
+		if ($CANVASBEHAVIOR !== 'isDrawingArrow') return;
+
+		arrows.update((a) => [...a, { start: { x: startX, y: startY }, end: { x: endX, y: endY } }]);
+		drawAllArrows();
 	};
 </script>
 
 <div
 	class="absolute h-full w-full"
 	on:mousedown={handleStart}
+	on:mouseup={handleEnd}
 	on:mousemove={handleMove}
 	on:touchstart={handleStart}
 	on:touchmove={handleMove}
+	on:touchend={handleEnd}
 >
 	<canvas style="position: absolute;" bind:this={canvas} />
 </div>
