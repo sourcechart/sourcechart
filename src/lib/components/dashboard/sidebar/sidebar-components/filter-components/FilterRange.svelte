@@ -15,7 +15,8 @@
 	let end: number;
 	let handlesDragged = false;
 
-	// Set initial values based on previous data
+	$: console.log($allCharts[$i]);
+
 	if (prevData) {
 		start = (Number(prevData.min) - min) / (max - min);
 		end = (Number(prevData.max) - min) / (max - min);
@@ -34,26 +35,20 @@
 	$: i = clickedChartIndex();
 
 	function updateFilter() {
-		// Check if column is null or undefined before proceeding
 		if (!column) {
 			console.warn('Column is not defined. Filter update skipped.');
 			return;
 		}
-
 		//@ts-ignore
-		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
-
-		//@ts-ignore
+		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column); //@ts-ignore
 		const nullFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === null);
 
 		if (existingFilter) {
-			// Update the existing filter by column name
 			existingFilter.value = {
 				min: lowHandle,
 				max: highHandle
 			};
 		} else if (nullFilter) {
-			// Update the filter that has a null column value
 			nullFilter.column = column;
 			nullFilter.value = {
 				min: lowHandle,
@@ -73,6 +68,9 @@
 				}
 			];
 		}
+
+		// Reassign the allCharts value to itself to notify Svelte of the change
+		allCharts.set($allCharts);
 	}
 
 	function draggable(node: HTMLElement) {
@@ -101,14 +99,17 @@
 		}
 
 		function handleMousemove(event: MouseEvent | TouchEvent) {
+			console.log('drag move');
 			if (!dragging) return; // If not dragging, exit the function
 
 			if (event.type === 'touchmove') {
 				event = event as TouchEvent;
 				x = event.changedTouches[0].clientX;
+				updateFilter();
 			} else {
 				event = event as MouseEvent;
 				x = event.clientX;
+				updateFilter();
 			}
 
 			node.dispatchEvent(
@@ -116,7 +117,6 @@
 					detail: { x }
 				})
 			);
-			updateFilter();
 		}
 
 		function handleMouseup() {
