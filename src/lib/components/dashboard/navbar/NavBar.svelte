@@ -15,7 +15,11 @@
 			component: Draw,
 			index: 2
 		},
-		{ name: 'Arrow', component: Arrow, index: 3 },
+		{
+			name: 'Arrow',
+			component: Arrow,
+			index: 3
+		},
 
 		{
 			name: 'Eraser',
@@ -33,7 +37,7 @@
 	class="rounded-md fixed inset-x-0 top-3 z-50 flex h-12 items-center justify-center background shadow-lg"
 >
 	<div class="flex items-center justify-center space-x-4 ml-1 mr-1">
-		{#each icons as { name, component } (name)}
+		{#each icons as { name, component, index } (name)}
 			<div class="flex items-center justify-center mx-1 rounded-md overflow-hidden">
 				<div class="relative flex flex-row justify-items-center">
 					<svelte:component this={component} on:mode={setMode} />

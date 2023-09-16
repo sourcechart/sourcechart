@@ -1,58 +1,98 @@
 <script lang="ts">
-	import { touchStates } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
-	import { drawEraserTrail } from '../draw-utils/Draw';
+	import rough from 'roughjs/bin/rough';
 
 	let canvas: HTMLCanvasElement;
-	let context: CanvasRenderingContext2D | null;
+	let roughCanvas: any;
+	let startX: number = 0;
+	let startY: number = 0;
+	let endX: number = 0;
+	let endY: number = 0;
 	let width: number = 0;
 	let height: number = 0;
-	let eraserTrail: Point[] = [];
-	let touchState = touchStates();
-	let offsetX: number = 0;
-	let offsetY: number = 0;
-	const MAX_TRAIL_LENGTH = 5;
 
 	onMount(() => {
-		context = canvas.getContext('2d');
+		roughCanvas = rough.canvas(canvas);
 		width = window.innerWidth;
 		height = window.innerHeight;
-		updateOffset();
 		canvas.width = width;
 		canvas.height = height;
 	});
 
-	const updateOffset = () => {
-		const rect = canvas.getBoundingClientRect();
-		offsetX = rect.left;
-		offsetY = Math.abs(rect.top - height);
+	const drawArrow = (): void => {
+		const context = canvas.getContext('2d');
+		if (!context) return;
+
+		// Clear canvas
+		context.clearRect(0, 0, canvas.width, canvas.height);
+
+		// Draw the arrow shaft using rough.js
+		roughCanvas.line(startX, startY, endX, endY, {
+			stroke: 'black',
+			strokeWidth: 0.5,
+			roughness: 0.4
+		});
+
+		// Calculate the angle for arrowhead
+		const angle: number = Math.atan2(endY - startY, endX - startX);
+		const arrowLength: number = 10;
+		const headX1: number = endX - arrowLength * Math.cos(angle + Math.PI / 6);
+		const headY1: number = endY - arrowLength * Math.sin(angle + Math.PI / 6);
+		const headX2: number = endX - arrowLength * Math.cos(angle - Math.PI / 6);
+		const headY2: number = endY - arrowLength * Math.sin(angle - Math.PI / 6);
+
+		// Draw the arrowhead using path in rough.js
+		const pathString: string = `M ${endX} ${endY} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
+		roughCanvas.path(pathString, {
+			stroke: 'black',
+			fill: 'black',
+			strokeWidth: 0.5,
+			roughness: 0.4
+		});
 	};
 
-	const handleMouseMove = (e: MouseEvent) => {
-		if ($touchState !== 'isErasing') return;
-
-		eraserTrail = [...eraserTrail, { x: e.clientX, y: e.clientY }];
-
-		// If the trail length exceeds the max length, remove the oldest point
-		while (eraserTrail.length > MAX_TRAIL_LENGTH) {
-			eraserTrail.shift();
-		}
-
-		if (context) {
-			// Clear the canvas
-			context.clearRect(0, 0, width, height);
-			// Draw the reduced trail on the cleared canvas
-			drawEraserTrail(eraserTrail, context, '#433f3f50', 4);
+	const handleStart = (e: MouseEvent | TouchEvent): void => {
+		if (e instanceof TouchEvent && e.touches.length) {
+			startX = e.touches[0].clientX;
+			startY = e.touches[0].clientY;
+		} else if (e instanceof MouseEvent) {
+			startX = e.clientX;
+			startY = e.clientY;
 		}
 	};
 
-	const handleMouseUp = () => {
-		if ($touchState !== 'isErasing') return;
-		if (context) {
-			eraserTrail = [];
-			context.clearRect(0, 0, width, height);
+	const handleMove = (e: MouseEvent | TouchEvent): void => {
+		if (e instanceof TouchEvent && e.touches.length) {
+			endX = e.touches[0].clientX;
+			endY = e.touches[0].clientY;
+		} else if (e instanceof MouseEvent) {
+			endX = e.clientX;
+			endY = e.clientY;
 		}
+		drawArrow();
 	};
 </script>
 
-<svg use:action />
+<div
+	class="absolute h-full w-full"
+	on:mousedown={handleStart}
+	on:mousemove={handleMove}
+	on:mouseup={handleStart}
+	on:touchstart={handleStart}
+	on:touchmove={handleMove}
+	on:touchend={handleStart}
+>
+	<canvas style="position: absolute;" bind:this={canvas} />
+</div>
+<svelte:window
+	on:resize={() => {
+		if (typeof window !== 'undefined') {
+			width = window.innerWidth;
+			height = window.innerHeight;
+			if (canvas) {
+				canvas.width = width;
+				canvas.height = height;
+			}
+		}
+	}}
+/>
