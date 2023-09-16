@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { drawingBehavior } from '$lib/io/Stores';
 	import rough from 'roughjs/bin/rough';
 
 	let canvas: HTMLCanvasElement;
@@ -10,6 +11,8 @@
 	let endY: number = 0;
 	let width: number = 0;
 	let height: number = 0;
+
+	$: DRAWINGBEHAVIOR = drawingBehavior();
 
 	onMount(() => {
 		roughCanvas = rough.canvas(canvas);
@@ -33,7 +36,6 @@
 			roughness: 0.4
 		});
 
-		// Calculate the angle for arrowhead
 		const angle: number = Math.atan2(endY - startY, endX - startX);
 		const arrowLength: number = 10;
 		const headX1: number = endX - arrowLength * Math.cos(angle + Math.PI / 6);
@@ -41,7 +43,6 @@
 		const headX2: number = endX - arrowLength * Math.cos(angle - Math.PI / 6);
 		const headY2: number = endY - arrowLength * Math.sin(angle - Math.PI / 6);
 
-		// Draw the arrowhead using path in rough.js
 		const pathString: string = `M ${endX} ${endY} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
 		roughCanvas.path(pathString, {
 			stroke: 'white',
@@ -62,6 +63,8 @@
 	};
 
 	const handleMove = (e: MouseEvent | TouchEvent): void => {
+		if ($DRAWINGBEHAVIOR !== 'drawArrow') return;
+
 		if (e instanceof TouchEvent && e.touches.length) {
 			endX = e.touches[0].clientX;
 			endY = e.touches[0].clientY;
@@ -75,14 +78,13 @@
 	};
 </script>
 
+<!--
 <div
 	class="absolute h-full w-full"
 	on:mousedown={handleStart}
 	on:mousemove={handleMove}
-	on:mouseup={handleStart}
 	on:touchstart={handleStart}
 	on:touchmove={handleMove}
-	on:touchend={handleStart}
 >
 	<canvas style="position: absolute;" bind:this={canvas} />
 </div>
@@ -98,3 +100,4 @@
 		}
 	}}
 />
+-->

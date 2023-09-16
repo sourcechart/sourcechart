@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { touchStates } from '$lib/io/Stores';
+	import { drawingBehavior } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
 	import { drawEraserTrail } from '../draw-utils/Draw';
 
@@ -8,7 +8,7 @@
 	let width: number = 0;
 	let height: number = 0;
 	let eraserTrail: Point[] = [];
-	let touchState = touchStates();
+	let DRAWINGBEHAVIOR = drawingBehavior();
 	let offsetX: number = 0;
 	let offsetY: number = 0;
 	const MAX_TRAIL_LENGTH = 5;
@@ -29,7 +29,7 @@
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
-		if ($touchState !== 'isErasing') return;
+		if ($DRAWINGBEHAVIOR !== 'isErasing') return;
 
 		eraserTrail = [...eraserTrail, { x: e.clientX, y: e.clientY }];
 
@@ -47,7 +47,7 @@
 	};
 
 	const handleMouseUp = () => {
-		if ($touchState !== 'isErasing') return;
+		if ($DRAWINGBEHAVIOR !== 'isErasing') return;
 		if (context) {
 			eraserTrail = [];
 			context.clearRect(0, 0, width, height);

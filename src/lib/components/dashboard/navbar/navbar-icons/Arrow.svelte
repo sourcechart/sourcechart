@@ -8,6 +8,8 @@
 	function clickButton() {
 		dispatch('mode', 'drawArrow');
 	}
+
+	$: console.log($navBarState);
 </script>
 
 <button

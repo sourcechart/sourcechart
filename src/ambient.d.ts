@@ -125,7 +125,7 @@ type Field = {
  *  @param isTouching when you are move your mouse and it is clicked
  */
 
-type MouseEvents =
+type TouchState =
 	| 'isHovering'
 	| 'isTouching'
 	| 'isTranslating'

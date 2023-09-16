@@ -5,13 +5,13 @@
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
 		navBarState,
-		mouseEventState,
 		polygons,
 		mostRecentChartID,
 		mouseType,
 		activeSidebar,
 		allCharts,
-		touchStates,
+		touchState,
+		drawingBehavior,
 		activeDropZone
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
@@ -42,8 +42,8 @@
 	const tolerance: number = 5;
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
-	$: TOUCHSTATE = touchStates();
-	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
+	$: DRAWINGBEHAVIOR = drawingBehavior();
+	$: if ($DRAWINGBEHAVIOR) controlSidebar($DRAWINGBEHAVIOR);
 
 	if (browser) {
 		onMount(() => {
@@ -69,6 +69,8 @@
 			activeSidebar.set(true);
 		} else if (touchstate === 'isDrawing') {
 			activeSidebar.set(true);
+		} else if (touchstate === 'isDrawingArrow') {
+			//;
 		}
 	}
 
@@ -82,17 +84,17 @@
 		var y = e.clientY - offsetY + scrollY;
 		startPosition = { x, y };
 
-		mouseEventState.set('isTouching');
+		touchState.set('isTouching');
 		const containingPolygon = PolyOps.getContainingPolygon(startPosition, $polygons);
 
 		if ($navBarState === 'select' && chartIndex >= 0 && containingPolygon) {
 			const polygon = $allCharts[chartIndex].polygon;
 			if (polygon && PolyOps.isPointInPolygon(startPosition, polygon)) {
 				if (polygon.id) mostRecentChartID.set(polygon.id);
-				mouseEventState.set('isTranslating');
+				touchState.set('isTranslating');
 				return;
 			} else {
-				mouseEventState.set('isTouching');
+				touchState.set('isTouching');
 				return;
 			}
 		}
@@ -107,7 +109,7 @@
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 
-		if ($TOUCHSTATE === 'isDrawing') {
+		if ($DRAWINGBEHAVIOR === 'isDrawing') {
 			let targetId = generateID();
 			const polygon = {
 				id: targetId,
@@ -122,7 +124,7 @@
 			addChartMetaData(targetId, $navBarState, polygon);
 		}
 
-		mouseEventState.set('isHovering');
+		touchState.set('isHovering');
 		navBarState.set('select');
 	};
 
@@ -132,7 +134,7 @@
 	 * @param e MouseEvent
 	 */
 	const handleMouseMove = (e: MouseEvent) => {
-		if ($TOUCHSTATE === 'isHovering') {
+		if ($DRAWINGBEHAVIOR === 'isHovering') {
 			handleMouseMoveUp(e.clientX, e.clientY);
 		} else {
 			handleMouseMoveDown(e.clientX, e.clientY);
@@ -170,7 +172,7 @@
 		} else if (hoverPolygon && !$mouseType) {
 			$mouseType = 'move';
 		} else {
-			$mouseType = $mouseType || 'default';
+			$mouseType = $mouseType || 'isHovering';
 		}
 	};
 
@@ -248,7 +250,7 @@
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
 
-		switch ($TOUCHSTATE) {
+		switch ($touchState) {
 			case 'isDrawing':
 				handleCreateShapes(x, y);
 				break;
