@@ -4,8 +4,8 @@
 	export let column: string;
 	export let min: number = 0;
 	export let max: number = 1;
-
 	export let prevData: any;
+
 	let lowHandle: string;
 	let highHandle: string;
 
@@ -14,8 +14,6 @@
 	let start: number;
 	let end: number;
 	let handlesDragged = false;
-
-	$: console.log($allCharts[$i]);
 
 	if (prevData) {
 		start = (Number(prevData.min) - min) / (max - min);
@@ -69,7 +67,6 @@
 			];
 		}
 
-		// Reassign the allCharts value to itself to notify Svelte of the change
 		allCharts.set($allCharts);
 	}
 

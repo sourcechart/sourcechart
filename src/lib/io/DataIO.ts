@@ -107,7 +107,6 @@ class DataIO {
 
 		if (typeof inferredFormat === 'string' && allowedFormats.has(inferredFormat)) {
 			x = x.map((dateString) => dayjs(dateString).format(inferredFormat));
-			console.log(x);
 		}
 
 		var title = this.createChartTitle();

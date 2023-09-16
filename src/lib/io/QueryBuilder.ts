@@ -163,6 +163,7 @@ export class Query {
 		});
 
 		const filteredClauses = clauses.filter(Boolean);
+
 		if (filteredClauses.length === 0) {
 			return ''; // Return an empty string if there are no valid conditions
 		}
