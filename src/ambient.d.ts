@@ -147,15 +147,10 @@ interface Rectangle {
 	draggable: boolean;
 }
 
-interface Point {
+type Point = {
 	x: number;
 	y: number;
-}
-
-interface Arrow {
-	start: Point;
-	end: Point;
-}
+};
 
 interface Polygon {
 	id?: string;

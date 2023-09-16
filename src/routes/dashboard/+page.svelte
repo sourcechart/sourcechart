@@ -4,6 +4,7 @@
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 	import { onMount } from 'svelte';
+
 	import { allCharts, clickedChartIndex, activeDropZone } from '$lib/io/Stores';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';

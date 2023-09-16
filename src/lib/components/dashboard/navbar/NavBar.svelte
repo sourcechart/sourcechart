@@ -32,8 +32,6 @@
 		console.log(event.detail);
 		navBarState.set(event.detail);
 	};
-
-	$: console.log($navBarState);
 </script>
 
 <div

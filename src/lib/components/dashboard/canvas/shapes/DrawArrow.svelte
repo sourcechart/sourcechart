@@ -1,141 +1,238 @@
 <script lang="ts">
+	import {
+		allCharts,
+		mostRecentChartID,
+		canvasBehavior,
+		getChartOptions,
+		activeSidebar
+	} from '$lib/io/Stores';
+	import { isPointInPolygon } from '../draw-utils/PolygonOperations';
+	import { drawRectangle } from '../draw-utils/Draw';
+	import { afterUpdate } from 'svelte';
 	import { onMount } from 'svelte';
-	import { canvasBehavior, arrows } from '$lib/io/Stores';
-	import rough from 'roughjs/bin/rough';
 
+	export let polygon: Polygon;
+
+	const highlightcolor: string = 'transparent';
+	const defaultcolor: string = 'transparent';
+
+	let offsetX = 0;
+	let offsetY = 0;
 	let canvas: HTMLCanvasElement;
-	let roughCanvas: any;
-	let startX: number = 0;
-	let startY: number = 0;
-	let endX: number = 0;
-	let endY: number = 0;
-	let width: number = 0;
-	let height: number = 0;
+	let context: CanvasRenderingContext2D | null;
+	let dragging = false;
+
+	let rectWidth: number = 0;
+	let rectHeight: number = 0;
+	let points: LookupTable = {};
+	let plotHeight: number = 0;
+	let plotWidth: number = 0;
 
 	$: CANVASBEHAVIOR = canvasBehavior();
 
 	onMount(() => {
-		roughCanvas = rough.canvas(canvas);
-		width = window.innerWidth;
-		height = window.innerHeight;
-		canvas.width = width;
-		canvas.height = height;
+		// Add global event listeners
+		window.addEventListener('mousemove', handleMouseMove);
+		window.addEventListener('mouseup', handleMouseUp);
+
+		return () => {
+			// Cleanup the global event listeners
+			window.removeEventListener('mousemove', handleMouseMove);
+			window.removeEventListener('mouseup', handleMouseUp);
+		};
 	});
 
-	const drawAllArrows = (): void => {
-		const context = canvas.getContext('2d');
-		if (!context) return;
+	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
+		var vertices: LookupTable = {
+			tl: { x: shrink, y: shrink }, // top-left
+			tr: { x: width - shrink, y: shrink }, // top-right
+			br: { x: width - shrink, y: height - shrink }, // bottom-right
+			bl: { x: shrink, y: height - shrink }, // bottom-left
+			mt: { x: width / 2, y: shrink }, // middle-top
+			mr: { x: width - shrink, y: height / 2 }, // middle-right
+			mb: { x: width / 2, y: height - shrink }, // middle-bottom
+			ml: { x: shrink, y: height / 2 } // middle-left
+		};
 
-		context.clearRect(0, 0, canvas.width, canvas.height);
-
-		$arrows.forEach((arrow) => {
-			roughCanvas.line(arrow.start.x, arrow.start.y, arrow.end.x, arrow.end.y, {
-				stroke: 'white',
-				strokeWidth: 0.5,
-				roughness: 0.4
-			});
-
-			const angle: number = Math.atan2(arrow.end.y - arrow.start.y, arrow.end.x - arrow.start.x);
-			const arrowLength: number = 10;
-			const headX1: number = arrow.end.x - arrowLength * Math.cos(angle + Math.PI / 6);
-			const headY1: number = arrow.end.y - arrowLength * Math.sin(angle + Math.PI / 6);
-			const headX2: number = arrow.end.x - arrowLength * Math.cos(angle - Math.PI / 6);
-			const headY2: number = arrow.end.y - arrowLength * Math.sin(angle - Math.PI / 6);
-
-			const pathString: string = `M ${arrow.end.x} ${arrow.end.y} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
-			roughCanvas.path(pathString, {
-				stroke: 'white',
-				fill: 'white',
-				strokeWidth: 0.5,
-				roughness: 0.4
-			});
-		});
+		return vertices;
 	};
 
-	const handleStart = (e: MouseEvent | TouchEvent): void => {
-		if (e instanceof TouchEvent && e.touches.length) {
-			startX = e.touches[0].clientX;
-			startY = e.touches[0].clientY;
-		} else if (e instanceof MouseEvent) {
-			startX = e.clientX;
-			startY = e.clientY;
-			console.log(startX, startY);
+	const drawRectangleCanvas = (
+		points: LookupTable,
+		context: CanvasRenderingContext2D,
+		color: string
+	) => {
+		var rectangleVertices: string[] = ['mt', 'mr', 'mb', 'ml'];
+		var vertices: Point[] = [];
+		for (var i = 0; i < rectangleVertices.length; i++) {
+			vertices.push(points[rectangleVertices[i]]);
+		}
+		drawRectangle(vertices, context, color);
+	};
+
+	const handleMouseDown = (e: MouseEvent) => {
+		var x = e.clientX; // adjust the mouse x-coordinate by the left offset of the canvas
+		var y = e.clientY;
+
+		let inPolygon = isPointInPolygon({ x, y }, polygon);
+		if (inPolygon) {
+			offsetX = x - polygon.vertices[0].x;
+			offsetY = y - polygon.vertices[0].y;
+			dragging = true;
 		}
 	};
 
-	const drawArrow = (arrow: { startX: number; startY: number; endX: number; endY: number }) => {
-		roughCanvas.line(arrow.startX, arrow.startY, arrow.endX, arrow.endY, {
-			stroke: 'white',
-			strokeWidth: 0.5,
-			roughness: 0.4
-		});
+	const handleMouseMove = (e: MouseEvent) => {
+		if (!dragging) return;
+		var x = e.clientX;
+		var y = e.clientY;
 
-		const angle: number = Math.atan2(arrow.endY - arrow.startY, arrow.endX - arrow.startX);
-		const arrowLength: number = 10;
-		const headX1: number = arrow.endX - arrowLength * Math.cos(angle + Math.PI / 6);
-		const headY1: number = arrow.endY - arrowLength * Math.sin(angle + Math.PI / 6);
-		const headX2: number = arrow.endX - arrowLength * Math.cos(angle - Math.PI / 6);
-		const headY2: number = arrow.endY - arrowLength * Math.sin(angle - Math.PI / 6);
+		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
+			mostRecentChartID.set(polygon.id);
 
-		const pathString: string = `M ${arrow.endX} ${arrow.endY} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
-		roughCanvas.path(pathString, {
-			stroke: 'white',
-			fill: 'white',
-			strokeWidth: 0.5,
-			roughness: 0.4
-		});
+			var newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
+			var dx = x - offsetX;
+			var dy = y - offsetY;
+
+			newPolygon.vertices[0].x = dx;
+			newPolygon.vertices[0].y = dy;
+			newPolygon.vertices[1].x = dx + canvas.width;
+			newPolygon.vertices[1].y = dy;
+			newPolygon.vertices[2].x = dx + canvas.width;
+			newPolygon.vertices[2].y = dy + canvas.height;
+			newPolygon.vertices[3].x = dx;
+			newPolygon.vertices[3].y = dy + canvas.height;
+
+			updateAllCharts(newPolygon);
+
+			polygon = newPolygon;
+		}
 	};
 
-	const handleMove = (e: MouseEvent | TouchEvent): void => {
-		if ($CANVASBEHAVIOR !== 'isDrawingArrow') return;
+	const updateAllCharts = (updatedPolygon: Polygon) => {
+		let i = $allCharts.findIndex((chart) => chart.chartID === polygon.id);
+		let chart = $allCharts[i];
+		chart.polygon.vertices = updatedPolygon.vertices;
+		$allCharts[i] = chart;
+	};
 
-		if (e instanceof TouchEvent && e.touches.length) {
-			endX = e.touches[0].clientX;
-			endY = e.touches[0].clientY;
-		} else if (e instanceof MouseEvent) {
-			endX = e.clientX;
-			endY = e.clientY;
+	const handleMouseUp = (e: MouseEvent) => {
+		if (!dragging) return;
+		var x = e.clientX;
+		var y = e.clientY;
+		if ($CANVASBEHAVIOR === 'isTranslating') {
+			var dx = x - offsetX;
+			var dy = y - offsetY;
+
+			polygon.vertices[0].x = dx;
+			polygon.vertices[0].y = dy;
+			polygon.vertices[1].x = dx + canvas.width;
+			polygon.vertices[1].y = dy;
+			polygon.vertices[2].x = dx + canvas.width;
+			polygon.vertices[2].y = dy + canvas.height;
+			polygon.vertices[3].x = dx;
+			polygon.vertices[3].y = dy + canvas.height;
+
+			updateAllCharts(polygon);
+			dragging = false;
 		}
+	};
 
-		// Clear the canvas and redraw saved arrows.
-		const context = canvas.getContext('2d');
+	const getPlotWidth = () => {
+		return Math.abs(polygon.vertices[0].x - polygon.vertices[2].x);
+	};
+
+	const getPlotHeight = () => {
+		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
+	};
+
+	function generateHandleRectangles(points: LookupTable) {
+		const handleSize = 10;
+		return Object.values(points).map((point) => ({
+			x: point.x - handleSize / 2,
+			y: point.y - handleSize / 2,
+			width: handleSize,
+			height: handleSize
+		}));
+	}
+
+	afterUpdate(() => {
+		// Set canvas width and height based on the polygon dimensions
+		var startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
+		var startY = Math.min(polygon.vertices[0].y, polygon.vertices[2].y);
+		var endX = Math.max(polygon.vertices[0].x, polygon.vertices[2].x);
+		var endY = Math.max(polygon.vertices[0].y, polygon.vertices[2].y);
+
+		canvas.width = Math.abs(endX - startX);
+		canvas.height = Math.abs(endY - startY);
+		context = canvas.getContext('2d');
+
+		var color =
+			$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
+				? highlightcolor
+				: defaultcolor;
+
 		if (context) {
-			context.clearRect(0, 0, canvas.width, canvas.height);
+			rectWidth = Math.abs(endX - startX);
+			rectHeight = Math.abs(endY - startY);
+
+			context.strokeStyle = color;
+			points = calculateVertices(rectWidth, rectHeight, 5);
+
+			plotWidth = getPlotWidth();
+			plotHeight = getPlotHeight();
+
+			drawRectangleCanvas(points, context, color);
 		}
-		drawAllArrows();
+	});
 
-		// Draw the current arrow
-		drawArrow({ startX, startY, endX, endY });
-	};
-
-	const handleEnd = (): void => {
-		if ($CANVASBEHAVIOR !== 'isDrawingArrow') return;
-
-		arrows.update((a) => [...a, { start: { x: startX, y: startY }, end: { x: endX, y: endY } }]);
-		drawAllArrows();
-	};
+	$: plotWidth = getPlotWidth();
+	$: points = calculateVertices(rectWidth, rectHeight, 5);
+	$: handles = generateHandleRectangles(points);
+	$: plotHeight = getPlotHeight();
 </script>
 
 <div
-	class="absolute h-full w-full"
-	on:mousedown={handleStart}
-	on:mouseup={handleEnd}
-	on:mousemove={handleMove}
-	on:touchstart={handleStart}
-	on:touchmove={handleMove}
-	on:touchend={handleEnd}
+	id={polygon.id}
+	style="position: absolute; left: {Math.min(
+		polygon.vertices[0].x,
+		polygon.vertices[2].x
+	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px; border:thin"
 >
-	<canvas style="position: absolute;" bind:this={canvas} />
+	<div
+		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
+		on:mousedown={handleMouseDown}
+		on:mousemove={handleMouseMove}
+		on:mouseup={handleMouseUp}
+		class="rounded-sm"
+	>
+		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
+		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1" />
+		<svg
+			style="position: absolute; width: {plotWidth}px; height: {plotHeight}px;"
+			viewBox={`0 0 ${plotWidth} ${plotHeight}`}
+		>
+			<!-- Draw rectangle -->
+			<rect
+				x={points.tl.x}
+				y={points.tl.y}
+				width={points.br.x - points.tl.x}
+				height={points.br.y - points.tl.y}
+				fill="transparent"
+				stroke="#C874D9"
+			/>
+			{#each handles as handle}
+				<rect
+					x={handle.x}
+					y={handle.y}
+					width={handle.width}
+					height={handle.height}
+					fill="#121212"
+					stroke="#9d99dc"
+					rx="3"
+					ry="3"
+				/>
+			{/each}
+		</svg>
+	</div>
 </div>
-<svelte:window
-	on:resize={() => {
-		if (typeof window !== 'undefined') {
-			width = window.innerWidth;
-			height = window.innerHeight;
-			if (canvas) {
-				canvas.width = width;
-				canvas.height = height;
-			}
-		}
-	}}
-/>

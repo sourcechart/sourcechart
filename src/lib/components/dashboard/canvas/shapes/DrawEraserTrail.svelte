@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { canvasBehavior } from '$lib/io/Stores';
+	import { canvasBehavior, arrows } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
 	import { drawEraserTrail } from '../draw-utils/Draw';
 

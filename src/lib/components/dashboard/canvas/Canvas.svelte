@@ -2,6 +2,7 @@
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
 	import DrawEraserTrail from './shapes/DrawEraserTrail.svelte';
 	import DrawArrow from './shapes/DrawArrow.svelte';
+
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
 		navBarState,
@@ -19,12 +20,18 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import rough from 'roughjs/bin/rough';
+	import Chart from '../echarts/Chart.svelte';
+	import Draw from '../navbar/navbar-icons/Draw.svelte';
+	import Page from '../../../../routes/+page.svelte';
 
 	let scrollX: number = 0;
 	let scrollY: number = 0;
 	let width: number = 0;
 	let height: number = 0;
-	let newPolygon: Polygon[] = []; //@ts-ignore
+	let newPolygon: Polygon[] = [];
+	let newArrow: Polygon[] = [];
+
 	let eraserTrail: Point[] = [];
 
 	let startPosition = { x: 0, y: 0 };
@@ -38,6 +45,7 @@
 
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
+	let roughCanvas: any;
 
 	const tolerance: number = 5;
 
@@ -47,6 +55,7 @@
 
 	if (browser) {
 		onMount(() => {
+			roughCanvas = rough.canvas(canvas);
 			context = canvas.getContext('2d');
 			width = window.innerWidth;
 			height = window.innerHeight;
@@ -70,15 +79,9 @@
 		} else if (touchstate === 'isDrawing') {
 			activeSidebar.set(true);
 		} else if (touchstate === 'isDrawingArrow') {
-			//;
 		}
 	}
 
-	/**
-	 * ### Handle the touch start event.
-	 *
-	 * @param e MouseEvent
-	 */
 	const handleMouseDown = (e: MouseEvent): void => {
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
@@ -98,13 +101,9 @@
 				return;
 			}
 		}
+		console.log('navBarState: ', $navBarState, $CANVASBEHAVIOR);
 	};
 
-	/**
-	 * ### Handle Touch End
-	 *
-	 * @param e MouseEvent
-	 */
 	const handleMouseUp = (e: MouseEvent) => {
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
@@ -128,25 +127,15 @@
 		navBarState.set('select');
 	};
 
-	/**
-	 * ### Handle Mouse Move
-	 *
-	 * @param e MouseEvent
-	 */
 	const handleMouseMove = (e: MouseEvent) => {
 		if ($CANVASBEHAVIOR === 'isHovering') {
 			handleMouseMoveUp(e.clientX, e.clientY);
 		} else {
+			console.log($CANVASBEHAVIOR);
 			handleMouseMoveDown(e.clientX, e.clientY);
 		}
 	};
 
-	/**
-	 * ### Handle Mouse Move
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleMouseMoveUp = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
@@ -176,12 +165,6 @@
 		}
 	};
 
-	/**
-	 * ### On intersection of a polygon while your mouse is touching erase
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleErase = (x: number, y: number): void => {
 		currentTouchPosition = { x: x, y: y };
 		handleEraseShape(x, y);
@@ -199,12 +182,6 @@
 		}
 	};
 
-	/**
-	 * ### Create the shapes where charts will be put.
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleCreateShapes = (x: number, y: number): void => {
 		const polygon = {
 			vertices: [
@@ -214,25 +191,17 @@
 				{ x: startPosition.x, y: y }
 			]
 		};
-		newPolygon = [polygon];
+		if ($CANVASBEHAVIOR === 'isDrawing') {
+			newPolygon = [polygon];
+		} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
+			newArrow = [polygon];
+		}
 	};
 
-	/**
-	 * ### Handle Erase Shape
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleEraseShape = (x: number, y: number): void => {
 		eraserTrail = [...eraserTrail, { x: x, y: y }];
 	};
 
-	/**
-	 * ### Handle Touch Resize
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleResize = (x: number, y: number) => {
 		if (chartIndex !== null) {
 			const polygon = $allCharts[chartIndex].polygon;
@@ -240,17 +209,15 @@
 		}
 	};
 
-	/**
-	 * ### Handle all touch movements
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleMouseMoveDown = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
 		switch ($CANVASBEHAVIOR) {
 			case 'isDrawing':
+				handleCreateShapes(x, y);
+				break;
+
+			case 'isDrawingArrow':
 				handleCreateShapes(x, y);
 				break;
 
@@ -284,10 +251,12 @@
 				{#each newPolygon as polygon}
 					<DrawRectangleCanvas {polygon} />
 				{/each}
+				{#each newArrow as arrow}
+					<DrawArrow polygon={arrow} />
+				{/each}
 			{/if}
 		</div>
 		<DrawEraserTrail />
-		<DrawArrow />
 	</div>
 	<canvas bind:this={canvas} />
 </div>
