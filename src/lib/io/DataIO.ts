@@ -207,37 +207,58 @@ class DataIO {
 		const results = await this.getDataResults(this.db, queryString);
 		return results.map((row) => Object.values(row));
 	}
+	private inferDateFormat(xAxis: string[]): string | string[] {
+		// Define potential date formats you expect
+		const potentialFormats = ['YYYY-MM-DD', 'MM/DD/YYYY', 'DD-MM-YYYY', 'YYYY/MM/DD', 'DD/MM/YYYY'];
 
-	private inferDateFormat(dates: string[]): string | string[] {
-		// FOR whatever reason... this makes the dom significantly slower
-		//if (!dates.length) return [];
+		// Check if each date string in xAxis is valid for any of the potential formats
+		const allValid = xAxis.every((x) => {
+			// Check if x can be parsed into a number (whole or with decimals)
+			if (!isNaN(parseFloat(x))) {
+				return false;
+			}
+			return potentialFormats.some((format) => dayjs(x, format, true).isValid());
+		});
 
-		const dateObjects = dates.map((dateString) => dayjs(dateString, 'YYYY-MM-DD', true));
-		const allValid = dates.every((date) => dayjs(date.toString()).isValid());
+		// If not all strings are valid dates, return the original array
 		if (!allValid) {
-			return dates; // Return original strings if any date is invalid
+			return xAxis;
 		}
 
+		// Convert date strings to dayjs objects using the first valid format for each string
+		const dateObjects = xAxis.map((x) => {
+			for (let format of potentialFormats) {
+				const dateObj = dayjs(x, format, true);
+				if (dateObj.isValid()) {
+					return dateObj;
+				}
+			}
+			return dayjs(x); // fallback
+		});
+
+		// Find the minimum and maximum dates
 		const minDate = dateObjects.reduce((a, b) => (a.isBefore(b) ? a : b));
 		const maxDate = dateObjects.reduce((a, b) => (a.isAfter(b) ? a : b));
 
+		// Calculate the date ranges
 		const rangeInDays = maxDate.diff(minDate, 'day');
 		const rangeInHours = maxDate.diff(minDate, 'hour');
 		const rangeInMinutes = maxDate.diff(minDate, 'minute');
 		const rangeInYears = maxDate.diff(minDate, 'year');
 
-		// Decide format based on range
+		// Decide on the appropriate format based on the calculated date ranges
 		if (rangeInMinutes < 60) {
 			return 'HH:mm:ss'; // Hours, minutes, seconds
 		} else if (rangeInHours < 24) {
-			return 'HH:mm';
+			return 'HH:mm'; // Hours, minutes
 		} else if (rangeInDays < 30) {
 			return 'MM-DD'; // Month-Day
 		} else if (rangeInYears < 1) {
-			return 'MM YYYY'; // Month abbreviation and Year
+			return 'MMM YYYY'; // Month abbreviation and Year
 		} else {
 			return 'YYYY'; // Just the year
 		}
 	}
 }
+
 export { DataIO };

@@ -4,10 +4,10 @@
 	export let column: string;
 	export let min: number = 0;
 	export let max: number = 1;
-
 	export let prevData: any;
-	export let lowHandle: string;
-	export let highHandle: string;
+
+	let lowHandle: string;
+	let highHandle: string;
 
 	let slider: HTMLElement;
 	let dragging = false;
@@ -15,7 +15,6 @@
 	let end: number;
 	let handlesDragged = false;
 
-	// Set initial values based on previous data
 	if (prevData) {
 		start = (Number(prevData.min) - min) / (max - min);
 		end = (Number(prevData.max) - min) / (max - min);
@@ -34,34 +33,29 @@
 	$: i = clickedChartIndex();
 
 	function updateFilter() {
-		// Check if column is null or undefined before proceeding
 		if (!column) {
 			console.warn('Column is not defined. Filter update skipped.');
 			return;
 		}
-
-		// Check for existing filter by column name
-		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
-
-		// Check for a filter with a null column value
+		//@ts-ignore
+		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column); //@ts-ignore
 		const nullFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === null);
 
 		if (existingFilter) {
-			// Update the existing filter by column name
 			existingFilter.value = {
 				min: lowHandle,
 				max: highHandle
 			};
 		} else if (nullFilter) {
-			// Update the filter that has a null column value
 			nullFilter.column = column;
 			nullFilter.value = {
 				min: lowHandle,
 				max: highHandle
 			};
 		} else {
-			// If no matching filter, append a new filter
+			//@ts-ignore
 			$allCharts[$i].filterColumns = [
+				//@ts-ignore
 				...$allCharts[$i].filterColumns,
 				{
 					column,
@@ -72,6 +66,8 @@
 				}
 			];
 		}
+
+		allCharts.set($allCharts);
 	}
 
 	function draggable(node: HTMLElement) {
@@ -100,14 +96,17 @@
 		}
 
 		function handleMousemove(event: MouseEvent | TouchEvent) {
+			console.log('drag move');
 			if (!dragging) return; // If not dragging, exit the function
 
 			if (event.type === 'touchmove') {
 				event = event as TouchEvent;
 				x = event.changedTouches[0].clientX;
+				updateFilter();
 			} else {
 				event = event as MouseEvent;
 				x = event.clientX;
+				updateFilter();
 			}
 
 			node.dispatchEvent(
@@ -115,7 +114,6 @@
 					detail: { x }
 				})
 			);
-			updateFilter();
 		}
 
 		function handleMouseup() {

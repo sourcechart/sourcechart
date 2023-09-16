@@ -9,54 +9,73 @@
 	let isDropdownOpen: boolean = false;
 
 	$: i = clickedChartIndex();
+
 	$: {
-		filterValues =
-			$allCharts[$i] && $allCharts[$i].filterColumns
-				? $allCharts[$i].filterColumns.filter((f) => f.column === column).map((f) => f.value)
+		filterValues = // @ts-ignore
+			$allCharts[$i] && $allCharts[$i].filterColumns // @ts-ignore
+				? $allCharts[$i].filterColumns.filter((f) => f.column === column).map((f) => f.value.item)
 				: [];
 	}
 
-	function updateFilter(item: string) {
-		// Check if column is null or undefined before proceeding
+	function updateFilter(filterItem: string) {
 		if (!column) {
 			console.warn('Column is not defined. Filter update skipped.');
 			return;
 		}
 
-		// Look for existing filter by column name
-		const existingFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === column);
+		const currentChartFilterColumns = getChartFilterColumns($i);
+
+		const existingFilter = findFilterByColumn(currentChartFilterColumns, column);
 
 		if (existingFilter) {
-			existingFilter.value = item;
+			existingFilter.value = { item: filterItem };
 		} else {
-			const nullFilter = $allCharts[$i].filterColumns.find((filter) => filter.column === null);
-
-			if (nullFilter) {
-				nullFilter.column = column;
-				nullFilter.value = item;
-			} else {
-				$allCharts[$i].filterColumns = [
-					...$allCharts[$i].filterColumns,
-					{
-						column,
-						value: item
-					}
-				];
-			}
+			updateOrCreateFilter(currentChartFilterColumns, filterItem);
 		}
 
-		// Update the filterValues if the item is not already included
-		if (!filterValues.includes(item)) {
-			filterValues = [...filterValues, item];
+		if (!findFilterValue(filterValues, filterItem)) {
+			//@ts-ignore
+			filterValues = [...filterValues, filterItem];
+		}
+
+		allCharts.set($allCharts);
+	}
+
+	function getChartFilterColumns(index: number): any[] {
+		// @ts-ignore
+		return $allCharts[index].filterColumns;
+	}
+
+	function findFilterByColumn(filters: any[], col: string) {
+		return filters.find((filter) => filter.column === col);
+	}
+
+	function updateOrCreateFilter(filters: any[], filterItem: string) {
+		const nullFilter = filters.find((filter) => filter.column === null);
+
+		if (nullFilter) {
+			nullFilter.column = column;
+			nullFilter.value = { item: filterItem };
+		} else {
+			filters.push({
+				column,
+				value: { item: filterItem }
+			});
 		}
 	}
 
+	function findFilterValue(filterValues: any[], itemValue: string) {
+		return filterValues.find((item) => item.item === itemValue);
+	}
+
 	function removeSelectedTag(item: string) {
-		filterValues = filterValues.filter((val) => val !== item);
+		filterValues = filterValues.filter((val) => val !== item); //@ts-ignore
 		const filterIndex = $allCharts[$i].filterColumns.findIndex(
+			//@ts-ignore
 			(filter) => filter.column === column && filter.value.item === item
 		);
 		if (filterIndex > -1) {
+			//@ts-ignore
 			$allCharts[$i].filterColumns.splice(filterIndex, 1);
 		}
 	}
@@ -77,7 +96,7 @@
 			 origin-top h-48 overflow-y-auto overflow-x-hidden
     		${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 	>
-		{#each items as item}
+		{#each items as item (item)}
 			<button
 				class="block w-full bg-gray-900 text-left text-gray-400 px-3 py-2 dark:text-gray-400 hover:bg-gray-200"
 				on:click={() => updateFilter(item)}
