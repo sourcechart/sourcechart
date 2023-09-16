@@ -28,7 +28,7 @@
 
 		// Draw the arrow shaft using rough.js
 		roughCanvas.line(startX, startY, endX, endY, {
-			stroke: 'black',
+			stroke: 'white',
 			strokeWidth: 0.5,
 			roughness: 0.4
 		});
@@ -44,8 +44,8 @@
 		// Draw the arrowhead using path in rough.js
 		const pathString: string = `M ${endX} ${endY} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
 		roughCanvas.path(pathString, {
-			stroke: 'black',
-			fill: 'black',
+			stroke: 'white',
+			fill: 'white',
 			strokeWidth: 0.5,
 			roughness: 0.4
 		});
@@ -68,6 +68,8 @@
 		} else if (e instanceof MouseEvent) {
 			endX = e.clientX;
 			endY = e.clientY;
+
+			console.log('endX: ', endX, endY);
 		}
 		drawArrow();
 	};

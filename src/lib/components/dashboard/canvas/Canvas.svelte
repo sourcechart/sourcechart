@@ -286,6 +286,7 @@
 			{/if}
 		</div>
 		<DrawEraserTrail />
+		<DrawArrow />
 	</div>
 	<canvas bind:this={canvas} />
 </div>
