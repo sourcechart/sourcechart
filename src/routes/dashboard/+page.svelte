@@ -12,7 +12,7 @@
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { setLocalStorage } from '$lib/io/Storage';
 
-	export let data;
+	//export let data;
 
 	setLocalStorage('color-theme', 'dark');
 
