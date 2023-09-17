@@ -42,6 +42,42 @@
 		startY = e.clientY;
 	};
 
+	const doLinesIntersect = (a1: Point, a2: Point, b1: Point, b2: Point): boolean => {
+		const crossProduct = (point1: Point, point2: Point, point3: Point) => {
+			return (
+				(point2.x - point1.x) * (point3.y - point1.y) -
+				(point2.y - point1.y) * (point3.x - point1.x)
+			);
+		};
+
+		const isPointOnSegment = (point1: Point, point2: Point, point: Point) => {
+			return (
+				point.x >= Math.min(point1.x, point2.x) &&
+				point.x <= Math.max(point1.x, point2.x) &&
+				point.y >= Math.min(point1.y, point2.y) &&
+				point.y <= Math.max(point1.y, point2.y)
+			);
+		};
+
+		const d1 = crossProduct(a1, a2, b1);
+		const d2 = crossProduct(a1, a2, b2);
+		const d3 = crossProduct(b1, b2, a1);
+		const d4 = crossProduct(b1, b2, a2);
+
+		// If d1 and d2 have opposite signs and d3 and d4 have opposite signs
+		if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) {
+			return true;
+		}
+
+		// Special cases where the endpoints are touching
+		if (d1 === 0 && isPointOnSegment(a1, a2, b1)) return true;
+		if (d2 === 0 && isPointOnSegment(a1, a2, b2)) return true;
+		if (d3 === 0 && isPointOnSegment(b1, b2, a1)) return true;
+		if (d4 === 0 && isPointOnSegment(b1, b2, a2)) return true;
+
+		return false;
+	};
+
 	const handleMouseMove = (e: MouseEvent) => {
 		eraserTrail = [...eraserTrail, { x: e.clientX, y: e.clientY }];
 
@@ -54,12 +90,12 @@
 			redrawArrows(); // Redraw arrows from the list
 			if ($CANVASBEHAVIOR === 'isErasing') {
 				drawEraserTrail(eraserTrail, context, '#433f3f50', 4);
+				eraseIntersectingArrows(); // <-- Add this here
 			} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
 				drawArrowhead(startX, startY, e.clientX, e.clientY);
 			}
 		}
 	};
-
 	const handleMouseUp = (e: MouseEvent) => {
 		if ($CANVASBEHAVIOR === 'isDrawingArrow') {
 			arrows.push({ startX, startY, endX: e.clientX, endY: e.clientY });
@@ -69,6 +105,28 @@
 			eraserTrail = [];
 			context.clearRect(0, 0, width, height);
 			redrawArrows();
+		}
+	};
+
+	const eraseIntersectingArrows = () => {
+		// Debug
+
+		// For each segment of the eraserTrail
+		for (let i = 0; i < eraserTrail.length - 1; i++) {
+			// For each arrow
+			for (let j = arrows.length - 1; j >= 0; j--) {
+				const arrow = arrows[j];
+				if (
+					doLinesIntersect(
+						{ x: arrow.startX, y: arrow.startY },
+						{ x: arrow.endX, y: arrow.endY },
+						eraserTrail[0],
+						eraserTrail[eraserTrail.length - 1]
+					)
+				) {
+					arrows.splice(j, 1); // Remove the arrow if intersecting
+				}
+			}
 		}
 	};
 
