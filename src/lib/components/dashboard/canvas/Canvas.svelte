@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
-
+	import { drawArrow } from './draw-utils/Draw';
 	import DrawUtils from './shapes/DrawUtils.svelte';
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
@@ -51,8 +51,9 @@
 
 	if (browser) {
 		onMount(() => {
-			roughCanvas = rough.canvas(canvas);
 			context = canvas.getContext('2d');
+			roughCanvas = rough.canvas(canvas);
+
 			width = window.innerWidth;
 			height = window.innerHeight;
 			updateOffset();
@@ -187,8 +188,6 @@
 		};
 		if ($CANVASBEHAVIOR === 'isDrawing') {
 			newPolygon = [polygon];
-		} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
-			newArrow = [polygon];
 		}
 	};
 
@@ -203,6 +202,32 @@
 		}
 	};
 
+	const handleDrawingArrow = (x: number, y: number) => {
+		const angle = Math.atan2(y - startPosition.y, x - startPosition.x);
+
+		const length = 15; // The length of the arrowhead lines
+		const headAngle = Math.PI / 7; // Angle for the arrowhead. Adjust for sharper/narrower arrowheads
+
+		const x1 = x - length * Math.cos(angle - headAngle);
+		const y1 = y - length * Math.sin(angle - headAngle);
+		const x2 = x - length * Math.cos(angle + headAngle);
+		const y2 = y - length * Math.sin(angle + headAngle);
+
+		console.log(x1, y1, x2, y2);
+
+		roughCanvas.line(startPosition.x, startPosition.y, x, y, {
+			stroke: 'white',
+			strokeWidth: 0.8,
+			roughness: 1
+		});
+
+		roughCanvas.path(`M ${x} ${y} L ${x1} ${y1} M ${x} ${y} L ${x2} ${y2}`, {
+			stroke: 'white',
+			strokeWidth: 0.8,
+			roughness: 1
+		});
+	};
+
 	const handleMouseMoveDown = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
@@ -212,7 +237,7 @@
 				break;
 
 			case 'isDrawingArrow':
-				handleCreateShapes(x, y);
+				handleDrawingArrow(x, y);
 				break;
 
 			case 'isErasing':

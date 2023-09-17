@@ -144,7 +144,7 @@ const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: str
 	return polygon;
 };
 
-const drawArrowhead = (
+const drawArrow = (
 	roughCanvas: any,
 	strokeWidth: number,
 	roughness: number,
@@ -185,7 +185,7 @@ const getPlotLeftPosition = (polygon: Polygon): number => {
 };
 
 export {
-	drawArrowhead,
+	drawArrow,
 	drawRectangle,
 	drawEraserTrail,
 	redraw,
