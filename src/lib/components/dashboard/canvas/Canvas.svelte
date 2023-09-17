@@ -250,7 +250,9 @@
 					<DrawRectangleCanvas {polygon} />
 				{/each}
 				{#each newArrow as arrow}
-					<DrawArrow polygon={arrow} />
+					<div class="absolute">
+						<DrawArrow polygon={arrow} />
+					</div>
 				{/each}
 			{/if}
 		</div>
