@@ -12,6 +12,8 @@
 	let eraserTrail: Point[] = [];
 	let CANVASBEHAVIOR = canvasBehavior();
 
+	let arrows: { startX: number; startY: number; endX: number; endY: number }[] = [];
+
 	let offsetX: number = 0;
 	let offsetY: number = 0;
 
@@ -49,6 +51,7 @@
 
 		if (context) {
 			context.clearRect(0, 0, width, height);
+			redrawArrows(); // Redraw arrows from the list
 			if ($CANVASBEHAVIOR === 'isErasing') {
 				drawEraserTrail(eraserTrail, context, '#433f3f50', 4);
 			} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
@@ -58,10 +61,20 @@
 	};
 
 	const handleMouseUp = () => {
+		if ($CANVASBEHAVIOR === 'isDrawingArrow') {
+			arrows.push({ startX, startY, endX: startX, endY: startY });
+		}
 		if ($CANVASBEHAVIOR !== ('isErasing' || 'isDrawingArrow')) return;
 		if (context) {
 			eraserTrail = [];
 			context.clearRect(0, 0, width, height);
+			redrawArrows();
+		}
+	};
+
+	const redrawArrows = () => {
+		for (let arrow of arrows) {
+			drawArrowhead(arrow.startX, arrow.startY, arrow.endX, arrow.endY);
 		}
 	};
 
