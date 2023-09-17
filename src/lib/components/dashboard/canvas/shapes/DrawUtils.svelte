@@ -57,7 +57,7 @@
 			context.clearRect(0, 0, width, height);
 			redrawArrows(); // Redraw arrows from the list
 			if ($CANVASBEHAVIOR === 'isErasing') {
-				drawEraserTrail(eraserTrail, context, '#433f3f50', 4);
+				drawEraserTrail(eraserTrail, context, '#433f3f50', 6);
 				eraseIntersectingArrows(); // <-- Add this here
 			} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
 				drawArrowhead(startX, startY, e.clientX, e.clientY);
