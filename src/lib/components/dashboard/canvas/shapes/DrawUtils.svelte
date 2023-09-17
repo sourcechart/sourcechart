@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { drawEraserTrail } from '../draw-utils/Draw';
 	import { doLinesIntersect } from '../draw-utils/PolygonOperations';
-	import rough from 'roughjs/bin/rough';
+	import { rough } from '$lib/components/ui/roughjs/rough';
 
 	let roughCanvas: any;
 	let canvas: HTMLCanvasElement;
