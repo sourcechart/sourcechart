@@ -15,6 +15,7 @@
 
 	let isDragging = false;
 	let handlesActivated = false;
+	let arrowCloseEnough = false;
 	let draggingArrowIndex: number | null = null;
 
 	let arrows: {
@@ -77,10 +78,15 @@
 				isDragging = true;
 				handlesActivated = true;
 				draggingArrowIndex = i;
+				arrowCloseEnough = true; // If the distance to an arrow is less than 10, set this to true
 				break;
-			} else {
+			} else if (distanceToLine > 10) {
+				arrowCloseEnough = false; // If the distance to an arrow is greater than 10, set this to false
 				handlesActivated = true;
 			}
+		}
+		if (!arrowCloseEnough) {
+			handlesActivated = false;
 		}
 	};
 
@@ -207,6 +213,8 @@
 			roughness: roughness
 		});
 	};
+
+	$: console.log(handlesActivated);
 </script>
 
 <div
