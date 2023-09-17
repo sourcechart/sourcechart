@@ -10,8 +10,8 @@
 	}
 </script>
 
-<button on:click={clickButton} class="w-8 h-8 flex flex-col justify-center items-center">
-	<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+<button on:click={clickButton} class="w-8 h-8 rounded-md flex flex-col justify-center items-center">
+	<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
 		><path
 			fill="none"
 			stroke="#9CA3AF"
@@ -22,12 +22,3 @@
 		/></svg
 	>
 </button>
-
-<style>
-	.button {
-		border-radius: 0.375rem;
-	}
-	.select {
-		background-color: #9d99dc77;
-	}
-</style>
