@@ -1,21 +1,30 @@
 <!-- Navbar.svelte -->
 
 <script lang="ts">
-	import { Cursor, Draw, Eraser } from './navbar-icons';
+	import { Cursor, Draw, Eraser, Arrow } from './navbar-icons';
 	import { navBarState } from '$lib/io/Stores';
 
 	let icons = [
 		{
 			name: 'Cursor',
-			component: Cursor
+			component: Cursor,
+			index: 1
 		},
 		{
 			name: 'Draw',
-			component: Draw
+			component: Draw,
+			index: 2
 		},
 		{
+			name: 'Arrow',
+			component: Arrow,
+			index: 3
+		},
+
+		{
 			name: 'Eraser',
-			component: Eraser
+			component: Eraser,
+			index: 4
 		}
 	];
 

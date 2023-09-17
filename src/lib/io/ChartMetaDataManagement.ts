@@ -15,10 +15,18 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 		groupbyColumns: [],
 		filterColumns: [],
 		xColumn: null,
-		polygon: polygon,
 		yColumn: null,
+		/*
+		Maybe I should seperate this out to a different store.
+		
+		The end goal is not to query the database everytime I move the canvas.
+		But... If I use a derived store, it would do that anyway. Maybe I need to do some composition instead.
+
+		*/
+		polygon: polygon,
 		canvasHeight: 0,
 		canvasWidth: 0,
+
 		chartOptions: {
 			xAxis: { data: [], type: 'category' },
 			series: [{ data: [], type: '', barWidth: '60%' }],

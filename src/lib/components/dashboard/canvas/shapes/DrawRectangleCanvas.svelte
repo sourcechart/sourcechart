@@ -2,7 +2,7 @@
 	import {
 		allCharts,
 		mostRecentChartID,
-		touchStates,
+		canvasBehavior,
 		getChartOptions,
 		activeSidebar
 	} from '$lib/io/Stores';
@@ -54,7 +54,7 @@
 		}
 	};
 
-	$: TOUCHSTATE = touchStates();
+	$: CANVASBEHAVIOR = canvasBehavior();
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
 
@@ -115,7 +115,7 @@
 		var x = e.clientX;
 		var y = e.clientY;
 
-		if ($TOUCHSTATE === 'isTranslating' && polygon.id) {
+		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
 			mostRecentChartID.set(polygon.id);
 
 			var newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
@@ -148,7 +148,7 @@
 		if (!dragging) return;
 		var x = e.clientX;
 		var y = e.clientY;
-		if ($TOUCHSTATE === 'isTranslating') {
+		if ($CANVASBEHAVIOR === 'isTranslating') {
 			var dx = x - offsetX;
 			var dy = y - offsetY;
 

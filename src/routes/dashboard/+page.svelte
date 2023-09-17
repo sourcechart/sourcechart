@@ -3,10 +3,8 @@
 	import Canvas from '$lib/components/dashboard/canvas/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
-
-	//@ts-ignore
-	//import DarkMode from 'flowbite-svelte/DarkMode.svelte';
 	import { onMount } from 'svelte';
+
 	import { allCharts, clickedChartIndex, activeDropZone } from '$lib/io/Stores';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
@@ -14,7 +12,7 @@
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { setLocalStorage } from '$lib/io/Storage';
 
-	export let data;
+	//export let data;
 
 	setLocalStorage('color-theme', 'dark');
 
@@ -70,7 +68,7 @@
 	onMount(loadPreviousState);
 </script>
 
-<div class="dark:bg-gray-900 no-scroll">
+<div class="no-scroll">
 	<div class="flex justify-center items-center mt-6 z-30">
 		<NavBar />
 	</div>

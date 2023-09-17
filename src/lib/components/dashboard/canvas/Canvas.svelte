@@ -1,16 +1,16 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
-	import DrawEraserTrail from './shapes/DrawEraserTrail.svelte';
+	import DrawUtils from './shapes/DrawUtils.svelte';
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
 		navBarState,
-		mouseEventState,
 		polygons,
 		mostRecentChartID,
 		mouseType,
 		activeSidebar,
 		allCharts,
-		touchStates,
+		touchState,
+		canvasBehavior,
 		activeDropZone
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
@@ -24,11 +24,12 @@
 	let width: number = 0;
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
+
 	let eraserTrail: Point[] = [];
 
-	let startPosition: Point = { x: 0, y: 0 };
-	let currentMousePosition: Point = { x: 0, y: 0 };
-	let currentTouchPosition: Point = { x: 0, y: 0 };
+	let startPosition = { x: 0, y: 0 };
+	let currentMousePosition = { x: 0, y: 0 };
+	let currentTouchPosition = { x: 0, y: 0 };
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -41,8 +42,8 @@
 	const tolerance: number = 5;
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
-	$: TOUCHSTATE = touchStates();
-	$: if ($TOUCHSTATE) controlSidebar($TOUCHSTATE);
+	$: CANVASBEHAVIOR = canvasBehavior();
+	$: if ($CANVASBEHAVIOR) controlSidebar($CANVASBEHAVIOR);
 
 	if (browser) {
 		onMount(() => {
@@ -68,45 +69,36 @@
 			activeSidebar.set(true);
 		} else if (touchstate === 'isDrawing') {
 			activeSidebar.set(true);
+		} else if (touchstate === 'isDrawingArrow') {
 		}
 	}
 
-	/**
-	 * ### Handle the touch start event.
-	 *
-	 * @param e MouseEvent
-	 */
 	const handleMouseDown = (e: MouseEvent): void => {
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 		startPosition = { x, y };
 
-		mouseEventState.set('isTouching');
+		touchState.set('isTouching');
 		const containingPolygon = PolyOps.getContainingPolygon(startPosition, $polygons);
 
 		if ($navBarState === 'select' && chartIndex >= 0 && containingPolygon) {
 			const polygon = $allCharts[chartIndex].polygon;
 			if (polygon && PolyOps.isPointInPolygon(startPosition, polygon)) {
 				if (polygon.id) mostRecentChartID.set(polygon.id);
-				mouseEventState.set('isTranslating');
+				touchState.set('isTranslating');
 				return;
 			} else {
-				mouseEventState.set('isTouching');
+				touchState.set('isTouching');
 				return;
 			}
 		}
 	};
 
-	/**
-	 * ### Handle Touch End
-	 *
-	 * @param e MouseEvent
-	 */
 	const handleMouseUp = (e: MouseEvent) => {
 		var x = e.clientX - offsetX + scrollX;
 		var y = e.clientY - offsetY + scrollY;
 
-		if ($TOUCHSTATE === 'isDrawing') {
+		if ($CANVASBEHAVIOR === 'isDrawing') {
 			let targetId = generateID();
 			const polygon = {
 				id: targetId,
@@ -121,29 +113,18 @@
 			addChartMetaData(targetId, $navBarState, polygon);
 		}
 
-		mouseEventState.set('isHovering');
+		touchState.set('isHovering');
 		navBarState.set('select');
 	};
 
-	/**
-	 * ### Handle Mouse Move
-	 *
-	 * @param e MouseEvent
-	 */
 	const handleMouseMove = (e: MouseEvent) => {
-		if ($TOUCHSTATE === 'isHovering') {
+		if ($CANVASBEHAVIOR === 'isHovering') {
 			handleMouseMoveUp(e.clientX, e.clientY);
 		} else {
 			handleMouseMoveDown(e.clientX, e.clientY);
 		}
 	};
 
-	/**
-	 * ### Handle Mouse Move
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleMouseMoveUp = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
@@ -169,16 +150,10 @@
 		} else if (hoverPolygon && !$mouseType) {
 			$mouseType = 'move';
 		} else {
-			$mouseType = $mouseType || 'default';
+			$mouseType = $mouseType || 'isHovering';
 		}
 	};
 
-	/**
-	 * ### On intersection of a polygon while your mouse is touching erase
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleErase = (x: number, y: number): void => {
 		currentTouchPosition = { x: x, y: y };
 		handleEraseShape(x, y);
@@ -196,12 +171,6 @@
 		}
 	};
 
-	/**
-	 * ### Create the shapes where charts will be put.
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleCreateShapes = (x: number, y: number): void => {
 		const polygon = {
 			vertices: [
@@ -211,25 +180,15 @@
 				{ x: startPosition.x, y: y }
 			]
 		};
-		newPolygon = [polygon];
+		if ($CANVASBEHAVIOR === 'isDrawing') {
+			newPolygon = [polygon];
+		}
 	};
 
-	/**
-	 * ### Handle Erase Shape
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleEraseShape = (x: number, y: number): void => {
 		eraserTrail = [...eraserTrail, { x: x, y: y }];
 	};
 
-	/**
-	 * ### Handle Touch Resize
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleResize = (x: number, y: number) => {
 		if (chartIndex !== null) {
 			const polygon = $allCharts[chartIndex].polygon;
@@ -237,17 +196,10 @@
 		}
 	};
 
-	/**
-	 * ### Handle all touch movements
-	 *
-	 * @param x x position on the screen
-	 * @param y y position on the screen
-	 */
 	const handleMouseMoveDown = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
-
-		switch ($TOUCHSTATE) {
+		switch ($CANVASBEHAVIOR) {
 			case 'isDrawing':
 				handleCreateShapes(x, y);
 				break;
@@ -284,7 +236,7 @@
 				{/each}
 			{/if}
 		</div>
-		<DrawEraserTrail />
+		<DrawUtils />
 	</div>
 	<canvas bind:this={canvas} />
 </div>
