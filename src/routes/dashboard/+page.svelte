@@ -5,7 +5,7 @@
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 	import { onMount } from 'svelte';
 
-	import { allCharts, clickedChartIndex, activeDropZone } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex, activeDropZone, keyPress } from '$lib/io/Stores';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { duckDBInstanceStore } from '$lib/io/Stores';
@@ -76,7 +76,21 @@
 		}
 	};
 
-	onMount(loadPreviousState);
+	function handleKeyPress(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			activeDropZone.set(false);
+		} else if (event.key in ['0', '1', '2', '3']) {
+			keyPress.set(event.key);
+		}
+	}
+
+	onMount(() => {
+		loadPreviousState();
+		document.addEventListener('keydown', handleKeyPress);
+		return () => {
+			document.removeEventListener('keydown', handleKeyPress);
+		};
+	});
 </script>
 
 <div class="no-scroll">
