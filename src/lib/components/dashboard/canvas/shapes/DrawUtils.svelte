@@ -14,9 +14,8 @@
 	let CANVASBEHAVIOR = canvasBehavior();
 
 	let isDragging = false;
+	let handlesActivated = false;
 	let draggingArrowIndex: number | null = null;
-
-	let selectedArrowIndex: number | null = null;
 
 	let arrows: {
 		startX: number;
@@ -45,8 +44,8 @@
 		updateOffset();
 		canvas.width = width;
 		canvas.height = height;
-
 		document.addEventListener('mouseup', handleMouseUp);
+
 		return () => {
 			// cleanup
 			document.removeEventListener('mouseup', handleMouseUp);
@@ -60,26 +59,27 @@
 	};
 
 	const handleMouseStart = (e: MouseEvent) => {
-		if ($CANVASBEHAVIOR === 'isDrawingArrow' || $CANVASBEHAVIOR === 'isErasing') {
-			startX = e.clientX;
-			startY = e.clientY;
+		startX = e.clientX;
+		startY = e.clientY;
 
-			for (let i = 0; i < arrows.length; i++) {
-				let arrow = arrows[i];
-				const distanceToLine = pointToLineDistance(
-					e.clientX,
-					e.clientY,
-					arrow.startX,
-					arrow.startY,
-					arrow.endX,
-					arrow.endY
-				);
+		for (let i = 0; i < arrows.length; i++) {
+			let arrow = arrows[i];
+			const distanceToLine = pointToLineDistance(
+				e.clientX,
+				e.clientY,
+				arrow.startX,
+				arrow.startY,
+				arrow.endX,
+				arrow.endY
+			);
 
-				if (distanceToLine < 10) {
-					isDragging = true;
-					draggingArrowIndex = i;
-					break;
-				}
+			if (distanceToLine < 10) {
+				isDragging = true;
+				handlesActivated = true;
+				draggingArrowIndex = i;
+				break;
+			} else {
+				handlesActivated = true;
 			}
 		}
 	};
@@ -207,8 +207,6 @@
 			roughness: roughness
 		});
 	};
-
-	$: console.log(isDragging);
 </script>
 
 <div
@@ -219,9 +217,17 @@
 >
 	<canvas style="position: fixed; z-index: 1;" bind:this={canvas} />
 	<svg viewBox={`0 0 ${width} ${height}`} style="position: absolute;  top: 0; left: 0; z-index: 1;">
-		{#if isDragging}
+		{#if handlesActivated}
 			{#each arrows as arrow}
-				<circle cx={startX} cy={startY} r="5" stroke="red" stroke-width="1" fill="transparent" />
+				<circle
+					cx={arrow.startX}
+					cy={arrow.startY}
+					r="5"
+					stroke="red"
+					stroke-width="1"
+					fill="transparent"
+				/>
+				<!--
 				<circle
 					cx={arrow.midX}
 					cy={arrow.midY}
@@ -230,6 +236,7 @@
 					stroke-width="1"
 					fill="transparent"
 				/>
+				-->
 				<circle
 					cx={arrow.endX}
 					cy={arrow.endY}
