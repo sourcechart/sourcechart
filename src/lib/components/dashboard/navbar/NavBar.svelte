@@ -40,6 +40,10 @@
 	$: if ($keyPress !== null) {
 		activeIndex = parseInt($keyPress);
 	}
+	$: {
+		const selectedIcon = icons.find((icon) => icon.mode === $navBarState);
+		activeIndex = selectedIcon ? selectedIcon.index : null;
+	}
 
 	$: if (activeIndex !== null) {
 		const selectedIcon = icons.find((icon) => icon.index === activeIndex);
