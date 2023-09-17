@@ -18,7 +18,6 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import rough from 'roughjs/bin/rough';
 
 	let scrollX: number = 0;
 	let scrollY: number = 0;
