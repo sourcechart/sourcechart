@@ -14,6 +14,8 @@
 	let CANVASBEHAVIOR = canvasBehavior();
 
 	let isDragging = false;
+	let isDraggingArrow = false;
+
 	let handlesActivated = false;
 	let arrowCloseEnough = false;
 	let draggingArrowIndex: number | null = null;
@@ -33,6 +35,7 @@
 	let startX: number = 0;
 	let startY: number = 0;
 	const MAX_TRAIL_LENGTH = 7;
+	let draggingEnd: 'start' | 'end' | null = null;
 
 	let roughness = 0.8;
 	let strokeWidth = 1;
@@ -47,11 +50,19 @@
 		canvas.height = height;
 		document.addEventListener('mouseup', handleMouseUp);
 
+		canvas.addEventListener('mousedown', (e) => e.preventDefault());
 		return () => {
-			// cleanup
 			document.removeEventListener('mouseup', handleMouseUp);
+			canvas.removeEventListener('mousedown', (e) => e.preventDefault());
 		};
 	});
+
+	const handleCircleMouseDown = (e: MouseEvent, index: number, end: 'start' | 'end') => {
+		e.stopPropagation(); // prevent canvas mousedown
+		isDragging = true;
+		draggingArrowIndex = index;
+		draggingEnd = end;
+	};
 
 	const updateOffset = () => {
 		const rect = canvas.getBoundingClientRect();
@@ -75,13 +86,12 @@
 			);
 
 			if (distanceToLine < 10) {
-				isDragging = true;
 				handlesActivated = true;
 				draggingArrowIndex = i;
-				arrowCloseEnough = true; // If the distance to an arrow is less than 10, set this to true
+				arrowCloseEnough = true;
 				break;
-			} else if (distanceToLine > 10) {
-				arrowCloseEnough = false; // If the distance to an arrow is greater than 10, set this to false
+			} else {
+				arrowCloseEnough = false;
 				handlesActivated = true;
 			}
 		}
@@ -107,8 +117,7 @@
 				drawArrowhead(startX, startY, e.clientX, e.clientY);
 			}
 		}
-
-		if (isDragging && draggingArrowIndex !== null) {
+		if (isDraggingArrow && draggingArrowIndex !== null) {
 			const deltaX = e.clientX - startX;
 			const deltaY = e.clientY - startY;
 
@@ -121,9 +130,17 @@
 
 			startX = e.clientX;
 			startY = e.clientY;
-
-			redrawArrows();
+		} else if (isDragging && draggingArrowIndex !== null) {
+			if (draggingEnd === 'start') {
+				arrows[draggingArrowIndex].startX = e.clientX;
+				arrows[draggingArrowIndex].startY = e.clientY;
+			} else if (draggingEnd === 'end') {
+				arrows[draggingArrowIndex].endX = e.clientX;
+				arrows[draggingArrowIndex].endY = e.clientY;
+			}
 		}
+
+		redrawArrows();
 	};
 
 	const handleMouseUp = (e: MouseEvent) => {
@@ -149,6 +166,13 @@
 		if (isDragging) {
 			isDragging = false;
 			draggingArrowIndex = null;
+			draggingEnd = null;
+		}
+		if (isDragging || isDraggingArrow) {
+			isDragging = false;
+			isDraggingArrow = false;
+			draggingArrowIndex = null;
+			draggingEnd = null;
 		}
 	};
 
@@ -226,7 +250,7 @@
 	<canvas style="position: fixed; z-index: 1;" bind:this={canvas} />
 	<svg viewBox={`0 0 ${width} ${height}`} style="position: absolute;  top: 0; left: 0; z-index: 1;">
 		{#if handlesActivated}
-			{#each arrows as arrow}
+			{#each arrows as arrow, i}
 				<circle
 					cx={arrow.startX}
 					cy={arrow.startY}
@@ -234,17 +258,8 @@
 					stroke="red"
 					stroke-width="1"
 					fill="transparent"
+					on:mousedown={(e) => handleCircleMouseDown(e, i, 'start')}
 				/>
-				<!--
-				<circle
-					cx={arrow.midX}
-					cy={arrow.midY}
-					r="5"
-					stroke="red"
-					stroke-width="1"
-					fill="transparent"
-				/>
-				-->
 				<circle
 					cx={arrow.endX}
 					cy={arrow.endY}
@@ -252,6 +267,7 @@
 					stroke="red"
 					stroke-width="1"
 					fill="transparent"
+					on:mousedown={(e) => handleCircleMouseDown(e, i, 'end')}
 				/>
 			{/each}
 		{/if}
