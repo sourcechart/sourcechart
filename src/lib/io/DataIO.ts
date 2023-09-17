@@ -98,6 +98,8 @@ class DataIO {
 	}
 
 	private updateBasicChart(results: any[], chart: Chart) {
+		console.warn = () => {};
+
 		const xColumn = this.getColumn(chart.xColumn);
 		const yColumn = this.getColumn(chart.yColumn);
 		let x = results.map((item) => item[xColumn]);
@@ -156,6 +158,8 @@ class DataIO {
 	}
 
 	public async updateChart() {
+		console.warn = () => {};
+
 		const queryString = this.query();
 		const results = await this.getDataResults(this.db, queryString);
 		if (this.chart.workflow === 'basic') {
@@ -208,6 +212,8 @@ class DataIO {
 		return results.map((row) => Object.values(row));
 	}
 	private inferDateFormat(xAxis: string[]): string | string[] {
+		console.warn = () => {};
+
 		// Define potential date formats you expect
 		const potentialFormats = ['YYYY-MM-DD', 'MM/DD/YYYY', 'DD-MM-YYYY', 'YYYY/MM/DD', 'DD/MM/YYYY'];
 
@@ -239,6 +245,7 @@ class DataIO {
 		// Find the minimum and maximum dates
 		const minDate = dateObjects.reduce((a, b) => (a.isBefore(b) ? a : b));
 		const maxDate = dateObjects.reduce((a, b) => (a.isAfter(b) ? a : b));
+		console.warn = () => {};
 
 		// Calculate the date ranges
 		const rangeInDays = maxDate.diff(minDate, 'day');
