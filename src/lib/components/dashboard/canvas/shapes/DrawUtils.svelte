@@ -170,7 +170,7 @@
 	on:mousemove={handleMouseMove}
 	on:mouseup={handleMouseUp}
 >
-	<canvas style="position: absolute;" bind:this={canvas} />
+	<canvas style="position: absolute; z-index: 10000;" bind:this={canvas} />
 </div>
 <svelte:window
 	on:resize={() => {
