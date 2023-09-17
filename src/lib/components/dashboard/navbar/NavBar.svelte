@@ -1,7 +1,7 @@
 <!-- Navbar.svelte -->
 
 <script lang="ts">
-	import { Cursor, Draw, Eraser, Arrow } from './navbar-icons';
+	import { Cursor, Rectangle, Eraser, Arrow } from './navbar-icons';
 	import { navBarState, keyPress } from '$lib/io/Stores';
 
 	let icons = [
@@ -11,8 +11,8 @@
 			index: 1
 		},
 		{
-			name: 'Draw',
-			component: Draw,
+			name: 'Rectangle',
+			component: Rectangle,
 			index: 2
 		},
 		{
