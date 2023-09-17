@@ -60,9 +60,9 @@
 		}
 	};
 
-	const handleMouseUp = () => {
+	const handleMouseUp = (e: MouseEvent) => {
 		if ($CANVASBEHAVIOR === 'isDrawingArrow') {
-			arrows.push({ startX, startY, endX: startX, endY: startY });
+			arrows.push({ startX, startY, endX: e.clientX, endY: e.clientY });
 		}
 		if ($CANVASBEHAVIOR !== ('isErasing' || 'isDrawingArrow')) return;
 		if (context) {
