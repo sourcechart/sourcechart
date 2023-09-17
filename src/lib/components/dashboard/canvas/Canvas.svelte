@@ -101,7 +101,6 @@
 				return;
 			}
 		}
-		console.log('navBarState: ', $navBarState, $CANVASBEHAVIOR);
 	};
 
 	const handleMouseUp = (e: MouseEvent) => {
@@ -131,7 +130,6 @@
 		if ($CANVASBEHAVIOR === 'isHovering') {
 			handleMouseMoveUp(e.clientX, e.clientY);
 		} else {
-			console.log($CANVASBEHAVIOR);
 			handleMouseMoveDown(e.clientX, e.clientY);
 		}
 	};

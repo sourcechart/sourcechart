@@ -1,15 +1,10 @@
 <script lang="ts">
-	import {
-		allCharts,
-		mostRecentChartID,
-		canvasBehavior,
-		getChartOptions,
-		activeSidebar
-	} from '$lib/io/Stores';
+	import { allCharts, mostRecentChartID, canvasBehavior, activeSidebar } from '$lib/io/Stores';
 	import { isPointInPolygon } from '../draw-utils/PolygonOperations';
 	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { onMount } from 'svelte';
+	import rough from 'roughjs/bin/rough';
 
 	export let polygon: Polygon;
 
@@ -27,19 +22,12 @@
 	let points: LookupTable = {};
 	let plotHeight: number = 0;
 	let plotWidth: number = 0;
+	let roughCanvas: any;
 
 	$: CANVASBEHAVIOR = canvasBehavior();
 
 	onMount(() => {
-		// Add global event listeners
-		window.addEventListener('mousemove', handleMouseMove);
-		window.addEventListener('mouseup', handleMouseUp);
-
-		return () => {
-			// Cleanup the global event listeners
-			window.removeEventListener('mousemove', handleMouseMove);
-			window.removeEventListener('mouseup', handleMouseUp);
-		};
+		roughCanvas = rough.canvas(canvas);
 	});
 
 	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
@@ -146,15 +134,34 @@
 		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
 	};
 
-	function generateHandleRectangles(points: LookupTable) {
-		const handleSize = 10;
-		return Object.values(points).map((point) => ({
-			x: point.x - handleSize / 2,
-			y: point.y - handleSize / 2,
-			width: handleSize,
-			height: handleSize
-		}));
-	}
+	const drawArrow = (): void => {
+		const context = canvas.getContext('2d');
+		if (!context) return;
+
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		roughCanvas.line(10, 10, plotWidth - 10, plotHeight - 10, {
+			stroke: 'white',
+			strokeWidth: 0.5,
+			roughness: 0.4
+		});
+
+		const angle: number = Math.atan2(
+			polygon.vertices[1].y - polygon.vertices[0].y,
+			polygon.vertices[1].x - polygon.vertices[0].x
+		);
+		const arrowLength: number = 10;
+		const headX1: number = polygon.vertices[1].x - arrowLength * Math.cos(angle + Math.PI / 6);
+		const headY1: number = polygon.vertices[1].y - arrowLength * Math.sin(angle + Math.PI / 6);
+		const headX2: number = polygon.vertices[1].x - arrowLength * Math.cos(angle - Math.PI / 6);
+		const headY2: number = polygon.vertices[1].y - arrowLength * Math.sin(angle - Math.PI / 6);
+
+		const pathString: string = `M ${polygon.vertices[1].x} ${polygon.vertices[1].y} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
+		roughCanvas.path(pathString, {
+			fill: 'white',
+			strokeWidth: 0.5,
+			roughness: 0.4
+		});
+	};
 
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
@@ -183,12 +190,12 @@
 			plotHeight = getPlotHeight();
 
 			drawRectangleCanvas(points, context, color);
+			drawArrow();
 		}
 	});
 
 	$: plotWidth = getPlotWidth();
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
-	$: handles = generateHandleRectangles(points);
 	$: plotHeight = getPlotHeight();
 </script>
 
@@ -207,12 +214,11 @@
 		class="rounded-sm"
 	>
 		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
-		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1" />
+		<div style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:0" />
 		<svg
 			style="position: absolute; width: {plotWidth}px; height: {plotHeight}px;"
 			viewBox={`0 0 ${plotWidth} ${plotHeight}`}
 		>
-			<!-- Draw rectangle -->
 			<rect
 				x={points.tl.x}
 				y={points.tl.y}
@@ -221,18 +227,6 @@
 				fill="transparent"
 				stroke="#C874D9"
 			/>
-			{#each handles as handle}
-				<rect
-					x={handle.x}
-					y={handle.y}
-					width={handle.width}
-					height={handle.height}
-					fill="#121212"
-					stroke="#9d99dc"
-					rx="3"
-					ry="3"
-				/>
-			{/each}
 		</svg>
 	</div>
 </div>
