@@ -1,8 +1,4 @@
-<div
-	class="w-8 h-8 flex flex-col justify-center items-center
-		? 'button select'
-		: 'dark:bg-gray-800'}"
->
+<div class="w-8 h-8 flex flex-col justify-center items-center">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width="16"

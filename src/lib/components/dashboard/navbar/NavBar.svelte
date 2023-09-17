@@ -4,39 +4,48 @@
 	import { Cursor, Rectangle, Eraser, Arrow } from './navbar-icons';
 	import { navBarState, keyPress } from '$lib/io/Stores';
 
-	let icons = [
+	let icons: { name: string; mode: NavBar; component: any; index: number }[] = [
 		{
 			name: 'Cursor',
+			mode: 'select',
 			component: Cursor,
 			index: 1
 		},
 		{
 			name: 'Rectangle',
+			mode: 'drawRectangle',
 			component: Rectangle,
 			index: 2
 		},
 		{
 			name: 'Arrow',
+			mode: 'drawArrow',
 			component: Arrow,
 			index: 3
 		},
-
 		{
 			name: 'Eraser',
+			mode: 'eraser',
 			component: Eraser,
 			index: 0
 		}
 	];
 
-	const setMode = (event: any, clickedIndex: number) => {
-		navBarState.set(event.detail);
-		activeIndex = clickedIndex; // set the active index
+	const setMode = (mode: NavBar, clickedIndex: number) => {
+		navBarState.set(mode);
+		activeIndex = clickedIndex;
 	};
 
-	// Reactively determine the active button based on the pressed key
 	let activeIndex: number | null = null;
 	$: if ($keyPress !== null) {
 		activeIndex = parseInt($keyPress);
+	}
+
+	$: if (activeIndex !== null) {
+		const selectedIcon = icons.find((icon) => icon.index === activeIndex);
+		if (selectedIcon) {
+			navBarState.set(selectedIcon.mode);
+		}
 	}
 </script>
 
@@ -44,7 +53,7 @@
 	class="rounded-md fixed inset-x-0 top-3 z-50 flex h-12 items-center justify-center background shadow-lg"
 >
 	<div class="flex items-center justify-center space-x-4 ml-1 mr-1">
-		{#each icons as { name, component, index } (name)}
+		{#each icons as { name, component, index, mode } (name)}
 			<div
 				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${
 					index === activeIndex ? 'selected' : ''
@@ -54,10 +63,10 @@
 						keyPress.set(event.key);
 					}
 				}}
-				on:click={() => setMode({ detail: name }, index)}
+				on:click={() => setMode(mode, index)}
 			>
 				<div class="relative flex flex-row justify-items-center">
-					<svelte:component this={component} on:mode={() => setMode({ detail: name }, index)} />
+					<svelte:component this={component} />
 				</div>
 			</div>
 		{/each}
@@ -69,6 +78,6 @@
 		background-color: rgb(38, 38, 39);
 	}
 	.selected {
-		background-color: #625f7c;
+		background-color: #9d99dc77;
 	}
 </style>
