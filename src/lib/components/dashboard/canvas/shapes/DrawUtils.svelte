@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { canvasBehavior } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
-	import { drawEraserTrail, drawArrow } from '../draw-utils/Draw';
+	import { drawEraserTrail } from '../draw-utils/Draw';
+	import { doLinesIntersect } from '../draw-utils/PolygonOperations';
 	import rough from 'roughjs/bin/rough';
 
 	let roughCanvas: any;
@@ -43,42 +44,6 @@
 	const handleMouseStart = (e: MouseEvent) => {
 		startX = e.clientX;
 		startY = e.clientY;
-	};
-
-	const doLinesIntersect = (a1: Point, a2: Point, b1: Point, b2: Point): boolean => {
-		const crossProduct = (point1: Point, point2: Point, point3: Point) => {
-			return (
-				(point2.x - point1.x) * (point3.y - point1.y) -
-				(point2.y - point1.y) * (point3.x - point1.x)
-			);
-		};
-
-		const isPointOnSegment = (point1: Point, point2: Point, point: Point) => {
-			return (
-				point.x >= Math.min(point1.x, point2.x) &&
-				point.x <= Math.max(point1.x, point2.x) &&
-				point.y >= Math.min(point1.y, point2.y) &&
-				point.y <= Math.max(point1.y, point2.y)
-			);
-		};
-
-		const d1 = crossProduct(a1, a2, b1);
-		const d2 = crossProduct(a1, a2, b2);
-		const d3 = crossProduct(b1, b2, a1);
-		const d4 = crossProduct(b1, b2, a2);
-
-		// If d1 and d2 have opposite signs and d3 and d4 have opposite signs
-		if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) {
-			return true;
-		}
-
-		// Special cases where the endpoints are touching
-		if (d1 === 0 && isPointOnSegment(a1, a2, b1)) return true;
-		if (d2 === 0 && isPointOnSegment(a1, a2, b2)) return true;
-		if (d3 === 0 && isPointOnSegment(b1, b2, a1)) return true;
-		if (d4 === 0 && isPointOnSegment(b1, b2, a2)) return true;
-
-		return false;
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
