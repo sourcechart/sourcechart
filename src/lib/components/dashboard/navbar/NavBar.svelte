@@ -37,9 +37,11 @@
 	};
 
 	let activeIndex: number | null = null;
+
 	$: if ($keyPress !== null) {
 		activeIndex = parseInt($keyPress);
 	}
+
 	$: {
 		const selectedIcon = icons.find((icon) => icon.mode === $navBarState);
 		activeIndex = selectedIcon ? selectedIcon.index : null;

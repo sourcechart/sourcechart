@@ -13,7 +13,19 @@
 	let eraserTrail: Point[] = [];
 	let CANVASBEHAVIOR = canvasBehavior();
 
-	let arrows: { startX: number; startY: number; endX: number; endY: number }[] = [];
+	let isDragging = false;
+	let draggingArrowIndex: number | null = null;
+
+	let selectedArrowIndex: number | null = null;
+
+	let arrows: {
+		startX: number;
+		startY: number;
+		endX: number;
+		endY: number;
+		midX: number;
+		midY: number;
+	}[] = [];
 
 	let offsetX: number = 0;
 	let offsetY: number = 0;
@@ -33,6 +45,12 @@
 		updateOffset();
 		canvas.width = width;
 		canvas.height = height;
+
+		document.addEventListener('mouseup', handleMouseUp);
+		return () => {
+			// cleanup
+			document.removeEventListener('mouseup', handleMouseUp);
+		};
 	});
 
 	const updateOffset = () => {
@@ -42,8 +60,28 @@
 	};
 
 	const handleMouseStart = (e: MouseEvent) => {
-		startX = e.clientX;
-		startY = e.clientY;
+		if ($CANVASBEHAVIOR === 'isDrawingArrow' || $CANVASBEHAVIOR === 'isErasing') {
+			startX = e.clientX;
+			startY = e.clientY;
+
+			for (let i = 0; i < arrows.length; i++) {
+				let arrow = arrows[i];
+				const distanceToLine = pointToLineDistance(
+					e.clientX,
+					e.clientY,
+					arrow.startX,
+					arrow.startY,
+					arrow.endX,
+					arrow.endY
+				);
+
+				if (distanceToLine < 10) {
+					isDragging = true;
+					draggingArrowIndex = i;
+					break;
+				}
+			}
+		}
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
@@ -63,25 +101,53 @@
 				drawArrowhead(startX, startY, e.clientX, e.clientY);
 			}
 		}
+
+		if (isDragging && draggingArrowIndex !== null) {
+			const deltaX = e.clientX - startX;
+			const deltaY = e.clientY - startY;
+
+			arrows[draggingArrowIndex].startX += deltaX;
+			arrows[draggingArrowIndex].startY += deltaY;
+			arrows[draggingArrowIndex].endX += deltaX;
+			arrows[draggingArrowIndex].endY += deltaY;
+			arrows[draggingArrowIndex].midX += deltaX;
+			arrows[draggingArrowIndex].midY += deltaY;
+
+			startX = e.clientX;
+			startY = e.clientY;
+
+			redrawArrows();
+		}
 	};
+
 	const handleMouseUp = (e: MouseEvent) => {
 		if ($CANVASBEHAVIOR === 'isDrawingArrow') {
-			arrows.push({ startX, startY, endX: e.clientX, endY: e.clientY });
+			arrows = [
+				...arrows,
+				{
+					startX,
+					startY,
+					endX: e.clientX,
+					endY: e.clientY,
+					midX: (e.clientX + startX) / 2,
+					midY: (e.clientY + startY) / 2
+				}
+			];
 		}
-		if ($CANVASBEHAVIOR !== ('isErasing' || 'isDrawingArrow')) return;
 		if (context) {
 			eraserTrail = [];
 			context.clearRect(0, 0, width, height);
 			redrawArrows();
 		}
+
+		if (isDragging) {
+			isDragging = false;
+			draggingArrowIndex = null;
+		}
 	};
 
 	const eraseIntersectingArrows = () => {
-		// Debug
-
-		// For each segment of the eraserTrail
 		for (let i = 0; i < eraserTrail.length - 1; i++) {
-			// For each arrow
 			for (let j = arrows.length - 1; j >= 0; j--) {
 				const arrow = arrows[j];
 				if (
@@ -97,6 +163,20 @@
 			}
 		}
 	};
+
+	function pointToLineDistance(
+		x0: number,
+		y0: number,
+		x1: number,
+		y1: number,
+		x2: number,
+		y2: number
+	): number {
+		const numerator = Math.abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1);
+		const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
+
+		return numerator / denominator;
+	}
 
 	const redrawArrows = () => {
 		for (let arrow of arrows) {
@@ -127,6 +207,8 @@
 			roughness: roughness
 		});
 	};
+
+	$: console.log(isDragging);
 </script>
 
 <div
@@ -136,6 +218,29 @@
 	on:mouseup={handleMouseUp}
 >
 	<canvas style="position: fixed; z-index: 1;" bind:this={canvas} />
+	<svg viewBox={`0 0 ${width} ${height}`} style="position: absolute;  top: 0; left: 0; z-index: 1;">
+		{#if isDragging}
+			{#each arrows as arrow}
+				<circle cx={startX} cy={startY} r="5" stroke="red" stroke-width="1" fill="transparent" />
+				<circle
+					cx={arrow.midX}
+					cy={arrow.midY}
+					r="5"
+					stroke="red"
+					stroke-width="1"
+					fill="transparent"
+				/>
+				<circle
+					cx={arrow.endX}
+					cy={arrow.endY}
+					r="5"
+					stroke="red"
+					stroke-width="1"
+					fill="transparent"
+				/>
+			{/each}
+		{/if}
+	</svg>
 </div>
 <svelte:window
 	on:resize={() => {
