@@ -96,6 +96,7 @@
 		} else if (e instanceof MouseEvent) {
 			endX = e.clientX;
 			endY = e.clientY;
+			console.log(endX, endY);
 		}
 
 		// Clear the canvas and redraw saved arrows.
@@ -125,6 +126,7 @@
 	on:touchstart={handleStart}
 	on:touchmove={handleMove}
 	on:touchend={handleEnd}
+	id="drawArrowCanvas"
 >
 	<canvas style="position: absolute;" bind:this={canvas} />
 </div>

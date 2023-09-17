@@ -29,7 +29,6 @@
 	];
 
 	const setMode = (event: any) => {
-		console.log(event.detail);
 		navBarState.set(event.detail);
 	};
 </script>

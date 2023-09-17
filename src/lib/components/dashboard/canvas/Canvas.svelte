@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
-	import DrawEraser from './shapes/DrawEraser.svelte';
+	import DrawUtils from './shapes/DrawUtils.svelte';
 	import DrawArrow from './shapes/DrawArrow.svelte';
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
@@ -247,11 +247,7 @@
 				{/each}
 			{/if}
 		</div>
-		<div class="absolute">
-			<DrawArrow />
-
-			<DrawEraser />
-		</div>
+		<DrawUtils />
 	</div>
 	<canvas bind:this={canvas} />
 </div>
