@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { canvasBehavior } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
-	import { drawEraserTrail } from '../draw-utils/Draw';
+	import { drawEraserTrail, drawArrow } from '../draw-utils/Draw';
 	import rough from 'roughjs/bin/rough';
 
 	let roughCanvas: any;
