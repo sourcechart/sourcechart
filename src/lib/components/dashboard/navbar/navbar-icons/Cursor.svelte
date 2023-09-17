@@ -10,12 +10,7 @@
 	}
 </script>
 
-<button
-	on:click={handleClick}
-	class=" w-8 h-8 flex flex-col items-center justify-center {mode === 'select'
-		? 'button select'
-		: 'dark:bg-gray-800'}"
->
+<button on:click={handleClick} class=" w-8 h-8 flex flex-col items-center justify-center">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		x="0px"

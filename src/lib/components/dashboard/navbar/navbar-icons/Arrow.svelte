@@ -10,12 +10,7 @@
 	}
 </script>
 
-<button
-	on:click={clickButton}
-	class="w-8 h-8 flex flex-col justify-center items-center {mode === 'drawArrow'
-		? 'button select'
-		: 'dark:bg-gray-800'}"
->
+<button on:click={clickButton} class="w-8 h-8 flex flex-col justify-center items-center">
 	<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
 		><path
 			fill="none"

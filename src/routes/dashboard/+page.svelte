@@ -79,7 +79,7 @@
 	function handleKeyPress(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
 			activeDropZone.set(false);
-		} else if (event.key in ['0', '1', '2', '3']) {
+		} else if (['0', '1', '2', '3'].includes(event.key)) {
 			keyPress.set(event.key);
 		}
 	}

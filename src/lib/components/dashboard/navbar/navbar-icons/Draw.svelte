@@ -10,12 +10,7 @@
 	}
 </script>
 
-<button
-	on:click={clickButton}
-	class=" w-8 h-8 flex flex-col justify-center items-center {mode === 'drawRectangle'
-		? 'button select'
-		: 'dark:bg-gray-800'}"
->
+<button on:click={clickButton} class=" w-8 h-8 flex flex-col justify-center items-center">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width="16"
