@@ -145,17 +145,16 @@
 			roughness: 0.4
 		});
 
-		const angle: number = Math.atan2(
-			polygon.vertices[1].y - polygon.vertices[0].y,
-			polygon.vertices[1].x - polygon.vertices[0].x
-		);
+		const angle: number = Math.atan2(plotHeight - 10, plotWidth - 10);
 		const arrowLength: number = 10;
-		const headX1: number = polygon.vertices[1].x - arrowLength * Math.cos(angle + Math.PI / 6);
-		const headY1: number = polygon.vertices[1].y - arrowLength * Math.sin(angle + Math.PI / 6);
-		const headX2: number = polygon.vertices[1].x - arrowLength * Math.cos(angle - Math.PI / 6);
-		const headY2: number = polygon.vertices[1].y - arrowLength * Math.sin(angle - Math.PI / 6);
+		const headX1: number = plotWidth - 10 - arrowLength * Math.cos(angle + Math.PI / 6);
+		const headY1: number = plotHeight - 10 - arrowLength * Math.sin(angle + Math.PI / 6);
+		const headX2: number = plotWidth - 10 - arrowLength * Math.cos(angle - Math.PI / 6);
+		const headY2: number = plotHeight - 10 - arrowLength * Math.sin(angle - Math.PI / 6);
 
-		const pathString: string = `M ${polygon.vertices[1].x} ${polygon.vertices[1].y} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
+		const pathString: string = `M ${plotWidth - 10} ${
+			plotHeight - 10
+		} L ${headX1} ${headY1} L ${headX2} ${headY2} Z`;
 		roughCanvas.path(pathString, {
 			fill: 'white',
 			strokeWidth: 0.5,
