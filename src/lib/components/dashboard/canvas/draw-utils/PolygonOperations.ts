@@ -61,7 +61,6 @@ const isNearPoint = (
 	pointY: number,
 	tolerance: number = 20
 ): boolean => {
-	// Calculate the absolute differences
 	const diffX = Math.abs(mouseX - pointX);
 	const diffY = Math.abs(mouseY - pointY);
 	return diffX <= tolerance && diffY <= tolerance;

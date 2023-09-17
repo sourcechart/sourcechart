@@ -26,6 +26,7 @@ export const duckDBInstanceStore = writable<DuckDBClient>();
 export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
+export const keyPress = writable<string>('');
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);

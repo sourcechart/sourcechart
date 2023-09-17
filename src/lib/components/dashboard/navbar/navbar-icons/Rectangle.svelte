@@ -1,0 +1,22 @@
+<div class="w-8 h-8 rounded-md flex flex-col justify-center items-center relative">
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="12"
+		height="12"
+		viewBox="0 0 448 512"
+		fill="#9CA3AF"
+	>
+		<!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+		<path
+			d="M384 80c8.8 0 16 7.2 16 16V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V96c0-8.8 7.2-16 16-16H384zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"
+		/></svg
+	>
+	<div class="absolute bottom-0 right-0 text-xs">2</div>
+</div>
+
+<style>
+	.text-xs {
+		font-size: 0.5rem;
+		color: #9ca3af;
+	}
+</style>

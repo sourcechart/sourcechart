@@ -1,25 +1,9 @@
-<script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import { navBarState } from '$lib/io/Stores';
-
-	$: mode = $navBarState;
-	const dispatch = createEventDispatcher();
-
-	const handleClick = () => {
-		dispatch('mode', 'eraser');
-	};
-</script>
-
-<button
-	on:click={handleClick}
-	class="w-8 h-8 flex flex-col justify-center items-center {mode === 'eraser'
-		? 'button select'
-		: 'dark:bg-gray-800'} "
->
+<div class="w-8 h-8 rounded-md flex flex-col justify-center items-center relative">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
-		width="16"
-		height="16"
+		width="12"
+		height="12"
+		stroke-width="3"
 		fill="#9CA3AF"
 		class="bi bi-eraser"
 		viewBox="0 0 16 16"
@@ -27,14 +11,13 @@
 		<path
 			d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"
 		/>
-	</svg></button
->
+	</svg>
+	<div class="absolute bottom-0 right-0 text-xs mb-1 mr-1">0</div>
+</div>
 
 <style>
-	.button {
-		border-radius: 0.375rem;
-	}
-	.select {
-		background-color: #9d99dc77;
+	.text-xs {
+		font-size: 0.5rem;
+		color: #9ca3af;
 	}
 </style>

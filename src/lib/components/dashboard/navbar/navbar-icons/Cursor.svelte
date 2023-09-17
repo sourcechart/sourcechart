@@ -1,27 +1,10 @@
-<script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import { navBarState } from '$lib/io/Stores';
-
-	$: mode = $navBarState;
-	const dispatch = createEventDispatcher();
-
-	function handleClick() {
-		dispatch('mode', 'select');
-	}
-</script>
-
-<button
-	on:click={handleClick}
-	class=" w-8 h-8 flex flex-col items-center justify-center {mode === 'select'
-		? 'button select'
-		: 'dark:bg-gray-800'}"
->
+<div class="w-8 h-8 rounded-md flex flex-col justify-center items-center relative">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		x="0px"
 		y="0px"
-		width="16px"
-		height="16px"
+		width="12"
+		height="12"
 		viewBox="0 0 30 30"
 		stroke="#9CA3AF"
 		fill="#9CA3AF"
@@ -30,13 +13,12 @@
 			d="M 9 3 A 1 1 0 0 0 8 4 L 8 21 A 1 1 0 0 0 9 22 A 1 1 0 0 0 9.796875 21.601562 L 12.919922 18.119141 L 16.382812 26.117188 C 16.701812 26.855187 17.566828 27.188469 18.298828 26.855469 C 19.020828 26.527469 19.340672 25.678078 19.013672 24.955078 L 15.439453 17.039062 L 21 17 A 1 1 0 0 0 22 16 A 1 1 0 0 0 21.628906 15.222656 L 9.7832031 3.3789062 A 1 1 0 0 0 9 3 z"
 		/>
 	</svg>
-</button>
+	<div class="absolute bottom-0 right-0 text-xs mb-1 mr-1">1</div>
+</div>
 
 <style>
-	.button {
-		border-radius: 0.375rem;
-	}
-	.select {
-		background-color: #9d99dc77;
+	.text-xs {
+		font-size: 0.5rem;
+		color: #9ca3af;
 	}
 </style>

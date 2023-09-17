@@ -1,38 +1,20 @@
-<script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import { navBarState } from '$lib/io/Stores';
-
-	$: mode = $navBarState;
-	const dispatch = createEventDispatcher();
-
-	function clickButton() {
-		dispatch('mode', 'drawArrow');
-	}
-</script>
-
-<button
-	on:click={clickButton}
-	class="w-8 h-8 flex flex-col justify-center items-center {mode === 'drawArrow'
-		? 'button select'
-		: 'dark:bg-gray-800'}"
->
-	<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+<div class="w-8 h-8 rounded-md flex flex-col justify-center items-center relative">
+	<svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 24 24"
 		><path
 			fill="none"
 			stroke="#9CA3AF"
 			stroke-linecap="round"
 			stroke-linejoin="round"
-			stroke-width="1.5"
+			stroke-width="3"
 			d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
 		/></svg
 	>
-</button>
+	<div class="absolute bottom-0 right-0 text-xs mb-1 mr-1">3</div>
+</div>
 
 <style>
-	.button {
-		border-radius: 0.375rem;
-	}
-	.select {
-		background-color: #9d99dc77;
+	.text-xs {
+		font-size: 0.5rem;
+		color: #9ca3af;
 	}
 </style>
