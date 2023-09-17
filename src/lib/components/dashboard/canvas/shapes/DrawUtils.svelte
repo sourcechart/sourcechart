@@ -19,7 +19,10 @@
 
 	let startX: number = 0;
 	let startY: number = 0;
-	const MAX_TRAIL_LENGTH = 5;
+	const MAX_TRAIL_LENGTH = 7;
+
+	let roughness = 0.8;
+	let strokeWidth = 1;
 
 	onMount(() => {
 		context = canvas.getContext('2d');
@@ -149,14 +152,14 @@
 
 		roughCanvas.line(startX, startY, endX, endY, {
 			stroke: 'white',
-			strokeWidth: 0.5,
-			roughness: 0.4
+			strokeWidth: strokeWidth,
+			roughness: roughness
 		});
 
 		roughCanvas.path(`M ${endX} ${endY} L ${x1} ${y1} M ${endX} ${endY} L ${x2} ${y2}`, {
 			stroke: 'white',
-			strokeWidth: 0.5,
-			roughness: 0.4
+			strokeWidth: strokeWidth,
+			roughness: roughness
 		});
 	};
 </script>
