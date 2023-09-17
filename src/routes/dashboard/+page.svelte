@@ -19,15 +19,24 @@
 	let syncWorker: Worker | undefined = undefined;
 	$: i = clickedChartIndex();
 
-	const loadDataFromSQLITE = (chart: Chart) => {
-		if (syncWorker) {
-			syncWorker.postMessage({
-				message: 'query',
-				filename: chart.filename
-			});
-			syncWorker.onmessage = onWorkerMessage;
-		}
-	};
+	function queryWorker(chart: Chart): Promise<void> {
+		return new Promise((resolve, reject) => {
+			if (syncWorker) {
+				syncWorker.postMessage({
+					message: 'query',
+					filename: chart.filename
+				});
+
+				syncWorker.onmessage = (e: MessageEvent) => {
+					// Process the message
+					onWorkerMessage(e);
+					resolve();
+				};
+			} else {
+				reject(new Error('Worker not initialized'));
+			}
+		});
+	}
 
 	const queryDuckDB = async (dataObject: DataObject) => {
 		const db = await DuckDBClient.of([dataObject]);
@@ -62,7 +71,9 @@
 		if ($allCharts.length === 0) return;
 
 		await loadWorker();
-		$allCharts.forEach(loadDataFromSQLITE);
+		for (const chart of $allCharts) {
+			await queryWorker(chart);
+		}
 	};
 
 	onMount(loadPreviousState);

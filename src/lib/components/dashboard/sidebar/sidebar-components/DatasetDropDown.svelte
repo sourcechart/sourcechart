@@ -62,7 +62,6 @@
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
 
-		console.log('schema', schema);
 		duckDBInstanceStore.set(db);
 
 		allCharts.update((charts) => {
