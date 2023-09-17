@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
 	import DrawEraser from './shapes/DrawEraser.svelte';
-
+	import DrawArrow from './shapes/DrawArrow.svelte';
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
 		navBarState,
@@ -247,7 +247,11 @@
 				{/each}
 			{/if}
 		</div>
-		<DrawEraser />
+		<div class="absolute">
+			<DrawArrow />
+
+			<DrawEraser />
+		</div>
 	</div>
 	<canvas bind:this={canvas} />
 </div>
