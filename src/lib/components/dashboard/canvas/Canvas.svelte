@@ -1,7 +1,6 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
-	import DrawEraserTrail from './shapes/DrawEraserTrail.svelte';
-	import DrawArrow from './shapes/DrawArrow.svelte';
+	import DrawEraser from './shapes/DrawEraser.svelte';
 
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
@@ -21,9 +20,6 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import rough from 'roughjs/bin/rough';
-	import Chart from '../echarts/Chart.svelte';
-	import Draw from '../navbar/navbar-icons/Draw.svelte';
-	import Page from '../../../../routes/+page.svelte';
 
 	let scrollX: number = 0;
 	let scrollY: number = 0;
@@ -249,14 +245,9 @@
 				{#each newPolygon as polygon}
 					<DrawRectangleCanvas {polygon} />
 				{/each}
-				{#each newArrow as arrow}
-					<div class="absolute">
-						<DrawArrow polygon={arrow} />
-					</div>
-				{/each}
 			{/if}
 		</div>
-		<DrawEraserTrail />
+		<DrawEraser />
 	</div>
 	<canvas bind:this={canvas} />
 </div>
