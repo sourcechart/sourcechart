@@ -1,7 +1,6 @@
 <script lang="ts">
 	import DrawRectangleCanvas from './shapes/DrawRectangleCanvas.svelte';
 	import DrawUtils from './shapes/DrawUtils.svelte';
-	import DrawArrow from './shapes/DrawArrow.svelte';
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
 		navBarState,
@@ -19,14 +18,12 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import rough from 'roughjs/bin/rough';
 
 	let scrollX: number = 0;
 	let scrollY: number = 0;
 	let width: number = 0;
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
-	let newArrow: Polygon[] = [];
 
 	let eraserTrail: Point[] = [];
 
@@ -51,7 +48,6 @@
 
 	if (browser) {
 		onMount(() => {
-			roughCanvas = rough.canvas(canvas);
 			context = canvas.getContext('2d');
 			width = window.innerWidth;
 			height = window.innerHeight;
@@ -185,11 +181,7 @@
 				{ x: startPosition.x, y: y }
 			]
 		};
-		if ($CANVASBEHAVIOR === 'isDrawing') {
-			newPolygon = [polygon];
-		} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
-			newArrow = [polygon];
-		}
+		newPolygon = [polygon];
 	};
 
 	const handleEraseShape = (x: number, y: number): void => {

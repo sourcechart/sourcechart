@@ -68,7 +68,7 @@
 	onMount(loadPreviousState);
 </script>
 
-<div class="dark:bg-gray-900 no-scroll">
+<div class="no-scroll">
 	<div class="flex justify-center items-center mt-6 z-30">
 		<NavBar />
 	</div>
