@@ -50,7 +50,7 @@
 </script>
 
 <div
-	class="rounded-md fixed inset-x-0 top-3 z-50 flex h-12 items-center justify-center background shadow-lg"
+	class="rounded-md fixed inset-x-0 top-5 z-50 flex h-10 items-center justify-center background shadow-lg"
 >
 	<div class="flex items-center justify-center space-x-4 ml-1 mr-1">
 		{#each icons as { name, component, index, mode } (name)}
