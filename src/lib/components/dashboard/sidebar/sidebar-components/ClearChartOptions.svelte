@@ -9,9 +9,3 @@
 		}, 100);
 	}
 </script>
-
-<!--
-<Button on:click={clearUpdatedChartObject} type="button" pill={false} outline={false}>
-	Clear Choices
-</Button>
--->

@@ -15,7 +15,6 @@ type Chart = {
 	chartType: string | null;
 	chartID: string;
 	workflow: WorkFlow;
-	polygon: Polygon;
 	filename: string | null;
 	aggregator: string | null;
 	datasetID: string | null;
@@ -25,9 +24,19 @@ type Chart = {
 	filterColumns: Array<any>;
 	xColumn: string | null;
 	yColumn: string | null;
+
+	//Maybe I should seperate this out to a different store.
 	canvasWidth: number;
 	canvasHeight: number;
+	polygon: Polygon;
+
 	chartOptions: any;
+};
+
+type Canvas = {
+	canvasWidth: number;
+	canvasHeight: number;
+	polygon: Polygon;
 };
 
 type ColumnName = {
@@ -116,15 +125,16 @@ type Field = {
  *  @param isTouching when you are move your mouse and it is clicked
  */
 
-type MouseEvents =
+type TouchState =
 	| 'isHovering'
 	| 'isTouching'
 	| 'isTranslating'
 	| 'isResizing'
 	| 'isDrawing'
-	| 'isErasing';
+	| 'isErasing'
+	| 'isDrawingArrow';
 type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
-type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'textbox';
+type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'drawArrow' | 'textbox';
 
 interface Rectangle {
 	x: number;
@@ -137,10 +147,11 @@ interface Rectangle {
 	draggable: boolean;
 }
 
-interface Point {
+type Point = {
 	x: number;
 	y: number;
-}
+};
+
 interface Polygon {
 	id?: string;
 	vertices: Point[];

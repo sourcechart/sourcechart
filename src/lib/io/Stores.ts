@@ -6,8 +6,8 @@ import type { DuckDBClient } from './DuckDBClient';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
-export const navBarState = writable<NavBar>('select');
-export const mouseEventState = writable<MouseEvents>();
+export const navBarState = writable<NavBar>('drawRectangle');
+export const touchState = writable<TouchState>('isHovering');
 export const mostRecentChartID = writable<string>();
 export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
@@ -26,6 +26,7 @@ export const duckDBInstanceStore = writable<DuckDBClient>();
 export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
+export const keyPress = writable<string>('');
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -124,32 +125,35 @@ export const clickedChartIndex = () =>
 		return i;
 	});
 
-export const touchStates = () => {
+export const canvasBehavior = () => {
 	return derived(
-		[navBarState, mouseEventState, mouseType],
-		([$navBarState, $mouseEventState, $mouseType]) => {
-			let touchState: MouseEvents;
-			if ($navBarState === 'drawRectangle' && $mouseEventState === 'isTouching') {
+		[navBarState, touchState, mouseType],
+		([$navBarState, $touchState, $mouseType]) => {
+			let touchState: TouchState;
+			if ($navBarState === 'drawRectangle' && $touchState === 'isTouching') {
 				touchState = 'isDrawing';
-			} else if ($navBarState === 'eraser' && $mouseEventState === 'isTouching') {
+			} else if ($navBarState === 'eraser' && $touchState === 'isTouching') {
 				touchState = 'isErasing';
 			} else if (
 				$navBarState === 'select' &&
-				$mouseEventState === 'isTouching' &&
+				$touchState === 'isTouching' &&
 				$mouseType !== 'move' &&
 				$mouseType !== ''
 			) {
+				//This will have to be changed
 				touchState = 'isResizing';
 			} else if (
 				$navBarState === 'select' &&
 				$mouseType === 'move' &&
-				$mouseEventState === 'isTouching'
+				$touchState === 'isTouching'
 			) {
 				touchState = 'isTranslating';
-			} else if ($navBarState === 'select' && $mouseEventState === 'isHovering') {
+			} else if ($navBarState === 'select' && $touchState === 'isHovering') {
 				touchState = 'isHovering';
-			} else if ($navBarState === 'select' && $mouseEventState === 'isTouching') {
+			} else if ($navBarState === 'select' && $touchState === 'isTouching') {
 				touchState = 'isTouching';
+			} else if ($navBarState === 'drawArrow' && $touchState === 'isTouching') {
+				touchState = 'isDrawingArrow';
 			} else {
 				return 'default';
 			}

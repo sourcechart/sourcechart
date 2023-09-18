@@ -3,33 +3,40 @@
 	import Canvas from '$lib/components/dashboard/canvas/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
-
-	//@ts-ignore
-	//import DarkMode from 'flowbite-svelte/DarkMode.svelte';
 	import { onMount } from 'svelte';
-	import { allCharts, clickedChartIndex, activeDropZone } from '$lib/io/Stores';
+
+	import { allCharts, clickedChartIndex, activeDropZone, keyPress } from '$lib/io/Stores';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { duckDBInstanceStore } from '$lib/io/Stores';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { setLocalStorage } from '$lib/io/Storage';
 
-	export let data;
+	//export let data;
 
 	setLocalStorage('color-theme', 'dark');
 
 	let syncWorker: Worker | undefined = undefined;
 	$: i = clickedChartIndex();
 
-	const loadDataFromSQLITE = (chart: Chart) => {
-		if (syncWorker) {
-			syncWorker.postMessage({
-				message: 'query',
-				filename: chart.filename
-			});
-			syncWorker.onmessage = onWorkerMessage;
-		}
-	};
+	function queryWorker(chart: Chart): Promise<void> {
+		return new Promise((resolve, reject) => {
+			if (syncWorker) {
+				syncWorker.postMessage({
+					message: 'query',
+					filename: chart.filename
+				});
+
+				syncWorker.onmessage = (e: MessageEvent) => {
+					// Process the message
+					onWorkerMessage(e);
+					resolve();
+				};
+			} else {
+				reject(new Error('Worker not initialized'));
+			}
+		});
+	}
 
 	const queryDuckDB = async (dataObject: DataObject) => {
 		const db = await DuckDBClient.of([dataObject]);
@@ -64,13 +71,29 @@
 		if ($allCharts.length === 0) return;
 
 		await loadWorker();
-		$allCharts.forEach(loadDataFromSQLITE);
+		for (const chart of $allCharts) {
+			await queryWorker(chart);
+		}
 	};
 
-	onMount(loadPreviousState);
+	function handleKeyPress(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			activeDropZone.set(false);
+		} else if (['0', '1', '2', '3'].includes(event.key)) {
+			keyPress.set(event.key);
+		}
+	}
+
+	onMount(() => {
+		loadPreviousState();
+		document.addEventListener('keydown', handleKeyPress);
+		return () => {
+			document.removeEventListener('keydown', handleKeyPress);
+		};
+	});
 </script>
 
-<div class="dark:bg-gray-900 no-scroll">
+<div class="no-scroll">
 	<div class="flex justify-center items-center mt-6 z-30">
 		<NavBar />
 	</div>
