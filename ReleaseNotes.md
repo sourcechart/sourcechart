@@ -6,6 +6,9 @@
 - Redid landing page
 - Fixed bug in choosing datasets
 - Added Filter Columns and More External Datasets
+- Fixed bugs with loading charts on refresh
+- Added arrows to point at things during meetings.
+- Fixed external dataset columns.
 
 ## August 2023
 
