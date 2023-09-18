@@ -1,18 +1,11 @@
 <div class="w-8 h-8 rounded-md flex flex-col justify-center items-center relative">
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="14"
-		height="14"
-		stroke-width="3"
-		fill="#9CA3AF"
-		class="bi bi-eraser"
-		viewBox="0 0 16 16"
+	<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+		><path
+			fill="#9ca3af"
+			d="M17.25 18H22v2h-6.75l2-2Zm-12.5 2l-2.125-2.125q-.575-.575-.588-1.425T2.6 15l11-11.4q.575-.6 1.413-.6t1.412.575L21.4 8.55q.575.575.575 1.425T21.4 11.4L13 20H4.75Z"
+		/></svg
 	>
-		<path
-			d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"
-		/>
-	</svg>
-	<div class="absolute bottom-0 right-0 text-xs mt-2 mr-1">0</div>
+	<div class="absolute bottom-0 right-0 text-xs mt-1 mr-1">0</div>
 </div>
 
 <style>
