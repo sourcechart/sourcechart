@@ -22,6 +22,9 @@ onmessage = async (e: MessageEvent) => {
 		case 'query':
 			getBinaryFromDatabase(messageData);
 			break;
+		case 'delete':
+			deleteDataFromDatabase(messageData);
+			break;
 		default:
 			postMessage({ error: 'Invalid command' });
 	}
@@ -43,6 +46,22 @@ const getBinaryFromDatabase = (data: DataMessage) => {
 			size: data.size,
 			fileextension: data.filename.split('.').pop()
 		});
+	});
+};
+
+const deleteDataFromDatabase = (data: DataMessage) => {
+	sqlite3InitModule().then(async (sqlite3) => {
+		//@ts-ignore
+		const db = new sqlite3.opfs.OpfsDb(dbFileName, 'c');
+		const res = db.exec(`DELETE FROM ${tableName} WHERE filename= '${data.filename}'`);
+
+		if (res) {
+			postMessage({ message: 'delete_success', filename: data.filename });
+		} else {
+			postMessage({ error: `Failed to delete ${data.filename}` });
+		}
+
+		db.close();
 	});
 };
 
