@@ -104,6 +104,7 @@
 			});
 		}
 	};
+
 	const toggleDropdown = () => {
 		isDropdownOpen = !isDropdownOpen;
 	};
