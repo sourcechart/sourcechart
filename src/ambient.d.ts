@@ -21,6 +21,7 @@ type Chart = {
 	columns: Array<string>;
 	groupbyColumns: Array<string>;
 	schema: any;
+	legendKey: string | null;
 	filterColumns: Array<any>;
 	xColumn: string | null;
 	yColumn: string | null;
