@@ -13,12 +13,15 @@
 	let eraserTrail: Point[] = [];
 	let CANVASBEHAVIOR = canvasBehavior();
 
+	let isCanvasFocused = false;
 	let isDragging = false;
 	let isDraggingArrow = false;
 	let mouseMoved = false;
-
 	let handlesActivated = false;
 	let arrowCloseEnough = false;
+
+	let hoveredCircleIndex: number | null = null;
+	let hoveredCircleEnd: 'start' | 'end' | null = null;
 	let draggingArrowIndex: number | null = null;
 	const MIN_DRAG_DISTANCE = 10; // You can adjust this value as needed
 
@@ -197,12 +200,15 @@
 						eraserTrail[eraserTrail.length - 1]
 					)
 				) {
-					arrows.splice(j, 1); // Remove the arrow if intersecting
+					arrows.splice(j, 1);
+					if (draggingArrowIndex === j) {
+						draggingArrowIndex = null;
+						handlesActivated = false;
+					}
 				}
 			}
 		}
 	};
-
 	function pointToLineDistance(
 		x0: number,
 		y0: number,
@@ -259,22 +265,44 @@
 		{#if handlesActivated}
 			{#each arrows as arrow, i}
 				<circle
+					class="circle-focusable"
 					cx={arrow.startX}
 					cy={arrow.startY}
-					r="5"
-					stroke="red"
-					stroke-width="1"
-					fill="transparent"
+					r={hoveredCircleIndex === i && hoveredCircleEnd === 'start' ? '7' : '5'}
+					fill="#26262777"
+					stroke="#9d99dc77"
+					stroke-width="2"
 					on:mousedown={(e) => handleCircleMouseDown(e, i, 'start')}
+					on:mouseover={() => {
+						hoveredCircleIndex = i;
+						hoveredCircleEnd = 'start';
+					}}
+					on:mouseout={() => {
+						hoveredCircleIndex = null;
+						hoveredCircleEnd = null;
+					}}
+					on:focus={() => (isCanvasFocused = true)}
+					on:blur={() => (isCanvasFocused = false)}
 				/>
 				<circle
+					class="circle-focusable"
 					cx={arrow.endX}
 					cy={arrow.endY}
-					r="5"
-					stroke="red"
-					stroke-width="1"
-					fill="transparent"
+					r={hoveredCircleIndex === i && hoveredCircleEnd === 'end' ? '7' : '5'}
+					stroke="#9d99dc77"
+					stroke-width="2"
+					fill="#26262777"
 					on:mousedown={(e) => handleCircleMouseDown(e, i, 'end')}
+					on:mouseover={() => {
+						hoveredCircleIndex = i;
+						hoveredCircleEnd = 'end';
+					}}
+					on:mouseout={() => {
+						hoveredCircleIndex = null;
+						hoveredCircleEnd = null;
+					}}
+					on:focus={() => (isCanvasFocused = true)}
+					on:blur={() => (isCanvasFocused = false)}
 				/>
 			{/each}
 		{/if}
@@ -292,3 +320,17 @@
 		}
 	}}
 />
+
+<style>
+	/* Initial circle styling */
+	.circle-focusable {
+		transition: stroke 0.3s, fill 0.3s;
+	}
+
+	/* Styling for the focused circle */
+	.circle-focusable:focus {
+		stroke: #5a3360; /* Change to desired stroke color for focus */
+		fill: #574a5b; /* Change to desired fill color for focus */
+		outline: none; /* Remove browser's default outline */
+	}
+</style>
