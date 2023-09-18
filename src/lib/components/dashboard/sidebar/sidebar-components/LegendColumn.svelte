@@ -59,8 +59,8 @@
 		let chart = $allCharts[$i];
 		selectedButtons.push(column);
 		tags = [column];
-		const keys = await handleAsyncOperations(column);
-        console.log(keys)
+		var keys = await handleAsyncOperations(column);
+		chart.legendValues = keys;
 		chart.legendKey = column;
 		$allCharts[$i] = chart;
 	};
