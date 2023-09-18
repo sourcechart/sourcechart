@@ -89,6 +89,7 @@
 				handlesActivated = true;
 				draggingArrowIndex = i;
 				arrowCloseEnough = true;
+				isDraggingArrow = true; // Add this line
 				break;
 			} else {
 				arrowCloseEnough = false;
@@ -97,6 +98,7 @@
 		}
 		if (!arrowCloseEnough) {
 			handlesActivated = false;
+			isDraggingArrow = false; // Make sure to reset it if no arrow is close enough
 		}
 	};
 
@@ -109,10 +111,10 @@
 
 		if (context) {
 			context.clearRect(0, 0, width, height);
-			redrawArrows(); // Redraw arrows from the list
+			redrawArrows();
 			if ($CANVASBEHAVIOR === 'isErasing') {
 				drawEraserTrail(eraserTrail, context, '#433f3f50', 6);
-				eraseIntersectingArrows(); // <-- Add this here
+				eraseIntersectingArrows();
 			} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
 				drawArrowhead(startX, startY, e.clientX, e.clientY);
 			}
@@ -237,8 +239,6 @@
 			roughness: roughness
 		});
 	};
-
-	$: console.log(handlesActivated);
 </script>
 
 <div
