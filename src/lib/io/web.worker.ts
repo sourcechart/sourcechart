@@ -46,6 +46,7 @@ const getBinaryFromDatabase = (data: DataMessage) => {
 			size: data.size,
 			fileextension: data.filename.split('.').pop()
 		});
+		db.close();
 	});
 };
 

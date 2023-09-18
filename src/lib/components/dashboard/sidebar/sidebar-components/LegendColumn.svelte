@@ -1,7 +1,13 @@
 <script lang="ts">
-	import { getColumnsFromFile, allCharts, clickedChartIndex } from '$lib/io/Stores';
+	import {
+		getColumnsFromFile,
+		allCharts,
+		clickedChartIndex,
+		duckDBInstanceStore
+	} from '$lib/io/Stores';
 	import { onDestroy } from 'svelte';
 	import Tags from '$lib/components/ui/tags/Tags.svelte';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	let dropdownContainer: HTMLElement;
 	let tags: Array<string> = [];
@@ -25,10 +31,36 @@
 		}
 	};
 
-	const addKey = (column: string) => {
+	const handleAsyncOperations = async (column: string) => {
+		let chart = $allCharts[$i];
+		if (chart.filename) {
+			var filename = checkNameForSpacesAndHyphens(chart.filename);
+			var correctColumn = checkNameForSpacesAndHyphens(column);
+			const distinctValues = await $duckDBInstanceStore.query(
+				`SELECT DISTINCT ${correctColumn} as distinctValues FROM ${filename}`
+			);
+			var distinctValuesObject = formatData(distinctValues).map(
+				(value: any) => value.distinctValues
+			);
+			return distinctValuesObject;
+		}
+	};
+
+	function formatData(res: any) {
+		const results = JSON.parse(
+			JSON.stringify(
+				res,
+				(_, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+			)
+		);
+		return results;
+	}
+	const addKey = async (column: string) => {
 		let chart = $allCharts[$i];
 		selectedButtons.push(column);
 		tags = [column];
+		const keys = await handleAsyncOperations(column);
+        console.log(keys)
 		chart.legendKey = column;
 		$allCharts[$i] = chart;
 	};

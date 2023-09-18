@@ -26,7 +26,7 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 		polygon: polygon,
 		canvasHeight: 0,
 		canvasWidth: 0,
-
+		legendValues: [],
 		legendKey: null,
 		chartOptions: {
 			xAxis: { data: [], type: 'category' },
