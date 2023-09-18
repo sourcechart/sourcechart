@@ -5,7 +5,8 @@
 		fileDropdown,
 		allCharts,
 		clickedChartIndex,
-		duckDBInstanceStore
+		duckDBInstanceStore,
+		fileUploadStore
 	} from '$lib/io/Stores';
 
 	import { CloseSolid } from 'flowbite-svelte-icons';
@@ -42,6 +43,8 @@
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
+
+	$: console.log($datasets);
 
 	const onWorkerMessage = (e: MessageEvent) => {
 		var arrayBuffer = hexToBuffer(e.data.hexadecimal);
@@ -97,12 +100,23 @@
 	};
 
 	const removeFileFromSqlite = (filename: string) => {
+		console.log('removing file from sqlite');
 		if (syncWorker) {
 			syncWorker.postMessage({
 				message: 'delete',
 				filename: filename
 			});
+			syncWorker.onmessage = onWorkerMessage;
+			console.log('file deleted from sqlite');
 		}
+
+		allCharts.update((charts) => {
+			return charts.filter((chart) => chart.filename !== filename);
+		});
+
+		fileUploadStore.update((file) => {
+			return file.filter((file) => file.filename !== filename);
+		});
 	};
 
 	const toggleDropdown = () => {
@@ -134,37 +148,31 @@
 		>
 			{#each $datasets as dataset}
 				{#if dataset !== null}
-					<div class="flex justify-between items-center text-gray-400">
-						<div class="selectFieldColor w-full">
-							<div
-								class="text-left px-3 py-2 selectFieldColor dark:text-black hover:bg-gray-700"
-								on:click={() => {
+					<div class="flex justify-between items-center text-gray-400 relative selectFieldColor">
+						<div
+							class="text-left px-3 py-2 w-full selectFieldColor dark:text-black hover:bg-gray-700 cursor-pointer"
+							on:click={() => {
+								selectFile(dataset);
+								isDropdownOpen = false;
+							}}
+							on:keypress={(event) => {
+								if (event.key === 'Enter') {
 									selectFile(dataset);
 									isDropdownOpen = false;
-								}}
-								on:keypress={() => {
-									selectFile(dataset);
-									isDropdownOpen = false;
-								}}
-							>
-								{dataset}
-							</div>
+								}
+							}}
+						>
+							{dataset}
 						</div>
-						<!--
-
-						<div class="selectFieldColor w-full h-full">
-							<button class="selectFieldColor">
-								<CloseSolid
-									class="w-3 h-3 text-white dark:text-white"
-									on:click={() => {
-										$datasets = $datasets.filter((item) => item !== dataset);
-										$allCharts = $allCharts.filter((chart) => chart.filename !== dataset);
-										removeFileFromSqlite(dataset);
-									}}
-								/>
-							</button>
-						</div>
-													-->
+						<button
+							class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
+							on:click={(event) => {
+								event.stopPropagation();
+								removeFileFromSqlite(dataset);
+							}}
+						>
+							<CloseSolid class="w-3 h-3 text-white dark:text-white" />
+						</button>
 					</div>
 				{/if}
 			{/each}
