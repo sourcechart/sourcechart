@@ -100,6 +100,12 @@
 			handlesActivated = false;
 			isDraggingArrow = false; // Make sure to reset it if no arrow is close enough
 		}
+	};
+
+	const handleMouseMove = (e: MouseEvent) => {
+		eraserTrail = [...eraserTrail, { x: e.clientX, y: e.clientY }];
+
+		while (eraserTrail.length > MAX_TRAIL_LENGTH) {
 			eraserTrail.shift();
 		}
 
