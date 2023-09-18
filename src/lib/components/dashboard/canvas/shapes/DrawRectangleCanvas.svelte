@@ -14,9 +14,6 @@
 
 	export let polygon: Polygon;
 
-	const highlightcolor: string = 'transparent';
-	const defaultcolor: string = 'transparent';
-
 	let offsetX = 0;
 	let offsetY = 0;
 	let canvas: HTMLCanvasElement;
@@ -195,22 +192,17 @@
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
 
-		var color =
-			$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
-				? highlightcolor
-				: defaultcolor;
-
 		if (context) {
 			rectWidth = Math.abs(endX - startX);
 			rectHeight = Math.abs(endY - startY);
 
-			context.strokeStyle = color;
+			context.strokeStyle = 'transparent';
 			points = calculateVertices(rectWidth, rectHeight, 5);
 
 			plotWidth = getPlotWidth();
 			plotHeight = getPlotHeight();
 
-			drawRectangleCanvas(points, context, color);
+			drawRectangleCanvas(points, context, 'transparent');
 		}
 	});
 
