@@ -155,7 +155,7 @@
 				{#if dataset !== null}
 					<div class="flex justify-between items-center text-gray-400 relative selectFieldColor">
 						<div
-							class="text-left px-3 py-2 w-full bg-gray-900 dark:text-black hover:bg-gray-700 cursor-pointer"
+							class="text-left px-3 py-2 w-full bg-gray-900 dark:text-black hover:bg-gray-700 cursor-pointer truncate pr-8"
 							on:click={() => {
 								selectFile(dataset);
 								isDropdownOpen = false;
