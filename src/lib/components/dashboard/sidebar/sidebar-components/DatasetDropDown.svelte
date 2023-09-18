@@ -8,6 +8,8 @@
 		duckDBInstanceStore
 	} from '$lib/io/Stores';
 
+	import { CloseSolid } from 'flowbite-svelte-icons';
+
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
@@ -94,6 +96,14 @@
 		}
 	};
 
+	const removeFileFromSqlite = (filename: string) => {
+		if (syncWorker) {
+			syncWorker.postMessage({
+				message: 'delete',
+				filename: filename
+			});
+		}
+	};
 	const toggleDropdown = () => {
 		isDropdownOpen = !isDropdownOpen;
 	};
@@ -123,15 +133,38 @@
 		>
 			{#each $datasets as dataset}
 				{#if dataset !== null}
-					<button
-						class="w-full text-left px-3 py-2 selectFieldColor dark:text-black hover:bg-gray-200"
-						on:click={() => {
-							selectFile(dataset);
-							isDropdownOpen = false;
-						}}
-					>
-						{dataset}
-					</button>
+					<div class="flex justify-between items-center text-gray-400">
+						<div class="selectFieldColor w-full">
+							<div
+								class="text-left px-3 py-2 selectFieldColor dark:text-black hover:bg-gray-700"
+								on:click={() => {
+									selectFile(dataset);
+									isDropdownOpen = false;
+								}}
+								on:keypress={() => {
+									selectFile(dataset);
+									isDropdownOpen = false;
+								}}
+							>
+								{dataset}
+							</div>
+						</div>
+						<!--
+
+						<div class="selectFieldColor w-full h-full">
+							<button class="selectFieldColor">
+								<CloseSolid
+									class="w-3 h-3 text-white dark:text-white"
+									on:click={() => {
+										$datasets = $datasets.filter((item) => item !== dataset);
+										$allCharts = $allCharts.filter((chart) => chart.filename !== dataset);
+										removeFileFromSqlite(dataset);
+									}}
+								/>
+							</button>
+						</div>
+													-->
+					</div>
 				{/if}
 			{/each}
 		</div>
