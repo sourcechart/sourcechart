@@ -1,8 +1,8 @@
 <div class="w-8 h-8 rounded-md flex flex-col justify-center items-center relative">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
-		width="12"
-		height="12"
+		width="11"
+		height="11"
 		viewBox="0 0 448 512"
 		fill="#9CA3AF"
 	>
@@ -11,7 +11,7 @@
 			d="M384 80c8.8 0 16 7.2 16 16V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V96c0-8.8 7.2-16 16-16H384zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"
 		/></svg
 	>
-	<div class="absolute bottom-0 right-0 text-xs">2</div>
+	<div class="absolute bottom-0 right-0 text-xs mt-2 mr-1">2</div>
 </div>
 
 <style>

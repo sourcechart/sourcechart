@@ -14,14 +14,13 @@
 
 	export let polygon: Polygon;
 
-	const highlightcolor: string = 'transparent';
-	const defaultcolor: string = 'transparent';
-
 	let offsetX = 0;
 	let offsetY = 0;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let dragging = false;
+	let dataAvailable = false; // Track whether data is available in the options.axis.data
+	let backupColor: string = '#9d99dc';
 
 	let rectWidth: number = 0;
 	let rectHeight: number = 0;
@@ -58,6 +57,11 @@
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
 
+	$: if (dataAvailable) {
+		backupColor = 'transparent';
+	} else {
+		backupColor = '#9d99dc';
+	}
 	onMount(() => {
 		// Add global event listeners
 		window.addEventListener('mousemove', handleMouseMove);
@@ -195,22 +199,17 @@
 		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
 
-		var color =
-			$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
-				? highlightcolor
-				: defaultcolor;
-
 		if (context) {
 			rectWidth = Math.abs(endX - startX);
 			rectHeight = Math.abs(endY - startY);
 
-			context.strokeStyle = color;
+			context.strokeStyle = 'transparent';
 			points = calculateVertices(rectWidth, rectHeight, 5);
 
 			plotWidth = getPlotWidth();
 			plotHeight = getPlotHeight();
 
-			drawRectangleCanvas(points, context, color);
+			drawRectangleCanvas(points, context, 'transparent');
 		}
 	});
 
@@ -253,8 +252,9 @@
 				fill="transparent"
 				stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
 					? '#9d99dc'
-					: 'transparent'}
+					: backupColor}
 			/>
+
 			{#each handles as handle}
 				<rect
 					x={handle.x}
@@ -264,7 +264,7 @@
 					fill="#121212"
 					stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
 						? '#9d99dc'
-						: 'transparent'}
+						: backupColor}
 					rx="3"
 					ry="3"
 				/>

@@ -37,8 +37,14 @@
 	};
 
 	let activeIndex: number | null = null;
+
 	$: if ($keyPress !== null) {
 		activeIndex = parseInt($keyPress);
+	}
+
+	$: {
+		const selectedIcon = icons.find((icon) => icon.mode === $navBarState);
+		activeIndex = selectedIcon ? selectedIcon.index : null;
 	}
 
 	$: if (activeIndex !== null) {
@@ -50,7 +56,7 @@
 </script>
 
 <div
-	class="rounded-md fixed inset-x-0 top-3 z-50 flex h-12 items-center justify-center background shadow-lg"
+	class="rounded-md fixed inset-x-0 top-4 z-50 flex h-10 items-center justify-center background shadow-lg"
 >
 	<div class="flex items-center justify-center space-x-4 ml-1 mr-1">
 		{#each icons as { name, component, index, mode } (name)}
@@ -75,7 +81,7 @@
 
 <style>
 	.background {
-		background-color: rgb(38, 38, 39);
+		background-color: #262627;
 	}
 	.selected {
 		background-color: #9d99dc77;
