@@ -143,14 +143,19 @@
 		</button>
 	</div>
 	{#if isDropdownOpen}
-		<div
-			class="scrollBarDiv absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+		<button
+			class={`
+            scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
+            rounded shadow-lg transform transition-transform 
+            origin-top overflow-y-auto overflow-x-hidden z-10 
+            ${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
+			on:click={() => (isDropdownOpen = false)}
 		>
 			{#each $datasets as dataset}
 				{#if dataset !== null}
 					<div class="flex justify-between items-center text-gray-400 relative selectFieldColor">
 						<div
-							class="text-left px-3 py-2 w-full selectFieldColor dark:text-black hover:bg-gray-700 cursor-pointer"
+							class="text-left px-3 py-2 w-full bg-gray-900 dark:text-black hover:bg-gray-700 cursor-pointer"
 							on:click={() => {
 								selectFile(dataset);
 								isDropdownOpen = false;
@@ -176,7 +181,7 @@
 					</div>
 				{/if}
 			{/each}
-		</div>
+		</button>
 	{/if}
 </div>
 
