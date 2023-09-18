@@ -19,6 +19,8 @@
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let dragging = false;
+	let dataAvailable = false; // Track whether data is available in the options.axis.data
+	let backupColor: string = '#9d99dc';
 
 	let rectWidth: number = 0;
 	let rectHeight: number = 0;
@@ -55,6 +57,11 @@
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
 
+	$: if (dataAvailable) {
+		backupColor = 'transparent';
+	} else {
+		backupColor = '#9d99dc';
+	}
 	onMount(() => {
 		// Add global event listeners
 		window.addEventListener('mousemove', handleMouseMove);
@@ -245,8 +252,9 @@
 				fill="transparent"
 				stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
 					? '#9d99dc'
-					: 'transparent'}
+					: backupColor}
 			/>
+
 			{#each handles as handle}
 				<rect
 					x={handle.x}
@@ -256,7 +264,7 @@
 					fill="#121212"
 					stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
 						? '#9d99dc'
-						: 'transparent'}
+						: backupColor}
 					rx="3"
 					ry="3"
 				/>
