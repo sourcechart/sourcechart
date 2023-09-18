@@ -15,10 +15,12 @@
 
 	let isDragging = false;
 	let isDraggingArrow = false;
+	let mouseMoved = false;
 
 	let handlesActivated = false;
 	let arrowCloseEnough = false;
 	let draggingArrowIndex: number | null = null;
+	const MIN_DRAG_DISTANCE = 10; // You can adjust this value as needed
 
 	let arrows: {
 		startX: number;
@@ -103,6 +105,8 @@
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
+		mouseMoved = true;
+
 		eraserTrail = [...eraserTrail, { x: e.clientX, y: e.clientY }];
 
 		while (eraserTrail.length > MAX_TRAIL_LENGTH) {
@@ -146,7 +150,9 @@
 	};
 
 	const handleMouseUp = (e: MouseEvent) => {
-		if ($CANVASBEHAVIOR === 'isDrawingArrow') {
+		const distanceMoved = Math.sqrt((e.clientX - startX) ** 2 + (e.clientY - startY) ** 2);
+
+		if ($CANVASBEHAVIOR === 'isDrawingArrow' && mouseMoved && distanceMoved > MIN_DRAG_DISTANCE) {
 			arrows = [
 				...arrows,
 				{
@@ -176,6 +182,7 @@
 			draggingArrowIndex = null;
 			draggingEnd = null;
 		}
+		mouseMoved = false;
 	};
 
 	const eraseIntersectingArrows = () => {
