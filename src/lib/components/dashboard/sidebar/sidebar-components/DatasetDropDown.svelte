@@ -44,8 +44,6 @@
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	$: console.log($datasets);
-
 	const onWorkerMessage = (e: MessageEvent) => {
 		var arrayBuffer = hexToBuffer(e.data.hexadecimal);
 		var dataObject = {
@@ -100,7 +98,6 @@
 	};
 
 	const removeFileFromSqlite = (filename: string) => {
-		console.log('removing file from sqlite');
 		if (syncWorker) {
 			syncWorker.postMessage({
 				message: 'delete',
