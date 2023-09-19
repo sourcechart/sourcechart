@@ -124,7 +124,7 @@
 				<div class="w-full font-medium">
 					<ExportToCSV />
 				</div>
-
+				<!--
 				<div class="mb-4">
 					<div
 						class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
@@ -132,9 +132,11 @@
 						<span class="mr-4 text-sm">Add Legend</span>
 					</div>
 					<div class="w-full font-medium">
-						<LegendColumn />
+							<LegendColumn />
 					</div>
+
 				</div>
+				-->
 			</div>
 		</div>
 	</div>
