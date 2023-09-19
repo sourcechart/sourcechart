@@ -2,6 +2,7 @@ import type { DuckDBClient } from './DuckDBClient';
 import { Query } from '$lib/io/QueryBuilder';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
 import dayjs from 'dayjs';
+import { e } from 'vitest/dist/index-5aad25c1';
 
 class DataIO {
 	private db: DuckDBClient;
@@ -103,10 +104,8 @@ class DataIO {
 
 		const xColumn = this.getColumn(chart.xColumn);
 		const yColumn = this.getColumn(chart.yColumn);
-		const key = this.getColumn(chart.legendKey);
 		let x = results.map((item) => item[xColumn]);
 		const y = results.map((item) => item[yColumn]);
-		const keyValues = results.map((item) => item[key]);
 		const inferredFormat = this.inferDateFormat(x);
 		const allowedFormats = new Set(['HH:mm:ss', 'HH:mm', 'MM-DD', 'MMM YYYY', 'YYYY']);
 
@@ -115,27 +114,40 @@ class DataIO {
 		}
 
 		var title = this.createChartTitle();
-		var series = this.zip(keyValues, x, y);
-		console.log(series);
-		chart.chartOptions.series[0].data = series;
+
 		chart.chartOptions.title = title;
 		chart.chartOptions.grid = {
 			left: '15%'
 		};
-		return chart;
-	}
 
-	private zip<S, T, U>(arr0: S[], arr1: T[], arr2: U[]): { category: S; data: (T | U)[] }[] {
-		const minLength = Math.min(arr1.length, arr2.length);
+		if (chart.legendKey) {
+			const legendKeyColumn = this.getColumn(chart.legendKey);
+			const uniqueLegendKeys = [...new Set(results.map((item) => item[legendKeyColumn]))];
 
-		const result: { category: S; data: (T | U)[] }[] = [];
+			const groupedData = uniqueLegendKeys.map((legend) => ({
+				name: legend,
+				data: results
+					.filter((item) => item[legendKeyColumn] === legend)
+					.map((item) => [item[xColumn], item[yColumn]])
+			}));
 
-		for (let i = 0; i < minLength; i++) {
-			var data = { category: arr0[i], data: [arr1[i], arr2[i]] };
-			result.push(data);
+			chart.chartOptions.series = groupedData.map((group) => ({
+				name: group.name,
+				type: 'scatter',
+				data: group.data
+			}));
+
+			chart.chartOptions.legend = {
+				top: '3%',
+				right: '10%',
+				data: uniqueLegendKeys
+			};
+		} else {
+			chart.chartOptions.xAxis.data = x;
+			chart.chartOptions.series[0].data = y;
 		}
 
-		return result;
+		return chart;
 	}
 
 	private getColumn(column: string | null): string {
@@ -178,7 +190,6 @@ class DataIO {
 		console.warn = () => {};
 
 		const queryString = this.query();
-		console.log(queryString);
 		const results = await this.getDataResults(this.db, queryString);
 		if (this.chart.workflow === 'basic') {
 			return this.updateBasicChart(results, this.chart);
