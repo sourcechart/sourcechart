@@ -1,12 +1,12 @@
 /**  State Management for eCharts Stores **/
-import { writable, derived } from 'svelte/store';
-import { DataIO } from '$lib/io/DataIO';
 import { storeToLocalStorage, storeFromLocalStorage } from '$lib/io/Storage';
 import type { DuckDBClient } from './DuckDBClient';
+import { writable, derived } from 'svelte/store';
+import { DataIO } from '$lib/io/DataIO';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
-export const navBarState = writable<NavBar>('drawRectangle');
+export const navBarState = writable<NavBar>('select');
 export const touchState = writable<TouchState>('isHovering');
 export const mostRecentChartID = writable<string>();
 export const chosenFile = writable<string | null>('');
@@ -27,6 +27,16 @@ export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
+export const arrows = writable<
+	{
+		startX: number;
+		startY: number;
+		endX: number;
+		endY: number;
+		midX: number;
+		midY: number;
+	}[]
+>(storeFromLocalStorage('arrowsStore', []));
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -191,6 +201,7 @@ export const columnLabel = (axis: string) =>
 
 storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');
+storeToLocalStorage(arrows, 'arrowsStore');
 
 export const dropdownStore = createDropdownStore();
 export const createFileStore = (filename: string, fileSize: number, dataID: string) => {

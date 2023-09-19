@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { canvasBehavior } from '$lib/io/Stores';
-	import { onMount } from 'svelte';
+	import { doLinesIntersect, pointToLineDistance } from '../draw-utils/PolygonOperations';
 	import { drawEraserTrail } from '../draw-utils/Draw';
-	import { doLinesIntersect } from '../draw-utils/PolygonOperations';
 	import { rough } from '$lib/components/ui/roughjs/rough';
+	import { canvasBehavior, arrows } from '$lib/io/Stores';
+	import { onMount } from 'svelte';
 
 	let roughCanvas: any;
 	let canvas: HTMLCanvasElement;
@@ -24,15 +24,6 @@
 	let hoveredCircleEnd: 'start' | 'end' | null = null;
 	let draggingArrowIndex: number | null = null;
 	const MIN_DRAG_DISTANCE = 10; // You can adjust this value as needed
-
-	let arrows: {
-		startX: number;
-		startY: number;
-		endX: number;
-		endY: number;
-		midX: number;
-		midY: number;
-	}[] = [];
 
 	let offsetX: number = 0;
 	let offsetY: number = 0;
@@ -79,8 +70,8 @@
 		startX = e.clientX;
 		startY = e.clientY;
 
-		for (let i = 0; i < arrows.length; i++) {
-			let arrow = arrows[i];
+		for (let i = 0; i < $arrows.length; i++) {
+			let arrow = $arrows[i];
 			const distanceToLine = pointToLineDistance(
 				e.clientX,
 				e.clientY,
@@ -130,22 +121,22 @@
 			const deltaX = e.clientX - startX;
 			const deltaY = e.clientY - startY;
 
-			arrows[draggingArrowIndex].startX += deltaX;
-			arrows[draggingArrowIndex].startY += deltaY;
-			arrows[draggingArrowIndex].endX += deltaX;
-			arrows[draggingArrowIndex].endY += deltaY;
-			arrows[draggingArrowIndex].midX += deltaX;
-			arrows[draggingArrowIndex].midY += deltaY;
+			$arrows[draggingArrowIndex].startX += deltaX;
+			$arrows[draggingArrowIndex].startY += deltaY;
+			$arrows[draggingArrowIndex].endX += deltaX;
+			$arrows[draggingArrowIndex].endY += deltaY;
+			$arrows[draggingArrowIndex].midX += deltaX;
+			$arrows[draggingArrowIndex].midY += deltaY;
 
 			startX = e.clientX;
 			startY = e.clientY;
 		} else if (isDragging && draggingArrowIndex !== null) {
 			if (draggingEnd === 'start') {
-				arrows[draggingArrowIndex].startX = e.clientX;
-				arrows[draggingArrowIndex].startY = e.clientY;
+				$arrows[draggingArrowIndex].startX = e.clientX;
+				$arrows[draggingArrowIndex].startY = e.clientY;
 			} else if (draggingEnd === 'end') {
-				arrows[draggingArrowIndex].endX = e.clientX;
-				arrows[draggingArrowIndex].endY = e.clientY;
+				$arrows[draggingArrowIndex].endX = e.clientX;
+				$arrows[draggingArrowIndex].endY = e.clientY;
 			}
 		}
 
@@ -156,8 +147,8 @@
 		const distanceMoved = Math.sqrt((e.clientX - startX) ** 2 + (e.clientY - startY) ** 2);
 
 		if ($CANVASBEHAVIOR === 'isDrawingArrow' && mouseMoved && distanceMoved > MIN_DRAG_DISTANCE) {
-			arrows = [
-				...arrows,
+			$arrows = [
+				...$arrows,
 				{
 					startX,
 					startY,
@@ -190,8 +181,8 @@
 
 	const eraseIntersectingArrows = () => {
 		for (let i = 0; i < eraserTrail.length - 1; i++) {
-			for (let j = arrows.length - 1; j >= 0; j--) {
-				const arrow = arrows[j];
+			for (let j = $arrows.length - 1; j >= 0; j--) {
+				const arrow = $arrows[j];
 				if (
 					doLinesIntersect(
 						{ x: arrow.startX, y: arrow.startY },
@@ -200,7 +191,10 @@
 						eraserTrail[eraserTrail.length - 1]
 					)
 				) {
-					arrows.splice(j, 1);
+					arrows.update((arrows) => {
+						arrows.splice(j, 1);
+						return arrows;
+					});
 					if (draggingArrowIndex === j) {
 						draggingArrowIndex = null;
 						handlesActivated = false;
@@ -209,22 +203,9 @@
 			}
 		}
 	};
-	function pointToLineDistance(
-		x0: number,
-		y0: number,
-		x1: number,
-		y1: number,
-		x2: number,
-		y2: number
-	): number {
-		const numerator = Math.abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1);
-		const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
-
-		return numerator / denominator;
-	}
 
 	const redrawArrows = () => {
-		for (let arrow of arrows) {
+		for (let arrow of $arrows) {
 			drawArrowhead(arrow.startX, arrow.startY, arrow.endX, arrow.endY);
 		}
 	};
@@ -260,10 +241,13 @@
 	on:mousemove={handleMouseMove}
 	on:mouseup={handleMouseUp}
 >
-	<canvas style="position: fixed; z-index: 1;" bind:this={canvas} />
-	<svg viewBox={`0 0 ${width} ${height}`} style="position: absolute;  top: 0; left: 0; z-index: 1;">
+	<canvas style="position: fixed; z-index: {isDragging ? 3 : 1};" bind:this={canvas} />
+	<svg
+		viewBox={`0 0 ${width} ${height}`}
+		style="position: absolute;  top: 0; left: 0; z-index:  {isDragging ? 3 : 1};"
+	>
 		{#if handlesActivated}
-			{#each arrows as arrow, i}
+			{#each $arrows as arrow, i}
 				<circle
 					class="circle-focusable"
 					cx={arrow.startX}
