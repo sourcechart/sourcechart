@@ -62,6 +62,14 @@
 		var keys = await handleAsyncOperations(column);
 		chart.legendValues = keys;
 		chart.legendKey = column;
+		chart.chartOptions.legend = {
+			display: true,
+			data: keys,
+			position: 'right',
+			labels: {
+				fontColor: '#fff'
+			}
+		};
 		$allCharts[$i] = chart;
 	};
 

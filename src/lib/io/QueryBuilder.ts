@@ -44,8 +44,7 @@ export class Query {
 	}
 
 	private getBasicQuery() {
-		var selectBlock = this.checkSelectBlock();
-		var y = selectBlock.yColumn;
+		var y = this.checkSelectBlock().yColumn;
 		var groupby = this.constructGroupBy();
 		var aggregator = this.queryObject.queries.select.basic.yColumn.aggregator;
 		var groupbyColumns = this.queryObject.queries.select.basic.groupbyColumns;
@@ -62,7 +61,9 @@ export class Query {
 				filters = this.constructFilters(filterColumns, false);
 			}
 		}
-		var selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
+
+		const columns = this.getAllColumns();
+		var selectQuery = this.constructSelect(columns.join(', '), this.checkSelectBlock().file);
 		var queryParts = [selectQuery, groupby, filters];
 		var queryString = queryParts.join(' ');
 		return queryString;
@@ -99,6 +100,25 @@ export class Query {
 			return '';
 		}
 		return groupbyQuery;
+	}
+
+	private getAllColumns(): string[] {
+		const baseColumns = [
+			this.queryObject.queries.select.basic.xColumn.column,
+			this.queryObject.queries.select.basic.yColumn.column
+		];
+
+		if (this.queryObject.queries.select.basic.legendKey) {
+			baseColumns.push(this.queryObject.queries.select.basic.legendKey);
+		}
+
+		const uniqueColumns = [...new Set(baseColumns)]; // Ensure unique columns.
+		if (uniqueColumns === undefined || uniqueColumns.length == 0 || uniqueColumns[0] === null) {
+			return [];
+		} else {
+			//@ts-ignore
+			return uniqueColumns;
+		}
 	}
 
 	private checkXColumnInGroupBy(groupby: Array<string>, xColumn: string) {
@@ -170,13 +190,9 @@ export class Query {
 		return (hasGroupBy ? 'HAVING ' : 'WHERE ') + filteredClauses.join(' AND ');
 	}
 
-	private constructSelect(
-		xColumn: string | null,
-		yColumn: string | null,
-		file: string | null
-	): string {
-		if (xColumn && yColumn && file) {
-			return `SELECT ${xColumn}, ${yColumn} FROM ${file}`;
+	private constructSelect(columns: string, file: string | null): string {
+		if (columns && file) {
+			return `SELECT ${columns} FROM ${file}`;
 		} else {
 			return '';
 		}

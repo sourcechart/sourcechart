@@ -77,6 +77,7 @@ type Queries = {
 			from: string | undefined | null;
 			groupbyColumns: string[];
 			filterColumns: any[];
+			legendKey: string | null;
 		};
 		cluster: {
 			attributes: string[];

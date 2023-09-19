@@ -26,7 +26,8 @@ class DataIO {
 						yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
 						from: chart?.filename,
 						groupbyColumns: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])],
-						filterColumns: [...(chart?.filterColumns ? chart.filterColumns : [])]
+						filterColumns: [...(chart?.filterColumns ? chart.filterColumns : [])],
+						legendKey: chart?.legendKey
 					},
 					cluster: {
 						attributes: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])],
@@ -102,8 +103,10 @@ class DataIO {
 
 		const xColumn = this.getColumn(chart.xColumn);
 		const yColumn = this.getColumn(chart.yColumn);
+		const key = this.getColumn(chart.legendKey);
 		let x = results.map((item) => item[xColumn]);
 		const y = results.map((item) => item[yColumn]);
+		const keyValues = results.map((item) => item[key]);
 		const inferredFormat = this.inferDateFormat(x);
 		const allowedFormats = new Set(['HH:mm:ss', 'HH:mm', 'MM-DD', 'MMM YYYY', 'YYYY']);
 
@@ -112,13 +115,27 @@ class DataIO {
 		}
 
 		var title = this.createChartTitle();
-		chart.chartOptions.xAxis.data = x;
-		chart.chartOptions.series[0].data = y;
+		var series = this.zip(keyValues, x, y);
+		console.log(series);
+		chart.chartOptions.series[0].data = series;
 		chart.chartOptions.title = title;
 		chart.chartOptions.grid = {
 			left: '15%'
 		};
 		return chart;
+	}
+
+	private zip<S, T, U>(arr0: S[], arr1: T[], arr2: U[]): { category: S; data: (T | U)[] }[] {
+		const minLength = Math.min(arr1.length, arr2.length);
+
+		const result: { category: S; data: (T | U)[] }[] = [];
+
+		for (let i = 0; i < minLength; i++) {
+			var data = { category: arr0[i], data: [arr1[i], arr2[i]] };
+			result.push(data);
+		}
+
+		return result;
 	}
 
 	private getColumn(column: string | null): string {
@@ -161,6 +178,7 @@ class DataIO {
 		console.warn = () => {};
 
 		const queryString = this.query();
+		console.log(queryString);
 		const results = await this.getDataResults(this.db, queryString);
 		if (this.chart.workflow === 'basic') {
 			return this.updateBasicChart(results, this.chart);
