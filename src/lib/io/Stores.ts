@@ -27,16 +27,7 @@ export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
-export const arrows = writable<
-	{
-		startX: number;
-		startY: number;
-		endX: number;
-		endY: number;
-		midX: number;
-		midY: number;
-	}[]
->(storeFromLocalStorage('arrowsStore', []));
+export const arrows = writable<arrow[]>(storeFromLocalStorage('arrowsStore', []));
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
@@ -199,10 +190,6 @@ export const columnLabel = (axis: string) =>
 		}
 	});
 
-storeToLocalStorage(fileUploadStore, 'fileUploadStore');
-storeToLocalStorage(allCharts, 'allCharts');
-storeToLocalStorage(arrows, 'arrowsStore');
-
 export const dropdownStore = createDropdownStore();
 export const createFileStore = (filename: string, fileSize: number, dataID: string) => {
 	var tableColumnsSize = {
@@ -214,3 +201,7 @@ export const createFileStore = (filename: string, fileSize: number, dataID: stri
 
 	fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 };
+
+storeToLocalStorage(fileUploadStore, 'fileUploadStore');
+storeToLocalStorage(allCharts, 'allCharts');
+storeToLocalStorage(arrows, 'arrowsStore');

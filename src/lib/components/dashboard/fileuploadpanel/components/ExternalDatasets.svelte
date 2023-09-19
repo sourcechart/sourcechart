@@ -249,10 +249,7 @@
 	const downloadRawDataset = async (dataset: ExternalDataset) => {
 		try {
 			const response = await fetch(dataset.url);
-			console.log(response);
-			const data = await response.text(); // Assuming the data is in JSON format
-			console.log(data);
-
+			const data = await response.text(); // Assuming the data is in JSON format\
 			downloadRawCSV(data, dataset.url.split('/').pop() + '');
 		} catch (error) {
 			console.error('Error downloading dataset:', error);
@@ -262,7 +259,7 @@
 	onMount(loadWorker);
 </script>
 
-<div class="table-container scrollBarDiv">
+<div class="scrollBarDiv">
 	{#if isLoading}
 		<div class="loading-container flex">
 			<span class="mr-2">Loading...</span>
