@@ -2,7 +2,6 @@ import type { DuckDBClient } from './DuckDBClient';
 import { Query } from '$lib/io/QueryBuilder';
 import { DBSCAN } from '$lib/analytics/dbscan/DBScan';
 import dayjs from 'dayjs';
-import { e } from 'vitest/dist/index-5aad25c1';
 
 class DataIO {
 	private db: DuckDBClient;
@@ -114,7 +113,6 @@ class DataIO {
 		}
 
 		var title = this.createChartTitle();
-
 		chart.chartOptions.title = title;
 		chart.chartOptions.grid = {
 			left: '15%'
