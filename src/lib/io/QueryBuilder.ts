@@ -44,7 +44,7 @@ export class Query {
 	}
 
 	private getBasicQuery() {
-		var y = this.checkSelectBlock().yColumn;
+		let yColumn = this.checkSelectBlock().yColumn;
 		var groupby = this.constructGroupBy();
 		var aggregator = this.queryObject.queries.select.basic.yColumn.aggregator;
 		var groupbyColumns = this.queryObject.queries.select.basic.groupbyColumns;
@@ -52,7 +52,11 @@ export class Query {
 		let filters = '';
 
 		if (aggregator && groupbyColumns)
-			y = this.checkAggregator(y, aggregator, this.queryObject.queries.select.basic.groupbyColumns);
+			yColumn = this.checkAggregator(
+				yColumn,
+				aggregator,
+				this.queryObject.queries.select.basic.groupbyColumns
+			);
 
 		if (filterColumns.length > 0) {
 			if (groupbyColumns.length > 0) {
@@ -61,8 +65,8 @@ export class Query {
 				filters = this.constructFilters(filterColumns, false);
 			}
 		}
-
-		const columns = this.getAllColumns();
+		//@ts-ignore
+		const columns = this.getAllColumns(yColumn);
 		var selectQuery = this.constructSelect(columns.join(', '), this.checkSelectBlock().file);
 		var queryParts = [selectQuery, groupby, filters];
 		var queryString = queryParts.join(' ');
@@ -102,23 +106,18 @@ export class Query {
 		return groupbyQuery;
 	}
 
-	private getAllColumns(): string[] {
+	private getAllColumns(processedYColumn?: string): string[] {
 		const baseColumns = [
 			this.queryObject.queries.select.basic.xColumn.column,
-			this.queryObject.queries.select.basic.yColumn.column
+			processedYColumn || this.queryObject.queries.select.basic.yColumn.column // Use processed yColumn if available
 		];
 
 		if (this.queryObject.queries.select.basic.legendKey) {
 			baseColumns.push(this.queryObject.queries.select.basic.legendKey);
 		}
 
-		const uniqueColumns = [...new Set(baseColumns)]; // Ensure unique columns.
-		if (uniqueColumns === undefined || uniqueColumns.length == 0 || uniqueColumns[0] === null) {
-			return [];
-		} else {
-			//@ts-ignore
-			return uniqueColumns;
-		}
+		const uniqueColumns = [...new Set(baseColumns.filter(Boolean))]; //@ts-ignore
+		return uniqueColumns;
 	}
 
 	private checkXColumnInGroupBy(groupby: Array<string>, xColumn: string) {
@@ -163,11 +162,12 @@ export class Query {
 	): string | null {
 		let column;
 		if (groupbyColumns.length > 0) {
-			//In the future, if there only needs to be one column for a visualization, we can adjust this.
 			column = `${aggregator}(${yColumn}) AS ${yColumn}`;
 			return column;
+		} else {
+			column = yColumn;
 		}
-		return yColumn;
+		return column;
 	}
 
 	private constructFilters(conditions: any[], hasGroupBy: boolean): string {

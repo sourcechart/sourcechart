@@ -100,12 +100,11 @@ class DataIO {
 
 	//TODO: Refactor this function to be more generic
 	private updateBasicChart(results: any[], chart: Chart) {
-		console.warn = () => {};
-
 		const xColumn = this.getColumn(chart.xColumn);
 		const yColumn = this.getColumn(chart.yColumn);
 		let x = results.map((item) => item[xColumn]);
 		const y = results.map((item) => item[yColumn]);
+
 		const inferredFormat = this.inferDateFormat(x);
 		const allowedFormats = new Set(['HH:mm:ss', 'HH:mm', 'MM-DD', 'MMM YYYY', 'YYYY']);
 
@@ -118,6 +117,9 @@ class DataIO {
 		chart.chartOptions.grid = {
 			left: '15%'
 		};
+
+		chart.chartOptions.xAxis.data = x;
+		chart.chartOptions.series[0].data = y;
 
 		if (chart.legendKey) {
 			const legendKeyColumn = this.getColumn(chart.legendKey);
@@ -143,11 +145,7 @@ class DataIO {
 			chart.chartOptions.xAxis = {};
 			chart.chartOptions.xAxis.type = 'category';
 			chart.chartOptions.xAxis.splitLine = false;
-		} else {
-			chart.chartOptions.xAxis.data = x;
-			chart.chartOptions.series[0].data = y;
 		}
-		console.log(chart.chartOptions);
 		return chart;
 	}
 
@@ -237,10 +235,12 @@ class DataIO {
 			return [];
 		}
 	}
+
 	public async getMultiDimensionalData(queryString: string): Promise<any[]> {
 		const results = await this.getDataResults(this.db, queryString);
 		return results.map((row) => Object.values(row));
 	}
+
 	private inferDateFormat(xAxis: string[]): string | string[] {
 		console.warn = () => {};
 

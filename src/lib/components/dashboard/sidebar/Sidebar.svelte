@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores';
-	import LegendColumn from './sidebar-components/LegendColumn.svelte';
+	//import LegendColumn from './sidebar-components/LegendColumn.svelte';
 	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
 	import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
 	import Groupby from './sidebar-components/Groupby.svelte';
@@ -10,15 +10,6 @@
 	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
-	import { onMount } from 'svelte';
-
-	let syncWorker: Worker | undefined = undefined;
-
-	const loadWorker = async () => {
-		const SyncWorker = await import('$lib/io/web.worker?worker');
-		syncWorker = new SyncWorker.default();
-	};
-	onMount(loadWorker);
 </script>
 
 {#if $activeSidebar}
