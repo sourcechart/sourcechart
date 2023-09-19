@@ -98,6 +98,7 @@ class DataIO {
 		this.downloadTSV(data, 'export.tsv');
 	}
 
+	//TODO: Refactor this function to be more generic
 	private updateBasicChart(results: any[], chart: Chart) {
 		console.warn = () => {};
 
@@ -118,7 +119,6 @@ class DataIO {
 			left: '15%'
 		};
 
-		console.log('trigger');
 		if (chart.legendKey) {
 			const legendKeyColumn = this.getColumn(chart.legendKey);
 			const uniqueLegendKeys = [...new Set(results.map((item) => item[legendKeyColumn]))];
@@ -130,17 +130,19 @@ class DataIO {
 					.map((item) => [item[xColumn], item[yColumn]])
 			}));
 
-			chart.chartOptions.series = groupedData.map((group) => ({
-				name: group.name,
+			chart.chartOptions.series = groupedData.map((group, index) => ({
+				name: group.name.toString(),
 				type: 'scatter',
 				data: group.data
 			}));
 
 			chart.chartOptions.legend = {
 				top: '3%',
-				right: '10%',
-				data: uniqueLegendKeys
+				right: '10%'
 			};
+			chart.chartOptions.xAxis = {};
+			chart.chartOptions.xAxis.type = 'category';
+			chart.chartOptions.xAxis.splitLine = false;
 		} else {
 			chart.chartOptions.xAxis.data = x;
 			chart.chartOptions.series[0].data = y;

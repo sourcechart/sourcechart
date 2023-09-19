@@ -6,7 +6,7 @@ import type { DuckDBClient } from './DuckDBClient';
 
 export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
-export const navBarState = writable<NavBar>('drawRectangle');
+export const navBarState = writable<NavBar>('select');
 export const touchState = writable<TouchState>('isHovering');
 export const mostRecentChartID = writable<string>();
 export const chosenFile = writable<string | null>('');
