@@ -36,6 +36,8 @@
 	let roughness = 0.8;
 	let strokeWidth = 1;
 
+	$: console.log($arrows);
+
 	onMount(() => {
 		context = canvas.getContext('2d');
 		roughCanvas = rough.canvas(canvas);
@@ -191,7 +193,10 @@
 						eraserTrail[eraserTrail.length - 1]
 					)
 				) {
-					$arrows = $arrows.splice(j, 1);
+					arrows.update((arrows) => {
+						arrows.splice(j, 1);
+						return arrows;
+					});
 					if (draggingArrowIndex === j) {
 						draggingArrowIndex = null;
 						handlesActivated = false;
