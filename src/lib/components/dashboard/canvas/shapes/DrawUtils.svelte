@@ -191,7 +191,7 @@
 						eraserTrail[eraserTrail.length - 1]
 					)
 				) {
-					$arrows.splice(j, 1);
+					$arrows = $arrows.splice(j, 1);
 					if (draggingArrowIndex === j) {
 						draggingArrowIndex = null;
 						handlesActivated = false;
