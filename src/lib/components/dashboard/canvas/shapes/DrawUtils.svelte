@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { drawEraserTrail } from '../draw-utils/Draw';
 	import { doLinesIntersect, pointToLineDistance } from '../draw-utils/PolygonOperations';
+	import { drawEraserTrail } from '../draw-utils/Draw';
 	import { rough } from '$lib/components/ui/roughjs/rough';
 	import { canvasBehavior, arrows } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
@@ -35,8 +35,6 @@
 
 	let roughness = 0.8;
 	let strokeWidth = 1;
-
-	$: console.log($arrows);
 
 	onMount(() => {
 		context = canvas.getContext('2d');
