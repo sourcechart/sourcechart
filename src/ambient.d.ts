@@ -9,6 +9,15 @@ type ChartType = 'Scatter' | 'Bar' | 'Line' | 'Pie' | 'Area' | 'ClusterDensity';
 type DistanceFunction = (a: number[], b: number[]) => number;
 type PointVector = number[];
 
+type arrow = {
+	startX: number;
+	startY: number;
+	endX: number;
+	endY: number;
+	midX: number;
+	midY: number;
+};
+
 type Chart = {
 	title: string;
 	chartShape: string;

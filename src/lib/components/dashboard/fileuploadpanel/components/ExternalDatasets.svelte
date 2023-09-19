@@ -262,7 +262,7 @@
 	onMount(loadWorker);
 </script>
 
-<div class="table-container scrollBarDiv">
+<div class="scrollBarDiv">
 	{#if isLoading}
 		<div class="loading-container flex">
 			<span class="mr-2">Loading...</span>
