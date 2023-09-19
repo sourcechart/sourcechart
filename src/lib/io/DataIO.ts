@@ -118,9 +118,6 @@ class DataIO {
 			left: '15%'
 		};
 
-		chart.chartOptions.xAxis.data = x;
-		chart.chartOptions.series[0].data = y;
-
 		if (chart.legendKey) {
 			const legendKeyColumn = this.getColumn(chart.legendKey);
 			const uniqueLegendKeys = [...new Set(results.map((item) => item[legendKeyColumn]))];
@@ -145,6 +142,9 @@ class DataIO {
 			chart.chartOptions.xAxis = {};
 			chart.chartOptions.xAxis.type = 'category';
 			chart.chartOptions.xAxis.splitLine = false;
+		} else {
+			chart.chartOptions.xAxis.data = x;
+			chart.chartOptions.series[0].data = y;
 		}
 		return chart;
 	}
