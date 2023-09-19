@@ -10,6 +10,25 @@ interface EChartOption {
 	// ... You can expand this interface to cover other ECharts properties
 }
 
+/**
+Example usage:
+const config = new EChartConfigBuilder()
+	.setTitle('My Chart')
+	.setTooltip({ trigger: 'axis' })
+	.setXAxis({ type: 'category', data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] })
+	.setYAxis({ type: 'value' })
+	.setSeries([
+		{
+			name: 'Series 1',
+			type: 'bar',
+			data: [10, 52, 200, 334, 390, 330, 220]
+		}
+	])
+	.build();
+
+console.log(config);
+
+*/
 class EChartConfigBuilder {
 	private configuration: EChartOption = {};
 
@@ -45,26 +64,9 @@ class EChartConfigBuilder {
 		return this;
 	}
 
-	// ... Add other methods for other configuration properties
-
 	build(): EChartOption {
 		return this.configuration;
 	}
 }
 
-// Example usage:
-const config = new EChartConfigBuilder()
-	.setTitle('My Chart')
-	.setTooltip({ trigger: 'axis' })
-	.setXAxis({ type: 'category', data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] })
-	.setYAxis({ type: 'value' })
-	.setSeries([
-		{
-			name: 'Series 1',
-			type: 'bar',
-			data: [10, 52, 200, 334, 390, 330, 220]
-		}
-	])
-	.build();
-
-console.log(config);
+export default EChartConfigBuilder;
