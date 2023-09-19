@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { canvasBehavior, arrows } from '$lib/io/Stores';
-	import { onMount } from 'svelte';
 	import { drawEraserTrail } from '../draw-utils/Draw';
 	import { doLinesIntersect } from '../draw-utils/PolygonOperations';
 	import { rough } from '$lib/components/ui/roughjs/rough';
+	import { canvasBehavior, arrows } from '$lib/io/Stores';
+	import { onMount } from 'svelte';
 
 	let roughCanvas: any;
 	let canvas: HTMLCanvasElement;
