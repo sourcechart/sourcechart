@@ -11,7 +11,8 @@
 	import TableBody from 'flowbite-svelte/TableBody.svelte'; //@ts-ignore
 	import TableBodyCell from 'flowbite-svelte/TableBodyCell.svelte'; //@ts-ignore
 	import TableBodyRow from 'flowbite-svelte/TableBodyRow.svelte'; //@ts-ignore
-	import TableHeadCell from 'flowbite-svelte/TableHeadCell.svelte';
+	import TableHeadCell from 'flowbite-svelte/TableHeadCell.svelte'; //@ts-ignore
+	import Spinner from 'flowbite-svelte/Spinner.svelte'; //@ts-ignore
 
 	let syncWorker: Worker | undefined = undefined;
 	let fileextension: string | undefined = '';
@@ -38,7 +39,9 @@
 			name: 'Crude Birth Rate North Korea (per 1000 people)',
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/SPDYNCBRTINPRK.csv',
 			description: 'Child Birth Rate in North Korea from 1961 to 2021'
-		},
+		}
+		/*
+
 		{
 			name: 'Infant Mortality Rate North Korea',
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/SPDYNIMRTINPRK.csv',
@@ -169,17 +172,21 @@
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/urban-development_chn.csv',
 			description: 'Urban Development China'
 		},
+		
 		{
 			name: 'Urban Development Hungary',
 			url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/urban-development_hun.csv',
 			description: 'Urban Development Hungary'
 		}
+		*/
 	];
 
 	const loadWorker = async () => {
 		const SyncWorker = await import('$lib/io/web.worker?worker');
 		syncWorker = new SyncWorker.default();
 	};
+
+	let isLoading = false;
 
 	const addURLToDatabase = async (dataset: ExternalDataset) => {
 		const response = await fetch(dataset.url);
@@ -196,25 +203,33 @@
 		fileextension: string,
 		size: number
 	) => {
-		var id = generateID();
-		var hex = bufferToHex(arrayBuffer);
+		isLoading = true; // start the loading process
 
-		if (syncWorker) {
-			syncWorker.postMessage({
-				filename: filename,
-				size: size,
-				id: id,
-				message: 'initialize',
-				hexadecimal: hex,
-				fileextension: fileextension
-			});
-			createFileStore(filename, size, id);
+		try {
+			var id = generateID();
+			var hex = bufferToHex(arrayBuffer);
 
-			syncWorker.onerror = (e) => {
-				console.log(e);
-			};
+			if (syncWorker) {
+				syncWorker.postMessage({
+					filename: filename,
+					size: size,
+					id: id,
+					message: 'initialize',
+					hexadecimal: hex,
+					fileextension: fileextension
+				});
+				createFileStore(filename, size, id);
+
+				syncWorker.onerror = (e) => {
+					console.log(e);
+				};
+			}
+		} catch (error) {
+			console.error('Error uploading to SQLite:', error);
+		} finally {
+			isLoading = false; // end the loading process
+			activeDropZone.set(false);
 		}
-		activeDropZone.set(false);
 	};
 
 	function downloadRawCSV(csvData: string, filename: string) {
@@ -248,37 +263,44 @@
 </script>
 
 <div class="table-container scrollBarDiv">
-	<Table>
-		<TableHead>
-			<TableHeadCell>Dataset</TableHeadCell>
-			<TableHeadCell>Description</TableHeadCell>
-			<TableHeadCell />
-			<TableBodyCell />
-		</TableHead>
-	</Table>
-	<TableBody>
-		{#each datasets as dataset}
-			<TableBodyRow>
-				<TableBodyCell>{dataset.name}</TableBodyCell>
-				<TableBodyCell>{dataset.description}</TableBodyCell>
+	{#if isLoading}
+		<div class="loading-container flex">
+			<span class="mr-2">Loading...</span>
+			<Spinner size={40} />
+		</div>
+	{:else}
+		<Table>
+			<TableHead>
+				<TableHeadCell>Dataset</TableHeadCell>
+				<TableHeadCell>Description</TableHeadCell>
+				<TableHeadCell />
+				<TableBodyCell />
+			</TableHead>
+		</Table>
+		<TableBody>
+			{#each datasets as dataset}
+				<TableBodyRow>
+					<TableBodyCell>{dataset.name}</TableBodyCell>
+					<TableBodyCell>{dataset.description}</TableBodyCell>
 
-				<TableBodyCell>
-					<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
-						>Add Dataset</Button
-					>
-				</TableBodyCell>
-				<TableBodyCell>
-					<Button pill={false} outline on:click={() => downloadRawDataset(dataset)}>
-						<div class="flex flex-row justify-between items-center">
-							<span class="mr-2">Download Raw CSV</span>
-							<!-- Added the `mr-2` for right margin -->
-							<ChevronDoubleDownOutline class="h-4 w-4 " />
-						</div>
-					</Button>
-				</TableBodyCell>
-			</TableBodyRow>
-		{/each}
-	</TableBody>
+					<TableBodyCell>
+						<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
+							>Add Dataset</Button
+						>
+					</TableBodyCell>
+					<TableBodyCell>
+						<Button pill={false} outline on:click={() => downloadRawDataset(dataset)}>
+							<div class="flex flex-row justify-between items-center">
+								<span class="mr-2">Download Raw CSV</span>
+								<!-- Added the `mr-2` for right margin -->
+								<ChevronDoubleDownOutline class="h-4 w-4 " />
+							</div>
+						</Button>
+					</TableBodyCell>
+				</TableBodyRow>
+			{/each}
+		</TableBody>
+	{/if}
 </div>
 
 <style>
@@ -286,6 +308,22 @@
 		height: 300px; /* Adjust this height as per your needs */
 		overflow-y: auto;
 		overflow-x: auto;
+	}
+
+	.table-container {
+		height: 300px; /* Adjust this height as per your needs */
+		overflow-y: auto;
+		overflow-x: auto;
+		display: flex; /* Add this line */
+		justify-content: center; /* Add this line */
+		align-items: center; /* Add this line */
+	}
+
+	.loading-container {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.scrollBarDiv::-webkit-scrollbar {

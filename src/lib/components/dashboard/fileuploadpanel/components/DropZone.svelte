@@ -67,7 +67,6 @@
 		}
 	};
 
-	/*This is used for Click to Upload Events*/
 	const handleChange = (event: Event) => {
 		const inputElement = event.target as HTMLInputElement;
 		const files = inputElement.files;
@@ -109,7 +108,10 @@
 	on:change={handleChange}
 >
 	{#if isLoading}
-		<Spinner />
+		<div class="loading-container flex">
+			<span class="mr-2">Loading...</span>
+			<Spinner size={40} />
+		</div>
 	{:else}
 		<svg
 			aria-hidden="true"
@@ -137,7 +139,10 @@
 </Dropzone>
 
 <style>
-	.selectFieldColor {
-		background-color: #33333d;
+	.loading-container {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>
