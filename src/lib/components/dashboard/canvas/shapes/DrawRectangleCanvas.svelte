@@ -233,9 +233,11 @@
 		on:mouseup={handleMouseUp}
 		class="rounded-sm"
 	>
-		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
+		<canvas style="position: absolute;  z-index: {dragging ? 4 : 2};" bind:this={canvas} />
 		<div
-			style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1"
+			style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:{dragging
+				? 3
+				: 2};"
 			class="overflow-vis"
 		>
 			<Chart {options} renderer={'svg'} />

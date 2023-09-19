@@ -191,7 +191,22 @@ const getHandlesHovered = (
 	return 'center'; // No handle is being hovered over.
 };
 
+function pointToLineDistance(
+	x0: number,
+	y0: number,
+	x1: number,
+	y1: number,
+	x2: number,
+	y2: number
+): number {
+	const numerator = Math.abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1);
+	const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
+
+	return numerator / denominator;
+}
+
 export {
+	pointToLineDistance,
 	doLinesIntersect,
 	calculateRectangleHandles,
 	getHandlesHovered,

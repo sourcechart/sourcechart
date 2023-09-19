@@ -34,7 +34,6 @@
 		}
 
 		if (!findFilterValue(filterValues, filterItem)) {
-			//@ts-ignore
 			filterValues = [...filterValues, filterItem];
 		}
 
@@ -42,7 +41,6 @@
 	}
 
 	function getChartFilterColumns(index: number): any[] {
-		// @ts-ignore
 		return $allCharts[index].filterColumns;
 	}
 
@@ -69,13 +67,11 @@
 	}
 
 	function removeSelectedTag(item: string) {
-		filterValues = filterValues.filter((val) => val !== item); //@ts-ignore
+		filterValues = filterValues.filter((val) => val !== item);
 		const filterIndex = $allCharts[$i].filterColumns.findIndex(
-			//@ts-ignore
 			(filter) => filter.column === column && filter.value.item === item
 		);
 		if (filterIndex > -1) {
-			//@ts-ignore
 			$allCharts[$i].filterColumns.splice(filterIndex, 1);
 		}
 	}

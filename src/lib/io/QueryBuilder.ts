@@ -44,8 +44,7 @@ export class Query {
 	}
 
 	private getBasicQuery() {
-		var selectBlock = this.checkSelectBlock();
-		var y = selectBlock.yColumn;
+		let yColumn = this.checkSelectBlock().yColumn;
 		var groupby = this.constructGroupBy();
 		var aggregator = this.queryObject.queries.select.basic.yColumn.aggregator;
 		var groupbyColumns = this.queryObject.queries.select.basic.groupbyColumns;
@@ -53,7 +52,11 @@ export class Query {
 		let filters = '';
 
 		if (aggregator && groupbyColumns)
-			y = this.checkAggregator(y, aggregator, this.queryObject.queries.select.basic.groupbyColumns);
+			yColumn = this.checkAggregator(
+				yColumn,
+				aggregator,
+				this.queryObject.queries.select.basic.groupbyColumns
+			);
 
 		if (filterColumns.length > 0) {
 			if (groupbyColumns.length > 0) {
@@ -62,7 +65,9 @@ export class Query {
 				filters = this.constructFilters(filterColumns, false);
 			}
 		}
-		var selectQuery = this.constructSelect(selectBlock.xColumn, y, selectBlock.file);
+		//@ts-ignore
+		const columns = this.getAllColumns(yColumn);
+		var selectQuery = this.constructSelect(columns.join(', '), this.checkSelectBlock().file);
 		var queryParts = [selectQuery, groupby, filters];
 		var queryString = queryParts.join(' ');
 		return queryString;
@@ -99,6 +104,20 @@ export class Query {
 			return '';
 		}
 		return groupbyQuery;
+	}
+
+	private getAllColumns(processedYColumn?: string): string[] {
+		const baseColumns = [
+			this.queryObject.queries.select.basic.xColumn.column,
+			processedYColumn || this.queryObject.queries.select.basic.yColumn.column // Use processed yColumn if available
+		];
+
+		if (this.queryObject.queries.select.basic.legendKey) {
+			baseColumns.push(this.queryObject.queries.select.basic.legendKey);
+		}
+
+		const uniqueColumns = [...new Set(baseColumns.filter(Boolean))]; //@ts-ignore
+		return uniqueColumns;
 	}
 
 	private checkXColumnInGroupBy(groupby: Array<string>, xColumn: string) {
@@ -143,11 +162,12 @@ export class Query {
 	): string | null {
 		let column;
 		if (groupbyColumns.length > 0) {
-			//In the future, if there only needs to be one column for a visualization, we can adjust this.
 			column = `${aggregator}(${yColumn}) AS ${yColumn}`;
 			return column;
+		} else {
+			column = yColumn;
 		}
-		return yColumn;
+		return column;
 	}
 
 	private constructFilters(conditions: any[], hasGroupBy: boolean): string {
@@ -170,13 +190,9 @@ export class Query {
 		return (hasGroupBy ? 'HAVING ' : 'WHERE ') + filteredClauses.join(' AND ');
 	}
 
-	private constructSelect(
-		xColumn: string | null,
-		yColumn: string | null,
-		file: string | null
-	): string {
-		if (xColumn && yColumn && file) {
-			return `SELECT ${xColumn}, ${yColumn} FROM ${file}`;
+	private constructSelect(columns: string, file: string | null): string {
+		if (columns && file) {
+			return `SELECT ${columns} FROM ${file}`;
 		} else {
 			return '';
 		}

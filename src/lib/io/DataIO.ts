@@ -26,7 +26,8 @@ class DataIO {
 						yColumn: { column: chart?.yColumn, aggregator: chart?.aggregator },
 						from: chart?.filename,
 						groupbyColumns: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])],
-						filterColumns: [...(chart?.filterColumns ? chart.filterColumns : [])]
+						filterColumns: [...(chart?.filterColumns ? chart.filterColumns : [])],
+						legendKey: chart?.legendKey
 					},
 					cluster: {
 						attributes: [...(chart?.groupbyColumns ? chart.groupbyColumns : [])],
@@ -97,13 +98,13 @@ class DataIO {
 		this.downloadTSV(data, 'export.tsv');
 	}
 
+	//TODO: Refactor this function to be more generic
 	private updateBasicChart(results: any[], chart: Chart) {
-		console.warn = () => {};
-
 		const xColumn = this.getColumn(chart.xColumn);
 		const yColumn = this.getColumn(chart.yColumn);
 		let x = results.map((item) => item[xColumn]);
 		const y = results.map((item) => item[yColumn]);
+
 		const inferredFormat = this.inferDateFormat(x);
 		const allowedFormats = new Set(['HH:mm:ss', 'HH:mm', 'MM-DD', 'MMM YYYY', 'YYYY']);
 
@@ -112,12 +113,39 @@ class DataIO {
 		}
 
 		var title = this.createChartTitle();
-		chart.chartOptions.xAxis.data = x;
-		chart.chartOptions.series[0].data = y;
 		chart.chartOptions.title = title;
 		chart.chartOptions.grid = {
 			left: '15%'
 		};
+
+		if (chart.legendKey) {
+			const legendKeyColumn = this.getColumn(chart.legendKey);
+			const uniqueLegendKeys = [...new Set(results.map((item) => item[legendKeyColumn]))];
+
+			const groupedData = uniqueLegendKeys.map((legend) => ({
+				name: legend,
+				data: results
+					.filter((item) => item[legendKeyColumn] === legend)
+					.map((item) => [item[xColumn], item[yColumn]])
+			}));
+
+			chart.chartOptions.series = groupedData.map((group, index) => ({
+				name: group.name.toString(),
+				type: 'scatter',
+				data: group.data
+			}));
+
+			chart.chartOptions.legend = {
+				top: '3%',
+				right: '10%'
+			};
+			chart.chartOptions.xAxis = {};
+			chart.chartOptions.xAxis.type = 'category';
+			chart.chartOptions.xAxis.splitLine = false;
+		} else {
+			chart.chartOptions.xAxis.data = x;
+			chart.chartOptions.series[0].data = y;
+		}
 		return chart;
 	}
 
@@ -207,10 +235,12 @@ class DataIO {
 			return [];
 		}
 	}
+
 	public async getMultiDimensionalData(queryString: string): Promise<any[]> {
 		const results = await this.getDataResults(this.db, queryString);
 		return results.map((row) => Object.values(row));
 	}
+
 	private inferDateFormat(xAxis: string[]): string | string[] {
 		console.warn = () => {};
 
