@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { drawEraserTrail } from '../draw-utils/Draw';
-	import { doLinesIntersect } from '../draw-utils/PolygonOperations';
+	import { doLinesIntersect, pointToLineDistance } from '../draw-utils/PolygonOperations';
 	import { rough } from '$lib/components/ui/roughjs/rough';
 	import { canvasBehavior, arrows } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
@@ -205,19 +205,6 @@
 			}
 		}
 	};
-	function pointToLineDistance(
-		x0: number,
-		y0: number,
-		x1: number,
-		y1: number,
-		x2: number,
-		y2: number
-	): number {
-		const numerator = Math.abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1);
-		const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
-
-		return numerator / denominator;
-	}
 
 	const redrawArrows = () => {
 		for (let arrow of $arrows) {
