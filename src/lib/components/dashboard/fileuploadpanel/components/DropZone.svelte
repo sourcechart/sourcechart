@@ -3,33 +3,27 @@
 	import Spinner from 'flowbite-svelte/Spinner.svelte'; //@ts-ignore
 	import Dropzone from 'flowbite-svelte/Dropzone.svelte';
 	import { generateID } from '$lib/io/GenerateID';
-	import { createFileStore, activeDropZone, activeSidebar, fileTest } from '$lib/io/Stores';
-	import { onMount } from 'svelte';
-	import { DuckDBClient } from '$lib/io/DuckDBClient';
-	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import { createFileStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
 
 	let isLoading = false;
 	let value: string[] = [];
-	let syncWorker: Worker | undefined = undefined;
 
-	const loadWorker = async () => {
-		const SyncWorker = await import('$lib/io/web.worker?worker');
-		syncWorker = new SyncWorker.default();
+	const insertFileHandle = (file: File) => {
+		isLoading = true;
+		const id = generateID();
+		createFileStore(file, id);
 	};
 
-	//This is used for Drag and Drop Events
 	const dropHandle = (event: DragEvent) => {
 		value = [];
 		event.preventDefault();
 		if (event.dataTransfer?.items) {
-			[...event.dataTransfer.items].forEach(async (item) => {
+			[...event.dataTransfer.items].forEach((item) => {
 				if (item.kind === 'file') {
 					const file = item.getAsFile();
 					if (file) {
 						value.push(file.name);
-						const db = await DuckDBClient.of([file]);
-						var filename = checkNameForSpacesAndHyphens(file.name);
-						const resp = await db.query(`SELECT * FROM ${filename} LIMIT 100`); //@ts-ignore
+						insertFileHandle(file);
 					}
 				}
 				activeDropZone.set(false);
@@ -50,12 +44,7 @@
 		if (files && files.length > 0) {
 			value.push(files[0].name);
 			[...files].forEach(async (file) => {
-				fileTest.set(file);
-				const db = await DuckDBClient.of([$fileTest]);
-				var filename = checkNameForSpacesAndHyphens(file.name);
-
-				const resp = await db.query(`SELECT * FROM ${filename} LIMIT 100`); //@ts-ignore
-				console.log(resp);
+				insertFileHandle(file);
 			});
 			activeDropZone.set(false);
 			activeSidebar.set(true);
@@ -78,7 +67,7 @@
 	const dragOver = (event: DragEvent) => {
 		event.preventDefault();
 	};
-	onMount(loadWorker);
+	//onMount(loadWorker);
 </script>
 
 <Dropzone

@@ -155,6 +155,13 @@ type Point = {
 	y: number;
 };
 
+type Arrow = {
+	startX: number;
+	startY: number;
+	endX: number;
+	endY: number;
+};
+
 interface Polygon {
 	id?: string;
 	vertices: Point[];

@@ -25,21 +25,9 @@ export const minimumPointsForCluster = writable<number>();
 export const duckDBInstanceStore = writable<DuckDBClient>();
 export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
-export const fileTest = writable<File | null>(null);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
-export const arrows = writable<arrow[]>(storeFromLocalStorage('arrowsStore', []));
-
-const createDropdownStore = () => {
-	const { subscribe, set, update } = writable(null);
-
-	return {
-		subscribe,
-		open: (id: any) => set(id),
-		close: () => set(null),
-		toggle: (id: any) => update((currentId) => (currentId !== id ? id : null))
-	};
-};
+export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
@@ -142,7 +130,6 @@ export const canvasBehavior = () => {
 				$mouseType !== 'move' &&
 				$mouseType !== ''
 			) {
-				//This will have to be changed
 				touchState = 'isResizing';
 			} else if (
 				$navBarState === 'select' &&
@@ -191,18 +178,18 @@ export const columnLabel = (axis: string) =>
 		}
 	});
 
-storeToLocalStorage(fileUploadStore, 'fileUploadStore');
-storeToLocalStorage(allCharts, 'allCharts');
-storeToLocalStorage(arrows, 'arrowsStore');
-
-export const dropdownStore = createDropdownStore();
-export const createFileStore = (filename: string, fileSize: number, dataID: string) => {
+export const createFileStore = (file: File, dataID: string) => {
 	var tableColumnsSize = {
-		filename: filename,
+		filename: file.name,
+		fileHandle: file,
 		datasetID: dataID,
-		size: fileSize,
-		fileextension: filename.split('.').pop()
+		size: file.size,
+		fileextension: file.name.split('.').pop()
 	};
 
 	fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 };
+
+storeToLocalStorage(fileUploadStore, 'fileUploadStore');
+storeToLocalStorage(allCharts, 'allCharts');
+storeToLocalStorage(arrows, 'arrowsStore');
