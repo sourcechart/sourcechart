@@ -160,6 +160,8 @@ type Arrow = {
 	startY: number;
 	endX: number;
 	endY: number;
+	midX: number;
+	midY: number;
 };
 
 interface Polygon {
