@@ -37,6 +37,7 @@ class DataIO {
 			}
 		};
 	}
+
 	private createChartTitle(): {
 		text: string;
 		subtext: string;
@@ -98,7 +99,6 @@ class DataIO {
 		this.downloadTSV(data, 'export.tsv');
 	}
 
-	//TODO: Refactor this function to be more generic
 	private updateBasicChart(results: any[], chart: Chart) {
 		const xColumn = this.getColumn(chart.xColumn);
 		const yColumn = this.getColumn(chart.yColumn);
@@ -249,19 +249,16 @@ class DataIO {
 
 		// Check if each date string in xAxis is valid for any of the potential formats
 		const allValid = xAxis.every((x) => {
-			// Check if x can be parsed into a number (whole or with decimals)
 			if (!isNaN(parseFloat(x))) {
 				return false;
 			}
 			return potentialFormats.some((format) => dayjs(x, format, true).isValid());
 		});
 
-		// If not all strings are valid dates, return the original array
 		if (!allValid) {
 			return xAxis;
 		}
 
-		// Convert date strings to dayjs objects using the first valid format for each string
 		const dateObjects = xAxis.map((x) => {
 			for (let format of potentialFormats) {
 				const dateObj = dayjs(x, format, true);
@@ -272,12 +269,10 @@ class DataIO {
 			return dayjs(x); // fallback
 		});
 
-		// Find the minimum and maximum dates
 		const minDate = dateObjects.reduce((a, b) => (a.isBefore(b) ? a : b));
 		const maxDate = dateObjects.reduce((a, b) => (a.isAfter(b) ? a : b));
 		console.warn = () => {};
 
-		// Calculate the date ranges
 		const rangeInDays = maxDate.diff(minDate, 'day');
 		const rangeInHours = maxDate.diff(minDate, 'hour');
 		const rangeInMinutes = maxDate.diff(minDate, 'minute');

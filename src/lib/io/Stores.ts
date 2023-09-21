@@ -13,8 +13,6 @@ export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
-export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
-export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
 export const polygons = writable<Polygon[]>([]);
@@ -27,6 +25,9 @@ export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
+
+export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
+export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 
 export const getFileFromStore = () =>
@@ -177,18 +178,6 @@ export const columnLabel = (axis: string) =>
 			return `${axis.toUpperCase()} Axis`;
 		}
 	});
-
-export const createFileStore = (file: File, dataID: string) => {
-	var tableColumnsSize = {
-		filename: file.name,
-		fileHandle: file,
-		datasetID: dataID,
-		size: file.size,
-		fileextension: file.name.split('.').pop()
-	};
-
-	fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
-};
 
 storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');

@@ -3,15 +3,23 @@
 	import Spinner from 'flowbite-svelte/Spinner.svelte'; //@ts-ignore
 	import Dropzone from 'flowbite-svelte/Dropzone.svelte';
 	import { generateID } from '$lib/io/GenerateID';
-	import { createFileStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
+	import { fileUploadStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
+	import Datasets from './Datasets.svelte';
 
 	let isLoading = false;
 	let value: string[] = [];
 
 	const insertFileHandle = (file: File) => {
 		isLoading = true;
-		const id = generateID();
-		createFileStore(file, id);
+		var tableColumnsSize = {
+			filename: file.name,
+			file: file,
+			datasetID: generateID(),
+			size: file.size,
+			fileExtension: file.name.split('.').pop()
+		};
+
+		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 	};
 
 	const dropHandle = (event: DragEvent) => {
@@ -67,7 +75,6 @@
 	const dragOver = (event: DragEvent) => {
 		event.preventDefault();
 	};
-	//onMount(loadWorker);
 </script>
 
 <Dropzone
