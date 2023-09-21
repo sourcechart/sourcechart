@@ -3,7 +3,7 @@
 </script>
 
 <div class="backgroundColor w-full h-full generalPadding">
-	<section>
+	<section id="navbar">
 		<div class="navbar w-full flex justify-between items-center pb-4">
 			<div class="mr-4">
 				<img class="logo-size object-contain" src="logo1.png" alt="Logo" />
@@ -11,7 +11,7 @@
 			<div
 				class="button-height shadow border border-white justify-end items-center inline-flex ml-4 px-4"
 			>
-				<div class="px-8 justify-start items-center gap-2.5 flex">
+				<div class="px-8 justify-start items-center flex">
 					<button
 						class="text-white lg:text-base md:text-sm sm:text-xs shadow-lg font-normal mavenFont leading-normal tracking-tight"
 					>
@@ -21,9 +21,9 @@
 			</div>
 		</div>
 	</section>
-	<section>
-		<div class="h-24 callToAction text-white sm:text-4xl mavenFont flex">
-			<div>
+	<section id="Hero">
+		<div class="h-24 callToAction text-white sm:text-4xl mavenFont flex flex-col md:flex-row">
+			<div class="flex-1 text-center md:text-left">
 				<span class="text-6xl shadow-lg font-medium"> Sharpen Your Insight. </span>
 				<div class="mt-6">
 					<span class="text-xl shadow-md font-thin">
@@ -44,7 +44,7 @@
 					</button>
 				</div>
 			</div>
-			<div class="px-8">
+			<div class="flex-1 px-8">
 				<Hero />
 			</div>
 		</div>
@@ -82,6 +82,17 @@
 	.button-height {
 		height: 56px; /* Default to large size */
 		padding: 0 1rem; /* Adjust padding to match height */
+	}
+	@media (max-width: 768px) {
+		/* This corresponds to the default md breakpoint in Tailwind */
+		.callToAction {
+			text-align: center;
+		}
+		.navbar {
+		}
+		.navbar .logo-size {
+			margin-bottom: 10px;
+		}
 	}
 	@media (max-width: 1024px) {
 		/* This corresponds to the default lg breakpoint in Tailwind */
