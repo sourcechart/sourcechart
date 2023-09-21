@@ -1,15 +1,3 @@
-/*
-The DuckDB client is how we instantiate the Duckdb WASM database inside the browser.
-
-This system works via making a database out of a webpack that is statically loaded into browser,
-and then hydration is run through the FileStreamer and DuckDBWasm Client.  Given that the files
-are larger, we have to load it into the database in batches. This process is not optimized yet 
-but will be starting in the coming days.
-
-// Adapted from https://observablehq.com/@cmudig/duckdb-client
-// Copyright 2021 CMU Data Interaction Group
-*/
-
 import * as duckdb from '@duckdb/duckdb-wasm';
 import duckdb_wasm from '/node_modules/@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url';
 import mvp_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url';
@@ -64,20 +52,14 @@ export class DuckDBClient {
 		}
 	}
 
+	/**
+	 * Query the duckdb database via a query string.
+	 *
+	 * @param query
+	 * @param params
+	 * @returns  Promise <Array<any[any]>>
+	 */
 	public async query(query: string, params?: Array<any>): Promise<Array<any[any]>> {
-		/*
-		Query the duckdb database via a query string.
-		
-		Args
-		----
-		query: string
-			Query string
-		 
-		 
-		Returns
-		-------
-		Promise <Array<any[any]>>
-		*/
 		const res = await this.queryStream(query, params);
 		let results = []; //@ts-ignore
 		for await (const rows of res.readRows()) {
@@ -89,8 +71,13 @@ export class DuckDBClient {
 		return results;
 	}
 
+	/**
+	 *
+	 * @param query
+	 * @param params
+	 * @returns
+	 */
 	public async queryRow(query: string, params?: Array<any>) {
-		/*Query a single row*/
 		const result = await this.queryStream(query, params); //@ts-ignore
 		const reader = result.readRows();
 		try {
@@ -127,6 +114,7 @@ export class DuckDBClient {
 			databaseType: column_type
 		}));
 	}
+
 	static async of(sources = {}, config: any = {}) {
 		const db: AsyncDuckDB | null = await makeDB();
 
@@ -166,11 +154,12 @@ async function processSources(db: AsyncDuckDB, sources: any): Promise<void> {
 		Object.entries(sources).map(async ([name, source]) => {
 			if (source instanceof File) {
 				await insertFileHandle(db, source);
-				//	await insertLargeOrDeformedFile(db, source);
 			} else if (isBufferSource(source)) {
+				//@ts-ignore
 				await insertArrayBuffer(db, source);
 			} else if (isFileSource(source)) {
-				const { file, ...options } = source;
+				//@ts-ignore
+				const { file, ...options } = source; //@ts-ignore
 				await insertFile(db, source.name, file, options);
 			} else {
 				throw new Error(`invalid source: ${source}`);
@@ -244,7 +233,6 @@ async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any)
 	await db.registerFileBuffer(file.name, uint8ArrayBuffer);
 	const connection = await db.connect();
 
-	/*
 	try {
 		switch (file.type) {
 			case 'text/csv':
@@ -276,7 +264,6 @@ async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any)
 	} finally {
 		await connection.close();
 	}
-	*/
 }
 
 async function insertFileHandle(db: AsyncDuckDB, pickedFile: File) {
@@ -294,15 +281,14 @@ async function insertFileHandle(db: AsyncDuckDB, pickedFile: File) {
 	);
 }
 
-const makeDB = async () => {
-	/*
-	Make DB from the webapp from web assembly worke
+/*
+Make DB from the webapp from web assembly worke
 
-	Returns
-	-------
-	Async duckdb
-
-	*/
+Returns
+-------
+Async duckdb
+*/
+const makeDB = async (): Promise<AsyncDuckDB> => {
 	const MANUAL_BUNDLES: duckdb.DuckDBBundles = {
 		mvp: {
 			mainModule: duckdb_wasm,

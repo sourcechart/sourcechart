@@ -52,7 +52,8 @@
 					const file = item.getAsFile();
 					if (file) {
 						value.push(file.name);
-						uploadToSQLITe(file);
+						DuckDBClient.of(file);
+						//uploadToSQLITe(file);
 					}
 				}
 				activeDropZone.set(false);
