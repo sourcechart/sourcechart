@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { bufferToHex } from '$lib/io/HexOps';
-	import { generateID } from '$lib/io/GenerateID';
+	//import { bufferToHex } from '$lib/io/HexOps';
+	//import { generateID } from '$lib/io/GenerateID';
+	//import { activeDropZone, createFileStore } from '$lib/io/Stores'; //@ts-ignore
+
 	import { onMount } from 'svelte';
-	import { activeDropZone, createFileStore } from '$lib/io/Stores'; //@ts-ignore
 	import { ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
 	//@ts-ignore
 	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
@@ -194,42 +195,7 @@
 		filename = dataset.url.split('/').pop(); //@ts-ignore
 		fileextension = filename.split('.').pop();
 		size = buffer.byteLength / 1000; //@ts-ignore
-		uploadToSQLITE(buffer, filename, fileextension, size);
-	};
-
-	const uploadToSQLITE = async (
-		arrayBuffer: ArrayBuffer,
-		filename: string,
-		fileextension: string,
-		size: number
-	) => {
-		isLoading = true; // start the loading process
-
-		try {
-			var id = generateID();
-			var hex = bufferToHex(arrayBuffer);
-
-			if (syncWorker) {
-				syncWorker.postMessage({
-					filename: filename,
-					size: size,
-					id: id,
-					message: 'initialize',
-					hexadecimal: hex,
-					fileextension: fileextension
-				});
-				createFileStore(filename, size, id);
-
-				syncWorker.onerror = (e) => {
-					console.log(e);
-				};
-			}
-		} catch (error) {
-			console.error('Error uploading to SQLite:', error);
-		} finally {
-			isLoading = false; // end the loading process
-			activeDropZone.set(false);
-		}
+		//uploadToSQLITE(buffer, filename, fileextension, size);
 	};
 
 	function downloadRawCSV(csvData: string, filename: string) {

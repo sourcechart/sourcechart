@@ -3,10 +3,10 @@
 	import Spinner from 'flowbite-svelte/Spinner.svelte'; //@ts-ignore
 	import Dropzone from 'flowbite-svelte/Dropzone.svelte';
 	import { generateID } from '$lib/io/GenerateID';
-	import { createFileStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
-	import { bufferToHex } from '$lib/io/HexOps';
+	import { createFileStore, activeDropZone, activeSidebar, fileTest } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	let isLoading = false;
 	let value: string[] = [];
@@ -17,43 +17,19 @@
 		syncWorker = new SyncWorker.default();
 	};
 
-	const uploadToSQLITe = async (file: File) => {
-		isLoading = true; // start the loading process
-		try {
-			var arrayBuffer = await file.arrayBuffer();
-			var id = generateID();
-			var hex = bufferToHex(arrayBuffer);
-
-			createFileStore(file.name, file.size, id);
-			if (syncWorker) {
-				syncWorker.postMessage({
-					filename: file.name,
-					size: file.size,
-					id: id,
-					message: 'initialize',
-					hexadecimal: hex,
-					fileextension: file.name.split('.').pop()
-				});
-			}
-		} catch (error) {
-			console.error('Error uploading to SQLite:', error);
-		} finally {
-			isLoading = false; // end the loading process
-		}
-	};
-
 	//This is used for Drag and Drop Events
 	const dropHandle = (event: DragEvent) => {
 		value = [];
 		event.preventDefault();
 		if (event.dataTransfer?.items) {
-			[...event.dataTransfer.items].forEach((item) => {
+			[...event.dataTransfer.items].forEach(async (item) => {
 				if (item.kind === 'file') {
 					const file = item.getAsFile();
 					if (file) {
 						value.push(file.name);
-						DuckDBClient.of(file);
-						//uploadToSQLITe(file);
+						const db = await DuckDBClient.of([file]);
+						var filename = checkNameForSpacesAndHyphens(file.name);
+						const resp = await db.query(`SELECT * FROM ${filename} LIMIT 100`); //@ts-ignore
 					}
 				}
 				activeDropZone.set(false);
@@ -62,7 +38,6 @@
 		} else if (event.dataTransfer) {
 			[...event.dataTransfer.files].forEach((file) => {
 				value.push(file.name);
-				uploadToSQLITe(file);
 			});
 			activeDropZone.set(false);
 			activeSidebar.set(true);
@@ -74,8 +49,13 @@
 		const files = inputElement.files;
 		if (files && files.length > 0) {
 			value.push(files[0].name);
-			[...files].forEach((file) => {
-				uploadToSQLITe(file);
+			[...files].forEach(async (file) => {
+				fileTest.set(file);
+				const db = await DuckDBClient.of([$fileTest]);
+				var filename = checkNameForSpacesAndHyphens(file.name);
+
+				const resp = await db.query(`SELECT * FROM ${filename} LIMIT 100`); //@ts-ignore
+				console.log(resp);
 			});
 			activeDropZone.set(false);
 			activeSidebar.set(true);

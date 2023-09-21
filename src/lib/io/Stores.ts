@@ -25,18 +25,10 @@ export const minimumPointsForCluster = writable<number>();
 export const duckDBInstanceStore = writable<DuckDBClient>();
 export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
+export const fileTest = writable<File | null>(null);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
-export const arrows = writable<
-	{
-		startX: number;
-		startY: number;
-		endX: number;
-		endY: number;
-		midX: number;
-		midY: number;
-	}[]
->(storeFromLocalStorage('arrowsStore', []));
+export const arrows = writable<arrow[]>(storeFromLocalStorage('arrowsStore', []));
 
 const createDropdownStore = () => {
 	const { subscribe, set, update } = writable(null);
