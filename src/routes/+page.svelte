@@ -22,15 +22,14 @@
 		</div>
 	</section>
 	<section id="Hero">
-		<div class="h-24 callToAction text-white sm:text-4xl mavenFont flex flex-col md:flex-row">
-			<div class="flex-1 text-center md:text-left">
+		<div class="h-24 callToAction text-white sm:text-4xl mavenFont flex">
+			<div class="">
 				<span class="text-6xl shadow-lg font-medium"> Sharpen Your Insight. </span>
 				<div class="mt-6">
 					<span class="text-xl shadow-md font-thin">
 						SourceChart processes gigabytes of data locally that moves as <br /> fast as you think.
 					</span>
 				</div>
-
 				<div class="flex items-center">
 					<button
 						class="mt-4 bg-blue-700 border border-1 border-white p-4 text-white lg:text-base md:text-sm sm:text-xs shadow-lg font-normal mavenFont leading-normal tracking-tight"
@@ -44,7 +43,7 @@
 					</button>
 				</div>
 			</div>
-			<div class="flex-1 px-8">
+			<div class="px-8 mt-10">
 				<Hero />
 			</div>
 		</div>
@@ -58,8 +57,11 @@
 
 <style>
 	.callToAction {
-		margin-top: 10%;
+		align-items: center;
+		justify-content: center;
+		margin-top: 30%;
 		background-color: #181818;
+		display: flex;
 	}
 	.mavenFont {
 		font-family: 'Maven Pro', sans-serif;
@@ -82,17 +84,6 @@
 	.button-height {
 		height: 56px; /* Default to large size */
 		padding: 0 1rem; /* Adjust padding to match height */
-	}
-	@media (max-width: 768px) {
-		/* This corresponds to the default md breakpoint in Tailwind */
-		.callToAction {
-			text-align: center;
-		}
-		.navbar {
-		}
-		.navbar .logo-size {
-			margin-bottom: 10px;
-		}
 	}
 	@media (max-width: 1024px) {
 		/* This corresponds to the default lg breakpoint in Tailwind */
@@ -127,5 +118,8 @@
 			padding-left: 5%;
 			padding-right: 5%;
 		}
+	}
+	#Hero {
+		margin-top: 5%; /* Adjust this value to control the top spacing */
 	}
 </style>
