@@ -47,11 +47,9 @@
 		const sanitizedFilename = checkNameForSpacesAndHyphens(dataObject.file.name);
 		const resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
 		var schema = resp.schema; //@ts-ignore
-		var columns = schema.map((item) => item['name']);
+		var columns = schema.map((iem) => item['name']);
 
-		console.log(db);
 		duckDBInstanceStore.set(db);
-
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			chart.schema = schema;
