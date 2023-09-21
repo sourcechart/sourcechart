@@ -1,25 +1,52 @@
 <div class="backgroundColor w-full h-full generalPadding">
 	<div class="navbar w-full flex justify-between items-center pb-4">
-		<!-- Logo -->
 		<div class="mr-4">
 			<img class="logo-size object-contain" src="logo1.png" alt="Logo" />
 		</div>
-
-		<!-- Login Button -->
 		<div class="button-height shadow border border-white justify-end items-center inline-flex ml-4">
 			<div class="p-2.5 justify-start items-center gap-2.5 flex">
 				<button
-					class="text-white lg:text-base md:text-sm sm:text-xs shadow-lg font-normal font-['?????'] leading-normal tracking-tight"
+					class="text-white lg:text-base md:text-sm sm:text-xs shadow-lg font-normal mavenFont leading-normal tracking-tight"
 				>
 					Login
 				</button>
 			</div>
 		</div>
 	</div>
-	<div class="bg-gray-50 h-full">Hello world</div>
+	<div class="h-24 callToAction text-white sm:text-4xl mavenFont">
+		<span class="text-6xl shadow-lg font-medium"> Sharpen Your Insight. </span>
+		<div class="mt-4">
+			<span class="text-lg shadow-md">
+				SourceChart processes gigabytes of data locally that moves as <br /> fast as you think.
+			</span>
+		</div>
+		<div>
+			<button
+				class="mt-4 bg-blue-700 border border-1 border-white p-5 text-white lg:text-base md:text-sm sm:text-xs shadow-lg font-normal mavenFont leading-normal tracking-tight"
+			>
+				Sign Up
+			</button>
+			<button
+				class="mt-4 text-white border border-1 border-white p-4 lg:text-base md:text-sm sm:text-xs shadow-lg font-normal mavenFont leading-normal tracking-tight"
+			>
+				<span class="text-lg">Learn More</span>
+			</button>
+		</div>
+	</div>
 </div>
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;700&display=swap"
+/>
 
 <style>
+	.callToAction {
+		margin-top: 10%;
+		background-color: #181818;
+	}
+	.mavenFont {
+		font-family: 'Maven Pro', sans-serif;
+	}
 	.backgroundColor {
 		background-color: #181818;
 	}
