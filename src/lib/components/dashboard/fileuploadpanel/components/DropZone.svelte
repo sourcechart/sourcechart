@@ -4,7 +4,6 @@
 	import Dropzone from 'flowbite-svelte/Dropzone.svelte';
 	import { generateID } from '$lib/io/GenerateID';
 	import { fileUploadStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
-	import Datasets from './Datasets.svelte';
 
 	let isLoading = false;
 	let value: string[] = [];

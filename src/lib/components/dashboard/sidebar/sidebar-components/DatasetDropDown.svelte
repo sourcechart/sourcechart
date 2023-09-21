@@ -8,24 +8,14 @@
 		duckDBInstanceStore,
 		fileUploadStore
 	} from '$lib/io/Stores';
-
 	import { CloseSolid } from 'flowbite-svelte-icons';
-
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
-	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { onMount, onDestroy } from 'svelte';
+	import { onDestroy } from 'svelte';
 
 	let isDropdownOpen = false;
-	let syncWorker: Worker | undefined = undefined;
 	let selectedDataset: string | null = 'Choose Dataset';
 	let dropdownContainer: HTMLElement;
-
-	const handleOutsideClick = (event: MouseEvent) => {
-		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
-			isDropdownOpen = false;
-		}
-	};
 
 	$: {
 		if (isDropdownOpen) {
@@ -44,24 +34,18 @@
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	const onWorkerMessage = (e: MessageEvent) => {
-		var arrayBuffer = hexToBuffer(e.data.hexadecimal);
-		var dataObject = {
-			buffer: arrayBuffer,
-			filename: e.data.filename
-		};
-		queryDuckDB(dataObject);
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+			isDropdownOpen = false;
+		}
 	};
 
-	const loadWorker = async () => {
-		const SyncWorker = await import('$lib/io/web.worker?worker');
-		syncWorker = new SyncWorker.default();
-	};
-
-	const queryDuckDB = async (dataObject: DataObject) => {
-		const db = await DuckDBClient.of([dataObject]);
-		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
-		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
+	const queryDuckDB = async (filename: string) => {
+		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
+		if (!dataObject) return;
+		const db = await DuckDBClient.of([dataObject.file]);
+		const sanitizedFilename = checkNameForSpacesAndHyphens(dataObject.file.name);
+		const resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
 
@@ -75,38 +59,20 @@
 		});
 	};
 
-	const selectFile = (filename: string | null) => {
-		if (filename) {
-			selectedDataset = filename;
-			$chosenFile = filename;
+	const selectFile = (filename: string) => {
+		selectedDataset = filename;
+		$chosenFile = filename;
 
-			if (syncWorker) {
-				syncWorker.postMessage({
-					message: 'query',
-					filename: filename
-				});
-				syncWorker.onmessage = onWorkerMessage;
-			}
+		allCharts.update((charts) => {
+			charts[$i].filename = filename;
+			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID;
+			return charts;
+		});
 
-			allCharts.update((charts) => {
-				let chart = charts[$i];
-				chart.filename = filename;
-				if ($file?.datasetID) chart.datasetID = $file.datasetID;
-				return charts;
-			});
-		}
+		queryDuckDB(filename);
 	};
 
-	const removeFileFromSqlite = (filename: string) => {
-		if (syncWorker) {
-			syncWorker.postMessage({
-				message: 'delete',
-				filename: filename
-			});
-			syncWorker.onmessage = onWorkerMessage;
-			console.log('file deleted from sqlite');
-		}
-
+	const removeFromAllCharts = (filename: string) => {
 		allCharts.update((charts) => {
 			return charts.filter((chart) => chart.filename !== filename);
 		});
@@ -123,8 +89,6 @@
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
-
-	onMount(loadWorker);
 </script>
 
 <div class="w-full p-4 rounded-sm relative selectFieldColor">
@@ -170,7 +134,7 @@
 							class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
 							on:click={(event) => {
 								event.stopPropagation();
-								removeFileFromSqlite(dataset);
+								removeFromAllCharts(dataset);
 							}}
 						>
 							<CloseSolid class="w-3 h-3 text-white dark:text-white" />
