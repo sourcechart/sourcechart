@@ -79,6 +79,7 @@ export const getChartOptions = (id: string | undefined) => {
 					const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
 					if (chart) {
 						const db = $duckDBInstanceStore;
+						console.log(db);
 						const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
 						const chartOption = await newChart.updateChart();
 						set(chartOption);
