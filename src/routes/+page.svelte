@@ -22,12 +22,14 @@
 		</div>
 	</section>
 	<section id="Hero">
-		<div class="h-24 callToAction text-white sm:text-4xl mavenFont flex">
-			<div class="">
-				<span class="text-6xl shadow-lg font-medium"> Sharpen Your Insight. </span>
+		<div class="h-24 callToAction text-white mavenFont flex mt-10">
+			<div class="-mt-7">
+				<span class=" shadow-lg font-medium items-center xl:text-6xl lg:text-6xl md:text-5xl">
+					Sharpen Your Insight.
+				</span>
 				<div class="mt-6">
-					<span class="text-xl shadow-md font-thin">
-						SourceChart processes gigabytes of data locally that moves as <br /> fast as you think.
+					<span class=" shadow-md font-thin">
+						SourceChart processes gigabytes of data locally that moves as fast as you think.
 					</span>
 				</div>
 				<div class="flex items-center">
@@ -56,13 +58,6 @@
 />
 
 <style>
-	.callToAction {
-		align-items: center;
-		justify-content: center;
-		margin-top: 30%;
-		background-color: #181818;
-		display: flex;
-	}
 	.mavenFont {
 		font-family: 'Maven Pro', sans-serif;
 	}
@@ -75,51 +70,61 @@
 		padding-right: 10%;
 	}
 	.navbar {
-		height: 80px; /* Default to large size */
+		height: 80px;
 	}
 	.logo-size {
-		height: 56px; /* Default to large size */
-		width: auto; /* Maintain aspect ratio */
+		height: 56px;
+		width: auto;
 	}
 	.button-height {
 		height: 56px; /* Default to large size */
 		padding: 0 1rem; /* Adjust padding to match height */
 	}
-	@media (max-width: 1024px) {
-		/* This corresponds to the default lg breakpoint in Tailwind */
-		.navbar {
-			height: 52px; /* Medium size */
+
+	.callToAction {
+		flex-direction: column; /* Default to column for mobile screens */
+	}
+
+	@media (min-width: 1025px) {
+		.callToAction {
+			flex-direction: row; /* Retain row display for larger screens */
+			margin-top: 20%;
+			align-items: center; /* Vertically center the items */
 		}
-		.logo-size {
-			height: 44px; /* Medium size */
-		}
-		.button-height {
-			height: 44px; /* Medium size */
-			padding: 0 0.8rem; /* Adjust padding to match height */
-		}
-		.generalPadding {
-			padding-left: 8%;
-			padding-right: 8%;
+		.callToAction > div.px-8.mt-0 {
+			margin-top: 10%; /* Reset the margin for larger screens */
 		}
 	}
+
+	/* For smaller screens */
 	@media (max-width: 640px) {
-		/* This corresponds to the default sm breakpoint in Tailwind */
-		.navbar {
-			height: 40px; /* Small size */
+		.callToAction > div {
+			margin-top: 10%; /* Give some top margin between elements */
+			text-align: center; /* Center the text */
+			font-size: 2rem /* 60px */;
 		}
-		.logo-size {
-			height: 32px; /* Small size */
+
+		/* Adjust Hero positioning for smaller screens */
+		.callToAction > div.px-8.mt-10 {
+			order: 4; /* Make Hero component appear last */
 		}
-		.button-height {
-			height: 32px; /* Small size */
-			padding: 0 0.6rem; /* Adjust padding to match height */
+
+		/* Adjust title positioning for smaller screens */
+		.callToAction > div > .text-6xl {
+			order: 1; /* Make title appear first */
+			text-align: center;
 		}
-		.generalPadding {
-			padding-left: 5%;
-			padding-right: 5%;
+
+		/* Adjust subtitle positioning for smaller screens */
+		.callToAction > div > .mt-6 {
+			order: 2; /* Make subtitle appear second */
+			text-align: center;
 		}
-	}
-	#Hero {
-		margin-top: 5%; /* Adjust this value to control the top spacing */
+
+		/* Adjust buttons positioning for smaller screens */
+		.callToAction > div > .flex.items-center {
+			order: 3; /* Make buttons appear third */
+			justify-content: center; /* Center the buttons */
+		}
 	}
 </style>
