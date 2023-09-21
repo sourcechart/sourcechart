@@ -6,6 +6,7 @@
 	import { createFileStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
 	import { bufferToHex } from '$lib/io/HexOps';
 	import { onMount } from 'svelte';
+	import { DuckDBClient } from '$lib/io/DuckDBClient';
 
 	let isLoading = false;
 	let value: string[] = [];

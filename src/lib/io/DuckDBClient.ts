@@ -18,6 +18,7 @@ import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url'
 import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
 import { checkNameForSpacesAndHyphens } from './FileUtils';
+import { DuckDBDataProtocol } from '@duckdb/duckdb-wasm';
 
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;
@@ -126,34 +127,56 @@ export class DuckDBClient {
 			databaseType: column_type
 		}));
 	}
-
 	static async of(sources = {}, config: any = {}) {
-		const db: AsyncDuckDB | null = await makeDB(); // If this db does not exist initialize the db
+		const db: AsyncDuckDB | null = await makeDB();
 
-		if (config.query?.castTimeStampToDate === undefined) {
-			config = { ...config, query: { ...config.query, castTimeStampToDate: true } };
-		}
-		if (config.query?.castBigIntToDouble === undefined) {
-			config = { ...config, query: { ...config.query, castBigIntToDouble: true } };
-		}
+		config = mergeWithDefaultConfig(config);
+
 		await db.open(config);
-		await Promise.all(
-			Object.entries(sources).map(async ([name, source]) => {
-				if (source instanceof File) {
-					await insertLargeOrDeformedFile(db, source); //@ts-ignore
-				} else if ('buffer' in source && 'filename' in source) {
-					//@ts-ignore
-					await insertArrayBuffer(db, source); //@ts-ignore
-				} else if ('file' in source) {
-					const { file, ...options } = source; //@ts-ignore
-					await insertFile(db, source.name, file, options);
-				} else {
-					throw new Error(`invalid source: ${source}`);
-				}
-			})
-		);
+		await processSources(db, sources);
+
 		return new DuckDBClient(db);
 	}
+}
+
+function mergeWithDefaultConfig(config: any): any {
+	const defaultQueryConfig = {
+		castTimeStampToDate: true,
+		castBigIntToDouble: true
+	};
+
+	return {
+		...config,
+		query: {
+			...defaultQueryConfig,
+			...config.query
+		}
+	};
+}
+function isBufferSource(source: any): boolean {
+	return 'buffer' in source && 'filename' in source;
+}
+
+function isFileSource(source: any): boolean {
+	return 'file' in source;
+}
+
+async function processSources(db: AsyncDuckDB, sources: any): Promise<void> {
+	await Promise.all(
+		Object.entries(sources).map(async ([name, source]) => {
+			if (source instanceof File) {
+				await insertFileHandle(db, source);
+				//	await insertLargeOrDeformedFile(db, source);
+			} else if (isBufferSource(source)) {
+				await insertArrayBuffer(db, source);
+			} else if (isFileSource(source)) {
+				const { file, ...options } = source;
+				await insertFile(db, source.name, file, options);
+			} else {
+				throw new Error(`invalid source: ${source}`);
+			}
+		})
+	);
 }
 
 async function insertArrayBuffer(db: AsyncDuckDB, source: DataObject) {
@@ -221,6 +244,7 @@ async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any)
 	await db.registerFileBuffer(file.name, uint8ArrayBuffer);
 	const connection = await db.connect();
 
+	/*
 	try {
 		switch (file.type) {
 			case 'text/csv':
@@ -252,6 +276,22 @@ async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any)
 	} finally {
 		await connection.close();
 	}
+	*/
+}
+
+async function insertFileHandle(db: AsyncDuckDB, pickedFile: File) {
+	const supportedExtensions = ['.parquet', '.csv']; // Extend this list if more extensions are supported in the future
+	const fileExtension = pickedFile.name.slice(((pickedFile.name.lastIndexOf('.') - 1) >>> 0) + 2);
+	if (!supportedExtensions.includes(`.${fileExtension}`)) {
+		throw new Error(`Unsupported file type: ${fileExtension}`);
+	}
+
+	await db.registerFileHandle(
+		pickedFile.name,
+		pickedFile,
+		DuckDBDataProtocol.BROWSER_FILEREADER,
+		true
+	);
 }
 
 const makeDB = async () => {
@@ -275,7 +315,6 @@ const makeDB = async () => {
 	};
 	// Select a bundle based on browser checks
 	const bundle = await duckdb.selectBundle(MANUAL_BUNDLES);
-	// Instantiate the asynchronus version of DuckDB-wasm
 	const worker = new Worker(bundle.mainWorker!);
 	const logger = new duckdb.ConsoleLogger();
 	const db = new duckdb.AsyncDuckDB(logger, worker);
