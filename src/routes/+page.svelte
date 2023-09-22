@@ -123,7 +123,7 @@
 								<div
 									class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-96 p-4 h-full md:h-96 bg-neutral-800 text-neutral-300 rounded-md"
 								>
-									<div class="flex flex-col items-start space-y-2">
+									<div class="flex items-center space-x-2">
 										<svelte:component this={feature.component} />
 										<span class="text-xl font-semibold">{feature.header}</span>
 									</div>
