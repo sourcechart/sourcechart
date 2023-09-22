@@ -58,7 +58,13 @@
 	</section>
 
 	<section id="space" class="lg:h-44 md:h-24 sm:h-20 w-full" />
-	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10">hello world</section>
+	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10">
+		<div
+			class="text-white font-maven flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
+		>
+			<span class="text-4xl text-center"> Features </span>
+		</div>
+	</section>
 </div>
 
 <link
