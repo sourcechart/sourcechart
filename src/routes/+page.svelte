@@ -82,7 +82,7 @@
 		</div>
 	</section>
 
-	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10 mt-16">
+	<section class="sm:mt-32 h-4/5 py-4 px-2 sm:px-4 md:px-8 lg:px-10 mt-24">
 		<div
 			class="text-white flex flex-col items-center justify-center space-y-4 md:space-y-8 lg:space-y-10 px-2 sm:px-4 md:px-8 lg:px-10"
 		>
@@ -109,7 +109,7 @@
 				</div>
 
 				<!-- Features Container -->
-				<div class="justify-center mr-8 flex">
+				<div class="justify-center flex">
 					<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full mt-10">
 						{#each features as feature}
 							<div
