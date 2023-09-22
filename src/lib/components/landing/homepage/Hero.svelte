@@ -1,12 +1,9 @@
-<script>
-	export let width = 874;
-	export let height = 625;
-</script>
+
 
 <svg
 	{width}
 	{height}
-	viewBox="0 0 {width} {height}"
+	viewBox="0 0 900 600"
 	fill="none"
 	xmlns="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
