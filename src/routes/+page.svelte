@@ -85,10 +85,10 @@
 					</div>
 				</div>
 				<div
-					class="mt-4 md:mt-0 flex-grow md:w-1/2 lg:w-2/5 xl:w-1/2 2xl:w-3/5 relative md:h-60 lg:h-1/3 xl:h-1/2 2xl:h-2/3"
+					class="mt-4 md:mt-0 flex-grow md:w-1/2 lg:w-2/5 xl:w-1/2 2xl:w-3/5 relative md:h-60 lg:h-1/3 xl:h-1/2 2xl:h-2/3 z-10"
 				>
-					<div class="w-full h-full">
-						<img class="w-full h-full object-cover object-center" src="hero2.png" alt="Logo" />
+					<div class="w-full h-full z-10">
+						<img class="w-full h-full object-cover object-center z-10" src="hero2.png" alt="Logo" />
 					</div>
 				</div>
 			</div>
