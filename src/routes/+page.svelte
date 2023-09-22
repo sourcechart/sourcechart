@@ -1,7 +1,3 @@
-<script>
-	import Hero from '$lib/components/landing/homepage/Hero.svelte';
-</script>
-
 <div class="w-full h-full bg-gradient-to-br from-neutral-900 via-neutral-800 to-[#2e2e2e]">
 	<section id="navbar" class="py-2 h-22 px-2 sm:px-4 md:px-8 lg:px-10">
 		<div class="navbar w-full flex justify-between items-center">
@@ -25,13 +21,13 @@
 	<section id="space" class="lg:h-44 sm:h-40 w-full" />
 	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10">
 		<div
-			class="text-white font-maven flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6"
+			class="text-white font-maven flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
 		>
 			<div class="mb-4 md:mb-0 space-y-4">
 				<span
 					class="shadow-lg font-medium text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-6xl"
 				>
-					Sharpen Your Insight.
+					Slice through the noise.
 				</span>
 				<div class="mt-2 md:mt-4">
 					<span class="shadow-md font-thin text-lg sm:text-xl md:text-xl lg:text-2xl">
@@ -51,49 +47,13 @@
 					</button>
 				</div>
 			</div>
+			<!-- Hero Image does not work well-->
 			<div class="mt-4 md:mt-0 flex-shrink-0">
 				<img class="-mt-4 top-0 left-0" src="hero2.png" alt="Logo" />
 			</div>
 		</div>
 	</section>
 </div>
-
-<!--
-	<section id="Hero" class="mt-8">
-		<div class="h-24 text-white font-maven flex mt-10">
-			<div class="">
-				<span class="shadow-lg font-medium xl:text-6xl lg:text-6xl md:text-5xl">
-					Sharpen Your Insight.
-				</span>
-				<div class="mt-6">
-					<span class="shadow-md font-thin lg:text-2xl">
-						SourceChart processes gigabytes of data locally that moves as fast as you think.
-					</span>
-				</div>
-				<div class="flex items-center mt-4 space-x-4">
-					<button
-						class="bg-blue-700 border border-white px-4 py-2 text-white lg:text-base md:text-sm sm:text-xs shadow-lg leading-normal tracking-tight hover:bg-blue-800"
-					>
-						<span class="text-lg"> Sign Up </span>
-					</button>
-					<button
-						class="text-white border border-white px-4 py-2 lg:text-base md:text-sm sm:text-xs shadow-lg leading-normal tracking-tight hover:bg-gray-700"
-					>
-						<span class="text-lg">Learn More</span>
-					</button>
-				</div>
-			</div>
-			<div class="px-8 mt-10">
-				<Hero />
-			</div>
-		</div>
-	</section>
-	<section id="features" class="mt-8">
-		<div class="bg-gray-50">Hello world</div>
-	</section>
-	</div>
-
-	-->
 
 <link
 	rel="stylesheet"
