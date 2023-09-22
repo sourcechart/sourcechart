@@ -11,7 +11,7 @@
 		},
 		{
 			component: Hand,
-			header: `Robust Analytics interface`,
+			header: `Robust Interface`,
 			body: 'Everything is right where you would  expect it to be.'
 		},
 		{
@@ -33,11 +33,9 @@
 				<img class="w-34 h-10 absolute -mt-4 top-0 left-0" src="logo1.png" alt="Logo" />
 				<!-- Aspect ratio box: 1:1 -->
 			</div>
-			<div
-				class="mr-2 sm:mr-3 md:mr-4 lg:mr-4 h-10 sm:h-12 md:h-14 lg:h-16 xl:h-18 flex items-center shadow-lg border border-neutral-300 hover:border-neutral-50 px-2 sm:px-4 md:px-6 lg:px-8"
-			>
+			<div class="mr-2 sm:mr-3 md:mr-4 lg:mr-4">
 				<button
-					class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl h-16 sm:h-14 md:h-16 lg:h-20 xl:h-24 text-neutral-300 hover hover:text-neutral-50 shadow-lg font-maven leading-normal tracking-tight px-2 sm:px-4 md:px-6 lg:px-8"
+					class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl h-10 sm:h-14 md:h-16 lg:h-20 xl:h-24 text-neutral-300 hover:text-neutral-50 border border-neutral-300 hover:border-neutral-50 hover:bg-neutral-800 font-maven leading-normal tracking-tight xl:h-18 flex items-center shadow-lg px-2 sm:px-4 md:px-6 lg:px-8"
 				>
 					Login
 				</button>
