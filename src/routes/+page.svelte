@@ -1,4 +1,29 @@
-<div class="w-full h-full bg-gradient-to-b from-neutral-900 via-neutral-800 to-[#3e3e3e]">
+<script>
+	import Arrow from '$lib/components/landing/homepage/icons/Arrow.svelte';
+	import Hand from '$lib/components/landing/homepage/icons/Hand.svelte';
+	import InfinityIcon from '$lib/components/landing/homepage/icons/InfinityIcon.svelte';
+	let features = [
+		{
+			component: Arrow,
+			header: 'A Single Source of Truth',
+			body: 'Our platform provides an  interactive visualizations of your complex data. Leading to faster and more effective decision making.'
+		},
+		{
+			component: Hand,
+			header: `Robust Analytics interface`,
+			body: 'Everything is right where you would  expect it to be.'
+		},
+		{
+			component: InfinityIcon,
+			header: 'Your data is yours',
+			body: 'Data never leaves your computer. This ensures  that  your data stays private'
+		}
+	];
+</script>
+
+<div
+	class="w-full h-full bg-gradient-to-br from-neutral-900 via-neutral-800 to-[#3e3e3e] font-maven"
+>
 	<section id="navbar" class="py-2 h-22 px-2 sm:px-4 md:px-8 lg:px-10">
 		<div class="navbar w-full flex justify-between items-center">
 			<div
@@ -18,10 +43,10 @@
 			</div>
 		</div>
 	</section>
-	<section id="space" class="lg:h-44 md:h-24 sm:h-20 w-full" />
-	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10">
+	<section id="space" class=" w-full" />
+	<section class="sm:mt-32 min-h-screen py-4 px-2 sm:px-4 md:px-8 lg:px-10">
 		<div
-			class="text-white font-maven flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
+			class="text-white flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
 		>
 			<div class="mb-4 md:mb-0 space-y-4">
 				<div class="shadow">
@@ -57,16 +82,58 @@
 		</div>
 	</section>
 
-	<section id="space" class="lg:h-44 md:h-24 sm:h-20 w-full" />
 	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10">
 		<div
-			class="text-white font-maven flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
+			class="text-white flex flex-col items-center space-y-4 md:space-y-8 lg:space-y-10 px-2 sm:px-4 md:px-8 lg:px-10"
 		>
-			<span class="text-4xl text-center"> Features </span>
+			<!-- Features Text and Subtext -->
+			<div class="flex flex-col items-center text-center space-y-2 w-full">
+				<span class="text-4xl">Features</span>
+				<span class="font-thin text-base sm:text-lg w-2/3">
+					Most dashboards are designed for data visualization and monitoring purposes. SourceChart
+					is designed to find insights.
+				</span>
+			</div>
+
+			<div class="flex flex-col space-y-4 md:space-y-0 md:space-x-6 lg:space-x-8 w-full">
+				<!-- Video Container -->
+				<div
+					class="flex-shrink-0 video-container overflow-hidden max-w-full md:max-w-none mb-4 md:mb-0"
+				>
+					<video autoplay loop muted class="video-style w-full">
+						<source src="demoMP4.mp4" type="video/mp4" />
+						Your browser does not support the video tag.
+					</video>
+				</div>
+
+				<!-- Features Container -->
+				<div
+					class="flex flex-wrap justify-center md:justify-start items-start space-y-4 md:space-y-0 md:space-x-4 w-full"
+				>
+					{#each features as feature}
+						<div class="w-full md:w-96 p-4 bg-neutral-800 text-white rounded-md">
+							<div class="flex items-start space-x-4">
+								<svelte:component this={feature.component} />
+								<span class="text-xl font-semibold">{feature.header}</span>
+							</div>
+							<div class="mt-2">
+								<span class="text-base">{feature.body}</span>
+							</div>
+						</div>
+					{/each}
+				</div>
+			</div>
 		</div>
 	</section>
+	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10" />
 </div>
-
+<footer class="justify-center flex bg-gradient-to-b from-[#3e3e3e] via-neutral-800 to-[#3e3e3e]">
+	<div class="legal-section">
+		<a href="/privacy-policy">Privacy Policy</a>
+		<a href="/terms-and-conditions">Terms and Conditions</a>
+		<a href="/disclaimer"> Disclaimer</a>
+	</div>
+</footer>
 <link
 	rel="stylesheet"
 	href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;700&display=swap"
