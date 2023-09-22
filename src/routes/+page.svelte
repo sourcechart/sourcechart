@@ -21,27 +21,26 @@
 	<section id="space" class="lg:h-44 md:h-24 sm:h-20 w-full" />
 	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10">
 		<div
-			class="text-white font-maven flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
+			class="text-white font-maven flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
 		>
 			<div class="mb-4 md:mb-0 space-y-4">
 				<div class="shadow">
-					<span class="font-medium block text-3xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+					<span class="font-medium block text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-6xl">
 						Slice through the noise.
 					</span>
 					<div class="mt-2 md:mt-4">
-						<span class="font-thin text-lg">
+						<span class="font-thin text-base sm:text-lg">
 							SourceChart processes gigabytes of data locally that moves as fast as you think.
 						</span>
 					</div>
-
 					<div class="flex flex-wrap items-center mt-4 space-x-4">
 						<button
-							class="bg-blue-700 border border-white px-4 py-2 text-sm sm:text-base md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-blue-800"
+							class="bg-blue-700 border border-white px-4 py-2 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-blue-800"
 						>
 							<span> Sign Up </span>
 						</button>
 						<button
-							class="text-white border border-white px-4 py-2 text-sm sm:text-base md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-gray-700"
+							class="text-white border border-white px-4 py-2 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-gray-700"
 						>
 							<span>Learn More</span>
 						</button>
@@ -57,6 +56,9 @@
 			</div>
 		</div>
 	</section>
+
+	<section id="space" class="lg:h-44 md:h-24 sm:h-20 w-full" />
+	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10">hello world</section>
 </div>
 
 <link
