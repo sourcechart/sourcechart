@@ -2,44 +2,55 @@
 	import Hero from '$lib/components/landing/homepage/Hero.svelte';
 </script>
 
-<div class="backgroundColor w-full h-full generalPadding">
-	<section id="navbar">
-		<div class="navbar w-full flex justify-between items-center pb-4">
-			<div class="mr-4">
-				<img class="logo-size object-contain" src="logo1.png" alt="Logo" />
+<div class="w-full h-full">
+	<section id="navbar" class="py-2 h-22 bg-[#121212] px-2 sm:px-4 md:px-8 lg:px-10">
+		<div class="navbar w-full flex justify-between items-center">
+			<div
+				class="ml-2 sm:ml-3 md:ml-4 lg:ml-4 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 min-w-60 max-w-200"
+			>
+				<img
+					class="w-full h-16 sm:h-14 md:h-16 lg:h-20 xl:h-24 object-contain"
+					src="logo1.png"
+					alt="Logo"
+				/>
 			</div>
 			<div
-				class="button-height shadow border border-white justify-end items-center inline-flex ml-4 px-4"
+				class="mr-2 sm:mr-3 md:mr-4 lg:mr-4 h-10 sm:h-12 md:h-14 lg:h-16 xl:h-18 flex items-center shadow border border-white px-2 sm:px-3 md:px-4 lg:px-4"
 			>
-				<div class="px-8 justify-start items-center flex">
-					<button
-						class="text-white lg:text-base md:text-sm sm:text-xs shadow-lg font-normal mavenFont leading-normal tracking-tight"
-					>
-						Login
-					</button>
-				</div>
+				<button
+					class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl h-16 sm:h-14 md:h-16 lg:h-20 xl:h-24 text-white shadow-lg font-maven leading-normal tracking-tight px-2 sm:px-4 md:px-6 lg:px-8"
+				>
+					Login
+				</button>
 			</div>
 		</div>
 	</section>
-	<section id="Hero">
-		<div class="h-24 callToAction text-white mavenFont flex mt-10">
-			<div class="-mt-7">
-				<span class=" shadow-lg font-medium items-center xl:text-6xl lg:text-6xl md:text-5xl">
+
+	<section class="px-2 sm:px-4 md:px-8 lg:px-10">
+		<div class="text-black">Hello World</div>
+	</section>
+</div>
+
+<!--
+	<section id="Hero" class="mt-8">
+		<div class="h-24 text-white font-maven flex mt-10">
+			<div class="">
+				<span class="shadow-lg font-medium xl:text-6xl lg:text-6xl md:text-5xl">
 					Sharpen Your Insight.
 				</span>
 				<div class="mt-6">
-					<span class=" shadow-md font-thin">
+					<span class="shadow-md font-thin lg:text-2xl">
 						SourceChart processes gigabytes of data locally that moves as fast as you think.
 					</span>
 				</div>
-				<div class="flex items-center">
+				<div class="flex items-center mt-4 space-x-4">
 					<button
-						class="mt-4 bg-blue-700 border border-1 border-white p-4 text-white lg:text-base md:text-sm sm:text-xs shadow-lg font-normal mavenFont leading-normal tracking-tight"
+						class="bg-blue-700 border border-white px-4 py-2 text-white lg:text-base md:text-sm sm:text-xs shadow-lg leading-normal tracking-tight hover:bg-blue-800"
 					>
 						<span class="text-lg"> Sign Up </span>
 					</button>
 					<button
-						class="mt-4 text-white border border-1 border-white p-4 lg:text-base md:text-sm sm:text-xs shadow-lg font-normal mavenFont leading-normal tracking-tight"
+						class="text-white border border-white px-4 py-2 lg:text-base md:text-sm sm:text-xs shadow-lg leading-normal tracking-tight hover:bg-gray-700"
 					>
 						<span class="text-lg">Learn More</span>
 					</button>
@@ -50,7 +61,12 @@
 			</div>
 		</div>
 	</section>
-</div>
+	<section id="features" class="mt-8">
+		<div class="bg-gray-50">Hello world</div>
+	</section>
+	</div>
+
+	-->
 
 <link
 	rel="stylesheet"
@@ -58,73 +74,7 @@
 />
 
 <style>
-	.mavenFont {
+	.font-maven {
 		font-family: 'Maven Pro', sans-serif;
-	}
-	.backgroundColor {
-		background-color: #181818;
-	}
-	.generalPadding {
-		padding-top: 2%;
-		padding-left: 10%;
-		padding-right: 10%;
-	}
-	.navbar {
-		height: 80px;
-	}
-	.logo-size {
-		height: 56px;
-		width: auto;
-	}
-	.button-height {
-		height: 56px; /* Default to large size */
-		padding: 0 1rem; /* Adjust padding to match height */
-	}
-
-	.callToAction {
-		flex-direction: column; /* Default to column for mobile screens */
-	}
-
-	@media (min-width: 1025px) {
-		.callToAction {
-			flex-direction: row; /* Retain row display for larger screens */
-			margin-top: 20%;
-			align-items: center; /* Vertically center the items */
-		}
-		.callToAction > div.px-8.mt-0 {
-			margin-top: 10%; /* Reset the margin for larger screens */
-		}
-	}
-
-	/* For smaller screens */
-	@media (max-width: 640px) {
-		.callToAction > div {
-			margin-top: 10%; /* Give some top margin between elements */
-			text-align: center; /* Center the text */
-			font-size: 2rem /* 60px */;
-		}
-
-		/* Adjust Hero positioning for smaller screens */
-		.callToAction > div.px-8.mt-10 {
-			order: 4; /* Make Hero component appear last */
-		}
-
-		/* Adjust title positioning for smaller screens */
-		.callToAction > div > .text-6xl {
-			order: 1; /* Make title appear first */
-			text-align: center;
-		}
-
-		/* Adjust subtitle positioning for smaller screens */
-		.callToAction > div > .mt-6 {
-			order: 2; /* Make subtitle appear second */
-			text-align: center;
-		}
-
-		/* Adjust buttons positioning for smaller screens */
-		.callToAction > div > .flex.items-center {
-			order: 3; /* Make buttons appear third */
-			justify-content: center; /* Center the buttons */
-		}
 	}
 </style>
