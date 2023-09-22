@@ -6,13 +6,10 @@
 	<section id="navbar" class="py-2 h-22 bg-[#121212] px-2 sm:px-4 md:px-8 lg:px-10">
 		<div class="navbar w-full flex justify-between items-center">
 			<div
-				class="ml-2 sm:ml-3 md:ml-4 lg:ml-4 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 min-w-60 max-w-200"
+				class="ml-2 sm:ml-3 md:ml-4 lg:ml-8 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 min-w-60 max-w-200 relative"
 			>
-				<img
-					class="w-full h-16 sm:h-14 md:h-16 lg:h-20 xl:h-24 object-contain"
-					src="logo1.png"
-					alt="Logo"
-				/>
+				<img class="w-34 h-10 absolute -mt-4 top-0 left-0" src="logo1.png" alt="Logo" />
+				<!-- Aspect ratio box: 1:1 -->
 			</div>
 			<div
 				class="mr-2 sm:mr-3 md:mr-4 lg:mr-4 h-10 sm:h-12 md:h-14 lg:h-16 xl:h-18 flex items-center shadow border border-white px-2 sm:px-4 md:px-6 lg:px-8"
@@ -26,7 +23,7 @@
 		</div>
 	</section>
 
-	<section class="px-2 sm:px-4 md:px-8 lg:px-10">
+	<section class="py-2 px-2 sm:px-4 md:px-8 lg:px-10">
 		<div class="text-black">Hello World</div>
 	</section>
 </div>
