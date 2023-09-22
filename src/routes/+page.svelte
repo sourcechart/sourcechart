@@ -2,6 +2,7 @@
 	import Arrow from '$lib/components/landing/homepage/icons/Arrow.svelte';
 	import Hand from '$lib/components/landing/homepage/icons/Hand.svelte';
 	import InfinityIcon from '$lib/components/landing/homepage/icons/InfinityIcon.svelte';
+	import { goto } from '$app/navigation';
 
 	let features = [
 		{
@@ -20,6 +21,10 @@
 			body: 'Data never leaves your computer. This ensures  that  your data stays private'
 		}
 	];
+
+	const enterFree = () => {
+		goto('/dashboard');
+	};
 </script>
 
 <div
@@ -30,22 +35,22 @@
 			<div
 				class="ml-2 sm:ml-3 md:ml-4 lg:ml-8 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 min-w-60 max-w-200 relative"
 			>
-				<img class="w-34 h-10 absolute -mt-4 top-0 left-0" src="logo1.png" alt="Logo" />
-				<!-- Aspect ratio box: 1:1 -->
+				<a href="/">
+					<img class="w-34 h-10 absolute -mt-4 top-0 left-0" src="logo1.png" alt="Logo" />
+					<!-- Aspect ratio box: 1:1 -->
+				</a>
 			</div>
-			<div class="mr-2 sm:mr-3 md:mr-4 lg:mr-4">
+			<div class="mr-2 sm:mr-3 md:mr-4 lg:mr-4 flex items-center flex-wrap h-10">
 				<button
-					class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl h-10 sm:h-14 md:h-16 lg:h-20 xl:h-24 text-neutral-300 hover:text-neutral-50 border border-neutral-300 hover:border-neutral-50 hover:bg-neutral-800 font-maven leading-normal tracking-tight xl:h-18 flex items-center shadow-lg px-2 sm:px-4 md:px-6 lg:px-8"
+					class="text-xs flex justify-center h-8 items-center sm:text-sm md:text-base lg:text-lg xl:text-xl w-20 sm:h-14 md:h-16 lg:h-20 xl:h-24 text-neutral-300 hover:text-neutral-50 hover:border-neutral-50 border hover:bg-neutral-800 border-neutral-300 font-maven leading-normal tracking-tight xl:h-18 shadow-lg px-2 sm:px-4 md:px-6 lg:px-8"
+					on:click={enterFree}
 				>
 					Login
 				</button>
 			</div>
 		</div>
 	</section>
-	<div
-		class="w-full h-full font-maven bg-gradient-to-br from-neutral-900 via-neutral-800 to-[#3e3e3e]"
-		style="background-image: url('backlighting.png');"
-	>
+	<div class="w-full h-full font-maven" style="background-image: url('backlighting.png');">
 		<section id="space" class="w-full h-20" />
 
 		<section class="sm:mt-32 h-4/5 py-4 px-2 sm:px-4 md:px-8 lg:px-10 mt-24 bg-center bg-cover">
@@ -61,17 +66,18 @@
 						</span>
 						<div class="mt-2 md:mt-4">
 							<span class="font-thin text-base sm:text-lg">
-								SourceChart processes gigabytes of data locally that moves as fast as you think.
+								SourceChart processes and visualizes gigabytes of data locally that moves as fast as
+								you think.
 							</span>
 						</div>
 						<div class="flex flex-wrap items-center mt-4 space-x-4">
 							<button
-								class="bg-blue-700 border border-white px-4 py-2 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-blue-800"
+								class="bg-blue-700 border border-white hover:border-neutral-50 hover:text-neutral-50 px-4 py-2 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-blue-600"
 							>
-								<span> Sign Up </span>
+								<span> Try Now </span>
 							</button>
 							<button
-								class="text-neutral-300 border border-white px-4 py-2 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-gray-700"
+								class="text-neutral-300 border border-white px-4 py-2 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-neutral-800 hover:text-neutral-50 hover:border-neutral-50"
 							>
 								<span>Learn More</span>
 							</button>
@@ -135,9 +141,9 @@
 				</div>
 			</div>
 		</section>
-		<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10" />
-		<footer class="justify-center flex bg-neutral-800">
-			<div class="legal-section">
+		<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10 bg-neutral-900" />
+		<footer class="justify-center flex bg-neutral-900 h-16">
+			<div class="legal-section text-sm space-x-3">
 				<a href="/privacy-policy">Privacy Policy</a>
 				<a href="/terms-and-conditions">Terms and Conditions</a>
 				<a href="/disclaimer"> Disclaimer</a>
