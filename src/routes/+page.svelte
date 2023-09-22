@@ -15,7 +15,7 @@
 				/>
 			</div>
 			<div
-				class="mr-2 sm:mr-3 md:mr-4 lg:mr-4 h-10 sm:h-12 md:h-14 lg:h-16 xl:h-18 flex items-center shadow border border-white px-2 sm:px-3 md:px-4 lg:px-4"
+				class="mr-2 sm:mr-3 md:mr-4 lg:mr-4 h-10 sm:h-12 md:h-14 lg:h-16 xl:h-18 flex items-center shadow border border-white px-2 sm:px-4 md:px-6 lg:px-8"
 			>
 				<button
 					class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl h-16 sm:h-14 md:h-16 lg:h-20 xl:h-24 text-white shadow-lg font-maven leading-normal tracking-tight px-2 sm:px-4 md:px-6 lg:px-8"
