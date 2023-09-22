@@ -43,8 +43,8 @@
 			</div>
 		</div>
 	</section>
-	<section id="space" class=" w-full" />
-	<section class="sm:mt-32 min-h-screen py-4 px-2 sm:px-4 md:px-8 lg:px-10">
+	<section id="space" class="w-full h-20" />
+	<section class="sm:mt-32 h-4/5 py-4 px-2 sm:px-4 md:px-8 lg:px-10 mt-24">
 		<div
 			class="text-white flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
 		>
@@ -82,23 +82,25 @@
 		</div>
 	</section>
 
-	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10">
+	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10 mt-16">
 		<div
-			class="text-white flex flex-col items-center space-y-4 md:space-y-8 lg:space-y-10 px-2 sm:px-4 md:px-8 lg:px-10"
+			class="text-white flex flex-col items-center justify-center space-y-4 md:space-y-8 lg:space-y-10 px-2 sm:px-4 md:px-8 lg:px-10"
 		>
 			<!-- Features Text and Subtext -->
 			<div class="flex flex-col items-center text-center space-y-2 w-full">
-				<span class="text-4xl">Features</span>
+				<span class="text-5xl">Features</span>
 				<span class="font-thin text-base sm:text-lg w-2/3">
 					Most dashboards are designed for data visualization and monitoring purposes. SourceChart
 					is designed to find insights.
 				</span>
 			</div>
 
-			<div class="flex flex-col space-y-4 md:space-y-0 md:space-x-6 lg:space-x-8 w-full">
+			<div
+				class="flex flex-col space-y-4 md:space-y-0 md:space-x-6 lg:space-x-8 w-full justify-evenly"
+			>
 				<!-- Video Container -->
 				<div
-					class="flex-shrink-0 video-container overflow-hidden max-w-full md:max-w-none mb-4 md:mb-0"
+					class="flex flex-shrink-0 video-container overflow-hidden max-w-full md:max-w-none mb-4 md:mb-0 justify-center items-center"
 				>
 					<video autoplay loop muted class="video-style w-full">
 						<source src="demoMP4.mp4" type="video/mp4" />
@@ -107,27 +109,30 @@
 				</div>
 
 				<!-- Features Container -->
-				<div
-					class="flex flex-wrap justify-center md:justify-start items-start space-y-4 md:space-y-0 md:space-x-4 w-full"
-				>
-					{#each features as feature}
-						<div class="w-full md:w-96 p-4 bg-neutral-800 text-white rounded-md">
-							<div class="flex items-start space-x-4">
-								<svelte:component this={feature.component} />
-								<span class="text-xl font-semibold">{feature.header}</span>
+				<div class="justify-center mr-8 flex">
+					<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full mt-10">
+						{#each features as feature}
+							<div
+								class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-96 p-4 h-full md:h-96 bg-neutral-800 text-white rounded-md"
+							>
+								<div class="flex flex-col items-start space-y-2">
+									<svelte:component this={feature.component} />
+									<span class="text-xl font-semibold">{feature.header}</span>
+								</div>
+								<div class="mt-2">
+									<span class="text-base">{feature.body}</span>
+								</div>
 							</div>
-							<div class="mt-2">
-								<span class="text-base">{feature.body}</span>
-							</div>
-						</div>
-					{/each}
+						{/each}
+					</div>
 				</div>
 			</div>
 		</div>
 	</section>
+
 	<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10" />
 </div>
-<footer class="justify-center flex bg-gradient-to-b from-[#3e3e3e] via-neutral-800 to-[#3e3e3e]">
+<footer class="justify-center flex bg-neutral-800">
 	<div class="legal-section">
 		<a href="/privacy-policy">Privacy Policy</a>
 		<a href="/terms-and-conditions">Terms and Conditions</a>
