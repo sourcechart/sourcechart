@@ -6,18 +6,19 @@
 	class="w-full h-full font-maven bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900"
 >
 	<!-- Navbar Section -->
-	<section id="navbar" class="py-2 h-22 px-4">
+	<section id="navbar" class="py-2 h-22 px-2 sm:px-4 md:px-8 lg:px-10">
 		<div class="navbar w-full flex justify-between items-center">
-			<!-- Logo Section -->
-			<div class="flex-shrink-0 relative ml-4 w-40">
+			<div
+				class="ml-2 sm:ml-3 md:ml-4 lg:ml-8 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 min-w-60 max-w-200 relative"
+			>
 				<a href="/">
-					<img class="w-full h-auto" src="logo1.png" alt="Logo" />
+					<img class="w-34 h-10 absolute -mt-4 top-0 left-0" src="logo1.png" alt="Logo" />
+					<!-- Aspect ratio box: 1:1 -->
 				</a>
 			</div>
-			<!-- Login Button -->
-			<div class="mr-4">
+			<div class="mr-2 sm:mr-3 md:mr-4 lg:mr-4 flex items-center flex-wrap h-10">
 				<button
-					class="text-base h-12 px-4 border-neutral-300 text-neutral-300 hover:text-neutral-50 hover:border-neutral-50 hover:bg-neutral-800 font-maven shadow-md"
+					class="text-xs flex justify-center h-8 items-center sm:text-sm md:text-base lg:text-lg xl:text-xl w-20 sm:h-14 md:h-16 lg:h-20 xl:h-24 text-neutral-300 hover:text-neutral-50 hover:border-neutral-50 border hover:bg-neutral-800 border-neutral-300 font-maven leading-normal tracking-tight xl:h-18 shadow-lg px-2 sm:px-4 md:px-6 lg:px-8"
 					on:click={() => {
 						goto('/dashboard');
 					}}

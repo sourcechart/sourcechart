@@ -26,31 +26,25 @@
 <div
 	class="w-full h-full font-maven bg-gradient-to-br from-neutral-900 via-neutral-800 to-[#3e3e3e]"
 >
-	<section id="navbar" class="py-2 h-22 px-2 sm:px-4 md:px-8 lg:px-10">
-		<div class="navbar w-full flex justify-between items-center">
-			<div
-				class="ml-2 sm:ml-3 md:ml-4 lg:ml-8 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 min-w-60 max-w-200 relative"
-			>
-				<a href="/">
-					<img class="w-34 h-10 absolute -mt-4 top-0 left-0" src="logo1.png" alt="Logo" />
-					<!-- Aspect ratio box: 1:1 -->
-				</a>
-			</div>
-			<div class="mr-2 sm:mr-3 md:mr-4 lg:mr-4 flex items-center flex-wrap h-10">
-				<button
-					class="text-xs flex justify-center h-8 items-center sm:text-sm md:text-base lg:text-lg xl:text-xl w-20 sm:h-14 md:h-16 lg:h-20 xl:h-24 text-neutral-300 hover:text-neutral-50 hover:border-neutral-50 border hover:bg-neutral-800 border-neutral-300 font-maven leading-normal tracking-tight xl:h-18 shadow-lg px-2 sm:px-4 md:px-6 lg:px-8"
-					on:click={() => {
-						goto('/dashboard');
-					}}
-				>
-					Login
-				</button>
-			</div>
-		</div>
+	<!-- NavBar -->
+	<section id="navbar" class="py-4 px-6 flex justify-between items-center">
+		<a href="/" class="w-36">
+			<img src="logo1.png" alt="Logo" class="w-full h-auto" />
+		</a>
+		<button
+			class="text-neutral-300 bg-transparent border border-gray-400 hover:border-neutral-50 px-4 py-2 text-sm font-medium hover:bg-neutral-700"
+			on:click={() => goto('/dashboard')}
+		>
+			Login
+		</button>
 	</section>
-	<div class="w-full h-full font-maven" style="background-image: url('backlighting.png');">
-		<section id="space" class="w-full h-20" />
 
+	<!-- Main Content -->
+	<div
+		class="relative w-full h-full py-16 px-6"
+		style="background-image: url('backlighting.png'); background-size: cover; background-repeat: no-repeat;"
+	>
+		<!-- Hero Section -->
 		<section class="sm:mt-32 h-4/5 py-4 px-2 sm:px-4 md:px-8 lg:px-10 mt-24 bg-center bg-cover">
 			<div
 				class="text-white flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
@@ -95,64 +89,46 @@
 			</div>
 		</section>
 
-		<section class="sm:mt-32 h-4/5 py-4 px-2 sm:px-4 md:px-8 lg:px-10 mt-24">
-			<div
-				class="text-neutral-300 flex flex-col items-center justify-center space-y-4 md:space-y-8 lg:space-y-10 px-2 sm:px-4 md:px-8 lg:px-10"
-			>
-				<!-- Features Text and Subtext -->
-				<div class="flex flex-col items-center text-center space-y-2 w-full">
-					<span class="text-5xl">Features</span>
-					<span class="font-thin text-base sm:text-lg w-2/3">
-						Most dashboards are designed for data visualization and monitoring purposes. SourceChart
-						is designed to find insights.
-					</span>
-				</div>
-
-				<div
-					class="flex flex-col space-y-4 md:space-y-0 md:space-x-6 lg:space-x-8 w-full justify-evenly"
-				>
-					<!-- Video Container -->
-					<div
-						class="flex flex-shrink-0 video-container overflow-hidden max-w-full md:max-w-none mb-4 md:mb-0 justify-center items-center"
-					>
-						<video autoplay loop muted class="video-style w-full">
-							<source src="demoMP4.mp4" type="video/mp4" />
-							Your browser does not support the video tag.
-						</video>
+		<!-- Features Section -->
+		<section class="mb-24">
+			<h2 class="text-center text-4xl text-gray-300 mb-8">Features</h2>
+			<p class="text-center text-gray-400 mb-16">
+				Most dashboards are designed for data visualization and monitoring purposes. SourceChart is
+				designed to find insights.
+			</p>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+				{#each features as feature}
+					<div class="bg-neutral-800 p-6 rounded-lg space-y-4 text-white mb-4">
+						<svelte:component this={feature.component} />
+						<h3 class="text-2xl text-white">{feature.header}</h3>
+						<p class="text-gray-400">{feature.body}</p>
 					</div>
-
-					<!-- Features Container -->
-					<div class="justify-center flex">
-						<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full mt-10">
-							{#each features as feature}
-								<div
-									class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-96 p-4 h-full md:h-96 bg-neutral-800 text-neutral-300 rounded-md"
-								>
-									<div class="flex items-center space-x-2">
-										<svelte:component this={feature.component} />
-										<span class="text-xl font-semibold">{feature.header}</span>
-									</div>
-									<div class="mt-2">
-										<span class="text-base">{feature.body}</span>
-									</div>
-								</div>
-							{/each}
-						</div>
-					</div>
-				</div>
+				{/each}
 			</div>
 		</section>
-		<section class="py-4 px-2 sm:px-4 md:px-8 lg:px-10 bg-neutral-900" />
-		<footer class="justify-center flex bg-neutral-900 h-16">
-			<div class="legal-section text-sm space-x-3">
-				<a href="/privacy-policy">Privacy Policy</a>
-				<a href="/terms-and-conditions">Terms and Conditions</a>
-				<a href="/disclaimer"> Disclaimer</a>
+
+		<!-- Video Section -->
+		<section class="mb-24">
+			<div class="flex justify-center items-center rounded-lg overflow-hidden">
+				<video autoplay loop muted class="max-w-full h-auto">
+					<source src="demoMP4.mp4" type="video/mp4" />
+					Your browser does not support the video tag.
+				</video>
 			</div>
-		</footer>
+		</section>
 	</div>
+
+	<!-- Footer -->
+	<footer class="bg-neutral-900 py-4">
+		<div class="text-center text-neutral-300 space-x-6">
+			<a href="/privacy-policy" class="hover:underline">Privacy Policy</a>
+			<a href="/terms-and-conditions" class="hover:underline">Terms and Conditions</a>
+			<a href="/disclaimer" class="hover:underline">Disclaimer</a>
+		</div>
+	</footer>
 </div>
 
+<!-- Font Link -->
 <link
 	rel="stylesheet"
 	href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;700&display=swap"
