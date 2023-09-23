@@ -73,9 +73,21 @@
 		}
 	}
 
-	const handleMouseDown = (e: MouseEvent): void => {
-		var x = e.clientX - offsetX + scrollX;
-		var y = e.clientY - offsetY + scrollY;
+	const handleMouseDown = (e: MouseEvent | TouchEvent): void => {
+		let x;
+		let y;
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+			e.stopPropagation();
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else if (e instanceof MouseEvent) {
+			x = e.clientX;
+			y = e.clientY;
+		} else {
+			return; // Not a MouseEvent or TouchEvent
+		}
+
 		startPosition = { x, y };
 
 		touchState.set('isTouching');
@@ -94,9 +106,24 @@
 		}
 	};
 
-	const handleMouseUp = (e: MouseEvent) => {
-		var x = e.clientX - offsetX + scrollX;
-		var y = e.clientY - offsetY + scrollY;
+	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
+		let x: number;
+		let y: number;
+
+		if (e instanceof MouseEvent) {
+			x = e.clientX;
+			y = e.clientY;
+		} else if (e instanceof TouchEvent) {
+			e.preventDefault();
+			e.stopPropagation();
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else {
+			return; // Not a MouseEvent or TouchEvent
+		}
+
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
 
 		if ($CANVASBEHAVIOR === 'isDrawing') {
 			let targetId = generateID();
@@ -117,11 +144,26 @@
 		navBarState.set('select');
 	};
 
-	const handleMouseMove = (e: MouseEvent) => {
-		if ($CANVASBEHAVIOR === 'isHovering') {
-			handleMouseMoveUp(e.clientX, e.clientY);
+	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+		let x: number;
+		let y: number;
+
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+			e.stopPropagation();
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else if (e instanceof MouseEvent) {
+			x = e.clientX;
+			y = e.clientY;
 		} else {
-			handleMouseMoveDown(e.clientX, e.clientY);
+			return; // Not a MouseEvent or TouchEvent
+		}
+
+		if ($CANVASBEHAVIOR === 'isHovering') {
+			handleMouseMoveUp(x, y);
+		} else {
+			handleMouseMoveDown(x, y);
 		}
 	};
 

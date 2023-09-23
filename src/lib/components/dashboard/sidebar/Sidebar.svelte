@@ -15,16 +15,16 @@
 {#if $activeSidebar}
 	<div
 		use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
-		class=" bg-neutral-900 fixed overflow-hidden h-3/4 w-64 rounded-md shadow-lg"
+		class=" bg-neutral-800 border border-1 border-black fixed overflow-hidden h-3/4 w-72 rounded-md shadow-lg"
 	>
-		<div class="overflow-y-auto sidebar-inner w-full h-full p-1">
+		<div class="overflow-y-auto sidebar-inner w-full h-full p-1 py-8">
 			<div class="mb-4">
 				<div
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
 					<span class="mr-4 text-sm">Upload Files</span>
 				</div>
-				<div class="rounded-t-none selectedButtonColor">
+				<div class="rounded-t-none bg-neutral-800">
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4 shadow-md"
 					>
@@ -34,11 +34,11 @@
 			</div>
 			<div class="mb-4">
 				<div
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 bg-neutral-800"
 				>
-					<span class="mr-4 text-sm">Choose Dataset</span>
+					<span class="mr-4 text-sm font-thin font-serif">Choose Dataset</span>
 				</div>
-				<div class="rounded-t-none selectedButtonColor">
+				<div class="rounded-t-none selectedButtonColor bg-neutral-800">
 					<div
 						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4 shadow-md"
 					>
@@ -48,9 +48,9 @@
 			</div>
 			<div class="mb-4">
 				<div
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
+					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 bg-neutral-800"
 				>
-					<span class="mr-4 text-sm">Chart</span>
+					<span class="mr-4 text-sm font-thin font-serif">Chart</span>
 				</div>
 				<div class="rounded-t-none selectedButtonColor">
 					<div
@@ -64,7 +64,7 @@
 				<div
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
 				>
-					<span class="mr-4 text-sm">Axis</span>
+					<span class="mr-4 text-sm font-thin font-serif">Axis</span>
 				</div>
 				<div class="rounded-t-none selectedButtonColor">
 					<div

@@ -75,7 +75,7 @@
 	});
 </script>
 
-<div class="w-full px-4 py-2 rounded-sm relative selectFieldColor">
+<div class="w-full px-4 py-2 rounded-sm relative bg-neutral-900">
 	<div class="flex-grow">
 		<span class="text-sm"> X Axis </span>
 		<button

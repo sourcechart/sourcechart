@@ -78,7 +78,7 @@
 	});
 </script>
 
-<div class="w-full p-4 rounded-sm relative selectFieldColor">
+<div class="w-full p-4 rounded-sm relative bg-neutral-900">
 	<div class="flex justify-between items-center">
 		<button
 			bind:this={dropdownContainer}

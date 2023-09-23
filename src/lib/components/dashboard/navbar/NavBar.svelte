@@ -3,6 +3,7 @@
 <script lang="ts">
 	import { Cursor, Rectangle, Eraser, Arrow } from './navbar-icons';
 	import { navBarState, keyPress } from '$lib/io/Stores';
+	let activeIndex: number | null = null;
 
 	let icons: { name: string; mode: NavBar; component: any; index: number }[] = [
 		{
@@ -35,8 +36,6 @@
 		navBarState.set(mode);
 		activeIndex = clickedIndex;
 	};
-
-	let activeIndex: number | null = null;
 
 	$: if ($keyPress !== null) {
 		activeIndex = parseInt($keyPress);

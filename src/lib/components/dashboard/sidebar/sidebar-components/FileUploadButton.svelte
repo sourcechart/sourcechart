@@ -12,7 +12,7 @@
 </script>
 
 <button
-	class="block w-full selectFieldColor text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+	class="block w-full bg-neutral-900 text-left px-3 py-2 dark:text-black hover:bg-gray-200"
 	on:click={handleClick}
 >
 	<div class="flex justify-between items-center w-full">

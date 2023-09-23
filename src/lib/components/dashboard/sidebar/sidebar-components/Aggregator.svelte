@@ -77,7 +77,7 @@
 
 <!-- Dropdown Button for Aggregators -->
 
-<div class="w-full p-4 rounded-sm relative selectFieldColor">
+<div class="w-full p-4 rounded-sm relative bg-neutral-900">
 	<button
 		bind:this={dropdownContainer}
 		class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
@@ -89,7 +89,7 @@
 	{#if isAggDropdownOpen}
 		<button
 			class={`
-            scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
+            scrollBarDiv bg-neutral-900 absolute top-full w-full mt-2 border
             rounded shadow-lg transform transition-transform 
             origin-top overflow-y-auto overflow-x-hidden z-10 h-48
             ${isAggDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
