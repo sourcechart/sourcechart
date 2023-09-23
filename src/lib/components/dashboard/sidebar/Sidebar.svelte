@@ -13,8 +13,11 @@
 </script>
 
 {#if $activeSidebar}
-	<div use:clickInside={{ clickInside: () => ($activeSidebar = true) }} class="sidebar-outer">
-		<div class="sidebar-inner">
+	<div
+		use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
+		class=" bg-neutral-900 fixed overflow-hidden h-3/4 w-64 rounded-md shadow-lg"
+	>
+		<div class="overflow-y-auto sidebar-inner w-full h-full p-1">
 			<div class="mb-4">
 				<div
 					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
@@ -134,23 +137,6 @@
 {/if}
 
 <style>
-	.sidebar-outer {
-		position: fixed;
-		width: 250px;
-		overflow: hidden;
-		height: 75vh;
-		background-color: #262627;
-		border-radius: 8px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-	}
-
-	.sidebar-inner {
-		width: 100%;
-		height: 100%;
-		overflow-y: auto;
-		padding: 1rem;
-	}
-
 	/* Scrollbar styles */
 	.sidebar-inner::-webkit-scrollbar {
 		width: 4px;

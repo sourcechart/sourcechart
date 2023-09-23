@@ -19,25 +19,6 @@
 	let syncWorker: Worker | undefined = undefined;
 	$: i = clickedChartIndex();
 
-	function queryWorker(chart: Chart): Promise<void> {
-		return new Promise((resolve, reject) => {
-			if (syncWorker) {
-				syncWorker.postMessage({
-					message: 'query',
-					filename: chart.filename
-				});
-
-				syncWorker.onmessage = (e: MessageEvent) => {
-					// Process the message
-					onWorkerMessage(e);
-					resolve();
-				};
-			} else {
-				reject(new Error('Worker not initialized'));
-			}
-		});
-	}
-
 	const queryDuckDB = async (dataObject: DataObject) => {
 		const db = await DuckDBClient.of([dataObject]);
 		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
@@ -53,26 +34,11 @@
 		});
 	};
 
-	const onWorkerMessage = (e: MessageEvent) => {
-		var arrayBuffer = hexToBuffer(e.data.hexadecimal);
-		var dataObject = {
-			buffer: arrayBuffer,
-			filename: e.data.filename
-		};
-		queryDuckDB(dataObject);
-	};
-
-	const loadWorker = async () => {
-		const SyncWorker = await import('$lib/io/web.worker?worker');
-		syncWorker = new SyncWorker.default();
-	};
-
 	const loadPreviousState = async () => {
 		if ($allCharts.length === 0) return;
 
-		await loadWorker();
 		for (const chart of $allCharts) {
-			await queryWorker(chart);
+			break; //queryWorker(chart);
 		}
 	};
 
@@ -94,7 +60,7 @@
 </script>
 
 <div class="no-scroll">
-	<div class="flex justify-center items-center mt-6 z-30">
+	<div class="flex justify-center items-center fixed top-4 left-1/2 -translate-x-1/2 z-30">
 		<NavBar />
 	</div>
 	<div class="absolute z-30 ml-6 mt-6">

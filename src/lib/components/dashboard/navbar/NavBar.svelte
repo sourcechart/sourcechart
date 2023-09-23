@@ -55,9 +55,7 @@
 	}
 </script>
 
-<div
-	class="rounded-md fixed inset-x-0 top-4 z-50 flex h-10 items-center justify-center background shadow-lg"
->
+<div class="flex justify-center h-10 w-52 items-center rounded-md shadow-lg bg-neutral-800">
 	<div class="flex items-center justify-center space-x-4 ml-1 mr-1">
 		{#each icons as { name, component, index, mode } (name)}
 			<div
@@ -80,9 +78,6 @@
 </div>
 
 <style>
-	.background {
-		background-color: #262627;
-	}
 	.selected {
 		background-color: #9d99dc77;
 	}

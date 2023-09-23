@@ -58,24 +58,20 @@
 				class="text-white flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
 			>
 				<div class="mb-4 md:mb-0 space-y-4">
-					<div class="flex flex-col items-start shadow">
-						<div class="flex flex-col items-start shadow">
-							<div class="flex flex-col items-start">
-								<span
-									id="title"
-									class="font-medium block text-4xl md:text-5xl lg:text-6xl xl:text-7xl flex-shrink-0"
-								>
-									Cut through the noise.
-								</span>
-								<span
-									id="subtext"
-									class="font-thin text-sm md:text-base lg:text-lg mt-2 md:mt-4 flex-grow"
-								>
-									SourceChart processes and visualizes gigabytes of data <br /> locally that moves as
-									fast as you think.
-								</span>
-							</div>
-						</div>
+					<div class="flex flex-col items-start">
+						<span
+							id="title"
+							class="font-medium block text-4xl md:text-5xl lg:text-6xl xl:text-7xl flex-shrink-0"
+						>
+							Cut through the noise.
+						</span>
+						<span
+							id="subtext"
+							class="font-thin text-sm md:text-base lg:text-lg mt-2 md:mt-4 flex-grow"
+						>
+							SourceChart processes and visualizes gigabytes of data <br /> locally that moves as fast
+							as you think.
+						</span>
 
 						<div class="flex flex-wrap items-center mt-4 space-x-4">
 							<button
@@ -126,7 +122,7 @@
 				{/each}
 			</div>
 		</section>
-		<div class="h-24" id="space" />
+		<div class="h-20" id="space" />
 
 		<!-- Video Section -->
 		<section>
@@ -158,7 +154,7 @@
 			</div>
 
 			<!-- Space between the sections -->
-			<div class="h-24 w-full" />
+			<div class="h-20 w-full" />
 			<!-- Space between the sections -->
 
 			<div
@@ -175,7 +171,7 @@
 			</div>
 		</section>
 
-		<div class="h-24 w-full" />
+		<div class="h-20 w-full" />
 
 		<!-- CTA Section -->
 		<section id="JoinUs" class="h-4/5 py-4 px-4 mt-24 text-center">
