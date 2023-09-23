@@ -78,14 +78,14 @@
 	});
 </script>
 
-<div class="w-full p-4 rounded-sm relative bg-neutral-900">
+<div class="w-full p-4 rounded-sm relative">
 	<div class="flex justify-between items-center">
 		<button
 			bind:this={dropdownContainer}
-			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			class="bg-neutral-950/80 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 			on:click={toggleChartDropdown}
 		>
-			<span class="text-sm ml-2">
+			<span class="text-sm ml-2 text-gray-100">
 				{chosenPlot}
 			</span>
 		</button>
@@ -112,10 +112,6 @@
 </div>
 
 <style>
-	.selectFieldColor {
-		background-color: #33333d;
-	}
-
 	.scrollBarDiv::-webkit-scrollbar {
 		width: 8px;
 	}
@@ -133,9 +129,5 @@
 	.scrollBarDiv {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
-	}
-
-	.selectFieldColor {
-		background-color: #33333d;
 	}
 </style>

@@ -131,10 +131,10 @@
 	<div class="flex justify-between items-center">
 		<button
 			bind:this={dropdownContainer}
-			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			class="bg-black/50 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 			on:click={toggleDropdown}
 		>
-			<span class="text-sm ml-2">
+			<span class="text-sm ml-2 text-slate-50">
 				{selectedDataset}
 			</span>
 		</button>

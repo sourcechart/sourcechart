@@ -17,121 +17,19 @@
 		use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
 		class=" bg-neutral-800 border border-1 border-black fixed overflow-hidden h-3/4 w-72 rounded-md shadow-lg"
 	>
-		<div class="overflow-y-auto sidebar-inner w-full h-full p-1 py-8">
-			<div class="mb-4">
-				<div
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
-				>
-					<span class="mr-4 text-sm">Upload Files</span>
-				</div>
-				<div class="rounded-t-none bg-neutral-800">
-					<div
-						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4 shadow-md"
-					>
-						<FileUploadButton />
-					</div>
-				</div>
-			</div>
-			<div class="mb-4">
-				<div
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 bg-neutral-800"
-				>
-					<span class="mr-4 text-sm font-thin font-serif">Choose Dataset</span>
-				</div>
-				<div class="rounded-t-none selectedButtonColor bg-neutral-800">
-					<div
-						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4 shadow-md"
-					>
-						<DatasetDropDown />
-					</div>
-				</div>
-			</div>
-			<div class="mb-4">
-				<div
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100 bg-neutral-800"
-				>
-					<span class="mr-4 text-sm font-thin font-serif">Chart</span>
-				</div>
-				<div class="rounded-t-none selectedButtonColor">
-					<div
-						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4 shadow-md"
-					>
-						<ChartDropdown sideBarVersion={'LowCode'} />
-					</div>
-				</div>
-			</div>
-			<div class="mb-4">
-				<div
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
-				>
-					<span class="mr-4 text-sm font-thin font-serif">Axis</span>
-				</div>
-				<div class="rounded-t-none selectedButtonColor">
-					<div
-						class="text-left font-medium text-gray-400 flex items-center justify-between space-x-4"
-					>
-						<ColumnDropDown />
-					</div>
-				</div>
-			</div>
-			<div class="mb-4">
-				<div class="w-full flex items-center justify-between text-gray-300 hover:text-gray-100">
-					<span class="mr-4 text-sm">Groupby</span>
-				</div>
-				<div class="font-medium text-gray-400 w-full justify-items-center shadow-md">
-					<Groupby />
-				</div>
-			</div>
-
-			<div class="mb-4">
-				<div
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
-				>
-					<span class="mr-4 text-sm">Aggregator</span>
-				</div>
-
-				<div class="rounded-t-none selectedButtonColor">
-					<div class="w-full font-medium text-gray-400 flex items-center justify-between shadow-md">
-						<Aggregator />
-					</div>
-				</div>
-			</div>
-
-			<!-- Filter -->
-			<div class="mb-4">
-				<div
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
-				>
-					<span class="mr-4 text-sm">Filters</span>
-				</div>
-				<div class="w-full font-medium">
-					<AddFilter />
-				</div>
-			</div>
-
-			<div class="mb-4">
-				<div
-					class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
-				>
-					<span class="mr-4 text-sm">Export</span>
-				</div>
-				<div class="w-full font-medium">
-					<ExportToCSV />
-				</div>
-				<!--
-				<div class="mb-4">
-					<div
-						class="w-full flex items-center justify-between text-xl text-gray-300 hover:text-gray-100"
-					>
-						<span class="mr-4 text-sm">Add Legend</span>
-					</div>
-					<div class="w-full font-medium">
-							<LegendColumn />
-					</div>
-
-				</div>
-				-->
-			</div>
+		<div
+			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full p-1 py-8 mb-2 divide-y"
+		>
+			<!-- Adjusted margins for larger spaces between dividers -->
+			<FileUploadButton />
+			<DatasetDropDown />
+			<ChartDropdown sideBarVersion={'LowCode'} />
+			<ColumnDropDown />
+			<Groupby />
+			<Aggregator />
+			<AddFilter />
+			<ExportToCSV />
+			<!-- Commented section can be added later if needed -->
 		</div>
 	</div>
 {/if}

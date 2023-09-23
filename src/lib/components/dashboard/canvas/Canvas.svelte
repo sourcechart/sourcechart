@@ -260,13 +260,16 @@
 	};
 </script>
 
-<div class="background">
+<div class="bg-neutral-950 w-full h-full top-0 left-0 fixed">
 	<div
 		class="h-full w-full"
 		style={`cursor: ${$mouseType};`}
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
+		on:touchstart={handleMouseDown}
+		on:touchmove={handleMouseMove}
+		on:touchend={handleMouseUp}
 	>
 		<div id="canvasParent">
 			{#if !$activeDropZone}
@@ -291,14 +294,3 @@
 		}
 	}}
 />
-
-<style>
-	.background {
-		background-color: #121212;
-		width: 100vw;
-		height: 100vh;
-		top: 0;
-		left: 0;
-		position: fixed;
-	}
-</style>

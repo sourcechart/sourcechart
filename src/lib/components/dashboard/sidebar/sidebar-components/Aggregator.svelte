@@ -77,7 +77,7 @@
 
 <!-- Dropdown Button for Aggregators -->
 
-<div class="w-full p-4 rounded-sm relative bg-neutral-900">
+<div class="w-full p-4 rounded-sm relative">
 	<button
 		bind:this={dropdownContainer}
 		class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
