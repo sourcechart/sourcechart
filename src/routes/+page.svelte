@@ -126,6 +126,7 @@
 				</video>
 			</div>
 		</section>
+
 		<div class="h-24" id="space" />
 
 		<!-- ABOUT US -->
@@ -145,6 +146,7 @@
 				</div>
 			</div>
 
+			<!-- Space between the sections -->
 			<div class="h-24 w-full" />
 			<!-- Space between the sections -->
 
@@ -163,6 +165,7 @@
 		</section>
 
 		<div class="h-24 w-full" />
+
 		<!-- CTA Section -->
 		<section id="JoinUs" class="h-4/5 py-4 px-4 mt-24 text-center">
 			<h2 class="text-2xl font-bold text-white mb-6">Ready to Dive In?</h2>
