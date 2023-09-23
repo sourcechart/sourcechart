@@ -4,6 +4,7 @@
 	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
 	import Download from '$lib/components/ui/icons/Download.svelte';
 	import Baseline from '$lib/components/ui/icons/Baseline.svelte';
+	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
 	//import LegendColumn from './sidebar-components/LegendColumn.svelte';
 	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
 	import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
@@ -25,7 +26,7 @@
 		>
 			<!-- Adjusted margins for larger spaces between dividers -->
 			<div class="py-2 px-3 w-full">
-				<div class="mt-3 px-1 flex flex-row items-center justify-between space-x-0">
+				<div class="mt-3 px-1 flex flex-row items-center justify-between space-x-2">
 					<span class="text-sm text-neutral-300">Dataset</span>
 
 					<DatasetDropDown />
@@ -40,8 +41,18 @@
 						<button><span class="text-xs text-neutral-300">stand in drop down</span> </button>
 					</div>
 				</div>
-				<div class="mt-3 px-1"><span class="text-sm text-neutral-300">Groupby</span></div>
-				<div class="mt-3 px-1"><span class="text-sm text-neutral-300">Aggregator</span></div>
+				<div class="mt-3 px-1">
+					<div class="flex justify-between items-center">
+						<span class="text-xs text-neutral-300">Groupby </span>
+						<CarrotDown />
+					</div>
+				</div>
+				<div class="mt-3 px-1">
+					<div class="flex justify-between items-center">
+						<span class="text-sm text-neutral-300">Aggregator</span>
+						<CarrotDown />
+					</div>
+				</div>
 			</div>
 			<!--Filters-->
 			<div class="py-2 px-3 hover:bg-[#303030]">

@@ -128,13 +128,14 @@
 
 <button
 	bind:this={dropdownContainer}
-	class="w-full border border-1 border-neutral-700 hover:bg-neutral-600 flex-grow flex items-center"
+	class="w-full border border-1 border-neutral-700 hover:border-neutral-600 flex items-center justify-center"
 	on:click={toggleDropdown}
 >
-	<span class="text-sm ml-2 text-neutral-300">
+	<span class="text-sm text-neutral-300 hover:text-neutral-200">
 		{selectedDataset}
 	</span>
 </button>
+
 {#if isDropdownOpen}
 	<button
 		class={`
