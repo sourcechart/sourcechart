@@ -21,10 +21,6 @@
 			body: 'Data never leaves your computer. This ensures  that  your data stays private'
 		}
 	];
-
-	const enterFree = () => {
-		goto('/dashboard');
-	};
 </script>
 
 <div
@@ -43,7 +39,9 @@
 			<div class="mr-2 sm:mr-3 md:mr-4 lg:mr-4 flex items-center flex-wrap h-10">
 				<button
 					class="text-xs flex justify-center h-8 items-center sm:text-sm md:text-base lg:text-lg xl:text-xl w-20 sm:h-14 md:h-16 lg:h-20 xl:h-24 text-neutral-300 hover:text-neutral-50 hover:border-neutral-50 border hover:bg-neutral-800 border-neutral-300 font-maven leading-normal tracking-tight xl:h-18 shadow-lg px-2 sm:px-4 md:px-6 lg:px-8"
-					on:click={enterFree}
+					on:click={() => {
+						goto('/dashboard');
+					}}
 				>
 					Login
 				</button>
@@ -78,6 +76,9 @@
 							</button>
 							<button
 								class="text-neutral-300 border border-white px-4 py-2 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-neutral-800 hover:text-neutral-50 hover:border-neutral-50"
+								on:click={() => {
+									goto('/about');
+								}}
 							>
 								<span>Learn More</span>
 							</button>
