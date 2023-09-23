@@ -28,11 +28,11 @@
 >
 	<!-- NavBar -->
 	<section id="navbar" class="py-4 px-6 flex justify-between items-center">
-		<a href="/" class="w-36">
+		<a href="/" class="w-48">
 			<img src="logo1.png" alt="Logo" class="w-full h-auto" />
 		</a>
 		<button
-			class="text-neutral-300 bg-transparent border border-gray-400 hover:border-neutral-50 px-4 py-2 text-sm font-medium hover:bg-neutral-700"
+			class="text-neutral-300 bg-transparent border border-gray-400 hover:border-neutral-50 px-12 py-3 text-sm font-medium hover:bg-neutral-700"
 			on:click={() => goto('/dashboard')}
 		>
 			Login
@@ -44,8 +44,9 @@
 		class="relative w-full h-full py-16 px-6"
 		style="background-image: url('backlighting.png'); background-size: cover; background-repeat: no-repeat;"
 	>
+		<div class="sm:mt-16" id="space" />
 		<!-- Hero Section -->
-		<section class="sm:mt-32 h-4/5 py-4 px-2 sm:px-4 md:px-8 lg:px-10 mt-24 bg-center bg-cover">
+		<section class=" h-4/5 py-4 px-2 sm:px-4 md:px-8 lg:px-10 bg-center bg-cover">
 			<div
 				class="text-white flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
 			>
@@ -70,11 +71,10 @@
 							</button>
 							<button
 								class="text-neutral-300 border border-white px-4 py-2 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-neutral-800 hover:text-neutral-50 hover:border-neutral-50"
-								on:click={() => {
-									goto('/about');
-								}}
 							>
-								<span>Learn More</span>
+								<a href="#features-section">
+									<span>Learn More</span>
+								</a>
 							</button>
 						</div>
 					</div>
@@ -88,9 +88,11 @@
 				</div>
 			</div>
 		</section>
+		<!--SPACE-->
+		<div class="h-24" id="space" />
 
 		<!-- Features Section -->
-		<section class="mb-24">
+		<section id="features-section">
 			<h2 class="text-center text-4xl text-gray-300 mb-8">Features</h2>
 			<p class="text-center text-gray-400 mb-16">
 				Most dashboards are designed for data visualization and monitoring purposes. SourceChart is
@@ -104,6 +106,42 @@
 						<p class="text-gray-400">{feature.body}</p>
 					</div>
 				{/each}
+			</div>
+		</section>
+		<!--SPACE-->
+		<div class="h-24" id="space" />
+		<!-- ABOUT US -->
+		<section id="about-us" class="h-4/5 py-4 px-4">
+			<h2 class="text-center text-4xl text-gray-300 mb-8">About Us</h2>
+
+			<div
+				class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-96 p-4 h-full md:h-96 bg-neutral-800 text-neutral-300 rounded-md"
+			>
+				<h1 class="text-3xl font-bold text-white mb-6">Mission</h1>
+				<div class="text-white ml-4 mr-4 leading-relaxed">
+					Created in 2023, we set out with a clear mission - to revolutionize the data processing
+					landscape. At SourceChart, we believe in security, speed, and clarity. Redefine your
+					understanding of data with our swift, lightweight tool, designed to offer in-browser
+					processing without compromise. As our commitment to you, we promise to move as fast as
+					your thoughts, ensuring your data remains anchored and your insights razor-sharp.
+				</div>
+			</div>
+		</section>
+		<div class="h-24 w-full" />
+
+		<!-- How it Works Section -->
+		<section class="mb-24">
+			<div
+				class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-96 p-4 h-full md:h-96 bg-neutral-800 text-neutral-300 rounded-md"
+			>
+				<h1 class="text-3xl font-bold text-white mb-6">How it Works</h1>
+				<div class="text-white ml-4 mr-4 leading-relaxed">
+					Our platform invites you to a realm of secure, in-browser data visualization. We
+					understand the essence of peace of mind - that's why your data never leaves your device.
+					Witness the magic as we transform raw data into captivating visual stories, all the while
+					ensuring seamless and secure handling. Supported by our robust hosting, we beckon you to
+					embark on a safer, streamlined visualization odyssey with us.
+				</div>
 			</div>
 		</section>
 
