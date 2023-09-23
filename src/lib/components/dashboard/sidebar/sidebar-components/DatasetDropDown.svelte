@@ -128,7 +128,7 @@
 
 <button
 	bind:this={dropdownContainer}
-	class="w-full border border-1 border-neutral-700 hover:border-neutral-600 flex items-center justify-center"
+	class="w-full border border-1 border-neutral-700 bg-[#27272a4c] hover:border-neutral-600 flex items-center justify-center"
 	on:click={toggleDropdown}
 >
 	<span class="text-sm text-neutral-300 hover:text-neutral-200">
@@ -180,6 +180,6 @@
 
 <style>
 	.selectFieldColor {
-		background-color: #33333d;
+		background-color: #27272a00;
 	}
 </style>
