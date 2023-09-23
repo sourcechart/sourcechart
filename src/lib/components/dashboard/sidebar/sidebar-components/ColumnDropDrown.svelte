@@ -76,16 +76,22 @@
 </script>
 
 <div class="w-full px-4 py-2 rounded-sm relative mb-4">
-	<span class="text-sm font-bold">Columns</span>
+	<div>
+		<button>
+			<span class="text-xs font-bold">Columns</span>
+		</button>
+	</div>
+
 	<div class="flex items-center space-x-2 mt-1">
 		<div class="flex-grow relative">
 			<button
 				bind:this={xDropdownContainer}
-				class="bg-gray-200 px-2 rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+				class=" w-full px-2 rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 				on:click={() => toggleDropdown('X')}
 			>
-				<span class="text-sm text-black"> X </span>
-				<span class="text-sm ml-2 text-slate-600"> {xAxisValue} </span>
+				<span class="text-sm text-slate-100"> X </span>
+				<span class="text-sm text-slate-100"> Schema </span>
+				<span class="text-sm ml-2 text-slate-100"> {yAxisValue} </span>
 			</button>
 
 			{#if xDropdownOpen}
@@ -110,12 +116,12 @@
 		<div class="flex-grow relative">
 			<button
 				bind:this={yDropdownContainer}
-				class="bg-gray-200 px-2 mr-2 rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+				class=" w-full px-2 mr-2 rounded-sm hover:bg-gray-300 flex-grow flex items-center shadow"
 				on:click={() => toggleDropdown('Y')}
 			>
-				<span class="text-sm text-black"> Y </span>
-
-				<span class="text-sm ml-2 text-slate-600"> {yAxisValue} </span>
+				<span class="text-sm text-slate-100"> Y </span>
+				<span class="text-sm text-slate-100"> Schema </span>
+				<span class="text-sm ml-2 text-slate-100"> {yAxisValue} </span>
 			</button>
 
 			{#if yDropdownOpen}
