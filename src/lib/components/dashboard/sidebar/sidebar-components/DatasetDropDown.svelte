@@ -9,8 +9,7 @@
 		fileUploadStore
 	} from '$lib/io/Stores';
 
-	import { CloseSolid } from 'flowbite-svelte-icons';
-
+	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
@@ -127,60 +126,56 @@
 	onMount(loadWorker);
 </script>
 
-<div class="w-full p-4 rounded-sm relative">
-	<div class="flex justify-between items-center">
-		<button
-			bind:this={dropdownContainer}
-			class="bg-black/50 w-full bg-gray-200 rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-			on:click={toggleDropdown}
-		>
-			<span class="text-sm ml-2 text-slate-600">
-				{selectedDataset}
-			</span>
-		</button>
-	</div>
-	{#if isDropdownOpen}
-		<button
-			class={`
+<button
+	bind:this={dropdownContainer}
+	class="w-full border border-1 border-neutral-700 hover:bg-neutral-600 flex-grow flex items-center"
+	on:click={toggleDropdown}
+>
+	<span class="text-sm ml-2 text-neutral-300">
+		{selectedDataset}
+	</span>
+</button>
+{#if isDropdownOpen}
+	<button
+		class={`
             scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
             rounded shadow-lg transform transition-transform 
             origin-top overflow-y-auto overflow-x-hidden z-10 
             ${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
-			on:click={() => (isDropdownOpen = false)}
-		>
-			{#each $datasets as dataset}
-				{#if dataset !== null}
-					<div class="flex justify-between items-center text-gray-400 relative selectFieldColor">
-						<div
-							class="text-left px-3 py-2 w-full bg-gray-900 dark:text-black hover:bg-gray-700 cursor-pointer truncate pr-8"
-							on:click={() => {
+		on:click={() => (isDropdownOpen = false)}
+	>
+		{#each $datasets as dataset}
+			{#if dataset !== null}
+				<div class="flex justify-between items-center text-gray-400 relative selectFieldColor">
+					<div
+						class="text-left px-3 py-2 w-full bg-gray-900 dark:text-black hover:bg-gray-700 cursor-pointer truncate pr-8"
+						on:click={() => {
+							selectFile(dataset);
+							isDropdownOpen = false;
+						}}
+						on:keypress={(event) => {
+							if (event.key === 'Enter') {
 								selectFile(dataset);
 								isDropdownOpen = false;
-							}}
-							on:keypress={(event) => {
-								if (event.key === 'Enter') {
-									selectFile(dataset);
-									isDropdownOpen = false;
-								}
-							}}
-						>
-							{dataset}
-						</div>
-						<button
-							class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
-							on:click={(event) => {
-								event.stopPropagation();
-								removeFileFromSqlite(dataset);
-							}}
-						>
-							<CloseSolid class="w-3 h-3 text-white dark:text-white" />
-						</button>
+							}
+						}}
+					>
+						{dataset}
 					</div>
-				{/if}
-			{/each}
-		</button>
-	{/if}
-</div>
+					<button
+						class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
+						on:click={(event) => {
+							event.stopPropagation();
+							removeFileFromSqlite(dataset);
+						}}
+					>
+						<CloseSolid class="w-3 h-3 text-white dark:text-white" />
+					</button>
+				</div>
+			{/if}
+		{/each}
+	</button>
+{/if}
 
 <style>
 	.selectFieldColor {

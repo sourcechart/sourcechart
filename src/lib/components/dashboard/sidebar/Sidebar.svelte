@@ -24,20 +24,26 @@
 			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-700/80"
 		>
 			<!-- Adjusted margins for larger spaces between dividers -->
-			<div class="py-2 px-3">
-				<button class="w-full">
-					<div class="flex justify-center space-x-4">
-						<div class="">
-							<span class="text-xs">X</span>
-							<button><span class="text-xs">stand in drop down</span> </button>
-						</div>
-						<div class="">
-							<span class="text-xs">Y</span>
-							<button><span class="text-xs">stand in drop down</span> </button>
-						</div>
+			<div class="py-2 px-3 w-full">
+				<div class="mt-3 px-1 flex flex-row items-center justify-between space-x-0">
+					<span class="text-sm text-neutral-300">Dataset</span>
+
+					<DatasetDropDown />
+				</div>
+				<div class="flex justify-center space-x-4">
+					<div class="">
+						<span class="text-sm text-neutral-300">X</span>
+						<button><span class="text-xs text-neutral-300">stand in drop down</span> </button>
 					</div>
-				</button>
+					<div class="">
+						<span class="text-sm text-neutral-300">Y</span>
+						<button><span class="text-xs text-neutral-300">stand in drop down</span> </button>
+					</div>
+				</div>
+				<div class="mt-3 px-1"><span class="text-sm text-neutral-300">Groupby</span></div>
+				<div class="mt-3 px-1"><span class="text-sm text-neutral-300">Aggregator</span></div>
 			</div>
+			<!--Filters-->
 			<div class="py-2 px-3 hover:bg-[#303030]">
 				<button class="w-full">
 					<div class="flex justify-between">
@@ -46,14 +52,16 @@
 					</div>
 				</button>
 			</div>
+			<!--Options-->
 			<div class="py-2 px-3 hover:bg-[#303030]">
 				<button class="w-full">
 					<div class="flex justify-between">
-						<span class="text-sm font-light text-neutral-300">Options</span>
+						<span class="text-sm font-light text-neutral-300">Chart Configuration</span>
 						<Baseline />
 					</div>
 				</button>
 			</div>
+			<!--Export-->
 			<div class="py-2 px-3 hover:bg-[#303030]">
 				<button class="w-full">
 					<div class="flex justify-between">
