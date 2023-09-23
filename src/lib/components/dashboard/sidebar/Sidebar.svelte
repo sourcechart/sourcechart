@@ -15,9 +15,11 @@
 {#if $activeSidebar}
 	<div
 		use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
-		class=" bg-neutral-800 border border-1 border-black fixed overflow-hidden h-3/4 w-72 rounded-md shadow-lg divide-y"
+		class=" bg-neutral-800 border border-1 border-black fixed overflow-hidden h-3/4 w-72 rounded-md shadow-lg"
 	>
-		<div class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full mt-2 mb-2 divide-y">
+		<div
+			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-400"
+		>
 			<!-- Adjusted margins for larger spaces between dividers -->
 			<FileUploadButton />
 			<DatasetDropDown />
