@@ -82,8 +82,8 @@
 				<div
 					class="mt-4 md:mt-0 flex-grow md:w-1/2 lg:w-2/5 xl:w-1/2 2xl:w-3/5 relative md:h-60 lg:h-1/3 xl:h-1/2 2xl:h-2/3 z-10"
 				>
-					<div class="w-full h-full z-10">
-						<img class="w-full h-full object-cover object-center z-10" src="hero2.png" alt="Logo" />
+					<div class="aspect-ratio-16-9">
+						<img class="object-cover object-center z-10" src="hero2.png" alt="Logo" />
 					</div>
 				</div>
 			</div>
@@ -171,3 +171,17 @@
 	rel="stylesheet"
 	href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;700&display=swap"
 />
+
+<style>
+	.aspect-ratio-16-9 {
+		padding-bottom: 66.66%;
+		position: relative;
+	}
+	.aspect-ratio-16-9 img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>
