@@ -87,7 +87,7 @@
 		class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 		on:click={toggleDropdown}
 	>
-		<span class="text-sm ml-2"> Fields </span>
+		<span class="text-sm ml-2 text-slate-600"> Fields </span>
 	</button>
 
 	{#if isGroupByOpen}

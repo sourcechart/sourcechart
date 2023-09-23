@@ -83,7 +83,7 @@
 		class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 		on:click={toggleAggDropdown}
 	>
-		<span class="text-sm ml-2"> Select Aggregator </span>
+		<span class="text-sm ml-2 text-slate-600"> Select Aggregator </span>
 	</button>
 
 	{#if isAggDropdownOpen}

@@ -82,10 +82,10 @@
 	<div class="flex justify-between items-center">
 		<button
 			bind:this={dropdownContainer}
-			class="bg-neutral-950/80 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			class="bg-neutral-950/80 w-full bg-gray-200 rounded-sm hover:bg-gray-300 flex-grow flex items-center"
 			on:click={toggleChartDropdown}
 		>
-			<span class="text-sm ml-2 text-gray-100">
+			<span class="text-sm ml-2 text-gray-500">
 				{chosenPlot}
 			</span>
 		</button>
