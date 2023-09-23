@@ -1,9 +1,10 @@
-<script>
+<script lang="ts">
 	import Arrow from '$lib/components/landing/homepage/icons/Arrow.svelte';
 	import Hand from '$lib/components/landing/homepage/icons/Hand.svelte';
 	import InfinityIcon from '$lib/components/landing/homepage/icons/InfinityIcon.svelte';
 	import Security from '$lib/components/landing/homepage/icons/Security.svelte';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	let features = [
 		{
@@ -27,13 +28,20 @@
 			body: 'Our platform is designed to handle large amounts of data. We are able to process gigabytes of data in seconds.'
 		}
 	];
+	onMount(() => {
+		const title = document.getElementById('title');
+		const subtext = document.getElementById('subtext');
+		if (!title || !subtext) return;
+		const titleWidth = title.offsetWidth;
+		subtext.style.maxWidth = titleWidth + 'px';
+	});
 </script>
 
 <div
 	class="w-full h-full font-maven bg-gradient-to-br bg-neutral-800 from-neutral-900 via-neutral-800 to-[#3e3e3e]"
 >
 	<!-- NavBar -->
-	<section id="navbar" class="py-4 px-6 flex justify-between items-center">
+	<section id="navbar" class="py-3 lg:px-32 sm:px-2 md:px-12 flex justify-between items-center">
 		<a href="/" class="w-48">
 			<img src="logo1.png" alt="Logo" class="w-full h-auto" />
 		</a>
@@ -47,7 +55,7 @@
 
 	<!-- Main Content -->
 	<div
-		class="relative w-full h-full py-16 px-6"
+		class="relative w-full h-full sm:px-6 md:px-10 lg:py-12 lg:px-28"
 		style="background-image: url('backlighting.png'); background-size: cover; background-repeat: no-repeat;"
 	>
 		<div class="sm:mt-16" id="space" />
@@ -58,28 +66,35 @@
 				class="text-white flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
 			>
 				<div class="mb-4 md:mb-0 space-y-4">
-					<div class="shadow-sm">
-						<span
-							class="font-medium block text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-6xl"
-						>
-							Cut through the noise.
-						</span>
-						<div class="mt-2 md:mt-4">
-							<span class="font-thin text-base sm:text-lg">
-								SourceChart processes and visualizes gigabytes of data locally that moves as fast as
-								you think.
-							</span>
+					<div class="flex flex-col items-start shadow">
+						<div class="flex flex-col items-start shadow">
+							<div class="flex flex-col items-start">
+								<span
+									id="title"
+									class="font-medium block text-4xl md:text-5xl lg:text-6xl xl:text-7xl flex-shrink-0"
+								>
+									Cut through the noise.
+								</span>
+								<span
+									id="subtext"
+									class="font-thin text-sm md:text-base lg:text-lg mt-2 md:mt-4 flex-grow"
+								>
+									SourceChart processes and visualizes gigabytes of data <br /> locally that moves as
+									fast as you think.
+								</span>
+							</div>
 						</div>
+
 						<div class="flex flex-wrap items-center mt-4 space-x-4">
 							<button
-								class="bg-purple-700 border border-white hover:border-neutral-50 hover:text-neutral-50 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-purple-600"
+								class="bg-purple-700 border border-white hover:border-neutral-50 hover:text-neutral-50 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-purple-600 transform transition-transform duration-300 ease-in-out hover:scale-105"
 							>
 								<span> Try Now </span>
 							</button>
 
 							<a href="#features-section">
 								<button
-									class="text-neutral-300 border border-white px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-neutral-800 hover:text-neutral-50 hover:border-neutral-50"
+									class="text-neutral-300 border border-white px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-neutral-800 hover:text-neutral-50 hover:border-neutral-50 transform transition-transform duration-300 ease-in-out hover:scale-105"
 								>
 									<span>Learn More</span>
 								</button>
@@ -87,9 +102,7 @@
 						</div>
 					</div>
 				</div>
-				<div
-					class="mt-4 md:mt-0 flex-grow md:w-1/2 lg:w-2/5 xl:w-1/2 2xl:w-3/5 relative md:h-60 lg:h-1/3 xl:h-1/2 2xl:h-2/3 z-10"
-				>
+				<div class="mt-4 md:mt-0 flex-grow md:w-3/5 lg:w-3/5 xl:w-1/2 2xl:w-3/5 relative z-10">
 					<div class="aspect-ratio-16-9">
 						<img
 							class="object-cover object-center z-10 transform transition-transform duration-300 ease-in-out hover:scale-105"
@@ -177,7 +190,7 @@
 			<h2 class="text-2xl font-bold text-white mb-6">Ready to Dive In?</h2>
 			<p class="text-white mb-6">Discover the difference. Join our community today.</p>
 			<button
-				class="text-lg h-14 px-8 border-neutral-300 text-neutral-300 hover:text-neutral-50 hover:border-neutral-50 hover:bg-neutral-800 font-maven shadow-md"
+				class="text-lg h-14 px-8 border-neutral-300 text-neutral-300 hover:text-neutral-50 hover:border-neutral-50 bg-purple-700 hover:bg-purple-600 font-maven shadow-md transform transition-transform duration-300 ease-in-out hover:scale-105"
 				on:click={() => {
 					goto('/dashboard');
 				}}
