@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getColumnsFromFile, clickedChartIndex, allCharts } from '$lib/io/Stores';
+	import ArrowDown from '$lib/components/ui/icons/ArrowDown.svelte';
 	import { onDestroy } from 'svelte';
 
 	let currentAxis = '';
@@ -9,6 +10,8 @@
 	let yDropdownOpen = false;
 	let xDropdownContainer: HTMLElement;
 	let yDropdownContainer: HTMLElement;
+
+	let showColumnDropdown = false;
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
@@ -75,75 +78,96 @@
 	});
 </script>
 
-<div class="w-full px-4 py-2 rounded-sm relative mb-4">
-	<div>
-		<button>
+<div class="w-full px-4 py-2 rounded-sm relative mb-4 font-mono">
+	<div class="flex justify-between">
+		<button
+			on:click={() => {
+				showColumnDropdown = !showColumnDropdown;
+			}}
+		>
 			<span class="text-xs font-bold">Columns</span>
 		</button>
+		<button
+			class=""
+			on:click={() => {
+				showColumnDropdown = !showColumnDropdown;
+			}}
+		>
+			<ArrowDown />
+		</button>
 	</div>
-
-	<div class="flex items-center space-x-2 mt-1">
-		<div class="flex-grow relative">
-			<button
-				bind:this={xDropdownContainer}
-				class=" w-full px-2 rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-				on:click={() => toggleDropdown('X')}
-			>
-				<span class="text-sm text-slate-100"> X </span>
-				<span class="text-sm text-slate-100"> Schema </span>
-				<span class="text-sm ml-2 text-slate-100"> {yAxisValue} </span>
-			</button>
-
-			{#if xDropdownOpen}
+	{#if showColumnDropdown}
+		<div class="flex items-center space-x-2 mt-1">
+			<div class="flex-grow relative">
 				<button
-					class="scrollBarDiv bg-gray-900 absolute top-0 left-full mt-0 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-					on:click|stopPropagation={() => toggleDropdown('X')}
+					bind:this={xDropdownContainer}
+					class=" w-full px-2 rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+					on:click={() => toggleDropdown('X')}
 				>
-					{#each $columns as column}
-						<button
-							class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-							on:click={() => chooseColumn(column)}
-						>
-							{column}
-						</button>
-					{/each}
+					<span class="text-xs text-slate-100"> X </span>
+					<span class="text-xs text-slate-100"> Schema </span>
+					<span class="text-sm ml-2 text-slate-100"> {yAxisValue} </span>
 				</button>
-			{/if}
+
+				{#if xDropdownOpen}
+					<button
+						class="scrollBarDiv bg-gray-900 absolute top-0 left-full mt-0 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+						on:click|stopPropagation={() => toggleDropdown('X')}
+					>
+						{#each $columns as column}
+							<button
+								class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+								on:click={() => chooseColumn(column)}
+							>
+								{column}
+							</button>
+						{/each}
+					</button>
+				{/if}
+			</div>
 		</div>
-	</div>
 
-	<div class="flex items-center space-x-2 mt-4">
-		<div class="flex-grow relative">
-			<button
-				bind:this={yDropdownContainer}
-				class=" w-full px-2 mr-2 rounded-sm hover:bg-gray-300 flex-grow flex items-center shadow"
-				on:click={() => toggleDropdown('Y')}
-			>
-				<span class="text-sm text-slate-100"> Y </span>
-				<span class="text-sm text-slate-100"> Schema </span>
-				<span class="text-sm ml-2 text-slate-100"> {yAxisValue} </span>
-			</button>
-
-			{#if yDropdownOpen}
+		<div class="flex items-center space-x-2 mt-4">
+			<div class="flex-grow relative">
 				<button
-					class="scrollBarDiv bg-gray-900 absolute top-0 left-full mt-0 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-					on:click|stopPropagation={() => toggleDropdown('Y')}
+					bind:this={yDropdownContainer}
+					class=" w-full px-2 mr-2 rounded-sm hover:bg-gray-300 flex-grow flex items-center shadow"
+					on:click={() => toggleDropdown('Y')}
 				>
-					{#each $columns as column}
-						<button
-							class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-							on:click={() => chooseColumn(column)}
-						>
-							{column}
-						</button>
-					{/each}
+					<span class="text-sm text-slate-100"> Y </span>
+					<span class="text-sm text-slate-100"> Schema </span>
+					<span class="text-sm ml-2 text-slate-100"> {yAxisValue} </span>
 				</button>
-			{/if}
+
+				{#if yDropdownOpen}
+					<button
+						class="scrollBarDiv bg-gray-900 absolute top-0 left-full mt-0 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+						on:click|stopPropagation={() => toggleDropdown('Y')}
+					>
+						{#each $columns as column}
+							<button
+								class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+								on:click={() => chooseColumn(column)}
+							>
+								{column}
+							</button>
+						{/each}
+					</button>
+				{/if}
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>
 
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Oxygen+Mono:wght@400;500;700&display=swap"
+/>
+
 <style>
+	.font-mono {
+		font-family: 'Oxygen Mono', monospace;
+	}
 	.scrollBarDiv::-webkit-scrollbar {
 		width: 8px;
 	}

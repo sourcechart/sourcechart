@@ -54,8 +54,8 @@
 	}
 </script>
 
-<div class="flex justify-center h-10 w-52 items-center rounded-md shadow-lg bg-neutral-800">
-	<div class="flex items-center justify-center space-x-4 ml-1 mr-1">
+<div class="flex justify-center h-10 items-center rounded-md shadow-lg bg-neutral-800">
+	<div class="flex items-center justify-center space-x-3 ml-1 mr-1">
 		{#each icons as { name, component, index, mode } (name)}
 			<div
 				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${

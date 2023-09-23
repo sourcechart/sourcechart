@@ -30,7 +30,7 @@
 </script>
 
 <div
-	class="w-full h-full font-maven bg-gradient-to-br bg-neutral-800 from-neutral-900 via-neutral-800 to-[#3e3e3e]"
+	class="w-full h-full font-maven bg-gradient-to-br bg-neutral-800 from-neutral-900 via-neutral-800 to-[#3e3e3e] font-mono"
 >
 	<!-- NavBar -->
 	<section id="navbar" class="py-3 lg:px-32 sm:px-2 md:px-12 flex justify-between items-center">
@@ -205,6 +205,9 @@
 />
 
 <style>
+	.font-mono {
+		font-family: 'Oxygen Mono', monospace;
+	}
 	.aspect-ratio-16-9 {
 		padding-bottom: 66.66%;
 		position: relative;

@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores';
+	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
+	import Download from '$lib/components/ui/icons/Download.svelte';
+	import Baseline from '$lib/components/ui/icons/Baseline.svelte';
 	//import LegendColumn from './sidebar-components/LegendColumn.svelte';
 	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
 	import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
@@ -15,24 +18,59 @@
 {#if $activeSidebar}
 	<div
 		use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
-		class=" bg-neutral-800 border border-1 border-black fixed overflow-hidden h-3/4 w-72 rounded-md shadow-lg"
+		class="bg-neutral-800 border border-1 border-black fixed overflow-hidden h-3/4 w-72 rounded-md shadow-lg"
 	>
 		<div
-			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-400"
+			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-700/80"
 		>
 			<!-- Adjusted margins for larger spaces between dividers -->
-			<FileUploadButton />
-			<DatasetDropDown />
-			<ChartDropdown sideBarVersion={'LowCode'} />
-			<ColumnDropDown />
-			<Groupby />
-			<Aggregator />
-			<AddFilter />
-			<ExportToCSV />
-			<!-- Commented section can be added later if needed -->
+			<div class="py-2 px-3">
+				<button class="w-full">
+					<div class="flex justify-center space-x-4">
+						<div class="">
+							<span class="text-xs">X</span>
+							<button><span class="text-xs">stand in drop down</span> </button>
+						</div>
+						<div class="">
+							<span class="text-xs">Y</span>
+							<button><span class="text-xs">stand in drop down</span> </button>
+						</div>
+					</div>
+				</button>
+			</div>
+			<div class="py-2 px-3 hover:bg-[#303030]">
+				<button class="w-full">
+					<div class="flex justify-between">
+						<span class="text-sm font-light text-neutral-300"> Filters </span>
+						<PlusSolid />
+					</div>
+				</button>
+			</div>
+			<div class="py-2 px-3 hover:bg-[#303030]">
+				<button class="w-full">
+					<div class="flex justify-between">
+						<span class="text-sm font-light text-neutral-300">Options</span>
+						<Baseline />
+					</div>
+				</button>
+			</div>
+			<div class="py-2 px-3 hover:bg-[#303030]">
+				<button class="w-full">
+					<div class="flex justify-between">
+						<span class="text-sm font-light text-neutral-300">Export</span>
+						<Download />
+					</div>
+				</button>
+			</div>
+			<div />
 		</div>
 	</div>
 {/if}
+
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Oxygen+Mono:wght@400;500;700&display=swap"
+/>
 
 <style>
 	/* Scrollbar styles */
@@ -52,5 +90,8 @@
 	.sidebar-inner {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
+	}
+	.hoverColor {
+		background-color: #303030;
 	}
 </style>
