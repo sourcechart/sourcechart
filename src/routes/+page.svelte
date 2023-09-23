@@ -4,7 +4,6 @@
 	import InfinityIcon from '$lib/components/landing/homepage/icons/InfinityIcon.svelte';
 	import Security from '$lib/components/landing/homepage/icons/Security.svelte';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 
 	let features = [
 		{
@@ -28,13 +27,6 @@
 			body: 'Our platform is designed to handle large amounts of data. We are able to process gigabytes of data in seconds.'
 		}
 	];
-	onMount(() => {
-		const title = document.getElementById('title');
-		const subtext = document.getElementById('subtext');
-		if (!title || !subtext) return;
-		const titleWidth = title.offsetWidth;
-		subtext.style.maxWidth = titleWidth + 'px';
-	});
 </script>
 
 <div
