@@ -91,7 +91,11 @@
 					class="mt-4 md:mt-0 flex-grow md:w-1/2 lg:w-2/5 xl:w-1/2 2xl:w-3/5 relative md:h-60 lg:h-1/3 xl:h-1/2 2xl:h-2/3 z-10"
 				>
 					<div class="aspect-ratio-16-9">
-						<img class="object-cover object-center z-10" src="hero2.png" alt="Logo" />
+						<img
+							class="object-cover object-center z-10 transform transition-transform duration-300 ease-in-out hover:scale-105"
+							src="hero2.png"
+							alt="Logo"
+						/>
 					</div>
 				</div>
 			</div>
@@ -107,9 +111,11 @@
 			</p>
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 				{#each features as feature}
-					<div class="bg-neutral-800 p-6 rounded-lg space-y-4 text-white mb-4">
+					<div
+						class="bg-neutral-800 p-6 rounded-lg space-y-4 mb-4 space-x-4 transform transition-transform duration-300 ease-in-out hover:scale-105"
+					>
 						<svelte:component this={feature.component} />
-						<h3 class="text-2xl text-white">{feature.header}</h3>
+						<h3 class="text-2xl text-[#A78BFA]">{feature.header}</h3>
 						<p class="text-gray-400">{feature.body}</p>
 					</div>
 				{/each}
