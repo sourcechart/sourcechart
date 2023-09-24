@@ -1,5 +1,4 @@
 <script lang="ts">
-	//@ts-ignore
 	import {
 		getColumnsFromFile,
 		clearChartOptions,
@@ -8,8 +7,6 @@
 		clickedChartIndex
 	} from '$lib/io/Stores';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
-	import Aggregator from './Aggregator.svelte';
-	import Tags from '$lib/components/ui/tags/Tags.svelte';
 	import { onDestroy } from 'svelte';
 
 	let dropdownContainer: HTMLElement;
@@ -85,7 +82,7 @@
 	<div class="flex justify-between items-center w-full text-neutral-300">
 		<span class="text-sm"> Aggregate </span>
 		<button
-			class=" ml-3 bg-neutral-900/80 justify-center w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
+			class=" mx-2 bg-neutral-900/80 justify-center w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
 		>
 			<span class="text-sm">Choose Fields</span>
 		</button>

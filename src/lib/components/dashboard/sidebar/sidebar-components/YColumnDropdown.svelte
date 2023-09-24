@@ -46,15 +46,16 @@
 	});
 </script>
 
-<div bind:this={container} class="flex-grow relative">
+<div bind:this={container} class="flex-grow relative mr-6">
 	<div class="flex items-center">
 		<span class="text-xs text-neutral-300">Y</span>
 		<button
-			class="ml-3 bg-neutral-900/80 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center"
+			class="mx-auto bg-neutral-900/80 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center"
 			on:click={() => (open = !open)}
 		>
 			<span class="text-xs text-slate-100 w-full"> {currentValue} </span>
-		</button>
+			<div class="w-4" /></button
+		>
 	</div>
 	{#if open}
 		<div

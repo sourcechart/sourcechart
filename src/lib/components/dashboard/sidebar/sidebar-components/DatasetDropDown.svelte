@@ -117,7 +117,7 @@
 			class="bg-neutral-900/80 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
 			on:click={toggleDropdown}
 		>
-			<span class="text-sm text-white font-thin hover:text-neutral-200 ml-2">
+			<span class="text-sm text-white font-thin justify-center flex hover:text-neutral-200 ml-2">
 				{selectedDataset}
 			</span>
 		</button>

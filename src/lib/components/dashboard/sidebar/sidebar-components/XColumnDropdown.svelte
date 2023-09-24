@@ -49,7 +49,7 @@
 	<div class="flex items-center justify-between">
 		<span class="text-xs text-neutral-300">X</span>
 		<button
-			class="bg-neutral-900/80 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center ml-3"
+			class="bg-neutral-900/80 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center mx-auto"
 			on:click={() => (open = !open)}
 		>
 			<span class="text-xs text-slate-100 w-full"> {currentValue} </span>
