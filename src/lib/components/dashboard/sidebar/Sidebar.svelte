@@ -29,20 +29,16 @@
 				<button class="w-full flex justify-between items-center">
 					<span class="text-sm font-light text-neutral-300">Dataset</span>
 					<DatasetDropDown />
-					<PlusSolid class="w-6 h-6" />
+					<PlusSolid class="w-6 h-6 hover:text-neutral-300" />
 				</button>
 			</div>
 
 			<div class="py-2 px-3 w-full">
-				<div class="mt-2 flex items-center justify-between">
-					<div
-						class="border border-1 hover:border-neutral-700 hover:bg-[#303030] border-neutral-800 flex items-center w-1/2"
-					>
+				<div class="mt-2 flex items-center justify-between space-x-3">
+					<div class="flex w-1/2">
 						<XColumnDropdown />
 					</div>
-					<div
-						class="border border-1 hover:border-neutral-700 hover:bg-[#303030] border-neutral-800 px-2.5 flex w-1/2"
-					>
+					<div class="flex w-1/2">
 						<YColumnDropdown />
 					</div>
 				</div>
