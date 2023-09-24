@@ -42,19 +42,8 @@
 						<YColumnDropdown />
 					</div>
 				</div>
-				<div class="mt-3 hover:bg-[#303030] hover:round-md">
-					<div class="border border-1 hover:border-neutral-700 border-neutral-800">
-						<!--	
-							<div class="">
-							<span class="">Groupby</span>
-							<CarrotDown />
-						</div>
-						-->
-						<Groupby />
-					</div>
-				</div>
-				<div class="mt-3 px-1">
-					<div class="flex justify-between items-center" />
+				<div class="mt-3 hover:round-md">
+					<Groupby />
 				</div>
 			</div>
 

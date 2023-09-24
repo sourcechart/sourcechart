@@ -83,7 +83,7 @@
 		}}
 	>
 		<div class="flex justify-between items-center w-full text-neutral-300">
-			<span class="text-xs"> Group By </span>
+			<span class="text-sm"> Aggregate </span>
 			<div>
 				<CarrotDown />
 			</div>
