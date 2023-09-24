@@ -75,53 +75,59 @@
 	});
 </script>
 
-<div bind:this={container} class="flex-grow relative hover:rounded-md">
-	<button
-		class="w-full rounded-sm flex items-center"
-		on:click={() => {
-			isGroupByOpen = !isGroupByOpen;
-		}}
-	>
-		<div class="flex justify-between items-center w-full text-neutral-300">
-			<span class="text-sm"> Aggregate </span>
-			<div>
-				<CarrotDown />
-			</div>
-		</div>
-	</button>
-
-	{#if isGroupByOpen}
+<button
+	bind:this={container}
+	class="flex-grow relative hover:rounded-md w-full rounded-sm flex items-center"
+	on:click={() => {
+		isGroupByOpen = !isGroupByOpen;
+	}}
+>
+	<div class="flex justify-between items-center w-full text-neutral-300">
+		<span class="text-sm"> Aggregate </span>
 		<button
-			class={`
+			class=" ml-3 bg-neutral-900/80 justify-center w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
+		>
+			<span class="text-sm">Choose Fields</span>
+		</button>
+		<button>
+			<CarrotDown />
+		</button>
+	</div>
+</button>
+
+{#if isGroupByOpen}
+	<button
+		class={`
             scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
             rounded shadow-lg transform transition-transform 
             origin-top overflow-y-auto overflow-x-hidden z-10 
             ${isGroupByOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
-			on:click|stopPropagation={() => {
-				isGroupByOpen = false;
-			}}
-		>
-			{#each $columns as column (column)}
-				<button
-					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-					on:click={() => {
-						addColumnToGroupBy(column);
-					}}
-				>
-					{column}
-				</button>
-			{/each}
-		</button>
-	{/if}
-	{#if tags.length > 0}
-		<div class="mt-4 flex-grow">
-			<span class="text-sm"> Columns </span>
-			<Tags items={tags} removeItem={removeTag} />
-		</div>
-		<Aggregator />
-	{/if}
-</div>
+		on:click|stopPropagation={() => {
+			isGroupByOpen = false;
+		}}
+	>
+		{#each $columns as column (column)}
+			<button
+				class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+				on:click={() => {
+					addColumnToGroupBy(column);
+				}}
+			>
+				{column}
+			</button>
+		{/each}
+	</button>
+{/if}
 
+<!--
+{#if tags.length > 0}
+	<div class="mt-4 flex-grow">
+		<span class="text-sm"> Columns </span>
+		<Tags items={tags} removeItem={removeTag} />
+	</div>
+	<Aggregator />
+{/if}
+-->
 <style>
 	/* For WebKit (Chrome, Safari) */
 	.scrollBarDiv::-webkit-scrollbar {
