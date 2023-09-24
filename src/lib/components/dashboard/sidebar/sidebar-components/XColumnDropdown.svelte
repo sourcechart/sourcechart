@@ -46,8 +46,9 @@
 	});
 </script>
 
-<div bind:this={container} class="flex-grow relative w-1/2">
-	<button class="w-full px-2 rounded-sm flex items-center" on:click={() => (open = !open)}>
+<div bind:this={container} class="flex-grow relative">
+	<button class="w-full rounded-sm flex items-center" on:click={() => (open = !open)}>
+		<span class="text-xs text-neutral-400">X</span>
 		<span class="text-sm ml-2 text-slate-100"> {currentValue} </span>
 	</button>
 

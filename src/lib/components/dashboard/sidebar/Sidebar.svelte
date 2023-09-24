@@ -41,7 +41,6 @@
 					<div
 						class="border border-1 hover:border-neutral-700 border-neutral-800 px-2 flex items-center w-1/2"
 					>
-						<span class="text-xs text-neutral-400">X</span>
 						<XColumnDropdown />
 					</div>
 
