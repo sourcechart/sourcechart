@@ -23,8 +23,6 @@
 	$: clickChart = clickedChart();
 	$: i = clickedChartIndex();
 
-	let testColumns = ['test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8'];
-
 	$: if ($allCharts.length > 0 && $allCharts[$i]?.groupbyColumns) {
 		tags = $allCharts[$i].groupbyColumns;
 	}
@@ -103,7 +101,7 @@
 				isGroupByOpen = false;
 			}}
 		>
-			{#each testColumns as column (column)}
+			{#each $columns as column (column)}
 				<button
 					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
 					on:click={() => {
