@@ -25,17 +25,16 @@
 		<div
 			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-700/80"
 		>
-			<div class="py-2 px-1 w-full hover:bg-[#303030] hover:round-md">
-				<div class="my-2 px-1 flex flex-row items-center justify-between space-x-2">
-					<span class="text-sm text-neutral-300 px-1">Dataset</span>
-					<PlusSolid />
-				</div>
-				<div class="px-3">
+			<div class="py-2 px-3 hover:bg-[#303030] hover:rounded-md">
+				<button class="w-full flex justify-between items-center">
+					<span class="text-sm font-light text-neutral-300">Dataset</span>
 					<DatasetDropDown />
-				</div>
+					<PlusSolid class="w-6 h-6" />
+				</button>
 			</div>
+
 			<div class="py-2 px-3 w-full">
-				<div class="flex items-center justify-between">
+				<div class="mt-2 flex items-center justify-between">
 					<div
 						class="border border-1 hover:border-neutral-700 hover:bg-[#303030] border-neutral-800 flex items-center w-1/2"
 					>
@@ -62,6 +61,18 @@
 					<div class="flex justify-between items-center" />
 				</div>
 			</div>
+
+			<!--Options-->
+			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
+				<button class="w-full">
+					<div class="flex justify-between items-center">
+						<span class="text-sm font-light text-neutral-300">Style</span>
+						<ChartDropdown sideBarVersion="LowCode" />
+
+						<Baseline />
+					</div>
+				</button>
+			</div>
 			<!--Filters-->
 			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
@@ -71,17 +82,7 @@
 					</div>
 				</button>
 			</div>
-			<!--Options-->
-			<!--
-			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
-				<button class="w-full">
-					<div class="flex justify-between items-center">
-						<span class="text-sm font-light text-neutral-300">Style</span>
-						<Baseline />
-					</div>
-				</button>
-			</div>
-		-->
+
 			<!--Export-->
 			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">

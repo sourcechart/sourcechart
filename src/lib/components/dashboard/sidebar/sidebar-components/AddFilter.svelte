@@ -24,7 +24,7 @@
 
 <button on:click={addFilterToSidebar}>
 	<div class="flex w-full justify-between shadow-md dark:text-black">
-		<PlusSolid class="hover:bg-neutral-50" />
+		<PlusSolid />
 	</div>
 </button>
 {#each filterColumns as filterData}
