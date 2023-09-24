@@ -31,6 +31,8 @@
 
 					<DatasetDropDown />
 				</div>
+			</div>
+			<div class="py-2 px-3 w-full">
 				<div class="flex justify-center space-x-4">
 					<div class="">
 						<span class="text-sm text-neutral-300">X</span>
