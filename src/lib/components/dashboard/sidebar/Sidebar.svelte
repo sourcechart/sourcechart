@@ -26,23 +26,22 @@
 		>
 			<!-- Adjusted margins for larger spaces between dividers -->
 
-			<div>Tabs can go here</div>
 			<div class="py-2 px-3 w-full">
-				<div class="mt-3 px-1 flex flex-row items-center justify-between space-x-2">
+				<div class="my-2 px-1 flex flex-row items-center justify-between space-x-2">
 					<span class="text-sm text-neutral-300">Dataset</span>
-					<DatasetDropDown />
 					<PlusSolid />
 				</div>
+				<DatasetDropDown />
 			</div>
 			<div class="py-2 px-3 w-full">
 				<div class="flex justify-center space-x-4">
-					<div class="">
+					<div class="hover:border hover:border-1 hover:border-neutral-700 px-1">
 						<span class="text-sm text-neutral-300">X</span>
-						<button><span class="text-xs text-neutral-300">stand in drop down</span> </button>
+						<button><span class="text-xs text-neutral-300">Column</span> </button>
 					</div>
-					<div class="">
+					<div class="hover:border hover:border-1 hover:border-neutral-700 px-1">
 						<span class="text-sm text-neutral-300">Y</span>
-						<button><span class="text-xs text-neutral-300">stand in drop down</span> </button>
+						<button><span class="text-xs text-neutral-300">Column</span> </button>
 					</div>
 				</div>
 				<div class="mt-3 px-1">
@@ -50,7 +49,7 @@
 						<span class="text-xs text-neutral-300">Groupby </span>
 						<CarrotDown />
 					</div>
-					<span class="text-xs px-2"> Aggregator Goes here </span>
+					<span class="text-xs px-2 text-neutral-300"> Aggregator Goes here </span>
 				</div>
 				<div class="mt-3 px-1">
 					<div class="flex justify-between items-center" />

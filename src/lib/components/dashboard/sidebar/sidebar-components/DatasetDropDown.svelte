@@ -79,14 +79,6 @@
 			selectedDataset = filename;
 			$chosenFile = filename;
 
-			if (syncWorker) {
-				syncWorker.postMessage({
-					message: 'query',
-					filename: filename
-				});
-				syncWorker.onmessage = onWorkerMessage;
-			}
-
 			allCharts.update((charts) => {
 				let chart = charts[$i];
 				chart.filename = filename;
@@ -97,15 +89,6 @@
 	};
 
 	const removeFileFromSqlite = (filename: string) => {
-		if (syncWorker) {
-			syncWorker.postMessage({
-				message: 'delete',
-				filename: filename
-			});
-			syncWorker.onmessage = onWorkerMessage;
-			console.log('file deleted from sqlite');
-		}
-
 		allCharts.update((charts) => {
 			return charts.filter((chart) => chart.filename !== filename);
 		});
@@ -131,7 +114,7 @@
 	class="w-full border border-1 border-neutral-700 bg-[#27272a4c] hover:border-neutral-600 flex items-center justify-center"
 	on:click={toggleDropdown}
 >
-	<span class="text-sm text-neutral-300 hover:text-neutral-200">
+	<span class="text-xs text-neutral-300 hover:text-neutral-200">
 		{selectedDataset}
 	</span>
 </button>
