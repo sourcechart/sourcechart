@@ -25,11 +25,13 @@
 			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-700/80"
 		>
 			<!-- Adjusted margins for larger spaces between dividers -->
+
+			<div>Tabs can go here</div>
 			<div class="py-2 px-3 w-full">
 				<div class="mt-3 px-1 flex flex-row items-center justify-between space-x-2">
 					<span class="text-sm text-neutral-300">Dataset</span>
-
 					<DatasetDropDown />
+					<PlusSolid />
 				</div>
 			</div>
 			<div class="py-2 px-3 w-full">
@@ -48,12 +50,10 @@
 						<span class="text-xs text-neutral-300">Groupby </span>
 						<CarrotDown />
 					</div>
+					<span class="text-xs px-2"> Aggregator Goes here </span>
 				</div>
 				<div class="mt-3 px-1">
-					<div class="flex justify-between items-center">
-						<span class="text-sm text-neutral-300">Aggregator</span>
-						<CarrotDown />
-					</div>
+					<div class="flex justify-between items-center" />
 				</div>
 			</div>
 			<!--Filters-->
