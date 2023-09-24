@@ -6,7 +6,6 @@
 	import { onMount } from 'svelte';
 
 	import { allCharts, clickedChartIndex, activeDropZone, keyPress } from '$lib/io/Stores';
-	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { duckDBInstanceStore } from '$lib/io/Stores';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';

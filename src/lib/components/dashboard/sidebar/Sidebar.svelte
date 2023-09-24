@@ -65,16 +65,16 @@
 			<!--Filters-->
 			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
-					<div class="flex justify-between">
+					<div class="flex justify-between items-center">
 						<span class="text-sm font-light text-neutral-300"> Filters </span>
-						<PlusSolid />
+						<AddFilter />
 					</div>
 				</button>
 			</div>
 			<!--Options-->
 			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
-					<div class="flex justify-between">
+					<div class="flex justify-between items-center">
 						<span class="text-sm font-light text-neutral-300">Style</span>
 						<Baseline />
 					</div>

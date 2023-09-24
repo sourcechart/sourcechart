@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Filter from './filter-components/Filter.svelte';
-	//import { PlusSolid } from 'flowbite-svelte-icons';
+	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	$: i = clickedChartIndex(); //@ts-ignore
@@ -22,24 +22,13 @@
 	};
 </script>
 
+<button on:click={addFilterToSidebar}>
+	<div class="flex w-full justify-between shadow-md text-left dark:text-black">
+		<PlusSolid />
+	</div>
+</button>
 {#each filterColumns as filterData}
 	<div class="py-2 flex">
 		<Filter {filterData} />
 	</div>
 {/each}
-<button on:click={addFilterToSidebar}>
-	<div
-		class="flex w-full selectFieldColor items-center justify-between shadow-md text-left px-3 py-1 dark:text-black hover:bg-gray-200"
-	>
-		Add Filter
-	</div>
-</button>
-
-<style>
-	.selectFieldColor {
-		background-color: #cd9f34;
-	}
-	.selectFieldColor:hover {
-		background-color: #fccb59;
-	}
-</style>
