@@ -24,42 +24,49 @@
 		<div
 			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-700/80"
 		>
-			<!-- Adjusted margins for larger spaces between dividers -->
-
-			<div class="py-2 px-3 w-full">
+			<div class="py-2 px-1 w-full hover:bg-[#303030] hover:round-md">
 				<div class="my-2 px-1 flex flex-row items-center justify-between space-x-2">
-					<span class="text-sm text-neutral-300">Dataset</span>
+					<span class="text-sm text-neutral-300 px-2">Dataset</span>
 					<PlusSolid />
 				</div>
-				<DatasetDropDown />
+				<div class="px-3">
+					<DatasetDropDown />
+				</div>
 			</div>
 			<div class="py-2 px-3 w-full">
-				<div class="flex space-x-11">
-					<div class="border border-1 hover:border-neutral-700 border-neutral-800 px-1">
-						<span class="text-sm text-neutral-400">X</span>
-						<button><span class="text-xs text-white">Choose Column</span> </button>
+				<div class="flex items-center">
+					<div
+						class="border border-1 hover:border-neutral-700 border-neutral-800 px-2 flex items-center w-1/2"
+					>
+						<span class="text-xs text-neutral-400">X</span>
+						<button>
+							<span class="text-xs text-white" />
+							<div class="w-8" />
+						</button>
 					</div>
-					<div class="border border-1 hover:border-neutral-700 border-neutral-800 px-1">
+
+					<div class="border border-1 hover:border-neutral-700 border-neutral-800 px-1 flex w-1/2">
 						<span class="text-sm text-neutral-400">Y</span>
-						<button><span class="text-xs text-white"> Choose Column</span> </button>
+						<button>
+							<span class="text-xs text-white" />
+							<div class="w-8" />
+						</button>
 					</div>
 				</div>
-				<div class="mt-1">
+				<div class="mt-1 hover:bg-[#303030] hover:round-md">
 					<div class="border border-1 hover:border-neutral-700 border-neutral-800 px-1">
 						<div class="flex justify-between items-center">
-							<span class="text-xs text-neutral-300">Groupby </span>
+							<span class="text-xs text-neutral-300">Groupby</span>
 							<CarrotDown />
 						</div>
 					</div>
-
-					<span class="text-xs px-2 text-neutral-300"> Aggregator Goes here </span>
 				</div>
 				<div class="mt-3 px-1">
 					<div class="flex justify-between items-center" />
 				</div>
 			</div>
 			<!--Filters-->
-			<div class="py-2 px-3 hover:bg-[#303030]">
+			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
 					<div class="flex justify-between">
 						<span class="text-sm font-light text-neutral-300"> Filters </span>
@@ -68,7 +75,7 @@
 				</button>
 			</div>
 			<!--Options-->
-			<div class="py-2 px-3 hover:bg-[#303030]">
+			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
 					<div class="flex justify-between">
 						<span class="text-sm font-light text-neutral-300">Chart Configuration</span>
@@ -77,7 +84,7 @@
 				</button>
 			</div>
 			<!--Export-->
-			<div class="py-2 px-3 hover:bg-[#303030]">
+			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
 					<div class="flex justify-between">
 						<span class="text-sm font-light text-neutral-300">Export</span>
@@ -113,8 +120,5 @@
 	.sidebar-inner {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
-	}
-	.hoverColor {
-		background-color: #303030;
 	}
 </style>
