@@ -72,6 +72,7 @@
 				</button>
 			</div>
 			<!--Options-->
+			<!--
 			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
 					<div class="flex justify-between items-center">
@@ -80,6 +81,7 @@
 					</div>
 				</button>
 			</div>
+			-->
 			<!--Export-->
 			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
