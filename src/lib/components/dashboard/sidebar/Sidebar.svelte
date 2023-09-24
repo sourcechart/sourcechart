@@ -34,14 +34,14 @@
 				<DatasetDropDown />
 			</div>
 			<div class="py-2 px-3 w-full">
-				<div class="flex justify-center space-x-4">
+				<div class="flex space-x-4">
 					<div class="hover:border hover:border-1 hover:border-neutral-700 px-1">
 						<span class="text-sm text-neutral-300">X</span>
-						<button><span class="text-xs text-neutral-300">Column</span> </button>
+						<button><span class="text-xs text-neutral-300">Choose Column</span> </button>
 					</div>
 					<div class="hover:border hover:border-1 hover:border-neutral-700 px-1">
 						<span class="text-sm text-neutral-300">Y</span>
-						<button><span class="text-xs text-neutral-300">Column</span> </button>
+						<button><span class="text-xs text-neutral-300"> Choose Column</span> </button>
 					</div>
 				</div>
 				<div class="mt-3 px-1">
