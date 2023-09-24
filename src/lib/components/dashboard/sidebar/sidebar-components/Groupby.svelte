@@ -7,11 +7,14 @@
 		clickedChart,
 		clickedChartIndex
 	} from '$lib/io/Stores';
+	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
+	import Aggregator from './Aggregator.svelte';
 
 	import { onDestroy } from 'svelte';
 	import Tags from '$lib/components/ui/tags/Tags.svelte';
 
 	let dropdownContainer: HTMLElement;
+	let container: HTMLElement;
 
 	let tags: Array<string> = [];
 	let selectedButtons: Array<string> = [];
@@ -34,7 +37,7 @@
 
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
-			closeDropdown();
+			isGroupByOpen = false;
 		}
 	};
 
@@ -68,26 +71,24 @@
 		$allCharts[$i] = chart;
 	};
 
-	const toggleDropdown = () => {
-		isGroupByOpen = !isGroupByOpen;
-	};
-
-	const closeDropdown = () => {
-		isGroupByOpen = false;
-	};
-
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
 </script>
 
-<div class="w-full p-4 rounded-sm relative">
+<div bind:this={container} class="flex-grow relative hover:rounded-md">
 	<button
-		bind:this={dropdownContainer}
-		class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-		on:click={toggleDropdown}
+		class="w-full rounded-sm flex items-center"
+		on:click={() => {
+			isGroupByOpen = !isGroupByOpen;
+		}}
 	>
-		<span class="text-sm ml-2 text-slate-600"> Fields </span>
+		<div class="flex justify-between items-center w-full text-neutral-300">
+			<span class="text-xs"> Group By </span>
+			<div>
+				<CarrotDown />
+			</div>
+		</div>
 	</button>
 
 	{#if isGroupByOpen}
@@ -97,7 +98,9 @@
             rounded shadow-lg transform transition-transform 
             origin-top overflow-y-auto overflow-x-hidden z-10 
             ${isGroupByOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
-			on:click|stopPropagation={closeDropdown}
+			on:click|stopPropagation={() => {
+				isGroupByOpen = false;
+			}}
 		>
 			{#each $columns as column (column)}
 				<button
@@ -111,12 +114,13 @@
 			{/each}
 		</button>
 	{/if}
-	<div class="mt-4 flex-grow">
-		{#if tags.length > 0}
+	{#if tags.length > 0}
+		<div class="mt-4 flex-grow">
 			<span class="text-sm"> Columns </span>
 			<Tags items={tags} removeItem={removeTag} />
-		{/if}
-	</div>
+		</div>
+		<Aggregator />
+	{/if}
 </div>
 
 <style>

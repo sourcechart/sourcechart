@@ -3,7 +3,6 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { onMount } from 'svelte';
 	import { activeDropZone, createFileStore } from '$lib/io/Stores'; //@ts-ignore
-	import { ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
 	//@ts-ignore
 	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
 	import TableHead from 'flowbite-svelte/TableHead.svelte'; //@ts-ignore
@@ -293,7 +292,6 @@
 							<div class="flex flex-row justify-between items-center">
 								<span class="mr-2">Download Raw CSV</span>
 								<!-- Added the `mr-2` for right margin -->
-								<ChevronDoubleDownOutline class="h-4 w-4 " />
 							</div>
 						</Button>
 					</TableBodyCell>

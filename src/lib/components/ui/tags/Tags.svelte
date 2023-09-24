@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { CloseSolid } from 'flowbite-svelte-icons';
+	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 
 	export let items: Array<string> = [];
 	export let removeItem: (item: string) => void;

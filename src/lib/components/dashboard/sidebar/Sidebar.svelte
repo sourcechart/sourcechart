@@ -4,16 +4,14 @@
 	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
 	import Download from '$lib/components/ui/icons/Download.svelte';
 	import Baseline from '$lib/components/ui/icons/Baseline.svelte';
-	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
 	//import LegendColumn from './sidebar-components/LegendColumn.svelte';
+	//import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
+
 	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
 	import XColumnDropdown from './sidebar-components/XColumnDropdown.svelte';
 	import YColumnDropdown from './sidebar-components/YColumnDropdown.svelte';
-
-	//import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
 	import Groupby from './sidebar-components/Groupby.svelte';
-	import Aggregator from './sidebar-components/Aggregator.svelte';
-	import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
+	//import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
 	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
@@ -29,7 +27,7 @@
 		>
 			<div class="py-2 px-1 w-full hover:bg-[#303030] hover:round-md">
 				<div class="my-2 px-1 flex flex-row items-center justify-between space-x-2">
-					<span class="text-sm text-neutral-300 px-2">Dataset</span>
+					<span class="text-sm text-neutral-300 px-1">Dataset</span>
 					<PlusSolid />
 				</div>
 				<div class="px-3">
@@ -37,23 +35,27 @@
 				</div>
 			</div>
 			<div class="py-2 px-3 w-full">
-				<div class="flex items-center">
+				<div class="flex items-center justify-between">
 					<div
-						class="border border-1 hover:border-neutral-700 border-neutral-800 px-2 flex items-center w-1/2"
+						class="border border-1 hover:border-neutral-700 hover:bg-[#303030] border-neutral-800 flex items-center w-1/2"
 					>
 						<XColumnDropdown />
 					</div>
-
-					<div class="border border-1 hover:border-neutral-700 border-neutral-800 px-1 flex w-1/2">
+					<div
+						class="border border-1 hover:border-neutral-700 hover:bg-[#303030] border-neutral-800 px-2.5 flex w-1/2"
+					>
 						<YColumnDropdown />
 					</div>
 				</div>
-				<div class="mt-1 hover:bg-[#303030] hover:round-md">
-					<div class="border border-1 hover:border-neutral-700 border-neutral-800 px-1">
-						<div class="flex justify-between items-center">
-							<span class="text-xs text-neutral-300">Groupby</span>
+				<div class="mt-3 hover:bg-[#303030] hover:round-md">
+					<div class="border border-1 hover:border-neutral-700 border-neutral-800">
+						<!--	
+							<div class="">
+							<span class="">Groupby</span>
 							<CarrotDown />
 						</div>
+						-->
+						<Groupby />
 					</div>
 				</div>
 				<div class="mt-3 px-1">

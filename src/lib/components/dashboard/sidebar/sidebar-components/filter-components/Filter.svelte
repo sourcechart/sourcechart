@@ -9,7 +9,7 @@
 	import FilterDropdown from './FilterDropdown.svelte';
 	import FilterRange from './FilterRange.svelte';
 	import { onDestroy } from 'svelte';
-	import { CloseSolid } from 'flowbite-svelte-icons';
+	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 
 	let dropdownContainer: HTMLElement;
 	let frequencies: { [key: string]: number } = {};

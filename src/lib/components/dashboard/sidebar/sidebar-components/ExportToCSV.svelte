@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { clickedChartIndex, allCharts, duckDBInstanceStore } from '$lib/io/Stores';
-	import { ArrowDownSolid } from 'flowbite-svelte-icons';
+	import ArrowDown from '$lib/components/ui/icons/ArrowDown.svelte';
 	import { DataIO } from '$lib/io/DataIO';
 
 	$: i = clickedChartIndex();
@@ -19,7 +19,7 @@
 >
 	<div class="flex justify-between items-center w-full">
 		<span>Export to CSV</span>
-		<ArrowDownSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+		<ArrowDown />
 	</div>
 </button>
 
