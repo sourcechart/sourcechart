@@ -37,11 +37,11 @@
 				<div class="flex space-x-11">
 					<div class="border border-1 hover:border-neutral-700 border-neutral-800 px-1">
 						<span class="text-sm text-neutral-400">X</span>
-						<button><span class="text-xs text-neutral-100">Choose Column</span> </button>
+						<button><span class="text-xs text-white">Choose Column</span> </button>
 					</div>
 					<div class="border border-1 hover:border-neutral-700 border-neutral-800 px-1">
 						<span class="text-sm text-neutral-400">Y</span>
-						<button><span class="text-xs text-neutral-100"> Choose Column</span> </button>
+						<button><span class="text-xs text-white"> Choose Column</span> </button>
 					</div>
 				</div>
 				<div class="mt-1">
