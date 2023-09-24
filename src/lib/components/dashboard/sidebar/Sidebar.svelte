@@ -44,11 +44,14 @@
 						<button><span class="text-xs text-neutral-100"> Choose Column</span> </button>
 					</div>
 				</div>
-				<div class="mt-3 px-1">
-					<div class="flex justify-between items-center">
-						<span class="text-xs text-neutral-300">Groupby </span>
-						<CarrotDown />
+				<div class="mt-1">
+					<div class="border border-1 hover:border-neutral-700 border-neutral-800 px-1">
+						<div class="flex justify-between items-center">
+							<span class="text-xs text-neutral-300">Groupby </span>
+							<CarrotDown />
+						</div>
 					</div>
+
 					<span class="text-xs px-2 text-neutral-300"> Aggregator Goes here </span>
 				</div>
 				<div class="mt-3 px-1">
