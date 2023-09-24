@@ -88,7 +88,6 @@
 			<span class="text-xs font-bold">Columns</span>
 		</button>
 		<button
-			class=""
 			on:click={() => {
 				showColumnDropdown = !showColumnDropdown;
 			}}
@@ -96,23 +95,22 @@
 			<ArrowDown />
 		</button>
 	</div>
+
 	{#if showColumnDropdown}
-		<div class="flex items-center space-x-2 mt-1">
-			<div class="flex-grow relative">
+		<div class="flex items-center mt-1">
+			<!-- X Section -->
+			<div class="flex-grow relative w-1/2">
 				<button
 					bind:this={xDropdownContainer}
-					class=" w-full px-2 rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+					class="w-full px-2 rounded-sm hover:bg-gray-300 flex items-center"
 					on:click={() => toggleDropdown('X')}
 				>
-					<span class="text-xs text-slate-100"> X </span>
-					<span class="text-xs text-slate-100"> Schema </span>
 					<span class="text-sm ml-2 text-slate-100"> {yAxisValue} </span>
 				</button>
 
 				{#if xDropdownOpen}
-					<button
+					<div
 						class="scrollBarDiv bg-gray-900 absolute top-0 left-full mt-0 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-						on:click|stopPropagation={() => toggleDropdown('X')}
 					>
 						{#each $columns as column}
 							<button
@@ -122,27 +120,23 @@
 								{column}
 							</button>
 						{/each}
-					</button>
+					</div>
 				{/if}
 			</div>
-		</div>
 
-		<div class="flex items-center space-x-2 mt-4">
-			<div class="flex-grow relative">
+			<!-- Y Section -->
+			<div class="flex-grow relative w-1/2">
 				<button
 					bind:this={yDropdownContainer}
-					class=" w-full px-2 mr-2 rounded-sm hover:bg-gray-300 flex-grow flex items-center shadow"
+					class="w-full px-2 rounded-sm hover:bg-gray-300 flex items-center"
 					on:click={() => toggleDropdown('Y')}
 				>
-					<span class="text-sm text-slate-100"> Y </span>
-					<span class="text-sm text-slate-100"> Schema </span>
 					<span class="text-sm ml-2 text-slate-100"> {yAxisValue} </span>
 				</button>
 
 				{#if yDropdownOpen}
-					<button
+					<div
 						class="scrollBarDiv bg-gray-900 absolute top-0 left-full mt-0 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-						on:click|stopPropagation={() => toggleDropdown('Y')}
 					>
 						{#each $columns as column}
 							<button
@@ -152,7 +146,7 @@
 								{column}
 							</button>
 						{/each}
-					</button>
+					</div>
 				{/if}
 			</div>
 		</div>

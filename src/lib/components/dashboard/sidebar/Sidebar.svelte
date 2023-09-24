@@ -7,7 +7,10 @@
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
 	//import LegendColumn from './sidebar-components/LegendColumn.svelte';
 	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
-	import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
+	import XColumnDropdown from './sidebar-components/XColumnDropdown.svelte';
+	import YColumnDropdown from './sidebar-components/YColumnDropdown.svelte';
+
+	//import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
 	import Groupby from './sidebar-components/Groupby.svelte';
 	import Aggregator from './sidebar-components/Aggregator.svelte';
 	import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
@@ -39,18 +42,11 @@
 						class="border border-1 hover:border-neutral-700 border-neutral-800 px-2 flex items-center w-1/2"
 					>
 						<span class="text-xs text-neutral-400">X</span>
-						<button>
-							<span class="text-xs text-white" />
-							<div class="w-8" />
-						</button>
+						<XColumnDropdown />
 					</div>
 
 					<div class="border border-1 hover:border-neutral-700 border-neutral-800 px-1 flex w-1/2">
-						<span class="text-sm text-neutral-400">Y</span>
-						<button>
-							<span class="text-xs text-white" />
-							<div class="w-8" />
-						</button>
+						<YColumnDropdown />
 					</div>
 				</div>
 				<div class="mt-1 hover:bg-[#303030] hover:round-md">
@@ -78,7 +74,7 @@
 			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
 					<div class="flex justify-between">
-						<span class="text-sm font-light text-neutral-300">Chart Configuration</span>
+						<span class="text-sm font-light text-neutral-300">Style</span>
 						<Baseline />
 					</div>
 				</button>
