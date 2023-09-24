@@ -29,7 +29,7 @@
 				<button class="w-full flex justify-between items-center">
 					<span class="text-sm font-light text-neutral-300">Dataset</span>
 					<DatasetDropDown />
-					<PlusSolid class="w-6 h-6 hover:text-neutral-300" />
+					<PlusSolid class="w-8 h-8 hover:text-neutral-300" />
 				</button>
 			</div>
 

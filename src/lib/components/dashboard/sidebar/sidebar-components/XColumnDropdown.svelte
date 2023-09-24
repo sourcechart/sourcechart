@@ -45,9 +45,9 @@
 	});
 </script>
 
-<div bind:this={container} class="flex-grow relative">
+<div bind:this={container} class="flex-grow relative w-full">
 	<div class="flex items-center">
-		<span class="text-xs text-neutral-400">X</span>
+		<span class="text-xs text-neutral-300">X</span>
 		<button
 			class="bg-neutral-900/80 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center ml-2"
 			on:click={() => (open = !open)}
