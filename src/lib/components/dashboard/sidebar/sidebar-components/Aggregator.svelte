@@ -60,9 +60,19 @@
 				selectAggregator(agg);
 			}}
 		>
-			<span class="text-xs font-thin">
+			<span class="text-xs font-thin font">
 				{agg}
 			</span>
 		</button>
 	{/each}
 </div>
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Oxygen+Mono:wght@400;500;700&display=swap"
+/>
+
+<style>
+	.font {
+		font-family: 'Oxygen Mono', monospace;
+	}
+</style>

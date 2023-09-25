@@ -75,8 +75,15 @@
 		{/each}
 	</div>
 </div>
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Oxygen+Mono:wght@400;500;700&display=swap"
+/>
 
 <style>
+	.font {
+		font-family: 'Oxygen Mono', monospace;
+	}
 	.selected {
 		background-color: #9d99dc77;
 	}
