@@ -100,7 +100,7 @@
 
 	<button
 		bind:this={dropdownContainer}
-		class="bg-neutral-900/80 w-full rounded-sm hover:bg-neutral-900 flex-grow justify-between flex items-center shadow-lg ml-4"
+		class="bg-neutral-900/80 w-full rounded-sm hover:bg-neutral-900 flex-grow justify-between flex items-center shadow-lg ml-4 border-neutral-700/50"
 		on:click={toggleDropdown}
 	>
 		<span class="text-sm text-white justify-center flex hover:text-neutral-200 font-thin ml-2">

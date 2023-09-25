@@ -48,7 +48,7 @@
 <div bind:this={container} class="flex-grow relative w-full">
 	<div class="flex items-center justify-between">
 		<button
-			class="bg-neutral-900/80 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center mx-auto"
+			class="bg-neutral-900/80 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center mx-auto border-neutral-700/50"
 			on:click={() => (open = !open)}
 		>
 			<span class="text-sm text-neutral-300 ml-1">X</span>

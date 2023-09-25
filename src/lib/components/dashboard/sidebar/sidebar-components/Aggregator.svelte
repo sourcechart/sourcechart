@@ -49,13 +49,15 @@
 	});
 </script>
 
-<div class="flex flex-wrap mt-4 space-x-3 justify-around">
+<div
+	class="scrollBarDiv bg-[#1c1c1ccd] flex justify-evenly items-center rounded-b-md overflow-x-auto py-2.5"
+>
 	{#each aggs as agg}
 		<button
-			class="inline-block w-auto rounded-md border hover:bg-[#9d99dc77] border-gray-400 text-center p-1 justify-center shadow-md {selectedAggregator ===
+			class="flex items-center justify-center w-auto p-2 rounded-md hover:bg-[#9d99dc77] text-center shadow-md {selectedAggregator ===
 			agg
 				? 'bg-[#9d99dc77]'
-				: ''}"
+				: 'bg-neutral-600/90'}"
 			on:click={() => {
 				selectAggregator(agg);
 			}}
@@ -66,3 +68,11 @@
 		</button>
 	{/each}
 </div>
+
+<!-- This style ensures that the section is taking up the full height of its parent. 
+You may need to adjust it depending on your parent's structure and styling. -->
+<style>
+	.full-height-section {
+		height: 100%;
+	}
+</style>

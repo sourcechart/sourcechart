@@ -81,7 +81,9 @@
 	});
 </script>
 
-<div class="flex items-center w-full bg-neutral-900/80 hover:bg-neutral-900/50 shadow-lg">
+<div
+	class="flex items-center w-full bg-neutral-900/80 hover:bg-neutral-900/50 shadow-lg border border-1 border-neutral-700/50"
+>
 	<button
 		class="flex-grow text-left mb-1"
 		on:click={(event) => {
@@ -89,7 +91,7 @@
 			event.stopPropagation();
 		}}
 	>
-		<span class="text-sm ml-1 text-white"> Aggregate Fields </span>
+		<span class="text-sm ml-1 text-white"> Groupby </span>
 	</button>
 
 	<button
@@ -129,6 +131,9 @@
 	{#if showGroupByAggregator}
 		<div class="-mt-1 bg-[#1c1c1c]">
 			<Tags items={tags} removeItem={removeTag} />
+		</div>
+		<div class="bg-[#1c1c1c] mt-3">
+			<span class="text-sm -mb-1 ml-1">Aggregate</span>
 			<Aggregator />
 		</div>
 	{/if}
@@ -137,12 +142,12 @@
 <style>
 	/* For WebKit (Chrome, Safari) */
 	.scrollBarDiv::-webkit-scrollbar {
-		width: 8px;
+		width: 4px; /* Change this value to make the scrollbar thinner or thicker */
 	}
 
 	.scrollBarDiv::-webkit-scrollbar-thumb {
 		background-color: rgba(255, 255, 255, 0.3);
-		border-radius: 4px;
+		border-radius: 2px; /* Adjust the border-radius as per the new width */
 	}
 
 	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
@@ -151,9 +156,9 @@
 
 	/* For Firefox */
 	.scrollBarDiv {
-		scrollbar-width: thin;
+		scrollbar-width: thin; /* This property can have values of "none", "auto", "thin", and "wide" */
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
-		max-height: 200px; /* Adjust this value to your desired maximum height */
+		max-height: 200px;
 		overflow-y: auto;
 	}
 </style>
