@@ -68,11 +68,3 @@
 		</button>
 	{/each}
 </div>
-
-<!-- This style ensures that the section is taking up the full height of its parent. 
-You may need to adjust it depending on your parent's structure and styling. -->
-<style>
-	.full-height-section {
-		height: 100%;
-	}
-</style>

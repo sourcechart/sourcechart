@@ -13,6 +13,6 @@
 </script>
 
 <button
-	class="selectFieldColor block selectFieldColor text-left px-3 py-2 dark:text-black hover:bg-gray-200"
+	class="block selectFieldColor text-left py-2 dark:text-black w-full"
 	on:click={exportToCSV}
 />

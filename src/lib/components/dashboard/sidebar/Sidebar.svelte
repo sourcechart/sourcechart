@@ -63,18 +63,21 @@
 			</div>
 
 			<!--Filters-->
-			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
+			<div class="p-2 hover:bg-[#303030] hover:round-md">
 				<div class="flex justify-between items-center w-full">
 					<span class="text-sm font-light text-neutral-300">Filters</span>
 					<AddFilter />
 				</div>
+
 				{#each filterColumns as filterData}
-					<Filter {filterData} />
+					<div class="mt-2">
+						<Filter {filterData} />
+					</div>
 				{/each}
 			</div>
 
 			<!--Export-->
-			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
+			<div class="py-2 px-2 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
 					<div class="flex justify-between">
 						<span class="text-sm font-light text-neutral-300">Export</span>
