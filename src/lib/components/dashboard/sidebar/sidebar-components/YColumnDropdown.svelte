@@ -51,9 +51,8 @@
 			class="mx-auto bg-neutral-900/80 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center"
 			on:click={() => (open = !open)}
 		>
-			<span class="text-xs text-slate-100 w-full"> {currentValue} </span>
-			<div class="w-4" /></button
-		>
+			<span class="text-xs text-slate-100 w-full justify-center"> {currentValue} </span>
+		</button>
 	</div>
 	{#if open}
 		<div

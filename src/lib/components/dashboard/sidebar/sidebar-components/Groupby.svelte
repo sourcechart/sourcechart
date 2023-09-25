@@ -128,7 +128,7 @@
 {/if}
 
 {#if tags.length > 0 || showGroupByAggregator}
-	<div class="mt-4 flex-grow">
+	<div class="flex-grow">
 		<span class="text-sm"> Columns </span>
 		<Tags items={tags} removeItem={removeTag} />
 	</div>
