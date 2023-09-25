@@ -7,6 +7,7 @@
 		clickedChartIndex
 	} from '$lib/io/Stores';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
+	import CarrotUp from '$lib/components/ui/icons/CarrotUp.svelte';
 	import { onDestroy } from 'svelte';
 	import { Tags } from '$lib/components/ui/tags';
 	import Aggregator from './Aggregator.svelte';
@@ -18,8 +19,6 @@
 	let selectedButtons: Array<string> = [];
 	let isGroupByDropdownOpen: boolean = false;
 	let showGroupByAggregator: boolean = false;
-
-	let testColumns = ['test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8'];
 
 	$: columns = getColumnsFromFile();
 	$: clickChart = clickedChart();
@@ -77,45 +76,44 @@
 	});
 </script>
 
-<div class="flex justify-between items-center w-full text-neutral-300">
-	<div
-		class="bg-neutral-900/60 w-full rounded-sm hover:bg-neutral-900/30 flex-grow flex items-center"
-	>
-		<button
-			class="flex justify-between w-full round-t-md"
-			on:click={() => {
-				showGroupByAggregator = !showGroupByAggregator;
-			}}
-		>
-			<span class="text-xs">Aggregates</span>
-			<CarrotDown class="h-6 w-6 hover:text-neutral-400" />
-		</button>
+<div class="flex justify-between items-center w-full text-neutral-300 bg-neutral-900/80 shadow-lg">
+	<div class="w-full rounded-sm hover:bg-neutral-900/30 flex-grow flex">
+		<div class="flex items-center">
+			<span class="text-xs flex-shrink-0 ml-1">Aggregates</span>
+
+			<button
+				class="flex-grow flex justify-center items-center border border-neutral-700 hover:border-neutral-600 ml-2 px-10"
+				on:click={() => {
+					isGroupByDropdownOpen = !isGroupByDropdownOpen;
+				}}
+			>
+				<span class="text-xs hover:text-neutral-200">Choose Fields</span>
+			</button>
+
+			<button
+				class="flex-shrink-0 flex items-center ml-1"
+				on:click={() => {
+					showGroupByAggregator = !showGroupByAggregator;
+				}}
+			>
+				{#if !showGroupByAggregator}
+					<CarrotDown class="h-6 w-6 hover:text-neutral-400" />
+				{:else}
+					<CarrotUp class="h-6 w-6 hover:text-neutral-400" />
+				{/if}
+			</button>
+		</div>
 	</div>
 </div>
-
-<div class="flex w-full h-auto">
-	<span class="text-xs bg-red-500 px-2 justify-center items-center">Fields</span>
-
-	<button
-		class="mb-1 w-full bg-neutral-900/90 flex justify-center"
-		on:click={() => {
-			isGroupByDropdownOpen = !isGroupByDropdownOpen;
-			if (isGroupByDropdownOpen == true) {
-				showGroupByAggregator = true;
-			}
-		}}
-	>
-		<span class="text-xs">Choose Fields</span>
-	</button>
-
+<div>
 	{#if isGroupByDropdownOpen}
 		<button
-			class="scrollBarDiv bg-red-500 absolute top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			class="scrollBarDiv absolute top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			on:click|stopPropagation={() => {
 				isGroupByDropdownOpen = false;
 			}}
 		>
-			{#each testColumns as column (column)}
+			{#each $columns as column (column)}
 				<button
 					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
 					on:click={() => {
@@ -128,11 +126,12 @@
 			{/each}
 		</button>
 	{/if}
+
 	{#if showGroupByAggregator}
-		<div class="flex-grow">
+		<div class="-mt-1">
 			<Tags items={tags} removeItem={removeTag} />
+			<Aggregator />
 		</div>
-		<Aggregator />
 	{/if}
 </div>
 
