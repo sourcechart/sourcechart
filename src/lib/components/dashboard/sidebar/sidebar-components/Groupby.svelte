@@ -77,66 +77,64 @@
 	});
 </script>
 
-<button
-	bind:this={container}
-	class="flex-grow relative hover:rounded-md w-full rounded-sm flex items-center"
->
-	<div class="flex justify-between items-center w-full text-neutral-300">
-		<div
-			class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
+<div class="flex justify-between items-center w-full text-neutral-300">
+	<div
+		class="bg-neutral-900/60 w-full rounded-sm hover:bg-neutral-900/30 flex-grow flex items-center"
+	>
+		<button
+			class="flex justify-between w-full round-t-md"
+			on:click={() => {
+				showGroupByAggregator = !showGroupByAggregator;
+			}}
 		>
-			<div class="flex items-center w-full">
-				<button
-					class="text-left mb-1 w-full"
-					on:click={() => {
-						isGroupByDropdownOpen = !isGroupByDropdownOpen;
-						if (isGroupByDropdownOpen == true) {
-							showGroupByAggregator = true;
-						}
-					}}
-				>
-					<span class="text-xs ml-1">Aggregate Fields</span>
-				</button>
-				<div class="flex-grow" />
-				<button
-					on:click={() => {
-						showGroupByAggregator = !showGroupByAggregator;
-					}}
-				>
-					<CarrotDown class="h-6 w-6 hover:text-neutral-400" />
-				</button>
-			</div>
-		</div>
+			<span class="text-xs">Aggregates</span>
+			<CarrotDown class="h-6 w-6 hover:text-neutral-400" />
+		</button>
 	</div>
-</button>
+</div>
 
-{#if isGroupByDropdownOpen}
+<div class="flex w-full h-auto">
+	<span class="text-xs bg-red-500 px-2 justify-center items-center">Fields</span>
+
 	<button
-		class="scrollBarDiv bg-neutral-900 absolute top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-		on:click|stopPropagation={() => {
-			isGroupByDropdownOpen = false;
+		class="mb-1 w-full bg-neutral-900/90 flex justify-center"
+		on:click={() => {
+			isGroupByDropdownOpen = !isGroupByDropdownOpen;
+			if (isGroupByDropdownOpen == true) {
+				showGroupByAggregator = true;
+			}
 		}}
 	>
-		{#each testColumns as column (column)}
-			<button
-				class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-				on:click={() => {
-					addColumnToGroupBy(column);
-					showGroupByAggregator = true;
-				}}
-			>
-				{column}
-			</button>
-		{/each}
+		<span class="text-xs">Choose Fields</span>
 	</button>
-{/if}
 
-{#if showGroupByAggregator}
-	<div class="flex-grow">
-		<Tags items={tags} removeItem={removeTag} />
-	</div>
-	<Aggregator />
-{/if}
+	{#if isGroupByDropdownOpen}
+		<button
+			class="scrollBarDiv bg-red-500 absolute top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			on:click|stopPropagation={() => {
+				isGroupByDropdownOpen = false;
+			}}
+		>
+			{#each testColumns as column (column)}
+				<button
+					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+					on:click={() => {
+						addColumnToGroupBy(column);
+						showGroupByAggregator = true;
+					}}
+				>
+					{column}
+				</button>
+			{/each}
+		</button>
+	{/if}
+	{#if showGroupByAggregator}
+		<div class="flex-grow">
+			<Tags items={tags} removeItem={removeTag} />
+		</div>
+		<Aggregator />
+	{/if}
+</div>
 
 <style>
 	/* For WebKit (Chrome, Safari) */
