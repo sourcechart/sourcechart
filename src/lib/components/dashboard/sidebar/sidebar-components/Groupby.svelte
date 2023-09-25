@@ -8,13 +8,16 @@
 	} from '$lib/io/Stores';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
 	import { onDestroy } from 'svelte';
+	import { Tags } from '$lib/components/ui/tags';
+	import Aggregator from './Aggregator.svelte';
 
 	let dropdownContainer: HTMLElement;
 	let container: HTMLElement;
 
 	let tags: Array<string> = [];
 	let selectedButtons: Array<string> = [];
-	let isGroupByOpen: boolean = false;
+	let isGroupByDropdownOpen: boolean = false;
+	let showGroupByAggregator: boolean = false;
 
 	$: columns = getColumnsFromFile();
 	$: clickChart = clickedChart();
@@ -33,12 +36,12 @@
 
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
-			isGroupByOpen = false;
+			isGroupByDropdownOpen = false;
 		}
 	};
 
 	$: {
-		if (isGroupByOpen) {
+		if (isGroupByDropdownOpen) {
 			document.addEventListener('click', handleOutsideClick);
 		} else {
 			document.removeEventListener('click', handleOutsideClick);
@@ -75,19 +78,24 @@
 <button
 	bind:this={container}
 	class="flex-grow relative hover:rounded-md w-full rounded-sm flex items-center"
-	on:click={() => {
-		isGroupByOpen = !isGroupByOpen;
-	}}
 >
 	<div class="flex justify-between items-center w-full text-neutral-300">
 		<div
 			class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
 		>
 			<div class="justify-between flex items-center w-full px-1 mb-1">
-				<button>
+				<button
+					on:click={() => {
+						isGroupByDropdownOpen = !isGroupByDropdownOpen;
+					}}
+				>
 					<span class="text-sm ml-2">Aggregate Fields</span>
 				</button>
-				<button>
+				<button
+					on:click={() => {
+						showGroupByAggregator = !showGroupByAggregator;
+					}}
+				>
 					<CarrotDown class="h-6 w-6" />
 				</button>
 			</div>
@@ -95,15 +103,15 @@
 	</div>
 </button>
 
-{#if isGroupByOpen}
+{#if isGroupByDropdownOpen}
 	<button
 		class={`
             scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
             rounded shadow-lg transform transition-transform 
             origin-top overflow-y-auto overflow-x-hidden z-10 
-            ${isGroupByOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
+            ${isGroupByDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 		on:click|stopPropagation={() => {
-			isGroupByOpen = false;
+			isGroupByDropdownOpen = false;
 		}}
 	>
 		{#each $columns as column (column)}
@@ -119,15 +127,14 @@
 	</button>
 {/if}
 
-<!--
-{#if tags.length > 0}
+{#if tags.length > 0 || showGroupByAggregator}
 	<div class="mt-4 flex-grow">
 		<span class="text-sm"> Columns </span>
 		<Tags items={tags} removeItem={removeTag} />
 	</div>
 	<Aggregator />
 {/if}
--->
+
 <style>
 	/* For WebKit (Chrome, Safari) */
 	.scrollBarDiv::-webkit-scrollbar {

@@ -5,8 +5,6 @@
 	export let open = false;
 	let currentValue: string = 'Select Column';
 
-	let testColumns = ['test1', 'test2', 'test3'];
-
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
 	let container: HTMLElement;
