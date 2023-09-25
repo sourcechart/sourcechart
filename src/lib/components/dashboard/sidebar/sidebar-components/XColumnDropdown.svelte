@@ -4,11 +4,18 @@
 
 	export let open = false;
 	let currentValue: string = 'Select Column';
-	let testColumns = ['test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8'];
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
 	let container: HTMLElement;
+
+	$: {
+		if (open) {
+			document.addEventListener('click', handleOutsideClick);
+		} else {
+			document.removeEventListener('click', handleOutsideClick);
+		}
+	}
 
 	const handleChoose = (column: string) => {
 		allCharts.update((charts) => {
@@ -32,14 +39,6 @@
 			open = false;
 		}
 	};
-
-	$: {
-		if (open) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
-	}
 
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);

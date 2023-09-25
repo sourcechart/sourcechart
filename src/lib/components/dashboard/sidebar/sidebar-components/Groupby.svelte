@@ -34,7 +34,11 @@
 		chart.groupbyColumns = [];
 		$allCharts[$i] = chart;
 	}
-
+	const handleEscapeKey = (event: KeyboardEvent) => {
+		if (event.key === 'Escape') {
+			isGroupByDropdownOpen = false;
+		}
+	};
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
 			isGroupByDropdownOpen = false;
@@ -73,10 +77,11 @@
 
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
+		document.removeEventListener('keydown', handleEscapeKey);
 	});
 </script>
 
-<div class="flex justify-between items-center w-full bg-neutral-900/80 shadow-lg">
+<div class="flex justify-between items-center w-full bg-neutral-900/80 shadow-lg rounded-md">
 	<div class="w-full rounded-sm hover:bg-neutral-900/30 flex-grow flex">
 		<div class="flex items-center">
 			<span class="text-xs flex-shrink-0 ml-1 text-neutral-300">Aggregates</span>
@@ -108,6 +113,7 @@
 <div>
 	{#if isGroupByDropdownOpen}
 		<button
+			bind:this={dropdownContainer}
 			class="scrollBarDiv absolute top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			on:click|stopPropagation={() => {
 				isGroupByDropdownOpen = false;

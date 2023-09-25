@@ -18,6 +18,12 @@
 		}
 	}
 
+	$: if ($allCharts.length > 0 && $allCharts[$i]?.aggregator) {
+		selectedAggregator = $allCharts[$i].aggregator;
+	} else {
+		selectedAggregator = 'Aggregator';
+	}
+
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
 			isAggDropdownOpen = false;
@@ -46,7 +52,10 @@
 <div class="flex flex-wrap mt-4 space-x-3 justify-around">
 	{#each aggs as agg}
 		<button
-			class="inline-block w-auto rounded-md border border-gray-400 text-center p-1 justify-center hover:bg-gray-200 transition duration-300 ease-in-out shadow-md"
+			class="inline-block w-auto rounded-md border hover:bg-[#9d99dc77] border-gray-400 text-center p-1 justify-center shadow-md {selectedAggregator ===
+			agg
+				? 'bg-[#9d99dc77]'
+				: ''}"
 			on:click={() => {
 				selectAggregator(agg);
 			}}
