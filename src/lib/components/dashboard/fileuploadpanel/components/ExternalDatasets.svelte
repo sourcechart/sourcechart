@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { ChevronDoubleDownOutline } from 'flowbite-svelte-icons'; //@ts-ignore
 	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
 	import TableHead from 'flowbite-svelte/TableHead.svelte'; //@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore

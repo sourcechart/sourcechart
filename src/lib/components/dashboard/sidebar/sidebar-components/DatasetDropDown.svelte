@@ -134,7 +134,6 @@
 									class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
 									on:click={(event) => {
 										event.stopPropagation();
-										removeFileFromSqlite(dataset);
 									}}
 								>
 									<CloseSolid class="w-3 h-3 text-white dark:text-white" />
