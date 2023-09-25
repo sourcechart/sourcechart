@@ -91,6 +91,9 @@
 						class="text-left mb-1 w-full"
 						on:click={() => {
 							isGroupByDropdownOpen = !isGroupByDropdownOpen;
+							if (isGroupByDropdownOpen == true) {
+								showGroupByAggregator = true;
+							}
 						}}
 					>
 						<span class="text-xs ml-1">Aggregate Fields</span>
