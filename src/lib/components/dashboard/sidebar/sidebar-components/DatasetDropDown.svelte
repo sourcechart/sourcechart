@@ -11,20 +11,12 @@
 
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
-	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { onMount, onDestroy } from 'svelte';
+	import { onDestroy } from 'svelte';
 
 	let isDropdownOpen = false;
-	let syncWorker: Worker | undefined = undefined;
 	let selectedDataset: string | null = 'Choose Dataset';
 	let dropdownContainer: HTMLElement;
-
-	const handleOutsideClick = (event: MouseEvent) => {
-		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
-			isDropdownOpen = false;
-		}
-	};
 
 	$: {
 		if (isDropdownOpen) {
@@ -43,30 +35,23 @@
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	const onWorkerMessage = (e: MessageEvent) => {
-		var arrayBuffer = hexToBuffer(e.data.hexadecimal);
-		var dataObject = {
-			buffer: arrayBuffer,
-			filename: e.data.filename
-		};
-		queryDuckDB(dataObject);
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+			isDropdownOpen = false;
+		}
 	};
 
-	const loadWorker = async () => {
-		const SyncWorker = await import('$lib/io/web.worker?worker');
-		syncWorker = new SyncWorker.default();
-	};
-
-	const queryDuckDB = async (dataObject: DataObject) => {
-		const db = await DuckDBClient.of([dataObject]);
-		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
-		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
+	const queryDuckDB = async (filename: string) => {
+		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
+		if (!dataObject) return;
+		const db = await DuckDBClient.of([dataObject.file]);
+		const sanitizedFilename = checkNameForSpacesAndHyphens(dataObject.file.name);
+		const resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
 		console.log(schema);
 
 		duckDBInstanceStore.set(db);
-
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			chart.schema = schema;
@@ -75,21 +60,20 @@
 		});
 	};
 
-	const selectFile = (filename: string | null) => {
-		if (filename) {
-			selectedDataset = filename;
-			$chosenFile = filename;
+	const selectFile = (filename: string) => {
+		selectedDataset = filename;
+		$chosenFile = filename;
 
-			allCharts.update((charts) => {
-				let chart = charts[$i];
-				chart.filename = filename;
-				if ($file?.datasetID) chart.datasetID = $file.datasetID;
-				return charts;
-			});
-		}
+		allCharts.update((charts) => {
+			charts[$i].filename = filename;
+			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID;
+			return charts;
+		});
+
+		queryDuckDB(filename);
 	};
 
-	const removeFileFromSqlite = (filename: string) => {
+	const removeFromAllCharts = (filename: string) => {
 		allCharts.update((charts) => {
 			return charts.filter((chart) => chart.filename !== filename);
 		});
@@ -106,8 +90,6 @@
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
-
-	onMount(loadWorker);
 </script>
 
 <div class="w-full p-4 rounded-sm relative">
@@ -129,27 +111,40 @@
 			>
 				{#each $datasets as dataset}
 					{#if dataset !== null}
-						<div class="flex justify-between items-center text-gray-400 relative selectFieldColor">
+						<div>
 							<div
-								class="text-left px-3 py-2 w-full bg-gray-900 dark:text-black hover:bg-gray-700 cursor-pointer truncate pr-8"
-								on:click={() => {
-									selectFile(dataset);
-									isDropdownOpen = false;
-								}}
-								on:keypress={(event) => {
-									if (event.key === 'Enter') {
+								class="flex justify-between items-center text-gray-400 relative selectFieldColor"
+							>
+								<div
+									class="text-left px-3 py-2 w-full bg-gray-900 dark:text-black hover:bg-gray-700 cursor-pointer truncate pr-8"
+									on:click={() => {
 										selectFile(dataset);
 										isDropdownOpen = false;
-									}
-								}}
-							>
-								{dataset}
+									}}
+									on:keypress={(event) => {
+										if (event.key === 'Enter') {
+											selectFile(dataset);
+											isDropdownOpen = false;
+										}
+									}}
+								>
+									{dataset}
+								</div>
+								<button
+									class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
+									on:click={(event) => {
+										event.stopPropagation();
+										removeFileFromSqlite(dataset);
+									}}
+								>
+									<CloseSolid class="w-3 h-3 text-white dark:text-white" />
+								</button>
 							</div>
 							<button
 								class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
 								on:click={(event) => {
 									event.stopPropagation();
-									removeFileFromSqlite(dataset);
+									removeFromAllCharts(dataset);
 								}}
 							>
 								<CloseSolid class="w-3 h-3 text-white dark:text-white" />

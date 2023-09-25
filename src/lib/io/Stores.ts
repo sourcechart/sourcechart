@@ -13,8 +13,6 @@ export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
-export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
-export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
 export const polygons = writable<Polygon[]>([]);
@@ -27,27 +25,10 @@ export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
-export const arrows = writable<
-	{
-		startX: number;
-		startY: number;
-		endX: number;
-		endY: number;
-		midX: number;
-		midY: number;
-	}[]
->(storeFromLocalStorage('arrowsStore', []));
 
-const createDropdownStore = () => {
-	const { subscribe, set, update } = writable(null);
-
-	return {
-		subscribe,
-		open: (id: any) => set(id),
-		close: () => set(null),
-		toggle: (id: any) => update((currentId) => (currentId !== id ? id : null))
-	};
-};
+export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
+export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
+export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
@@ -98,6 +79,7 @@ export const getChartOptions = (id: string | undefined) => {
 					const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
 					if (chart) {
 						const db = $duckDBInstanceStore;
+						console.log(db);
 						const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
 						const chartOption = await newChart.updateChart();
 						set(chartOption);
@@ -150,7 +132,6 @@ export const canvasBehavior = () => {
 				$mouseType !== 'move' &&
 				$mouseType !== ''
 			) {
-				//This will have to be changed
 				touchState = 'isResizing';
 			} else if (
 				$navBarState === 'select' &&
@@ -202,15 +183,3 @@ export const columnLabel = (axis: string) =>
 storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');
 storeToLocalStorage(arrows, 'arrowsStore');
-
-export const dropdownStore = createDropdownStore();
-export const createFileStore = (filename: string, fileSize: number, dataID: string) => {
-	var tableColumnsSize = {
-		filename: filename,
-		datasetID: dataID,
-		size: fileSize,
-		fileextension: filename.split('.').pop()
-	};
-
-	fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
-};

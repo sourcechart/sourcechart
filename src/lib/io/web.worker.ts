@@ -1,3 +1,4 @@
+/*
 import sqlite3InitModule from 'sqlite-wasm-esm';
 
 type DataMessage = {
@@ -86,3 +87,4 @@ const insertDataIntoDatabase = (data: DataMessage) => {
 		db.close();
 	});
 };
+*/

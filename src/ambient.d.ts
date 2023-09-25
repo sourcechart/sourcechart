@@ -84,8 +84,6 @@ type Queries = {
 			from: string | undefined | null;
 		};
 	};
-	//filters: Array<Condition>;
-	//having: Array<Condition>;
 };
 
 type Condition = { column: string; filter: string | null | number };
@@ -102,9 +100,10 @@ type DataObject = {
 
 type FileUpload = {
 	filename: string;
-	//columns: string[];
-	size: number;
+	file: File | ExternalDataset;
+	size: number | null;
 	datasetID: string;
+	fileExtension: string | undefined;
 };
 
 type Field = {
@@ -153,6 +152,15 @@ interface Rectangle {
 type Point = {
 	x: number;
 	y: number;
+};
+
+type Arrow = {
+	startX: number;
+	startY: number;
+	endX: number;
+	endY: number;
+	midX: number;
+	midY: number;
 };
 
 interface Polygon {
