@@ -81,8 +81,10 @@
 	});
 </script>
 
-<div class="flex justify-between items-center w-full bg-neutral-900/80 shadow-lg rounded-md">
-	<div class="w-full rounded-sm hover:bg-neutral-900/30 flex-grow flex">
+<div
+	class="flex justify-between items-center w-full bg-neutral-900/80 hover:bg-neutral-900/50 shadow-lg rounded-md"
+>
+	<div class="w-full rounded-sm flex-grow flex">
 		<div class="flex items-center">
 			<span class="text-xs flex-shrink-0 ml-1 text-neutral-300">Aggregates</span>
 

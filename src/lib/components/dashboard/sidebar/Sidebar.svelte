@@ -15,9 +15,6 @@
 	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
-
-	import { fileDropdown } from '$lib/io/Stores';
-	$: numberOfDatasets = fileDropdown();
 </script>
 
 {#if $activeSidebar}
@@ -30,13 +27,13 @@
 		>
 			<div class="py-2 px-3 hover:bg-[#303030] hover:rounded-md">
 				<button class="w-full flex justify-between items-center">
-					<span class="text-sm font-light text-neutral-300">Datasets{[$numberOfDatasets]}</span>
+					<span class="text-sm font-light text-neutral-300">Datasets</span>
 					<DatasetDropDown />
 					<FileUploadButton />
 				</button>
 			</div>
 
-			<div class="py-2 px-3 w-full">
+			<div class="py-2 px-3 w-full hover:bg-[#303030]">
 				<div class="mt-2 flex items-center justify-between space-x-3">
 					<div class="flex w-1/2">
 						<XColumnDropdown />

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
-	import { PlusSolid } from 'flowbite-svelte-icons';
+	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
 
 	const handleClick = () => {
 		activeDropZone.set(true);
@@ -9,5 +9,5 @@
 </script>
 
 <button on:click={handleClick}>
-	<PlusSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
+	<PlusSolid class="w-6 h-6  text-white dark:text-neutral-300" />
 </button>
