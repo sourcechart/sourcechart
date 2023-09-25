@@ -124,11 +124,7 @@
 
 		{#if isDropdownOpen}
 			<button
-				class={`
-            scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
-            rounded shadow-lg transform transition-transform 
-            origin-top overflow-y-auto overflow-x-hidden z-10 
-            ${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
+				class="scrollBarDiv bg-neutral-900 absolute top-0 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 				on:click={() => (isDropdownOpen = false)}
 			>
 				{#each $datasets as dataset}

@@ -77,40 +77,38 @@
 	});
 </script>
 
-<div>
-	<button
-		bind:this={container}
-		class="flex-grow relative hover:rounded-md w-full rounded-sm flex items-center"
-	>
-		<div class="flex justify-between items-center w-full text-neutral-300">
-			<div
-				class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
-			>
-				<div class="flex items-center w-full">
-					<button
-						class="text-left mb-1 w-full"
-						on:click={() => {
-							isGroupByDropdownOpen = !isGroupByDropdownOpen;
-							if (isGroupByDropdownOpen == true) {
-								showGroupByAggregator = true;
-							}
-						}}
-					>
-						<span class="text-xs ml-1">Aggregate Fields</span>
-					</button>
-					<div class="flex-grow" />
-					<button
-						on:click={() => {
-							showGroupByAggregator = !showGroupByAggregator;
-						}}
-					>
-						<CarrotDown class="h-6 w-6 hover:text-neutral-400" />
-					</button>
-				</div>
+<button
+	bind:this={container}
+	class="flex-grow relative hover:rounded-md w-full rounded-sm flex items-center"
+>
+	<div class="flex justify-between items-center w-full text-neutral-300">
+		<div
+			class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
+		>
+			<div class="flex items-center w-full">
+				<button
+					class="text-left mb-1 w-full"
+					on:click={() => {
+						isGroupByDropdownOpen = !isGroupByDropdownOpen;
+						if (isGroupByDropdownOpen == true) {
+							showGroupByAggregator = true;
+						}
+					}}
+				>
+					<span class="text-xs ml-1">Aggregate Fields</span>
+				</button>
+				<div class="flex-grow" />
+				<button
+					on:click={() => {
+						showGroupByAggregator = !showGroupByAggregator;
+					}}
+				>
+					<CarrotDown class="h-6 w-6 hover:text-neutral-400" />
+				</button>
 			</div>
 		</div>
-	</button>
-</div>
+	</div>
+</button>
 
 {#if isGroupByDropdownOpen}
 	<button

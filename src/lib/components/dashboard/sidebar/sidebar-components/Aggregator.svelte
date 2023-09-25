@@ -79,10 +79,10 @@
 
 <button
 	bind:this={dropdownContainer}
-	class="scrollBarDiv bg-neutral-900 absolute top-0 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+	class="relative w-full scrollBarDiv bg-neutral-900 text-left top-0 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 	on:click={toggleAggDropdown}
 >
-	<span class="text-sm ml-2 text-white"> Select Aggregator </span>
+	<span class="text-xs ml-2 text-white"> Select Aggregator </span>
 </button>
 
 {#if isAggDropdownOpen}
@@ -106,12 +106,10 @@
 		{/each}
 	</button>
 {/if}
-<div class="mt-4 flex-grow">
-	{#if selectedAggregator !== 'Aggregator'}
-		<span class="text-sm"> Selected Aggregator </span>
-		<Tags items={tags} removeItem={removeTag} />
-	{/if}
-</div>
+{#if selectedAggregator !== 'Aggregator'}
+	<span class="text-sm"> Selected Aggregator </span>
+	<Tags items={tags} removeItem={removeTag} />
+{/if}
 
 <!-- You can keep the provided styles as-is or modify them to match your overall theme -->
 
