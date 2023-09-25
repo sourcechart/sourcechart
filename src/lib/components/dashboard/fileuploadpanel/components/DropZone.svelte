@@ -17,7 +17,6 @@
 			size: file.size,
 			fileExtension: file.name.split('.').pop()
 		};
-
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 	};
 

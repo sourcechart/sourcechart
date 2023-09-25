@@ -81,49 +81,40 @@
 	});
 </script>
 
-<div
-	class="flex justify-between items-center w-full bg-neutral-900/80 hover:bg-neutral-900/50 shadow-lg rounded-md"
->
-	<div class="w-full rounded-sm flex-grow flex">
-		<div class="flex items-center">
-			<span class="text-xs flex-shrink-0 ml-1 text-neutral-300">Aggregates</span>
+<div class="flex items-center w-full bg-neutral-900/80 hover:bg-neutral-900/50 shadow-lg">
+	<button
+		class="flex-grow text-left mb-1"
+		on:click={(event) => {
+			isGroupByDropdownOpen = !isGroupByDropdownOpen;
+			event.stopPropagation();
+		}}
+	>
+		<span class="text-sm ml-1 text-white"> Aggregate Fields </span>
+	</button>
 
-			<button
-				class="flex-grow flex justify-center items-center border border-neutral-700 hover:border-neutral-600 ml-2 px-10"
-				on:click={() => {
-					isGroupByDropdownOpen = !isGroupByDropdownOpen;
-				}}
-			>
-				<span class="text-xs text-white">Choose Fields</span>
-			</button>
-
-			<button
-				class="flex-shrink-0 flex items-center ml-1"
-				on:click={() => {
-					showGroupByAggregator = !showGroupByAggregator;
-				}}
-			>
-				{#if !showGroupByAggregator}
-					<CarrotDown class="h-6 w-6 hover:text-neutral-400" />
-				{:else}
-					<CarrotUp class="h-6 w-6 hover:text-neutral-400" />
-				{/if}
-			</button>
-		</div>
-	</div>
+	<button
+		class=" flex-shrink-0"
+		on:click={() => {
+			showGroupByAggregator = !showGroupByAggregator;
+		}}
+	>
+		{#if !showGroupByAggregator}
+			<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-4" />
+		{:else}
+			<CarrotUp class="h-6 w-6 hover:text-neutral-400 ml-4" />
+		{/if}
+	</button>
 </div>
+
 <div>
 	{#if isGroupByDropdownOpen}
-		<button
+		<div
 			bind:this={dropdownContainer}
-			class="scrollBarDiv absolute top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-			on:click|stopPropagation={() => {
-				isGroupByDropdownOpen = false;
-			}}
+			class="scrollBarDiv absolute top-0 rounded-md bg-neutral-900 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 		>
 			{#each $columns as column (column)}
 				<button
-					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 text-xs font-thin"
 					on:click={() => {
 						addColumnToGroupBy(column);
 						showGroupByAggregator = true;
@@ -132,11 +123,11 @@
 					{column}
 				</button>
 			{/each}
-		</button>
+		</div>
 	{/if}
 
 	{#if showGroupByAggregator}
-		<div class="-mt-1 bg-neutral-900">
+		<div class="-mt-1 bg-[#1c1c1c]">
 			<Tags items={tags} removeItem={removeTag} />
 			<Aggregator />
 		</div>

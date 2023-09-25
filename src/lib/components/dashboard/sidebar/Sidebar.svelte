@@ -1,18 +1,15 @@
 <script lang="ts">
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores';
-	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
 	import Download from '$lib/components/ui/icons/Download.svelte';
 	import Baseline from '$lib/components/ui/icons/Baseline.svelte';
-	//import LegendColumn from './sidebar-components/LegendColumn.svelte';
-	//import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
+
 	import Filter from './sidebar-components/filter-components/Filter.svelte';
 
 	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
 	import XColumnDropdown from './sidebar-components/XColumnDropdown.svelte';
 	import YColumnDropdown from './sidebar-components/YColumnDropdown.svelte';
 	import Groupby from './sidebar-components/Groupby.svelte';
-	import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
 	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
@@ -32,15 +29,15 @@
 			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-700/80"
 		>
 			<div class="py-2 px-3 hover:bg-[#303030] hover:rounded-md">
-				<button class="w-full flex justify-between items-center">
-					<span class="text-sm font-light text-neutral-300">Datasets</span>
+				<div class="w-full flex justify-between items-center ml-0">
 					<DatasetDropDown />
-					<FileUploadButton />
-				</button>
+				</div>
 			</div>
 
 			<div class="py-2 px-3 w-full hover:bg-[#303030]">
-				<div class="mt-2 flex items-center justify-between space-x-3">
+				<span class="text-sm mt-1 text-neutral-300">Query</span>
+
+				<div class="flex items-center justify-between space-x-3 mt-1">
 					<div class="flex w-1/2">
 						<XColumnDropdown />
 					</div>
@@ -48,7 +45,7 @@
 						<YColumnDropdown />
 					</div>
 				</div>
-				<div class="mt-3 hover:round-md">
+				<div class="my-4 hover:round-md">
 					<Groupby />
 				</div>
 			</div>

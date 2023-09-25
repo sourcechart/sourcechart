@@ -50,13 +50,13 @@
 			class="mx-auto bg-neutral-900/80 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center"
 			on:click={() => (open = !open)}
 		>
-			<span class="text-xs text-neutral-300 ml-1">Y</span>
-			<span class="text-xs text-slate-100 w-full justify-center"> {currentValue} </span>
+			<span class="text-sm text-neutral-300 ml-1">Y</span>
+			<span class="text-sm text-slate-100 w-full justify-center"> {currentValue} </span>
 		</button>
 	</div>
 	{#if open}
 		<div
-			class="scrollBarDiv bg-neutral-900 absolute top-0 left-0 mt-5 border transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			class="scrollBarDiv bg-neutral-900 rounded-md absolute top-0 left-0 mt-5 border transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 		>
 			{#each $columns as column}
 				<button

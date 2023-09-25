@@ -9,5 +9,5 @@
 </script>
 
 <button on:click={handleClick}>
-	<PlusSolid class="w-6 h-6  text-white dark:text-neutral-300" />
+	<PlusSolid />
 </button>

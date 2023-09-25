@@ -36,12 +36,12 @@
 </script>
 
 <div
-	class="scrollBarDiv bg-neutral-900/90 flex justify-start items-center rounded-b-md overflow-x-auto tagsColor"
+	class="scrollBarDiv bg-[#1c1c1ccd] flex justify-start items-center rounded-b-md overflow-x-auto"
 >
 	{#each items as item, i (i)}
 		<div
 			role="button"
-			class="flex items-center m-2 rounded-sm bg-gray-700 text-white px-4 py-1 text-sm cursor-pointer hover:bg-gray-600 transition duration-150 ease-in-out"
+			class="flex items-center m-2 rounded-md bg-neutral-600 border border-1 border-neutral-700 text-white px-3 py-1 text-sm cursor-pointer hover:bg-gray-600 transition duration-150 ease-in-out"
 			tabindex="0"
 			on:click={() => selectItem(i)}
 			on:keydown={(e) => {

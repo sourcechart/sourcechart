@@ -8,14 +8,17 @@
 		duckDBInstanceStore,
 		fileUploadStore
 	} from '$lib/io/Stores';
+	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
 
-	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { onDestroy } from 'svelte';
 
+	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
+	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
+
 	let isDropdownOpen = false;
-	let selectedDataset: string | null = 'Choose Dataset';
+	let selectedDataset: string | null = '';
 	let dropdownContainer: HTMLElement;
 
 	$: {
@@ -27,7 +30,7 @@
 	}
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
-		selectedDataset = $allCharts[$i]?.filename ? $allCharts[$i].filename : 'Choose Dataset';
+		selectedDataset = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 	}
 
@@ -92,72 +95,90 @@
 	});
 </script>
 
-<div class="w-full p-4 rounded-sm relative">
-	<div class="flex justify-between items-center">
-		<button
-			bind:this={dropdownContainer}
-			class="bg-neutral-900/80 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
-			on:click={toggleDropdown}
-		>
-			<span class="text-sm text-white font-thin justify-center flex hover:text-neutral-200 ml-2">
-				{selectedDataset}
-			</span>
-		</button>
+<div class="py-1 flex w-full space-x-3 items-center">
+	<span class="text-sm font-light text-neutral-300">Datasets</span>
 
-		{#if isDropdownOpen}
-			<button
-				class="scrollBarDiv bg-neutral-900 absolute top-0 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-				on:click={() => (isDropdownOpen = false)}
-			>
-				{#each $datasets as dataset}
-					{#if dataset !== null}
-						<div>
+	<button
+		bind:this={dropdownContainer}
+		class="bg-neutral-900/80 w-full rounded-sm hover:bg-neutral-900 flex-grow justify-between flex items-center shadow-lg ml-4"
+		on:click={toggleDropdown}
+	>
+		<span class="text-sm text-white justify-center flex hover:text-neutral-200 font-thin ml-2">
+			{selectedDataset}
+		</span>
+		<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-10" />
+	</button>
+
+	{#if isDropdownOpen}
+		<button
+			class="scrollBarDiv bg-neutral-800 absolute top-0 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			on:click={() => (isDropdownOpen = false)}
+		>
+			{#each $datasets as dataset}
+				{#if dataset !== null}
+					<div>
+						<div class="flex justify-between items-center text-gray-400 relative selectFieldColor">
 							<div
-								class="flex justify-between items-center text-gray-400 relative selectFieldColor"
-							>
-								<div
-									class="text-left px-3 py-2 w-full bg-gray-900 dark:text-black hover:bg-gray-700 cursor-pointer truncate pr-8"
-									on:click={() => {
+								class="text-left px-3 py-2 w-full bg-neutral-900/50 hover:bg-gray-700 cursor-pointer truncate pr-8"
+								on:click={() => {
+									selectFile(dataset);
+									isDropdownOpen = false;
+								}}
+								on:keypress={(event) => {
+									if (event.key === 'Enter') {
 										selectFile(dataset);
 										isDropdownOpen = false;
-									}}
-									on:keypress={(event) => {
-										if (event.key === 'Enter') {
-											selectFile(dataset);
-											isDropdownOpen = false;
-										}
-									}}
-								>
-									{dataset}
-								</div>
-								<button
-									class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
-									on:click={(event) => {
-										event.stopPropagation();
-									}}
-								>
-									<CloseSolid class="w-3 h-3 text-white dark:text-white" />
-								</button>
+									}
+								}}
+							>
+								{dataset}
 							</div>
 							<button
 								class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
 								on:click={(event) => {
 									event.stopPropagation();
-									removeFromAllCharts(dataset);
 								}}
 							>
 								<CloseSolid class="w-3 h-3 text-white dark:text-white" />
 							</button>
 						</div>
-					{/if}
-				{/each}
-			</button>
-		{/if}
-	</div>
+						<button
+							class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
+							on:click={(event) => {
+								event.stopPropagation();
+								removeFromAllCharts(dataset);
+							}}
+						>
+							<CloseSolid class="w-3 h-3 text-white dark:text-white" />
+						</button>
+					</div>
+				{/if}
+			{/each}
+		</button>
+	{/if}
+	<FileUploadButton />
 </div>
 
 <style>
-	.selectFieldColor {
-		background-color: #27272a00;
+	/* For WebKit (Chrome, Safari) */
+	.scrollBarDiv::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.scrollBarDiv::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
+	}
+
+	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(168, 168, 168, 0.5);
+	}
+
+	/* For Firefox */
+	.scrollBarDiv {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+		max-height: 200px; /* Adjust this value to your desired maximum height */
+		overflow-y: auto;
 	}
 </style>
