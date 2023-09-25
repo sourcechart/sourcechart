@@ -17,7 +17,6 @@
 		}
 	}
 
-	$: console.log($columns);
 	const handleChoose = (column: string) => {
 		allCharts.update((charts) => {
 			charts[$i].xColumn = column;
