@@ -11,10 +11,13 @@
 	import XColumnDropdown from './sidebar-components/XColumnDropdown.svelte';
 	import YColumnDropdown from './sidebar-components/YColumnDropdown.svelte';
 	import Groupby from './sidebar-components/Groupby.svelte';
-	//import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
+	import FileUploadButton from './sidebar-components/FileUploadButton.svelte';
 	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
+
+	import { fileDropdown } from '$lib/io/Stores';
+	$: numberOfDatasets = fileDropdown();
 </script>
 
 {#if $activeSidebar}
@@ -27,9 +30,9 @@
 		>
 			<div class="py-2 px-3 hover:bg-[#303030] hover:rounded-md">
 				<button class="w-full flex justify-between items-center">
-					<span class="text-sm font-light text-neutral-300">Dataset</span>
+					<span class="text-sm font-light text-neutral-300">Datasets{[$numberOfDatasets]}</span>
 					<DatasetDropDown />
-					<PlusSolid class="w-8 h-8 hover:text-neutral-300" />
+					<FileUploadButton />
 				</button>
 			</div>
 
