@@ -35,7 +35,9 @@
 	});
 </script>
 
-<div class=" scrollBarDiv flex justify-start items-center rounded-md overflow-x-auto tagsColor">
+<div
+	class="scrollBarDiv bg-neutral-900/90 flex justify-start items-center rounded-b-md overflow-x-auto tagsColor"
+>
 	{#each items as item, i (i)}
 		<div
 			role="button"
@@ -64,10 +66,6 @@
 
 <style>
 	/* Scrollbar styles */
-
-	.tagsColor {
-		background-color: rgb(18, 18, 18);
-	}
 
 	.scrollBarDiv::-webkit-scrollbar {
 		width: 8px;

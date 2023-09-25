@@ -46,11 +46,11 @@
 
 <div bind:this={container} class="flex-grow relative">
 	<div class="flex items-center">
-		<span class="text-xs text-neutral-300">Y</span>
 		<button
 			class="mx-auto bg-neutral-900/80 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center"
 			on:click={() => (open = !open)}
 		>
+			<span class="text-xs text-neutral-300 ml-1">Y</span>
 			<span class="text-xs text-slate-100 w-full justify-center"> {currentValue} </span>
 		</button>
 	</div>

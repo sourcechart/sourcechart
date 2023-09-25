@@ -19,8 +19,6 @@
 	let isGroupByDropdownOpen: boolean = false;
 	let showGroupByAggregator: boolean = false;
 
-	$: console.log(isGroupByDropdownOpen, showGroupByAggregator);
-
 	let testColumns = ['test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8'];
 
 	$: columns = getColumnsFromFile();
@@ -98,7 +96,6 @@
 						<span class="text-xs ml-1">Aggregate Fields</span>
 					</button>
 					<div class="flex-grow" />
-					<!-- This will push the next elements to the right -->
 					<button
 						on:click={() => {
 							showGroupByAggregator = !showGroupByAggregator;
@@ -119,11 +116,12 @@
 			isGroupByDropdownOpen = false;
 		}}
 	>
-		{#each $columns as column (column)}
+		{#each testColumns as column (column)}
 			<button
 				class="block w-full text-left px-3 py-2 hover:bg-gray-200"
 				on:click={() => {
 					addColumnToGroupBy(column);
+					showGroupByAggregator = true;
 				}}
 			>
 				{column}
@@ -132,9 +130,8 @@
 	</button>
 {/if}
 
-{#if tags.length > 0 || showGroupByAggregator}
+{#if showGroupByAggregator}
 	<div class="flex-grow">
-		<span class="text-sm"> Columns </span>
 		<Tags items={tags} removeItem={removeTag} />
 	</div>
 	<Aggregator />
@@ -161,9 +158,5 @@
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
 		max-height: 200px; /* Adjust this value to your desired maximum height */
 		overflow-y: auto;
-	}
-
-	.selectFieldColor {
-		background-color: #33333d;
 	}
 </style>
