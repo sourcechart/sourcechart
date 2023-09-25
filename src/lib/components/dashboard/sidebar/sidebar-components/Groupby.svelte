@@ -76,10 +76,10 @@
 	});
 </script>
 
-<div class="flex justify-between items-center w-full text-neutral-300 bg-neutral-900/80 shadow-lg">
+<div class="flex justify-between items-center w-full bg-neutral-900/80 shadow-lg">
 	<div class="w-full rounded-sm hover:bg-neutral-900/30 flex-grow flex">
 		<div class="flex items-center">
-			<span class="text-xs flex-shrink-0 ml-1">Aggregates</span>
+			<span class="text-xs flex-shrink-0 ml-1 text-neutral-300">Aggregates</span>
 
 			<button
 				class="flex-grow flex justify-center items-center border border-neutral-700 hover:border-neutral-600 ml-2 px-10"
@@ -87,7 +87,7 @@
 					isGroupByDropdownOpen = !isGroupByDropdownOpen;
 				}}
 			>
-				<span class="text-xs hover:text-neutral-200">Choose Fields</span>
+				<span class="text-xs text-white">Choose Fields</span>
 			</button>
 
 			<button
@@ -128,7 +128,7 @@
 	{/if}
 
 	{#if showGroupByAggregator}
-		<div class="-mt-1">
+		<div class="-mt-1 bg-neutral-900">
 			<Tags items={tags} removeItem={removeTag} />
 			<Aggregator />
 		</div>
