@@ -19,6 +19,10 @@
 	let isGroupByDropdownOpen: boolean = false;
 	let showGroupByAggregator: boolean = false;
 
+	$: console.log(isGroupByDropdownOpen, showGroupByAggregator);
+
+	let testColumns = ['test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8'];
+
 	$: columns = getColumnsFromFile();
 	$: clickChart = clickedChart();
 	$: i = clickedChartIndex();
@@ -75,41 +79,42 @@
 	});
 </script>
 
-<button
-	bind:this={container}
-	class="flex-grow relative hover:rounded-md w-full rounded-sm flex items-center"
->
-	<div class="flex justify-between items-center w-full text-neutral-300">
-		<div
-			class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
-		>
-			<div class="justify-between flex items-center w-full px-1 mb-1">
-				<button
-					on:click={() => {
-						isGroupByDropdownOpen = !isGroupByDropdownOpen;
-					}}
-				>
-					<span class="text-sm ml-2">Aggregate Fields</span>
-				</button>
-				<button
-					on:click={() => {
-						showGroupByAggregator = !showGroupByAggregator;
-					}}
-				>
-					<CarrotDown class="h-6 w-6" />
-				</button>
+<div>
+	<button
+		bind:this={container}
+		class="flex-grow relative hover:rounded-md w-full rounded-sm flex items-center"
+	>
+		<div class="flex justify-between items-center w-full text-neutral-300">
+			<div
+				class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
+			>
+				<div class="flex items-center w-full">
+					<button
+						class="text-left mb-1 w-full"
+						on:click={() => {
+							isGroupByDropdownOpen = !isGroupByDropdownOpen;
+						}}
+					>
+						<span class="text-xs ml-1">Aggregate Fields</span>
+					</button>
+					<div class="flex-grow" />
+					<!-- This will push the next elements to the right -->
+					<button
+						on:click={() => {
+							showGroupByAggregator = !showGroupByAggregator;
+						}}
+					>
+						<CarrotDown class="h-6 w-6 hover:text-neutral-400" />
+					</button>
+				</div>
 			</div>
 		</div>
-	</div>
-</button>
+	</button>
+</div>
 
 {#if isGroupByDropdownOpen}
 	<button
-		class={`
-            scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
-            rounded shadow-lg transform transition-transform 
-            origin-top overflow-y-auto overflow-x-hidden z-10 
-            ${isGroupByDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
+		class="scrollBarDiv bg-neutral-900 absolute top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 		on:click|stopPropagation={() => {
 			isGroupByDropdownOpen = false;
 		}}

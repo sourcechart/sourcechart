@@ -93,7 +93,7 @@
 
 	{#if isChartDropdownOpen}
 		<button
-			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
+			class="scrollBarDiv bg-neutral-900 absolute top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			on:click|stopPropagation={closeChartDropdown}
 		>
 			{#each rectangleCharts as { chartType }, i (i)}
