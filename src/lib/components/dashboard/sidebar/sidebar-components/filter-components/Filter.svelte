@@ -150,12 +150,12 @@
 	});
 </script>
 
-<div class="w-full p-4 selectFieldColor rounded-sm shadow-xl">
-	<div class="flex justify-between items-center text-gray-400">
+<div class="w-full p-4 bg-neutral-900/80 rounded-sm shadow-xl">
+	<div class="flex justify-between items-center text-white">
 		<div class="relative flex-grow w-full">
 			<button
 				bind:this={dropdownContainer}
-				class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex items-center"
+				class="bg-[#303030] w-full rounded-sm hover:bg-neutral-700 flex items-center"
 				on:click={() => {
 					isFieldDropdown = !isFieldDropdown;
 				}}

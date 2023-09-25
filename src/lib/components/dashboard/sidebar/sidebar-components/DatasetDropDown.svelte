@@ -9,7 +9,6 @@
 		fileUploadStore
 	} from '$lib/io/Stores';
 
-	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { hexToBuffer } from '$lib/io/HexOps';
@@ -64,6 +63,7 @@
 		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
+		console.log(schema);
 
 		duckDBInstanceStore.set(db);
 

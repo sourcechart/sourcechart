@@ -1,10 +1,8 @@
 <script lang="ts">
-	import Filter from './filter-components/Filter.svelte';
 	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	$: i = clickedChartIndex(); //@ts-ignore
-	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
 
 	let filterIDCounter = 0; // Add this line at the top
 
@@ -22,13 +20,9 @@
 	};
 </script>
 
+<!-- "Add Filter" Button -->
 <button on:click={addFilterToSidebar}>
-	<div class="flex w-full justify-between shadow-md dark:text-black">
-		<PlusSolid />
-	</div>
+	<PlusSolid />
 </button>
-{#each filterColumns as filterData}
-	<div class="py-2 flex">
-		<Filter {filterData} />
-	</div>
-{/each}
+
+<!-- Display Each Filter Component Underneath the Add Filter Button -->

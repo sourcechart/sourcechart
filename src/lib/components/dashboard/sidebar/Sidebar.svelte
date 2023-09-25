@@ -6,6 +6,7 @@
 	import Baseline from '$lib/components/ui/icons/Baseline.svelte';
 	//import LegendColumn from './sidebar-components/LegendColumn.svelte';
 	//import ColumnDropDown from './sidebar-components/ColumnDropDrown.svelte';
+	import Filter from './sidebar-components/filter-components/Filter.svelte';
 
 	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
 	import XColumnDropdown from './sidebar-components/XColumnDropdown.svelte';
@@ -15,6 +16,11 @@
 	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
+
+	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
+
+	$: i = clickedChartIndex(); //@ts-ignore
+	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
 </script>
 
 {#if $activeSidebar}
@@ -58,14 +64,16 @@
 					</div>
 				</button>
 			</div>
+
 			<!--Filters-->
 			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
-				<button class="w-full">
-					<div class="flex justify-between items-center">
-						<span class="text-sm font-light text-neutral-300"> Filters </span>
-						<AddFilter />
-					</div>
-				</button>
+				<div class="flex justify-between items-center w-full">
+					<span class="text-sm font-light text-neutral-300">Filters</span>
+					<AddFilter />
+				</div>
+				{#each filterColumns as filterData}
+					<Filter {filterData} />
+				{/each}
 			</div>
 
 			<!--Export-->
