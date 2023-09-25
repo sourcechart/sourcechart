@@ -80,15 +80,18 @@
 	}}
 >
 	<div class="flex justify-between items-center w-full text-neutral-300">
-		<span class="text-sm"> Aggregate </span>
-		<button
-			class=" mx-2 bg-neutral-900/80 justify-center w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
+		<div
+			class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
 		>
-			<span class="text-sm">Choose Fields</span>
-		</button>
-		<button>
-			<CarrotDown />
-		</button>
+			<div class="justify-between flex items-center w-full px-1 mb-1">
+				<button>
+					<span class="text-sm ml-2">Aggregate Fields</span>
+				</button>
+				<button>
+					<CarrotDown class="h-6 w-6" />
+				</button>
+			</div>
+		</div>
 	</div>
 </button>
 

@@ -34,6 +34,9 @@
 			</div>
 
 			<div class="py-2 px-3 w-full">
+				<!--
+				<span class="text-xs text-neutral-300">Query</span>
+				-->
 				<div class="mt-2 flex items-center justify-between space-x-3">
 					<div class="flex w-1/2">
 						<XColumnDropdown />

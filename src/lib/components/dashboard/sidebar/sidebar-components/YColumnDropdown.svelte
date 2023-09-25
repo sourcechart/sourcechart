@@ -46,7 +46,7 @@
 	});
 </script>
 
-<div bind:this={container} class="flex-grow relative mr-6">
+<div bind:this={container} class="flex-grow relative">
 	<div class="flex items-center">
 		<span class="text-xs text-neutral-300">Y</span>
 		<button
