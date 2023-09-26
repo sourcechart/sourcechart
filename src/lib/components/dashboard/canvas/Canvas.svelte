@@ -181,9 +181,10 @@
 			hoverIntersection = insidePolygon ? true : false;
 			if (insidePolygon) {
 				hoverPolygon = polygon;
-				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
-
+				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
+				console.log(handlePosition);
 				var direction = PolyOps.getCursorStyleFromDirection(handlePosition);
+				console.log(direction);
 				mouseType.set(direction);
 				if (handlePosition) return true; // This will break the .find() loop
 			}

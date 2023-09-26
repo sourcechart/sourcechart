@@ -141,61 +141,62 @@ const doLinesIntersect = (a1: Point, a2: Point, b1: Point, b2: Point): boolean =
 	return false;
 };
 
+function generateHandleRectangles(points: LookupTable) {
+	const handleSize = 10;
+	return Object.values(points).map((point) => ({
+		x: point.x - handleSize / 2,
+		y: point.y - handleSize / 2,
+		width: handleSize,
+		height: handleSize
+	}));
+}
+
 const isWithinHandle = (
 	mouseX: number,
 	mouseY: number,
-	rectX: number,
-	rectY: number,
-	width: number,
-	height: number
+	handle: Point,
+	handleType: HandlePosition
 ): boolean => {
-	return mouseX > rectX && mouseX < rectX + width && mouseY > rectY && mouseY < rectY + height;
-};
-const getHandlesHovered = (
-	currentMousePosition: Point,
-	polygon: Polygon,
-	tolerance: number = 20
-): HandlePosition => {
 	const handleSize = 10;
+	const tolerance = 5;
 
-	const { x, y } = currentMousePosition;
-	let handles = calculateRectangleHandles(polygon);
+	let xOffset = handleSize / 2 + tolerance;
+	let yOffset = handleSize / 2 + tolerance;
 
-	for (let i = 0; i < handles.length; i++) {
-		const rectX = handles[i].x - tolerance / 2;
-		const rectY = handles[i].y - tolerance / 2;
+	if (handleType === 'n' || handleType === 's') {
+		xOffset = handleSize / 2 + 2 * tolerance; // Expand horizontally for 'n' and 's'
+	} else if (handleType === 'e' || handleType === 'w') {
+		yOffset = handleSize / 2 + 2 * tolerance; // Expand vertically for 'e' and 'w'
+	}
 
-		if (isWithinHandle(x, y, rectX, rectY, handleSize, handleSize)) {
-			switch (i) {
-				case 0:
-					return 'nw'; // top left
-				case 1:
-					return 'ne'; // top right
-				case 2:
-					return 'se'; // bottom right
-				case 3:
-					return 'sw'; // bottom left
-				case 4:
-					return 'n'; // middle top
-				case 5:
-					return 'e'; // middle right
-				case 6:
-					return 's'; // middle bottom
-				case 7:
-					return 'w'; // middle left
-				default:
-					return 'center';
-			}
+	return (
+		mouseX > handle.x - xOffset &&
+		mouseX < handle.x + xOffset &&
+		mouseY > handle.y - yOffset &&
+		mouseY < handle.y + yOffset
+	);
+};
+
+const getHandlesHovered = (currentMousePosition: Point, polygon: Polygon): HandlePosition => {
+	const handlesArray = Object.values(polygon.vertices);
+	const handleTypes: HandlePosition[] = ['nw', 'ne', 'se', 'sw', 'n', 'e', 's', 'w'];
+
+	for (let i = 0; i < handlesArray.length; i++) {
+		if (
+			isWithinHandle(
+				currentMousePosition.x,
+				currentMousePosition.y,
+				handlesArray[i],
+				handleTypes[i]
+			)
+		) {
+			return handleTypes[i];
 		}
 	}
-	return 'center'; // No handle is being hovered over.
+	return 'center';
 };
 
-export const calculateVertices = (
-	width: number,
-	height: number,
-	shrink: number = 5
-): LookupTable => {
+const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
 	var vertices: LookupTable = {
 		tl: { x: shrink, y: shrink }, // top-left
 		tr: { x: width - shrink, y: shrink }, // top-right
@@ -225,6 +226,7 @@ function pointToLineDistance(
 }
 
 export {
+	calculateVertices,
 	pointToLineDistance,
 	doLinesIntersect,
 	calculateRectangleHandles,
@@ -232,5 +234,6 @@ export {
 	isPointInPolygon,
 	getContainingPolygon,
 	isNearPoint,
-	getCursorStyleFromDirection
+	getCursorStyleFromDirection,
+	generateHandleRectangles
 };

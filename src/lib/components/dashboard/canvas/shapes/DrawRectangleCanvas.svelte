@@ -7,7 +7,11 @@
 		activeSidebar,
 		mouseType
 	} from '$lib/io/Stores';
-	import { isPointInPolygon, calculateVertices } from '../draw-utils/PolygonOperations';
+	import {
+		isPointInPolygon,
+		calculateVertices,
+		generateHandleRectangles
+	} from '../draw-utils/PolygonOperations';
 	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
@@ -164,16 +168,6 @@
 		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
 	};
 
-	function generateHandleRectangles(points: LookupTable) {
-		const handleSize = 10;
-		return Object.values(points).map((point) => ({
-			x: point.x - handleSize / 2,
-			y: point.y - handleSize / 2,
-			width: handleSize,
-			height: handleSize
-		}));
-	}
-
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
 		var startX = Math.min(polygon.vertices[0].x, polygon.vertices[2].x);
@@ -189,13 +183,13 @@
 			rectWidth = Math.abs(endX - startX);
 			rectHeight = Math.abs(endY - startY);
 
-			context.strokeStyle = 'transparent';
+			context.strokeStyle = 'red';
 			points = calculateVertices(rectWidth, rectHeight, 5);
 
 			plotWidth = getPlotWidth();
 			plotHeight = getPlotHeight();
 
-			drawRectangleCanvas(points, context, 'transparent');
+			drawRectangleCanvas(points, context, 'red');
 		}
 	});
 
