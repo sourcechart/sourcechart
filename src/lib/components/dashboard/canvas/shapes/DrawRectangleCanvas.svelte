@@ -4,9 +4,10 @@
 		mostRecentChartID,
 		canvasBehavior,
 		getChartOptions,
-		activeSidebar
+		activeSidebar,
+		mouseType
 	} from '$lib/io/Stores';
-	import { isPointInPolygon } from '../draw-utils/PolygonOperations';
+	import { isPointInPolygon, calculateVertices } from '../draw-utils/PolygonOperations';
 	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
@@ -73,21 +74,6 @@
 			window.removeEventListener('mouseup', handleMouseUp);
 		};
 	});
-
-	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
-		var vertices: LookupTable = {
-			tl: { x: shrink, y: shrink }, // top-left
-			tr: { x: width - shrink, y: shrink }, // top-right
-			br: { x: width - shrink, y: height - shrink }, // bottom-right
-			bl: { x: shrink, y: height - shrink }, // bottom-left
-			mt: { x: width / 2, y: shrink }, // middle-top
-			mr: { x: width - shrink, y: height / 2 }, // middle-right
-			mb: { x: width / 2, y: height - shrink }, // middle-bottom
-			ml: { x: shrink, y: height / 2 } // middle-left
-		};
-
-		return vertices;
-	};
 
 	const drawRectangleCanvas = (
 		points: LookupTable,
@@ -224,20 +210,19 @@
 	style="position: absolute; left: {Math.min(
 		polygon.vertices[0].x,
 		polygon.vertices[2].x
-	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px; "
+	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
 >
 	<div
-		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
+		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;  cursor: {$mouseType} "
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
 		class="rounded-sm"
 	>
-		<canvas style="position: absolute;  z-index: {dragging ? 4 : 2};" bind:this={canvas} />
+		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
+		<!-- TODO, put in a lock button and change the z-index here.-->
 		<div
-			style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:{dragging
-				? 3
-				: 2};"
+			style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1;"
 			class="overflow-vis"
 		>
 			<Chart {options} renderer={'svg'} />
@@ -274,11 +259,3 @@
 		</svg>
 	</div>
 </div>
-
-<style>
-	.overflow-vis {
-		overflow: visible;
-		width: 100%;
-		height: 100%;
-	}
-</style>

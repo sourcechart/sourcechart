@@ -7,9 +7,9 @@
 		polygons,
 		mostRecentChartID,
 		mouseType,
+		touchState,
 		activeSidebar,
 		allCharts,
-		touchState,
 		canvasBehavior,
 		activeDropZone
 	} from '$lib/io/Stores';
@@ -170,9 +170,9 @@
 	const handleMouseMoveUp = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
+
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
-
 		const polygons = $allCharts.map((chart) => chart.polygon);
 
 		const polygon = polygons.find((polygon) => {
@@ -182,17 +182,16 @@
 			if (insidePolygon) {
 				hoverPolygon = polygon;
 				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
-				$mouseType = PolyOps.getCursorStyleFromDirection(handlePosition);
+
+				var direction = PolyOps.getCursorStyleFromDirection(handlePosition);
+				mouseType.set(direction);
 				if (handlePosition) return true; // This will break the .find() loop
 			}
-			return false; // This will continue to the next item in the .find() loop
 		});
 		if (!polygon) {
 			$mouseType = '';
 		} else if (hoverPolygon && !$mouseType) {
 			$mouseType = 'move';
-		} else {
-			$mouseType = $mouseType || 'isHovering';
 		}
 	};
 

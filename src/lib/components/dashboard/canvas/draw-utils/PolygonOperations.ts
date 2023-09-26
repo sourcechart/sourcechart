@@ -191,6 +191,25 @@ const getHandlesHovered = (
 	return 'center'; // No handle is being hovered over.
 };
 
+export const calculateVertices = (
+	width: number,
+	height: number,
+	shrink: number = 5
+): LookupTable => {
+	var vertices: LookupTable = {
+		tl: { x: shrink, y: shrink }, // top-left
+		tr: { x: width - shrink, y: shrink }, // top-right
+		br: { x: width - shrink, y: height - shrink }, // bottom-right
+		bl: { x: shrink, y: height - shrink }, // bottom-left
+		mt: { x: width / 2, y: shrink }, // middle-top
+		mr: { x: width - shrink, y: height / 2 }, // middle-right
+		mb: { x: width / 2, y: height - shrink }, // middle-bottom
+		ml: { x: shrink, y: height / 2 } // middle-left
+	};
+
+	return vertices;
+};
+
 function pointToLineDistance(
 	x0: number,
 	y0: number,

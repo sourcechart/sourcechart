@@ -241,10 +241,10 @@
 	on:mousemove={handleMouseMove}
 	on:mouseup={handleMouseUp}
 >
-	<canvas style="position: fixed; z-index: {isDragging ? 3 : 1};" bind:this={canvas} />
+	<canvas style="position: fixed; z-index: {isDragging ? 4 : 1};" bind:this={canvas} />
 	<svg
 		viewBox={`0 0 ${width} ${height}`}
-		style="position: absolute;  top: 0; left: 0; z-index:  {isDragging ? 3 : 1};"
+		style="position: absolute;  top: 0; left: 0; z-index:  {isDragging ? 4 : 1};"
 	>
 		{#if handlesActivated}
 			{#each $arrows as arrow, i}

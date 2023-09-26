@@ -79,7 +79,6 @@ export const getChartOptions = (id: string | undefined) => {
 					const chart = $allCharts.find((item: { chartID: string }) => item.chartID === id);
 					if (chart) {
 						const db = $duckDBInstanceStore;
-						console.log(db);
 						const newChart = new DataIO(db, chart, $epsilonDistance, $minimumPointsForCluster);
 						const chartOption = await newChart.updateChart();
 						set(chartOption);
@@ -121,34 +120,34 @@ export const canvasBehavior = () => {
 	return derived(
 		[navBarState, touchState, mouseType],
 		([$navBarState, $touchState, $mouseType]) => {
-			let touchState: TouchState;
+			let behavior: TouchState;
 			if ($navBarState === 'drawRectangle' && $touchState === 'isTouching') {
-				touchState = 'isDrawing';
+				behavior = 'isDrawing';
 			} else if ($navBarState === 'eraser' && $touchState === 'isTouching') {
-				touchState = 'isErasing';
+				behavior = 'isErasing';
 			} else if (
 				$navBarState === 'select' &&
 				$touchState === 'isTouching' &&
 				$mouseType !== 'move' &&
 				$mouseType !== ''
 			) {
-				touchState = 'isResizing';
+				behavior = 'isResizing';
 			} else if (
 				$navBarState === 'select' &&
 				$mouseType === 'move' &&
 				$touchState === 'isTouching'
 			) {
-				touchState = 'isTranslating';
+				behavior = 'isTranslating';
 			} else if ($navBarState === 'select' && $touchState === 'isHovering') {
-				touchState = 'isHovering';
+				behavior = 'isHovering';
 			} else if ($navBarState === 'select' && $touchState === 'isTouching') {
-				touchState = 'isTouching';
+				behavior = 'isTouching';
 			} else if ($navBarState === 'drawArrow' && $touchState === 'isTouching') {
-				touchState = 'isDrawingArrow';
+				behavior = 'isDrawingArrow';
 			} else {
 				return 'default';
 			}
-			return touchState;
+			return behavior;
 		}
 	);
 };
