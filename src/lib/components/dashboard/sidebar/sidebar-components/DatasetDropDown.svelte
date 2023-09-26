@@ -52,7 +52,6 @@
 		const resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
-		console.log(schema);
 
 		duckDBInstanceStore.set(db);
 		allCharts.update((charts) => {
