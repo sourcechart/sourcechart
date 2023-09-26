@@ -92,9 +92,16 @@
 		drawRectangle(vertices, context, color);
 	};
 
-	const handleMouseDown = (e: MouseEvent) => {
-		var x = e.clientX; // adjust the mouse x-coordinate by the left offset of the canvas
-		var y = e.clientY;
+	const handleMouseDown = (e: MouseEvent | TouchEvent) => {
+		// Detect whether the event is from a mouse or touch and set x and y accordingly
+		var x, y;
+		if (e instanceof TouchEvent) {
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else {
+			x = (e as MouseEvent).clientX;
+			y = (e as MouseEvent).clientY;
+		}
 
 		let inPolygon = isPointInPolygon({ x, y }, polygon);
 		if (inPolygon) {
@@ -102,12 +109,25 @@
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;
 		}
+
+		// If it's a touch event, prevent the default behavior.
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+		}
 	};
 
-	const handleMouseMove = (e: MouseEvent) => {
+	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
-		var x = e.clientX;
-		var y = e.clientY;
+
+		// Detect whether the event is from a mouse or touch and set x and y accordingly
+		var x, y;
+		if (e instanceof TouchEvent) {
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else {
+			x = (e as MouseEvent).clientX;
+			y = (e as MouseEvent).clientY;
+		}
 
 		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
 			mostRecentChartID.set(polygon.id);
@@ -129,6 +149,11 @@
 
 			polygon = newPolygon;
 		}
+
+		// If it's a touch event, prevent the default behavior to avoid any unwanted side effects, like scrolling.
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+		}
 	};
 
 	const updateAllCharts = (updatedPolygon: Polygon) => {
@@ -138,10 +163,19 @@
 		$allCharts[i] = chart;
 	};
 
-	const handleMouseUp = (e: MouseEvent) => {
+	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
-		var x = e.clientX;
-		var y = e.clientY;
+
+		// Detect whether the event is from a mouse or touch and set x and y accordingly
+		var x, y;
+		if (e instanceof TouchEvent) {
+			x = e.changedTouches[0].clientX;
+			y = e.changedTouches[0].clientY;
+		} else {
+			x = (e as MouseEvent).clientX;
+			y = (e as MouseEvent).clientY;
+		}
+
 		if ($CANVASBEHAVIOR === 'isTranslating') {
 			var dx = x - offsetX;
 			var dy = y - offsetY;
@@ -157,6 +191,11 @@
 
 			updateAllCharts(polygon);
 			dragging = false;
+		}
+
+		// If it's a touch event, prevent the default behavior.
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
 		}
 	};
 
@@ -183,13 +222,13 @@
 			rectWidth = Math.abs(endX - startX);
 			rectHeight = Math.abs(endY - startY);
 
-			context.strokeStyle = 'red';
+			context.strokeStyle = 'transparent';
 			points = calculateVertices(rectWidth, rectHeight, 5);
 
 			plotWidth = getPlotWidth();
 			plotHeight = getPlotHeight();
 
-			drawRectangleCanvas(points, context, 'red');
+			drawRectangleCanvas(points, context, 'transparent');
 		}
 	});
 
@@ -197,6 +236,8 @@
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
 	$: handles = generateHandleRectangles(points);
 	$: plotHeight = getPlotHeight();
+
+	$: console.log(polygon);
 </script>
 
 <div
@@ -211,6 +252,9 @@
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
+		on:touchstart={handleMouseDown}
+		on:touchmove={handleMouseMove}
+		on:touchend={handleMouseUp}
 		class="rounded-sm"
 	>
 		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />

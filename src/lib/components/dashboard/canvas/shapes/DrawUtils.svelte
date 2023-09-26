@@ -66,15 +66,30 @@
 		offsetY = Math.abs(rect.top - height);
 	};
 
-	const handleMouseStart = (e: MouseEvent) => {
-		startX = e.clientX;
-		startY = e.clientY;
+	const handleMouseStart = (e: MouseEvent | TouchEvent) => {
+		let startX: number;
+		let startY: number;
+
+		if (e instanceof MouseEvent) {
+			startX = e.clientX;
+			startY = e.clientY;
+		} else if (e instanceof TouchEvent) {
+			if (e.touches.length > 0) {
+				startX = e.touches[0].clientX;
+				startY = e.touches[0].clientY;
+			} else {
+				// If no touch points available, return from the function
+				return;
+			}
+		} else {
+			return; // Not a MouseEvent or TouchEvent
+		}
 
 		for (let i = 0; i < $arrows.length; i++) {
 			let arrow = $arrows[i];
 			const distanceToLine = pointToLineDistance(
-				e.clientX,
-				e.clientY,
+				startX, // Use captured startX
+				startY, // Use captured startY
 				arrow.startX,
 				arrow.startY,
 				arrow.endX,
@@ -98,10 +113,27 @@
 		}
 	};
 
-	const handleMouseMove = (e: MouseEvent) => {
+	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+		let clientX: number;
+		let clientY: number;
+
+		if (e instanceof MouseEvent) {
+			clientX = e.clientX;
+			clientY = e.clientY;
+		} else if (e instanceof TouchEvent) {
+			if (e.touches.length > 0) {
+				clientX = e.touches[0].clientX;
+				clientY = e.touches[0].clientY;
+			} else {
+				return; // If no touch points are available, return from the function
+			}
+		} else {
+			return; // Not a MouseEvent or TouchEvent
+		}
+
 		mouseMoved = true;
 
-		eraserTrail = [...eraserTrail, { x: e.clientX, y: e.clientY }];
+		eraserTrail = [...eraserTrail, { x: clientX, y: clientY }];
 
 		while (eraserTrail.length > MAX_TRAIL_LENGTH) {
 			eraserTrail.shift();
@@ -114,12 +146,13 @@
 				drawEraserTrail(eraserTrail, context, '#433f3f50', 6);
 				eraseIntersectingArrows();
 			} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
-				drawArrowhead(startX, startY, e.clientX, e.clientY);
+				drawArrowhead(startX, startY, clientX, clientY);
 			}
 		}
+
 		if (isDraggingArrow && draggingArrowIndex !== null) {
-			const deltaX = e.clientX - startX;
-			const deltaY = e.clientY - startY;
+			const deltaX = clientX - startX;
+			const deltaY = clientY - startY;
 
 			$arrows[draggingArrowIndex].startX += deltaX;
 			$arrows[draggingArrowIndex].startY += deltaY;
@@ -128,23 +161,40 @@
 			$arrows[draggingArrowIndex].midX += deltaX;
 			$arrows[draggingArrowIndex].midY += deltaY;
 
-			startX = e.clientX;
-			startY = e.clientY;
+			startX = clientX;
+			startY = clientY;
 		} else if (isDragging && draggingArrowIndex !== null) {
 			if (draggingEnd === 'start') {
-				$arrows[draggingArrowIndex].startX = e.clientX;
-				$arrows[draggingArrowIndex].startY = e.clientY;
+				$arrows[draggingArrowIndex].startX = clientX;
+				$arrows[draggingArrowIndex].startY = clientY;
 			} else if (draggingEnd === 'end') {
-				$arrows[draggingArrowIndex].endX = e.clientX;
-				$arrows[draggingArrowIndex].endY = e.clientY;
+				$arrows[draggingArrowIndex].endX = clientX;
+				$arrows[draggingArrowIndex].endY = clientY;
 			}
 		}
 
 		redrawArrows();
 	};
 
-	const handleMouseUp = (e: MouseEvent) => {
-		const distanceMoved = Math.sqrt((e.clientX - startX) ** 2 + (e.clientY - startY) ** 2);
+	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
+		let clientX: number;
+		let clientY: number;
+
+		if (e instanceof MouseEvent) {
+			clientX = e.clientX;
+			clientY = e.clientY;
+		} else if (e instanceof TouchEvent) {
+			if (e.changedTouches.length > 0) {
+				clientX = e.changedTouches[0].clientX;
+				clientY = e.changedTouches[0].clientY;
+			} else {
+				return; // If no touch points are available, return from the function
+			}
+		} else {
+			return; // Not a MouseEvent or TouchEvent
+		}
+
+		const distanceMoved = Math.sqrt((clientX - startX) ** 2 + (clientY - startY) ** 2);
 
 		if ($CANVASBEHAVIOR === 'isDrawingArrow' && mouseMoved && distanceMoved > MIN_DRAG_DISTANCE) {
 			$arrows = [
@@ -152,10 +202,10 @@
 				{
 					startX,
 					startY,
-					endX: e.clientX,
-					endY: e.clientY,
-					midX: (e.clientX + startX) / 2,
-					midY: (e.clientY + startY) / 2
+					endX: clientX,
+					endY: clientY,
+					midX: (clientX + startX) / 2,
+					midY: (clientY + startY) / 2
 				}
 			];
 		}
@@ -240,6 +290,9 @@
 	on:mousedown={handleMouseStart}
 	on:mousemove={handleMouseMove}
 	on:mouseup={handleMouseUp}
+	on:touchstart={handleMouseStart}
+	on:touchmove={handleMouseMove}
+	on:touchend={handleMouseUp}
 >
 	<canvas style="position: fixed; z-index: {isDragging ? 4 : 1};" bind:this={canvas} />
 	<svg

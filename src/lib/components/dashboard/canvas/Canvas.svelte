@@ -39,8 +39,6 @@
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
 
-	const tolerance: number = 5;
-
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: if ($CANVASBEHAVIOR) controlSidebar($CANVASBEHAVIOR);
@@ -92,7 +90,7 @@
 
 		touchState.set('isTouching');
 		const containingPolygon = PolyOps.getContainingPolygon(startPosition, $polygons);
-
+		console.log('containingPolygon', containingPolygon, startPosition);
 		if ($navBarState === 'select' && chartIndex >= 0 && containingPolygon) {
 			const polygon = $allCharts[chartIndex].polygon;
 			if (polygon && PolyOps.isPointInPolygon(startPosition, polygon)) {
@@ -114,10 +112,10 @@
 			x = e.clientX;
 			y = e.clientY;
 		} else if (e instanceof TouchEvent) {
+			x = e.changedTouches[0].clientX; // <-- Use changedTouches here
+			y = e.changedTouches[0].clientY; // <-- Use changedTouches here
 			e.preventDefault();
 			e.stopPropagation();
-			x = e.touches[0].clientX;
-			y = e.touches[0].clientY;
 		} else {
 			return; // Not a MouseEvent or TouchEvent
 		}
