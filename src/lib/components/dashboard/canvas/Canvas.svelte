@@ -4,7 +4,6 @@
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
 		navBarState,
-		polygons,
 		mostRecentChartID,
 		mouseType,
 		touchState,
@@ -43,6 +42,7 @@
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: if ($CANVASBEHAVIOR) controlSidebar($CANVASBEHAVIOR);
 
+	$: console.log($allCharts);
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -89,8 +89,9 @@
 		startPosition = { x, y };
 
 		touchState.set('isTouching');
-		const containingPolygon = PolyOps.getContainingPolygon(startPosition, $polygons);
-		console.log('containingPolygon', containingPolygon, startPosition);
+		const polygons = $allCharts.map((chart) => chart.polygon);
+		const containingPolygon = PolyOps.getContainingPolygon(startPosition, polygons);
+
 		if ($navBarState === 'select' && chartIndex >= 0 && containingPolygon) {
 			const polygon = $allCharts[chartIndex].polygon;
 			if (polygon && PolyOps.isPointInPolygon(startPosition, polygon)) {
@@ -112,8 +113,8 @@
 			x = e.clientX;
 			y = e.clientY;
 		} else if (e instanceof TouchEvent) {
-			x = e.changedTouches[0].clientX; // <-- Use changedTouches here
-			y = e.changedTouches[0].clientY; // <-- Use changedTouches here
+			x = e.changedTouches[0].clientX;
+			y = e.changedTouches[0].clientY;
 			e.preventDefault();
 			e.stopPropagation();
 		} else {

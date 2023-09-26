@@ -67,15 +67,21 @@
 	} else {
 		backupColor = '#9d99dc';
 	}
+
 	onMount(() => {
 		// Add global event listeners
 		window.addEventListener('mousemove', handleMouseMove);
 		window.addEventListener('mouseup', handleMouseUp);
 
+		window.addEventListener('touchmove', handleMouseMove);
+		window.addEventListener('touchend', handleMouseUp);
+
 		return () => {
 			// Cleanup the global event listeners
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('mouseup', handleMouseUp);
+			window.removeEventListener('touchmove', handleMouseMove);
+			window.removeEventListener('touchend', handleMouseUp);
 		};
 	});
 
@@ -192,11 +198,6 @@
 			updateAllCharts(polygon);
 			dragging = false;
 		}
-
-		// If it's a touch event, prevent the default behavior.
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
-		}
 	};
 
 	const getPlotWidth = () => {
@@ -236,8 +237,6 @@
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
 	$: handles = generateHandleRectangles(points);
 	$: plotHeight = getPlotHeight();
-
-	$: console.log(polygon);
 </script>
 
 <div

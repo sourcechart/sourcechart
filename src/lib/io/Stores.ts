@@ -15,7 +15,6 @@ export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
-export const polygons = writable<Polygon[]>([]);
 export const mouseType = writable<string | null>();
 export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
