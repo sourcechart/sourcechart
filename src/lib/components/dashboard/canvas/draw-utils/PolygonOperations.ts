@@ -94,7 +94,6 @@ const calculateRectangleHandles = (polygon: Polygon): Point[] => {
 	const { vertices } = polygon;
 	let midPoints: Point[] = [];
 
-	// Calculate midpoints if you want to resize on sides of rectangle too.
 	for (let i = 0; i < vertices.length; i++) {
 		let nextIndex = (i + 1) % vertices.length;
 		midPoints.push({
@@ -164,9 +163,9 @@ const isWithinHandle = (
 	let yOffset = handleSize / 2 + tolerance;
 
 	if (handleType === 'n' || handleType === 's') {
-		xOffset = handleSize / 2 + 2 * tolerance; // Expand horizontally for 'n' and 's'
+		xOffset = handleSize / 2 + 2 * tolerance;
 	} else if (handleType === 'e' || handleType === 'w') {
-		yOffset = handleSize / 2 + 2 * tolerance; // Expand vertically for 'e' and 'w'
+		yOffset = handleSize / 2 + 2 * tolerance;
 	}
 
 	return (
@@ -178,7 +177,7 @@ const isWithinHandle = (
 };
 
 const getHandlesHovered = (currentMousePosition: Point, polygon: Polygon): HandlePosition => {
-	const handlesArray = Object.values(polygon.vertices);
+	const handlesArray = calculateRectangleHandles(polygon);
 	const handleTypes: HandlePosition[] = ['nw', 'ne', 'se', 'sw', 'n', 'e', 's', 'w'];
 
 	for (let i = 0; i < handlesArray.length; i++) {
@@ -193,19 +192,21 @@ const getHandlesHovered = (currentMousePosition: Point, polygon: Polygon): Handl
 			return handleTypes[i];
 		}
 	}
+
 	return 'center';
 };
 
 const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
+	//tl corresponds to top left, tr to top right, etc.
 	var vertices: LookupTable = {
-		tl: { x: shrink, y: shrink }, // top-left
-		tr: { x: width - shrink, y: shrink }, // top-right
-		br: { x: width - shrink, y: height - shrink }, // bottom-right
-		bl: { x: shrink, y: height - shrink }, // bottom-left
-		mt: { x: width / 2, y: shrink }, // middle-top
-		mr: { x: width - shrink, y: height / 2 }, // middle-right
-		mb: { x: width / 2, y: height - shrink }, // middle-bottom
-		ml: { x: shrink, y: height / 2 } // middle-left
+		tl: { x: shrink, y: shrink },
+		tr: { x: width - shrink, y: shrink },
+		br: { x: width - shrink, y: height - shrink },
+		bl: { x: shrink, y: height - shrink },
+		mt: { x: width / 2, y: shrink },
+		mr: { x: width - shrink, y: height / 2 },
+		mb: { x: width / 2, y: height - shrink },
+		ml: { x: shrink, y: height / 2 }
 	};
 
 	return vertices;
