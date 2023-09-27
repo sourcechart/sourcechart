@@ -10,8 +10,7 @@
 		allCharts,
 		canvasBehavior,
 		activeDropZone,
-		responsiveType,
-		activeSidebar
+		responsiveType
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './draw-utils/Draw';

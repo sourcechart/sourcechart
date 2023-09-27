@@ -157,6 +157,9 @@ async function processSources(db: AsyncDuckDB, sources: any): Promise<void> {
 			} else if (isBufferSource(source)) {
 				//@ts-ignore
 				await insertArrayBuffer(db, source);
+			} else if (typeof source === 'string' && isValidURL(source)) {
+				console.log(source);
+				await insertFileURL(db, source);
 			} else if (isFileSource(source)) {
 				//@ts-ignore
 				const { file, ...options } = source; //@ts-ignore
@@ -166,6 +169,11 @@ async function processSources(db: AsyncDuckDB, sources: any): Promise<void> {
 			}
 		})
 	);
+}
+
+function isValidURL(string: string): boolean {
+	const regex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+	return regex.test(string);
 }
 
 async function insertArrayBuffer(db: AsyncDuckDB, source: DataObject) {
@@ -279,6 +287,11 @@ async function insertFileHandle(db: AsyncDuckDB, pickedFile: File) {
 		DuckDBDataProtocol.BROWSER_FILEREADER,
 		true
 	);
+}
+
+async function insertFileURL(db: AsyncDuckDB, url: string) {
+	const filename = url.slice(((url.lastIndexOf('/') - 1) >>> 0) + 2);
+	await db.registerFileURL(filename, url, DuckDBDataProtocol.HTTP, false);
 }
 
 /*
