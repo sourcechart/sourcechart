@@ -139,15 +139,7 @@ export const canvasBehavior = () => {
 				$touchState === 'isTouching'
 			) {
 				behavior = 'isTranslating';
-			} //else if (
-			//	$touchType === 'default' &&
-			//	$navBarState === 'select' &&
-			//		$touchState === 'isTouching' &&
-			//		$responsiveType === 'mobile'
-			//	) {
-			//		behavior = 'isTranslating';
-			//}
-			else if ($navBarState === 'select' && $touchState === 'isHovering') {
+			} else if ($navBarState === 'select' && $touchState === 'isHovering') {
 				behavior = 'isHovering';
 			} else if (
 				$navBarState === 'select' &&
