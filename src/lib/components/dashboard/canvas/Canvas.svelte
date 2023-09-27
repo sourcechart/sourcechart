@@ -7,11 +7,11 @@
 		mostRecentChartID,
 		touchType,
 		touchState,
-		activeSidebar,
 		allCharts,
 		canvasBehavior,
 		activeDropZone,
-		responsiveType
+		responsiveType,
+		activeSidebar
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './draw-utils/Draw';
@@ -257,7 +257,6 @@
 		if (chartIndex !== null) {
 			const polygon = $allCharts[chartIndex].polygon;
 			const newPolygon = resizeRectangle(x, y, polygon, handlePosition);
-			console.log(newPolygon);
 			$allCharts[chartIndex].polygon = newPolygon;
 		}
 	};

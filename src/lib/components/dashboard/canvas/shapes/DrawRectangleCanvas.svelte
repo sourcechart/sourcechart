@@ -57,26 +57,6 @@
 			left: '15%' // Adjust the percentage as needed
 		}
 	};
-	/*
-	[
-    {
-        "x": 234,
-        "y": 128.3333511352539
-    },
-    {
-        "x": 497,
-        "y": 128.3333511352539
-    },
-    {
-        "x": 497,
-        "y": 375.3333511352539
-    },
-    {
-        "x": 234,
-        "y": 375.3333511352539
-    }
-]
-	*/
 
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
@@ -140,7 +120,6 @@
 	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
 
-		// Detect whether the event is from a mouse or touch and set x and y accordingly
 		var x, y;
 		if (e instanceof TouchEvent) {
 			x = e.touches[0].clientX;

@@ -23,7 +23,7 @@
 	let hoveredCircleIndex: number | null = null;
 	let hoveredCircleEnd: 'start' | 'end' | null = null;
 	let draggingArrowIndex: number | null = null;
-	const MIN_DRAG_DISTANCE = 10; // You can adjust this value as needed
+	const MIN_DRAG_DISTANCE = 10;
 
 	let offsetX: number = 0;
 	let offsetY: number = 0;
@@ -54,7 +54,7 @@
 	});
 
 	const handleCircleMouseDown = (e: MouseEvent, index: number, end: 'start' | 'end') => {
-		e.stopPropagation(); // prevent canvas mousedown
+		e.stopPropagation();
 		isDragging = true;
 		draggingArrowIndex = index;
 		draggingEnd = end;
@@ -67,9 +67,6 @@
 	};
 
 	const handleMouseStart = (e: MouseEvent | TouchEvent) => {
-		let startX: number;
-		let startY: number;
-
 		if (e instanceof MouseEvent) {
 			startX = e.clientX;
 			startY = e.clientY;
@@ -78,18 +75,17 @@
 				startX = e.touches[0].clientX;
 				startY = e.touches[0].clientY;
 			} else {
-				// If no touch points available, return from the function
 				return;
 			}
 		} else {
-			return; // Not a MouseEvent or TouchEvent
+			return;
 		}
 
 		for (let i = 0; i < $arrows.length; i++) {
 			let arrow = $arrows[i];
 			const distanceToLine = pointToLineDistance(
-				startX, // Use captured startX
-				startY, // Use captured startY
+				startX,
+				startY,
 				arrow.startX,
 				arrow.startY,
 				arrow.endX,
@@ -100,7 +96,7 @@
 				handlesActivated = true;
 				draggingArrowIndex = i;
 				arrowCloseEnough = true;
-				isDraggingArrow = true; // Add this line
+				isDraggingArrow = true;
 				break;
 			} else {
 				arrowCloseEnough = false;
@@ -109,7 +105,7 @@
 		}
 		if (!arrowCloseEnough) {
 			handlesActivated = false;
-			isDraggingArrow = false; // Make sure to reset it if no arrow is close enough
+			isDraggingArrow = false;
 		}
 	};
 
@@ -188,10 +184,10 @@
 				clientX = e.changedTouches[0].clientX;
 				clientY = e.changedTouches[0].clientY;
 			} else {
-				return; // If no touch points are available, return from the function
+				return;
 			}
 		} else {
-			return; // Not a MouseEvent or TouchEvent
+			return;
 		}
 
 		const distanceMoved = Math.sqrt((clientX - startX) ** 2 + (clientY - startY) ** 2);
