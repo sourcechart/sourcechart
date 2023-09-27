@@ -138,6 +138,8 @@ type TouchState =
 type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'drawArrow' | 'textbox';
 
+type ResponsiveType = 'mobile' | 'desktop';
+
 interface Rectangle {
 	x: number;
 	y: number;

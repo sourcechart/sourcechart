@@ -69,15 +69,12 @@
 	}
 
 	onMount(() => {
-		// Add global event listeners
 		window.addEventListener('mousemove', handleMouseMove);
 		window.addEventListener('mouseup', handleMouseUp);
-
 		window.addEventListener('touchmove', handleMouseMove);
 		window.addEventListener('touchend', handleMouseUp);
 
 		return () => {
-			// Cleanup the global event listeners
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('mouseup', handleMouseUp);
 			window.removeEventListener('touchmove', handleMouseMove);
@@ -99,7 +96,6 @@
 	};
 
 	const handleMouseDown = (e: MouseEvent | TouchEvent) => {
-		// Detect whether the event is from a mouse or touch and set x and y accordingly
 		var x, y;
 		if (e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
@@ -116,7 +112,6 @@
 			dragging = true;
 		}
 
-		// If it's a touch event, prevent the default behavior.
 		if (e instanceof TouchEvent) {
 			e.preventDefault();
 		}
@@ -135,7 +130,6 @@
 			y = (e as MouseEvent).clientY;
 		}
 
-		//console.log(polygon);
 		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
 			mostRecentChartID.set(polygon.id);
 
@@ -157,7 +151,6 @@
 			polygon = newPolygon;
 		}
 
-		// If it's a touch event, prevent the default behavior to avoid any unwanted side effects, like scrolling.
 		if (e instanceof TouchEvent) {
 			e.preventDefault();
 		}
@@ -173,7 +166,6 @@
 	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
 
-		// Detect whether the event is from a mouse or touch and set x and y accordingly
 		var x, y;
 		if (e instanceof TouchEvent) {
 			x = e.changedTouches[0].clientX;

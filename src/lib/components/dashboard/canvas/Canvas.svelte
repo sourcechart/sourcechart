@@ -10,7 +10,8 @@
 		activeSidebar,
 		allCharts,
 		canvasBehavior,
-		activeDropZone
+		activeDropZone,
+		responsiveType
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './draw-utils/Draw';
@@ -42,7 +43,6 @@
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: if ($CANVASBEHAVIOR) controlSidebar($CANVASBEHAVIOR);
 
-	$: console.log($touchType, $CANVASBEHAVIOR);
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -83,26 +83,11 @@
 			x = e.clientX;
 			y = e.clientY;
 		} else {
-			return; // Not a MouseEvent or TouchEvent
+			return;
 		}
 
 		startPosition = { x, y };
-
 		touchState.set('isTouching');
-		//const polygons = $allCharts.map((chart) => chart.polygon);
-		// I am not sure why this works
-		const containingPolygon = PolyOps.getContainingPolygon(startPosition, []);
-		if ($navBarState === 'select' && chartIndex >= 0 && containingPolygon) {
-			const polygon = $allCharts[chartIndex].polygon;
-			if (polygon && PolyOps.isPointInPolygon(startPosition, polygon)) {
-				if (polygon.id) mostRecentChartID.set(polygon.id);
-				touchState.set('isTranslating');
-				return;
-			} else {
-				touchState.set('isTouching');
-				return;
-			}
-		}
 	};
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
@@ -112,14 +97,16 @@
 		if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
+			responsiveType.set('desktop');
 		} else if (e instanceof TouchEvent) {
+			responsiveType.set('mobile');
 			x = e.changedTouches[0].clientX;
 			y = e.changedTouches[0].clientY;
 			e.preventDefault();
 			e.stopPropagation();
 			handleTouchTranslate(x, y);
 		} else {
-			return; // Not a MouseEvent or TouchEvent
+			return;
 		}
 
 		x = x - offsetX + scrollX;
@@ -145,11 +132,13 @@
 	};
 
 	const handleTouchTranslate = (x: number, y: number): void => {
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 		const polygons = $allCharts.map((chart) => chart.polygon);
 
-		const polygon = polygons.find((polygon) => {
+		polygons.find((polygon) => {
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
@@ -158,14 +147,11 @@
 				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
 				var direction = PolyOps.getCursorStyleFromDirection(handlePosition);
 				touchType.set(direction);
-				if (handlePosition) return true; // This will break the .find() loop
+				if (handlePosition) return true;
+			} else {
+				touchType.set('default');
 			}
 		});
-		if (!polygon) {
-			touchType.set('default');
-		} else if (hoverPolygon && !$touchType) {
-			touchType.set('move');
-		}
 	};
 
 	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
@@ -177,6 +163,7 @@
 			e.stopPropagation();
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
+			handleMouseMoveUp(x, y);
 		} else if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
@@ -198,7 +185,7 @@
 		let hoverPolygon = null;
 		const polygons = $allCharts.map((chart) => chart.polygon);
 
-		const polygon = polygons.find((polygon) => {
+		polygons.find((polygon) => {
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
@@ -207,14 +194,11 @@
 				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
 				var direction = PolyOps.getCursorStyleFromDirection(handlePosition);
 				touchType.set(direction);
-				if (handlePosition) return true; // This will break the .find() loop
+				if (handlePosition) return true;
+			} else {
+				touchType.set('default');
 			}
 		});
-		if (!polygon) {
-			$touchType = 'default';
-		} else if (hoverPolygon && !$touchType) {
-			$touchType = 'move';
-		}
 	};
 
 	const handleErase = (x: number, y: number): void => {
@@ -272,7 +256,6 @@
 				break;
 
 			case 'isResizing':
-				console.log('triggering');
 				handleResize(x, y);
 				break;
 

@@ -25,6 +25,8 @@ export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
 
+export const responsiveType = writable<ResponsiveType>('desktop');
+
 export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
 export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
@@ -117,8 +119,8 @@ export const clickedChartIndex = () =>
 
 export const canvasBehavior = () => {
 	return derived(
-		[navBarState, touchState, touchType],
-		([$navBarState, $touchState, $touchType]) => {
+		[navBarState, touchState, touchType, responsiveType],
+		([$navBarState, $touchState, $touchType, $responsiveType]) => {
 			let behavior: TouchState;
 			if ($navBarState === 'drawRectangle' && $touchState === 'isTouching') {
 				behavior = 'isDrawing';
@@ -137,9 +139,22 @@ export const canvasBehavior = () => {
 				$touchState === 'isTouching'
 			) {
 				behavior = 'isTranslating';
-			} else if ($navBarState === 'select' && $touchState === 'isHovering') {
+			} //else if (
+			//	$touchType === 'default' &&
+			//	$navBarState === 'select' &&
+			//		$touchState === 'isTouching' &&
+			//		$responsiveType === 'mobile'
+			//	) {
+			//		behavior = 'isTranslating';
+			//}
+			else if ($navBarState === 'select' && $touchState === 'isHovering') {
 				behavior = 'isHovering';
-			} else if ($navBarState === 'select' && $touchState === 'isTouching') {
+			} else if (
+				$navBarState === 'select' &&
+				$touchState === 'isTouching' &&
+				$responsiveType === 'desktop' &&
+				$touchType === 'default'
+			) {
 				behavior = 'isTouching';
 			} else if ($navBarState === 'drawArrow' && $touchState === 'isTouching') {
 				behavior = 'isDrawingArrow';
