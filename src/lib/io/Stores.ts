@@ -24,6 +24,7 @@ export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
+export const mobileNav = writable<MobileBar | null>(null);
 
 export const responsiveType = writable<ResponsiveType>('desktop');
 
