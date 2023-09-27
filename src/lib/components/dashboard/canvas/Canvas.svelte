@@ -24,6 +24,7 @@
 	let width: number = 0;
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
+	let touchStartedOnHandle = false;
 
 	let eraserTrail: Point[] = [];
 
@@ -51,7 +52,13 @@
 		});
 	}
 
-	$: console.log($CANVASBEHAVIOR, $touchType);
+	let debounceTimer: number | undefined;
+
+	const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
+		clearTimeout(debounceTimer);
+		debounceTimer = window.setTimeout(() => handleMouseMoveUp(x, y), 5);
+	};
+
 	const updateOffset = () => {
 		const rect = canvas.getBoundingClientRect();
 		offsetX = rect.left;
@@ -59,8 +66,9 @@
 	};
 
 	const handleMouseDown = (e: MouseEvent | TouchEvent): void => {
-		let x;
-		let y;
+		let x: number;
+		let y: number;
+
 		if (e instanceof TouchEvent) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -69,12 +77,39 @@
 		} else if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
+			x = x - offsetX + scrollX;
+			y = y - offsetY + scrollY;
 		} else {
 			return;
 		}
 
 		startPosition = { x, y };
+
+		// Check if touch/mouse down started on a handle
+		const polygons = $allCharts.map((chart) => chart.polygon);
+		for (let polygon of polygons) {
+			const handlePosition = PolyOps.getHandlesHovered({ x, y }, polygon);
+			if (handlePosition !== 'center' || handlePosition !== null) {
+				touchStartedOnHandle = true;
+				break;
+			}
+		}
+
 		touchState.set('isTouching');
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleGlobalMouseUp);
+		document.addEventListener('touchmove', handleMouseMove, { passive: false });
+		document.addEventListener('touchend', handleGlobalMouseUp, { passive: false });
+	};
+
+	const handleGlobalMouseUp = (e: MouseEvent | TouchEvent): void => {
+		// Remove global event listeners first
+		document.removeEventListener('mousemove', handleMouseMove);
+		document.removeEventListener('mouseup', handleGlobalMouseUp);
+		document.removeEventListener('touchmove', handleMouseMove);
+		document.removeEventListener('touchend', handleGlobalMouseUp);
+
+		handleMouseUp(e); // then call your existing handleMouseUp function
 	};
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
@@ -126,36 +161,55 @@
 			e.stopPropagation();
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
-			handleMouseMoveUp(x, y);
+			handleTouchMove(x, y);
 		} else if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
+			x = x - offsetX + scrollX;
+			y = y - offsetY + scrollY;
 		} else {
 			return;
 		}
+
 		if ($CANVASBEHAVIOR === 'isHovering') {
-			handleMouseMoveUp(x, y);
-		} else if ($CANVASBEHAVIOR !== 'isHovering') {
+			debouncedHandleMouseMoveUp(x, y);
+		} else {
 			handleMouseMoveDown(x, y);
 		}
 	};
 
-	const handleMouseMoveUp = (x: number, y: number): void => {
-		x = x - offsetX + scrollX;
-		y = y - offsetY + scrollY;
-
+	const handleTouchMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 		const polygons = $allCharts.map((chart) => chart.polygon);
-
+		let direction: string;
 		polygons.find((polygon) => {
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
-			if (insidePolygon) {
+			if (insidePolygon && touchStartedOnHandle) {
 				hoverPolygon = polygon;
 				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
-				var direction = PolyOps.getCursorStyleFromDirection(handlePosition);
+				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
+				touchType.set(direction);
+				if (handlePosition) return true;
+			}
+		});
+	};
+
+	const handleMouseMoveUp = (x: number, y: number): void => {
+		currentMousePosition = { x: x, y: y };
+		let hoverPolygon = null;
+		const polygons = $allCharts.map((chart) => chart.polygon);
+		let direction: string;
+		polygons.find((polygon) => {
+			let insidePolygon =
+				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
+			hoverIntersection = insidePolygon ? true : false;
+			if (insidePolygon && touchStartedOnHandle) {
+				hoverPolygon = polygon;
+				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
+				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
 				touchType.set(direction);
 				if (handlePosition) return true;
 			} else {
@@ -202,13 +256,13 @@
 	const handleResize = (x: number, y: number) => {
 		if (chartIndex !== null) {
 			const polygon = $allCharts[chartIndex].polygon;
-			$allCharts[chartIndex].polygon = resizeRectangle(x, y, polygon, handlePosition);
+			const newPolygon = resizeRectangle(x, y, polygon, handlePosition);
+			console.log(newPolygon);
+			$allCharts[chartIndex].polygon = newPolygon;
 		}
 	};
 
 	const handleMouseMoveDown = (x: number, y: number): void => {
-		x = x - offsetX + scrollX;
-		y = y - offsetY + scrollY;
 		switch ($CANVASBEHAVIOR) {
 			case 'isDrawing':
 				handleCreateShapes(x, y);
@@ -228,7 +282,7 @@
 	};
 </script>
 
-<div class="bg-neutral-950 w-full h-full top-0 left-0 fixed">
+<div class="bg-neutral-900 w-full h-full top-0 left-0 fixed">
 	<div
 		class="h-full w-full"
 		style={`cursor: ${$touchType};`}

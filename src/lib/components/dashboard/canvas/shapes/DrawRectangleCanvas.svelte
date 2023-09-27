@@ -57,6 +57,26 @@
 			left: '15%' // Adjust the percentage as needed
 		}
 	};
+	/*
+	[
+    {
+        "x": 234,
+        "y": 128.3333511352539
+    },
+    {
+        "x": 497,
+        "y": 128.3333511352539
+    },
+    {
+        "x": 497,
+        "y": 375.3333511352539
+    },
+    {
+        "x": 234,
+        "y": 375.3333511352539
+    }
+]
+	*/
 
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
@@ -250,7 +270,6 @@
 		class="rounded-sm"
 	>
 		<canvas style="position: absolute;  z-index: 2;" bind:this={canvas} />
-		<!-- TODO, put in a lock button and change the z-index here.-->
 		<div
 			style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1;"
 			class="overflow-vis"

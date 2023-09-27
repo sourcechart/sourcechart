@@ -5,11 +5,8 @@
 	import MobileSidebar from '$lib/components/dashboard/sidebar/MobileSidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 	import { onMount } from 'svelte';
-
 	import { activeDropZone, keyPress } from '$lib/io/Stores';
 	import { setLocalStorage } from '$lib/io/Storage';
-
-	//export let data;
 
 	setLocalStorage('color-theme', 'dark');
 

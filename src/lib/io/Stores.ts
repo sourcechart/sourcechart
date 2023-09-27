@@ -27,7 +27,6 @@ export const keyPress = writable<string>('');
 export const mobileNav = writable<MobileBar | null>(null);
 export const activeMobileNav = writable<boolean>(false);
 export const responsiveType = writable<ResponsiveType>('desktop');
-
 export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
 export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
