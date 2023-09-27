@@ -15,7 +15,7 @@ export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
-export const mouseType = writable<string | null>();
+export const touchType = writable<string | null>();
 export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
 export const minimumPointsForCluster = writable<number>();
@@ -117,8 +117,8 @@ export const clickedChartIndex = () =>
 
 export const canvasBehavior = () => {
 	return derived(
-		[navBarState, touchState, mouseType],
-		([$navBarState, $touchState, $mouseType]) => {
+		[navBarState, touchState, touchType],
+		([$navBarState, $touchState, $touchType]) => {
 			let behavior: TouchState;
 			if ($navBarState === 'drawRectangle' && $touchState === 'isTouching') {
 				behavior = 'isDrawing';
@@ -127,13 +127,13 @@ export const canvasBehavior = () => {
 			} else if (
 				$navBarState === 'select' &&
 				$touchState === 'isTouching' &&
-				$mouseType !== 'move' &&
-				$mouseType !== ''
+				$touchType !== 'move' &&
+				$touchType !== ''
 			) {
 				behavior = 'isResizing';
 			} else if (
 				$navBarState === 'select' &&
-				$mouseType === 'move' &&
+				$touchType === 'move' &&
 				$touchState === 'isTouching'
 			) {
 				behavior = 'isTranslating';

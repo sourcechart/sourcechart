@@ -5,7 +5,7 @@
 	import {
 		navBarState,
 		mostRecentChartID,
-		mouseType,
+		touchType,
 		touchState,
 		activeSidebar,
 		allCharts,
@@ -91,7 +91,6 @@
 		touchState.set('isTouching');
 		const polygons = $allCharts.map((chart) => chart.polygon);
 		const containingPolygon = PolyOps.getContainingPolygon(startPosition, polygons);
-
 		if ($navBarState === 'select' && chartIndex >= 0 && containingPolygon) {
 			const polygon = $allCharts[chartIndex].polygon;
 			if (polygon && PolyOps.isPointInPolygon(startPosition, polygon)) {
@@ -152,19 +151,46 @@
 			e.stopPropagation();
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
+			handleTouchMove(x, y);
 		} else if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
+			if ($CANVASBEHAVIOR === 'isHovering') {
+				handleMouseMoveUp(x, y);
+			} else {
+				handleMouseMoveDown(x, y);
+			}
 		} else {
 			return; // Not a MouseEvent or TouchEvent
 		}
+	};
 
-		if ($CANVASBEHAVIOR === 'isHovering') {
-			handleMouseMoveUp(x, y);
-		} else {
-			handleMouseMoveDown(x, y);
+	const handleTouchMove = (x: number, y: number) => {
+		currentMousePosition = { x: x, y: y };
+		let hoverPolygon = null;
+		const polygons = $allCharts.map((chart) => chart.polygon);
+
+		const polygon = polygons.find((polygon) => {
+			let insidePolygon =
+				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
+			hoverIntersection = insidePolygon ? true : false;
+			if (insidePolygon) {
+				hoverPolygon = polygon;
+				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
+				var direction = PolyOps.getCursorStyleFromDirection(handlePosition);
+				touchType.set(direction);
+				if (handlePosition) return true; // This will break the .find() loop
+			}
+		});
+
+		if (!polygon) {
+			$touchType = 'default';
+		} else if (hoverPolygon && !$touchType) {
+			$touchType = 'move';
 		}
 	};
+
+	$: console.log($touchType);
 
 	const handleMouseMoveUp = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
@@ -182,14 +208,14 @@
 				hoverPolygon = polygon;
 				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
 				var direction = PolyOps.getCursorStyleFromDirection(handlePosition);
-				mouseType.set(direction);
+				touchType.set(direction);
 				if (handlePosition) return true; // This will break the .find() loop
 			}
 		});
 		if (!polygon) {
-			$mouseType = '';
-		} else if (hoverPolygon && !$mouseType) {
-			$mouseType = 'move';
+			$touchType = 'default';
+		} else if (hoverPolygon && !$touchType) {
+			$touchType = 'move';
 		}
 	};
 
@@ -260,7 +286,7 @@
 <div class="bg-neutral-950 w-full h-full top-0 left-0 fixed">
 	<div
 		class="h-full w-full"
-		style={`cursor: ${$mouseType};`}
+		style={`cursor: ${$touchType};`}
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}

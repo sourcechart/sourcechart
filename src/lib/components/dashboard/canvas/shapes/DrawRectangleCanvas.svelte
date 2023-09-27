@@ -5,7 +5,7 @@
 		canvasBehavior,
 		getChartOptions,
 		activeSidebar,
-		mouseType
+		touchType
 	} from '$lib/io/Stores';
 	import {
 		isPointInPolygon,
@@ -135,7 +135,9 @@
 			y = (e as MouseEvent).clientY;
 		}
 
+		//console.log(polygon);
 		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
+			console.log('isTranslating');
 			mostRecentChartID.set(polygon.id);
 
 			var newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
@@ -247,7 +249,7 @@
 	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
 >
 	<div
-		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;  cursor: {$mouseType} "
+		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;  cursor: {$touchType} "
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}

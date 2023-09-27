@@ -27,9 +27,9 @@ const isPointInPolygon = (point: Point, polygon: Polygon): boolean => {
  * Get Cursor Style From Direction
  *
  * @param direction
- * @returns string|null
+ * @returns string
  */
-const getCursorStyleFromDirection = (direction: string): string | null => {
+const getCursorStyleFromDirection = (direction: string): string => {
 	const cursorMap: { [key: string]: string } = {
 		n: 'ns-resize',
 		ne: 'nesw-resize',
@@ -38,10 +38,10 @@ const getCursorStyleFromDirection = (direction: string): string | null => {
 		s: 'ns-resize',
 		sw: 'nesw-resize',
 		w: 'ew-resize',
-		nw: 'nwse-resize'
-		//center: 'move'
+		nw: 'nwse-resize',
+		center: 'move'
 	};
-	return cursorMap[direction] || null;
+	return cursorMap[direction] || 'default';
 };
 
 /**
