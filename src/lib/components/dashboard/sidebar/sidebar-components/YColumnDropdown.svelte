@@ -3,7 +3,7 @@
 
 	import { clickedChartIndex, allCharts, getColumnsFromFile } from '$lib/io/Stores';
 	export let open = false;
-	let currentValue: string = 'Select Column';
+	let currentValue: string = '';
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
