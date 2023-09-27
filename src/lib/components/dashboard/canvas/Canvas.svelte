@@ -41,7 +41,6 @@
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: CANVASBEHAVIOR = canvasBehavior();
-	$: if ($CANVASBEHAVIOR) controlSidebar($CANVASBEHAVIOR);
 
 	if (browser) {
 		onMount(() => {
@@ -52,24 +51,12 @@
 		});
 	}
 
+	$: console.log($CANVASBEHAVIOR, $touchType);
 	const updateOffset = () => {
 		const rect = canvas.getBoundingClientRect();
 		offsetX = rect.left;
 		offsetY = Math.abs(rect.top - height);
 	};
-
-	function controlSidebar(touchstate: string) {
-		if (touchstate === 'isTouching') {
-			activeSidebar.set(false);
-		} else if (touchstate === 'isErasing') {
-			activeSidebar.set(false);
-		} else if (touchstate === 'isResizing' || touchstate === 'isTranslating') {
-			activeSidebar.set(true);
-		} else if (touchstate === 'isDrawing') {
-			activeSidebar.set(true);
-		} else if (touchstate === 'isDrawingArrow') {
-		}
-	}
 
 	const handleMouseDown = (e: MouseEvent | TouchEvent): void => {
 		let x;

@@ -25,7 +25,7 @@ export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
 export const mobileNav = writable<MobileBar | null>(null);
-
+export const activeMobileNav = writable<boolean>(false);
 export const responsiveType = writable<ResponsiveType>('desktop');
 
 export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
@@ -154,10 +154,42 @@ export const canvasBehavior = () => {
 			} else {
 				return 'default';
 			}
+			controlBar(behavior, $responsiveType);
 			return behavior;
 		}
 	);
 };
+
+function controlBar(touchstate: string, responsiveType: string) {
+	if (touchstate === 'isTouching' && responsiveType === 'desktop') {
+		activeSidebar.set(false);
+	} else if (touchstate === 'isTouching' && responsiveType === 'mobile') {
+		activeMobileNav.set(false);
+	} else if (touchstate === 'isErasing' && responsiveType === 'desktop') {
+		activeSidebar.set(false);
+	} else if (touchstate === 'isErasing' && responsiveType === 'mobile') {
+		activeMobileNav.set(false);
+	} else if (
+		(touchstate === 'isResizing' || touchstate === 'isTranslating' || touchstate === 'isDrawing') &&
+		responsiveType === 'desktop'
+	) {
+		activeSidebar.set(true);
+	} else if (
+		(touchstate === 'isResizing' || touchstate === 'isTranslating' || touchstate === 'isDrawing') &&
+		responsiveType === 'mobile'
+	) {
+		activeMobileNav.set(true);
+	}
+}
+
+export const controlSidebar = () =>
+	derived([activeSidebar, activeMobileNav, mobileNav], ([_, $activeMobileNav, $mobileNav]) => {
+		if ($activeMobileNav && $mobileNav === 'sidebar') {
+			activeSidebar.set(true);
+		} else {
+			activeSidebar.set(false);
+		}
+	});
 
 export const columnLabel = (axis: string) =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
