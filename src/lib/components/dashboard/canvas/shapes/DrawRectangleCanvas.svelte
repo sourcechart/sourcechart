@@ -137,7 +137,6 @@
 
 		//console.log(polygon);
 		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
-			console.log('isTranslating');
 			mostRecentChartID.set(polygon.id);
 
 			var newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon

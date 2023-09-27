@@ -42,7 +42,7 @@
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: if ($CANVASBEHAVIOR) controlSidebar($CANVASBEHAVIOR);
 
-	$: console.log($allCharts);
+	$: console.log($touchType, $CANVASBEHAVIOR);
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
@@ -89,8 +89,9 @@
 		startPosition = { x, y };
 
 		touchState.set('isTouching');
-		const polygons = $allCharts.map((chart) => chart.polygon);
-		const containingPolygon = PolyOps.getContainingPolygon(startPosition, polygons);
+		//const polygons = $allCharts.map((chart) => chart.polygon);
+		// I am not sure why this works
+		const containingPolygon = PolyOps.getContainingPolygon(startPosition, []);
 		if ($navBarState === 'select' && chartIndex >= 0 && containingPolygon) {
 			const polygon = $allCharts[chartIndex].polygon;
 			if (polygon && PolyOps.isPointInPolygon(startPosition, polygon)) {
@@ -116,6 +117,7 @@
 			y = e.changedTouches[0].clientY;
 			e.preventDefault();
 			e.stopPropagation();
+			handleTouchTranslate(x, y);
 		} else {
 			return; // Not a MouseEvent or TouchEvent
 		}
@@ -142,30 +144,7 @@
 		navBarState.set('select');
 	};
 
-	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
-		let x: number;
-		let y: number;
-
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
-			e.stopPropagation();
-			x = e.touches[0].clientX;
-			y = e.touches[0].clientY;
-			handleTouchMove(x, y);
-		} else if (e instanceof MouseEvent) {
-			x = e.clientX;
-			y = e.clientY;
-			if ($CANVASBEHAVIOR === 'isHovering') {
-				handleMouseMoveUp(x, y);
-			} else {
-				handleMouseMoveDown(x, y);
-			}
-		} else {
-			return; // Not a MouseEvent or TouchEvent
-		}
-	};
-
-	const handleTouchMove = (x: number, y: number) => {
+	const handleTouchTranslate = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 		const polygons = $allCharts.map((chart) => chart.polygon);
@@ -182,15 +161,34 @@
 				if (handlePosition) return true; // This will break the .find() loop
 			}
 		});
-
 		if (!polygon) {
-			$touchType = 'default';
+			touchType.set('default');
 		} else if (hoverPolygon && !$touchType) {
-			$touchType = 'move';
+			touchType.set('move');
 		}
 	};
 
-	$: console.log($touchType);
+	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+		let x: number;
+		let y: number;
+
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+			e.stopPropagation();
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else if (e instanceof MouseEvent) {
+			x = e.clientX;
+			y = e.clientY;
+		} else {
+			return;
+		}
+		if ($CANVASBEHAVIOR === 'isHovering') {
+			handleMouseMoveUp(x, y);
+		} else if ($CANVASBEHAVIOR !== 'isHovering') {
+			handleMouseMoveDown(x, y);
+		}
+	};
 
 	const handleMouseMoveUp = (x: number, y: number): void => {
 		x = x - offsetX + scrollX;
@@ -274,6 +272,7 @@
 				break;
 
 			case 'isResizing':
+				console.log('triggering');
 				handleResize(x, y);
 				break;
 

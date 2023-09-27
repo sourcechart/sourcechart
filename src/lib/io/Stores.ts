@@ -128,7 +128,7 @@ export const canvasBehavior = () => {
 				$navBarState === 'select' &&
 				$touchState === 'isTouching' &&
 				$touchType !== 'move' &&
-				$touchType !== ''
+				$touchType !== 'default'
 			) {
 				behavior = 'isResizing';
 			} else if (
