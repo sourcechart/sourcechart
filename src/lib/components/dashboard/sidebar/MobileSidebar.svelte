@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Trash from '$lib/components/ui/icons/Trash.svelte';
 	import AcademiconsOpenData from '$lib/components/ui/icons/AcademiconsOpenData.svelte';
-	let activeIndex: number | null = null;
 	import { mobileNav } from '$lib/io/Stores';
+
+	let activeIndex: number | null = null;
 
 	const setMode = (mode: MobileBar, clickedIndex: number) => {
 		mobileNav.set(mode);
@@ -10,17 +11,17 @@
 	};
 
 	let icons: { name: string; mode: MobileBar; component: any; index: number }[] = [
-		{ name: 'Trash', component: Trash, index: 0, mode: 'trash' },
-		{ name: 'AcademiconsOpenData', component: AcademiconsOpenData, mode: 'sidebar', index: 1 }
+		{ name: 'AcademiconsOpenData', component: AcademiconsOpenData, mode: 'sidebar', index: 1 },
+		{ name: 'Trash', component: Trash, index: 0, mode: 'trash' }
 	];
 </script>
 
-<div class="flex justify-center h-10 items-center rounded-md shadow-lg bg-neutral-800">
-	<div class="flex items-center justify-center space-x-3 ml-1 mr-1">
+<div class="flex justify-center w-40 h-10 items-center rounded-md shadow-lg bg-neutral-800">
+	<div class="flex items-center justify-center space-x-16 ml-1 mr-1">
 		{#each icons as { name, component, index, mode } (name)}
 			<button
 				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${
-					index === activeIndex ? 'selected' : ''
+					index === activeIndex ? 'bg-[#9d99dc77]' : ''
 				}`}
 				on:click={() => setMode(mode, index)}
 			>
