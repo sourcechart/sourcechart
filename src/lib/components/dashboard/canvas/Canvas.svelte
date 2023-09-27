@@ -104,7 +104,6 @@
 			y = e.changedTouches[0].clientY;
 			e.preventDefault();
 			e.stopPropagation();
-			handleTouchTranslate(x, y);
 		} else {
 			return;
 		}
@@ -129,29 +128,6 @@
 
 		touchState.set('isHovering');
 		navBarState.set('select');
-	};
-
-	const handleTouchTranslate = (x: number, y: number): void => {
-		x = x - offsetX + scrollX;
-		y = y - offsetY + scrollY;
-		currentMousePosition = { x: x, y: y };
-		let hoverPolygon = null;
-		const polygons = $allCharts.map((chart) => chart.polygon);
-
-		polygons.find((polygon) => {
-			let insidePolygon =
-				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
-			hoverIntersection = insidePolygon ? true : false;
-			if (insidePolygon) {
-				hoverPolygon = polygon;
-				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
-				var direction = PolyOps.getCursorStyleFromDirection(handlePosition);
-				touchType.set(direction);
-				if (handlePosition) return true;
-			} else {
-				touchType.set('default');
-			}
-		});
 	};
 
 	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
