@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 
-	import { clickedChartIndex, allCharts, getColumnsFromFile } from '$lib/io/Stores';
+	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
 	export let open = false;
 	let currentValue: string = '';
 
@@ -74,7 +74,7 @@
 		</button>
 
 		<!-- Tooltip element -->
-		{#if showTooltip}
+		{#if showTooltip && $responsiveType !== 'mobile'}
 			<div
 				role="tooltip"
 				class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md"
