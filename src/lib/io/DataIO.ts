@@ -99,6 +99,7 @@ class DataIO {
 		this.downloadTSV(data, 'export.tsv');
 	}
 
+	//TODO: Refactor this function to be more generic
 	private updateBasicChart(results: any[], chart: Chart) {
 		const xColumn = this.getColumn(chart.xColumn);
 		const yColumn = this.getColumn(chart.yColumn);

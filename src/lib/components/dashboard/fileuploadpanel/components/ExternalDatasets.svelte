@@ -43,10 +43,7 @@
 	const downloadRawDataset = async (dataset: ExternalDataset) => {
 		try {
 			const response = await fetch(dataset.url);
-			console.log(response);
-			const data = await response.text(); // Assuming the data is in JSON format
-			console.log(data);
-
+			const data = await response.text(); // Assuming the data is in JSON format\
 			downloadRawCSV(data, dataset.url.split('/').pop() + '');
 		} catch (error) {
 			console.error('Error downloading dataset:', error);
@@ -54,20 +51,26 @@
 	};
 </script>
 
-<div class="table-container scrollBarDiv">
-	<Table>
-		<TableHead>
-			<TableHeadCell>Dataset</TableHeadCell>
-			<TableHeadCell>Description</TableHeadCell>
-			<TableHeadCell />
-			<TableBodyCell />
-		</TableHead>
-	</Table>
-	<TableBody>
-		{#each datasets as dataset}
-			<TableBodyRow>
-				<TableBodyCell>{dataset.name}</TableBodyCell>
-				<TableBodyCell>{dataset.description}</TableBodyCell>
+<div class="scrollBarDiv">
+	{#if isLoading}
+		<div class="loading-container flex">
+			<span class="mr-2">Loading...</span>
+			<Spinner size={40} />
+		</div>
+	{:else}
+		<Table>
+			<TableHead>
+				<TableHeadCell>Dataset</TableHeadCell>
+				<TableHeadCell>Description</TableHeadCell>
+				<TableHeadCell />
+				<TableBodyCell />
+			</TableHead>
+		</Table>
+		<TableBody>
+			{#each datasets as dataset}
+				<TableBodyRow>
+					<TableBodyCell>{dataset.name}</TableBodyCell>
+					<TableBodyCell>{dataset.description}</TableBodyCell>
 
 				<TableBodyCell>
 					<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
