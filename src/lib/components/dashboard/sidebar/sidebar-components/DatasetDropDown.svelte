@@ -9,11 +9,9 @@
 		fileUploadStore
 	} from '$lib/io/Stores';
 	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
-
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { onDestroy } from 'svelte';
-
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
 
@@ -46,7 +44,7 @@
 
 	const queryDuckDB = async (filename: string) => {
 		selectedDataset = filename;
-		$chosenFile = filename;
+		chosenFile.set(filename);
 		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
 		if (!dataObject) return;
 		let resp;
