@@ -52,7 +52,7 @@
 			on:click={() => (open = !open)}
 		>
 			<span class="text-sm text-neutral-300 ml-1">X</span>
-			<span class="text-sm text-slate-100 w-full"> {currentValue} </span>
+			<span class="text-sm text-gray-100 w-full"> {currentValue} </span>
 		</button>
 	</div>
 

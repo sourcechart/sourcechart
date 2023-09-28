@@ -85,7 +85,7 @@
 			class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
 			on:click={toggleChartDropdown}
 		>
-			<span class="text-sm ml-2 font-thin text-neutral-300">
+			<span class="text-sm ml-2 font-thin text-gray-100">
 				{chosenPlot}
 			</span>
 		</button>

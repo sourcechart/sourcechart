@@ -94,57 +94,47 @@
 	});
 </script>
 
-<div class="py-1 flex w-full space-x-3 items-center">
+<div class="py-1 flex w-full space-x-3 items-center justify-between">
 	<span class="text-sm font-light text-neutral-300">Datasets</span>
 
-	<button
-		bind:this={dropdownContainer}
-		class="bg-neutral-900 w-full rounded-sm flex-grow justify-between flex items-center shadow-lg ml-4 border-neutral-700/50 hover:bg-neutral-900/50"
-		on:click={toggleDropdown}
-	>
-		<span class="text-sm text-white justify-center flex hover:text-neutral-200 font-thin ml-2">
-			{selectedDataset}
-		</span>
-		<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-10" />
-	</button>
-
-	{#if isDropdownOpen}
+	<div class="relative inline-block">
 		<button
-			class="scrollBarDiv bg-neutral-800 absolute rounded-md top-0 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-			on:click={() => (isDropdownOpen = false)}
+			bind:this={dropdownContainer}
+			class="bg-neutral-900 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center mx-auto border-neutral-700/50"
+			on:click={toggleDropdown}
 		>
-			{#each $datasets as dataset}
-				{#if dataset !== null}
-					<div>
-						<div class="flex justify-between items-center text-gray-300 relative selectFieldColor">
-							<div
-								class="text-left text-sm px-3 py-2 w-full bg-neutral-900 hover:bg-gray-700 cursor-pointer truncate pr-8 relative"
+			<span class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-2">
+				{selectedDataset}
+			</span>
+			<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-10" />
+		</button>
+
+		{#if isDropdownOpen}
+			<div
+				class="scrollBarDiv absolute top-full left-0 rounded-md bg-neutral-900 w-48 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			>
+				{#each $datasets as dataset}
+					{#if dataset !== null}
+						<div
+							class="flex justify-between w-full items-center text-gray-300 relative selectFieldColor hover:bg-neutral-700"
+						>
+							<button
+								class="flex-grow text-left text-sm px-3 py-2 cursor-pointer truncate"
 								on:click={() => selectFile(dataset)}
 								on:keypress={(e) => e.key === 'Enter' && selectFile(dataset)}
 							>
 								{dataset}
-								<button
-									class="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-transparent"
-									on:click={(e) => e.stopPropagation()}
-								>
-									<CloseSolid class="w-3 h-3 text-white" />
-								</button>
-							</div>
+							</button>
+							<button class="ml-2 p-2" on:click={(e) => e.stopPropagation()}>
+								<CloseSolid class="w-4 h- text-white" />
+							</button>
 						</div>
-						<button
-							class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
-							on:click={(event) => {
-								event.stopPropagation();
-								removeFromAllCharts(dataset);
-							}}
-						>
-							<CloseSolid class="w-3 h-3 text-white dark:text-white" />
-						</button>
-					</div>
-				{/if}
-			{/each}
-		</button>
-	{/if}
+					{/if}
+				{/each}
+			</div>
+		{/if}
+	</div>
+	<!-- End of surrounding container -->
 	<FileUploadButton />
 </div>
 

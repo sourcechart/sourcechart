@@ -51,7 +51,7 @@
 			on:click={() => (open = !open)}
 		>
 			<span class="text-sm text-neutral-300 ml-1">Y</span>
-			<span class="text-sm text-slate-100 w-full justify-center"> {currentValue} </span>
+			<span class="text-sm text-gray-100 w-full justify-center"> {currentValue} </span>
 		</button>
 	</div>
 	{#if open}
