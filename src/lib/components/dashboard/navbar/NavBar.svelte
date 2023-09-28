@@ -59,7 +59,7 @@
 		{#each icons as { name, component, index, mode } (name)}
 			<div
 				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${
-					index === activeIndex ? 'bg-[#9d99dc77]' : ''
+					index === activeIndex ? 'bg-[#908bd971]' : ''
 				}`}
 				on:keypress={(event) => {
 					if (['0', '1', '2', '3'].includes(event.key)) {
