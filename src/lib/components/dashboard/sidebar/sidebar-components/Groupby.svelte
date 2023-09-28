@@ -85,7 +85,7 @@
 	const startGroupByHover = (): void => {
 		hoverTimeout = setTimeout(() => {
 			showGroupByTooltip = true;
-		}, 800);
+		}, 3000);
 	};
 
 	const endGroupByHover = (): void => {
