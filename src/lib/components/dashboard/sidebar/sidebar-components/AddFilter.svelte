@@ -18,6 +18,7 @@
 			return charts;
 		});
 	};
+	$: console.log($allCharts[$i]);
 
 	let showTooltip: boolean = false;
 	let hoverTimeout: NodeJS.Timeout;

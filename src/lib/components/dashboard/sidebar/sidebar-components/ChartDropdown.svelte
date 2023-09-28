@@ -104,6 +104,7 @@
 				{chosenPlot}
 			</span>
 		</button>
+		<!--
 		<div
 			class="ml-3 relative"
 			on:mouseover={startInfoHover}
@@ -117,7 +118,6 @@
 		>
 			<Info />
 
-			<!-- Tooltip for Info icon -->
 			{#if showInfoTooltip}
 				<div
 					role="tooltip"
@@ -127,6 +127,7 @@
 				</div>
 			{/if}
 		</div>
+		-->
 	</div>
 </div>
 {#if isChartDropdownOpen}
