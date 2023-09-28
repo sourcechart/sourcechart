@@ -45,44 +45,38 @@
 	};
 
 	const queryDuckDB = async (filename: string) => {
+		selectedDataset = filename;
+		$chosenFile = filename;
 		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
 		if (!dataObject) return;
 		let resp;
+		let fname = filename;
 		const db = await DuckDBClient.of([dataObject.file]);
+		//@ts-ignore
 
-		if (dataObject.file.name) {
+		if (dataObject.file.url) {
+			//@ts-ignore
+			resp = await db.query(`SELECT * FROM '${dataObject.file.url}' LIMIT 0`); //@ts-ignore
+			fname = `${dataObject.file.url}`;
+		} else if (dataObject.file.name) {
 			const sanitizedFilename = checkNameForSpacesAndHyphens(dataObject.file.name);
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
-		} else if (dataObject.file.url) {
-			//@ts-ignore
-			console.log(dataObject.file.url); //@ts-ignore
-			resp = await db.query(`SELECT * FROM ${dataObject.file.url} LIMIT 0`); //@ts-ignore
 		} else {
 			return;
 		} //@ts-ignore
+
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
 
 		duckDBInstanceStore.set(db);
 		allCharts.update((charts) => {
 			let chart = charts[$i];
+			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID;
+			charts[$i].filename = fname;
 			chart.schema = schema;
 			chart.columns = columns;
 			return charts;
 		});
-	};
-
-	const selectFile = (filename: string) => {
-		selectedDataset = filename;
-		$chosenFile = filename;
-
-		allCharts.update((charts) => {
-			charts[$i].filename = filename;
-			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID;
-			return charts;
-		});
-
-		queryDuckDB(filename);
 	};
 
 	const removeFromAllCharts = (filename: string) => {
@@ -132,8 +126,8 @@
 						>
 							<button
 								class="flex-grow text-left text-sm px-3 py-2 cursor-pointer truncate"
-								on:click={() => selectFile(dataset)}
-								on:keypress={(e) => e.key === 'Enter' && selectFile(dataset)}
+								on:click={async () => queryDuckDB(dataset)}
+								on:keypress={async (e) => e.key === 'Enter' && queryDuckDB(dataset)}
 							>
 								{dataset}
 							</button>
@@ -152,7 +146,6 @@
 			</div>
 		{/if}
 	</div>
-	<!-- End of surrounding container -->
 
 	<FileUploadButton />
 </div>

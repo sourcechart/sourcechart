@@ -6,7 +6,7 @@
 
 	import DropZone from './components/DropZone.svelte';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
-	//import ExternalDatasets from './components/ExternalDatasets.svelte';
+	import ExternalDatasets from './components/ExternalDatasets.svelte';
 
 	const handleClick = () => {
 		activeDropZone.set(false);
@@ -26,11 +26,10 @@
 			<TabItem title="Load Files" open>
 				<DropZone />
 			</TabItem>
-			<!--
+
 			<TabItem title="External Datasets">
 				<ExternalDatasets />
 			</TabItem>
-			-->
 		</Tabs>
 	</div>
 </div>
