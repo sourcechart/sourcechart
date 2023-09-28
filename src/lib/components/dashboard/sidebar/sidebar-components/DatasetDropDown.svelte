@@ -111,7 +111,7 @@
 
 		{#if isDropdownOpen}
 			<div
-				class="scrollBarDiv absolute top-full left-0 rounded-md bg-neutral-900 w-48 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+				class="scrollBarDiv absolute top-full left-0 rounded-sm bg-neutral-900 w-40 mr-3 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			>
 				{#each $datasets as dataset}
 					{#if dataset !== null}
@@ -125,8 +125,14 @@
 							>
 								{dataset}
 							</button>
-							<button class="ml-2 p-2" on:click={(e) => e.stopPropagation()}>
-								<CloseSolid class="w-4 h- text-white" />
+							<button
+								class="ml-2 p-2"
+								on:click={(e) => {
+									removeFromAllCharts(dataset);
+									e.stopPropagation();
+								}}
+							>
+								<CloseSolid class="w-4 h-4 hover:text-gray-300 text-white" />
 							</button>
 						</div>
 					{/if}
