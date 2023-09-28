@@ -116,7 +116,7 @@
 		>
 			{#each $columns as column (column)}
 				<button
-					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 text-xs font-thin"
+					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm"
 					on:click={() => {
 						addColumnToGroupBy(column);
 						showGroupByAggregator = true;

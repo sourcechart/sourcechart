@@ -99,7 +99,7 @@
 
 	<button
 		bind:this={dropdownContainer}
-		class="bg-neutral-900/80 w-full rounded-sm hover:bg-neutral-900 flex-grow justify-between flex items-center shadow-lg ml-4 border-neutral-700/50"
+		class="bg-neutral-900 w-full rounded-sm flex-grow justify-between flex items-center shadow-lg ml-4 border-neutral-700/50"
 		on:click={toggleDropdown}
 	>
 		<span class="text-sm text-white justify-center flex hover:text-neutral-200 font-thin ml-2">
@@ -110,7 +110,7 @@
 
 	{#if isDropdownOpen}
 		<button
-			class="scrollBarDiv bg-neutral-800 absolute top-0 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			class="scrollBarDiv bg-neutral-800 absolute rounded-md top-0 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			on:click={() => (isDropdownOpen = false)}
 		>
 			{#each $datasets as dataset}
@@ -118,28 +118,18 @@
 					<div>
 						<div class="flex justify-between items-center text-gray-400 relative selectFieldColor">
 							<div
-								class="text-left px-3 py-2 w-full bg-neutral-900/50 hover:bg-gray-700 cursor-pointer truncate pr-8"
-								on:click={() => {
-									selectFile(dataset);
-									isDropdownOpen = false;
-								}}
-								on:keypress={(event) => {
-									if (event.key === 'Enter') {
-										selectFile(dataset);
-										isDropdownOpen = false;
-									}
-								}}
+								class="text-left text-xs px-3 py-2 w-full bg-neutral-900 hover:bg-gray-700 cursor-pointer truncate pr-8 relative"
+								on:click={() => selectFile(dataset)}
+								on:keypress={(e) => e.key === 'Enter' && selectFile(dataset)}
 							>
 								{dataset}
+								<button
+									class="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-transparent"
+									on:click={(e) => e.stopPropagation()}
+								>
+									<CloseSolid class="w-3 h-3 text-white" />
+								</button>
 							</div>
-							<button
-								class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
-								on:click={(event) => {
-									event.stopPropagation();
-								}}
-							>
-								<CloseSolid class="w-3 h-3 text-white dark:text-white" />
-							</button>
 						</div>
 						<button
 							class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"

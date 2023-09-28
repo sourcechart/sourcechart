@@ -47,7 +47,7 @@
 <div bind:this={container} class="flex-grow relative">
 	<div class="flex items-center">
 		<button
-			class="mx-auto bg-neutral-900/80 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center border-neutral-700/50"
+			class="mx-auto bg-neutral-900 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center border-neutral-700/50"
 			on:click={() => (open = !open)}
 		>
 			<span class="text-sm text-neutral-300 ml-1">Y</span>

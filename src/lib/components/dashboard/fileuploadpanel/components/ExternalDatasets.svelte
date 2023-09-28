@@ -1,4 +1,5 @@
 <script lang="ts">
+	//@ts-ignore
 	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
 	import TableHead from 'flowbite-svelte/TableHead.svelte'; //@ts-ignore
 	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
@@ -10,6 +11,7 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { datasets } from './Datasets';
 	import { fileUploadStore } from '$lib/io/Stores';
+	import AddFilter from '../../sidebar/sidebar-components/AddFilter.svelte';
 
 	let isLoading = false;
 

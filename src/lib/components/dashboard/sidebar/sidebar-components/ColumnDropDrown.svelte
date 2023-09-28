@@ -140,7 +140,7 @@
 					>
 						{#each $columns as column}
 							<button
-								class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+								class="text-left text-xs px-3 py-2 w-full bg-neutral-900 hover:bg-gray-700 cursor-pointer truncate pr-8 relative"
 								on:click={() => chooseColumn(column)}
 							>
 								{column}
