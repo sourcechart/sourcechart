@@ -128,6 +128,16 @@
 				<CarrotUp class="h-6 w-6 hover:text-neutral-400 ml-4" />
 			{/if}
 		</button>
+		<!--
+	{#if showGroupByTooltip}
+		<div
+			role="tooltip"
+			class="absolute left-0 transform -translate-y-1/2 p-2 bg-neutral-200 text-gray-700 text-xs rounded shadow-md"
+		>
+			Click to select columns for grouping.
+		</div>
+	{/if}
+	-->
 	</div>
 
 	{#if isGroupByDropdownOpen}
