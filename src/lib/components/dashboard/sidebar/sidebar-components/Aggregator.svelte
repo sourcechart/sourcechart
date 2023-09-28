@@ -1,27 +1,14 @@
 <script lang="ts">
-	import { allCharts, clickedChartIndex, clearChartOptions } from '$lib/io/Stores'; //@ts-ignore
-	import Tags from '$lib/components/ui/tags/Tags.svelte';
+	import { allCharts, clickedChartIndex, clearChartOptions } from '$lib/io/Stores';
 	import { onDestroy } from 'svelte';
 
 	let aggs = ['avg', 'max', 'min', 'sum', 'count'];
 	let selectedAggregator: string | null = 'Aggregator';
-	let tags: Array<string> = []; // For storing selected aggregator
-	let isAggDropdownOpen: boolean = false; // To control the dropdown's visibility
+	let isAggDropdownOpen: boolean = false;
 	let dropdownContainer: HTMLElement;
 
 	$: i = clickedChartIndex();
 	$: $clearChartOptions, (selectedAggregator = '');
-
-	$: {
-		if ($allCharts.length > 0 && $allCharts[$i]) {
-			selectedAggregator = $allCharts[$i]?.aggregator ? $allCharts[$i].aggregator : 'Aggregator';
-		}
-		if (selectedAggregator !== 'Aggregator' && selectedAggregator) {
-			tags = [selectedAggregator];
-		} else {
-			tags = [];
-		}
-	}
 
 	$: {
 		if (isAggDropdownOpen) {
@@ -29,6 +16,12 @@
 		} else {
 			document.removeEventListener('click', handleOutsideClick);
 		}
+	}
+
+	$: if ($allCharts.length > 0 && $allCharts[$i]?.aggregator) {
+		selectedAggregator = $allCharts[$i].aggregator;
+	} else {
+		selectedAggregator = 'Aggregator';
 	}
 
 	const handleOutsideClick = (event: MouseEvent) => {
@@ -41,10 +34,8 @@
 		// Toggle the selected aggregator
 		if (selectedAggregator === agg) {
 			selectedAggregator = 'Aggregator';
-			tags = [];
 		} else {
 			selectedAggregator = agg;
-			tags = [agg];
 		}
 
 		allCharts.update((charts) => {
@@ -53,94 +44,27 @@
 		});
 	};
 
-	const removeTag = () => {
-		selectedAggregator = 'Aggregator';
-		tags = [];
-		allCharts.update((charts) => {
-			charts[$i].aggregator = null;
-			return charts;
-		});
-	};
-
-	const toggleAggDropdown = () => {
-		isAggDropdownOpen = !isAggDropdownOpen;
-	};
-
-	const closeAggDropdown = () => {
-		isAggDropdownOpen = false;
-	};
-
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
 </script>
 
-<!-- Dropdown Button for Aggregators -->
-
-<div class="w-full p-4 rounded-sm relative selectFieldColor">
-	<button
-		bind:this={dropdownContainer}
-		class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-		on:click={toggleAggDropdown}
-	>
-		<span class="text-sm ml-2"> Select Aggregator </span>
-	</button>
-
-	{#if isAggDropdownOpen}
+<div
+	class="scrollBarDiv bg-[#1c1c1ccd] flex justify-evenly items-center rounded-md overflow-x-auto py-2.5 border border-1 border-neutral-700/50"
+>
+	{#each aggs as agg}
 		<button
-			class={`
-            scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
-            rounded shadow-lg transform transition-transform 
-            origin-top overflow-y-auto overflow-x-hidden z-10 h-48
-            ${isAggDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
-			on:click|stopPropagation={closeAggDropdown}
+			class="flex items-center justify-center w-auto truncate p-2 rounded-md hover:bg-[#9d99dc77] text-center shadow-md {selectedAggregator ===
+			agg
+				? 'bg-[#9d99dc77]'
+				: 'bg-neutral-600/90'}"
+			on:click={() => {
+				selectAggregator(agg);
+			}}
 		>
-			{#each aggs as agg}
-				<button
-					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-					on:click={() => {
-						selectAggregator(agg);
-					}}
-				>
-					{agg}
-				</button>
-			{/each}
+			<span class="text-xs font-light">
+				{agg}
+			</span>
 		</button>
-	{/if}
-	<div class="mt-4 flex-grow">
-		{#if selectedAggregator !== 'Aggregator'}
-			<span class="text-sm"> Selected Aggregator </span>
-			<Tags items={tags} removeItem={removeTag} />
-		{/if}
-	</div>
+	{/each}
 </div>
-
-<!-- You can keep the provided styles as-is or modify them to match your overall theme -->
-
-<style>
-	.scrollBarDiv::-webkit-scrollbar {
-		width: 8px;
-	}
-
-	.scrollBarDiv::-webkit-scrollbar-thumb {
-		background-color: rgba(255, 255, 255, 0.3);
-		border-radius: 4px;
-	}
-
-	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
-		background-color: rgba(168, 168, 168, 0.5);
-	}
-
-	/* For Firefox */
-	.scrollBarDiv {
-		scrollbar-width: thin;
-		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
-	}
-
-	.selectFieldColor {
-		background-color: #33333d;
-	}
-	.selectFieldColor {
-		background-color: #33333d;
-	}
-</style>

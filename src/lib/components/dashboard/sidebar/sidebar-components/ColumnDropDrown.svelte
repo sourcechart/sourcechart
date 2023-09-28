@@ -1,22 +1,25 @@
 <script lang="ts">
 	import { getColumnsFromFile, clickedChartIndex, allCharts } from '$lib/io/Stores';
+	import ArrowDown from '$lib/components/ui/icons/ArrowDown.svelte';
 	import { onDestroy } from 'svelte';
 
 	let currentAxis = '';
-	let xAxisValue = 'Select Column for X Axis';
-	let yAxisValue = 'Select Column for Y Axis';
+	let xAxisValue = 'Select Column';
+	let yAxisValue = 'Select Column';
 	let xDropdownOpen = false;
 	let yDropdownOpen = false;
 	let xDropdownContainer: HTMLElement;
 	let yDropdownContainer: HTMLElement;
+
+	let showColumnDropdown = false;
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
 		//@ts-ignore
-		xAxisValue = $allCharts[$i]?.xColumn || 'Select Column for X Axis'; //@ts-ignore
-		yAxisValue = $allCharts[$i]?.yColumn || 'Select Column for Y Axis';
+		xAxisValue = $allCharts[$i]?.xColumn || 'Select Column'; //@ts-ignore
+		yAxisValue = $allCharts[$i]?.yColumn || 'Select Column';
 	}
 
 	const toggleDropdown = (axis: string) => {
@@ -75,67 +78,90 @@
 	});
 </script>
 
-<div class="w-full px-4 py-2 rounded-sm relative selectFieldColor">
-	<div class="flex-grow">
-		<span class="text-sm"> X Axis </span>
+<div class="w-full px-4 py-2 rounded-sm relative mb-4 font-mono">
+	<div class="flex justify-between">
 		<button
-			bind:this={xDropdownContainer}
-			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-			on:click={() => toggleDropdown('X')}
+			on:click={() => {
+				showColumnDropdown = !showColumnDropdown;
+			}}
 		>
-			<span class="text-sm ml-2"> {xAxisValue} </span>
+			<span class="text-xs font-bold">Columns</span>
+		</button>
+		<button
+			on:click={() => {
+				showColumnDropdown = !showColumnDropdown;
+			}}
+		>
+			<ArrowDown />
 		</button>
 	</div>
 
-	{#if xDropdownOpen}
-		<button
-			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-			on:click|stopPropagation={() => toggleDropdown('X')}
-		>
-			{#each $columns as column}
+	{#if showColumnDropdown}
+		<div class="flex items-center mt-1">
+			<!-- X Section -->
+			<div class="flex-grow relative w-1/2">
 				<button
-					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-					on:click={() => chooseColumn(column)}
+					bind:this={xDropdownContainer}
+					class="w-full px-2 rounded-sm hover:bg-gray-300 flex items-center"
+					on:click={() => toggleDropdown('X')}
 				>
-					{column}
+					<span class="text-sm ml-2 text-slate-100"> {yAxisValue} </span>
 				</button>
-			{/each}
-		</button>
-	{/if}
 
-	<div class="flex-grow mt-4">
-		<span class="text-sm"> Y Axis </span>
-		<button
-			bind:this={yDropdownContainer}
-			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
-			on:click={() => toggleDropdown('Y')}
-		>
-			<span class="text-sm ml-2"> {yAxisValue} </span>
-		</button>
-	</div>
+				{#if xDropdownOpen}
+					<div
+						class="scrollBarDiv bg-gray-900 absolute top-0 left-full mt-0 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+					>
+						{#each $columns as column}
+							<button
+								class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+								on:click={() => chooseColumn(column)}
+							>
+								{column}
+							</button>
+						{/each}
+					</div>
+				{/if}
+			</div>
 
-	{#if yDropdownOpen}
-		<button
-			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-			on:click|stopPropagation={() => toggleDropdown('Y')}
-		>
-			{#each $columns as column}
+			<!-- Y Section -->
+			<div class="flex-grow relative w-1/2">
 				<button
-					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-					on:click={() => chooseColumn(column)}
+					bind:this={yDropdownContainer}
+					class="w-full px-2 rounded-sm hover:bg-gray-300 flex items-center"
+					on:click={() => toggleDropdown('Y')}
 				>
-					{column}
+					<span class="text-sm ml-2 text-slate-100"> {yAxisValue} </span>
 				</button>
-			{/each}
-		</button>
+
+				{#if yDropdownOpen}
+					<div
+						class="scrollBarDiv bg-gray-900 absolute top-0 left-full mt-0 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+					>
+						{#each $columns as column}
+							<button
+								class="text-left text-xs px-3 py-2 w-full bg-neutral-900 hover:bg-gray-700 cursor-pointer truncate pr-8 relative"
+								on:click={() => chooseColumn(column)}
+							>
+								{column}
+							</button>
+						{/each}
+					</div>
+				{/if}
+			</div>
+		</div>
 	{/if}
 </div>
 
-<style>
-	.selectFieldColor {
-		background-color: #33333d;
-	}
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Oxygen+Mono:wght@400;500;700&display=swap"
+/>
 
+<style>
+	.font-mono {
+		font-family: 'Oxygen Mono', monospace;
+	}
 	.scrollBarDiv::-webkit-scrollbar {
 		width: 8px;
 	}
@@ -155,9 +181,5 @@
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
 		max-height: 200px; /* Adjust this value to your desired maximum height */
 		overflow-y: auto;
-	}
-
-	.selectFieldColor {
-		background-color: #33333d;
 	}
 </style>

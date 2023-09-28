@@ -13,12 +13,9 @@ export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>();
 export const clearChartOptions = writable<boolean>(false);
-export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
-export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
-export const polygons = writable<Polygon[]>([]);
-export const mouseType = writable<string | null>();
+export const touchType = writable<string | null>();
 export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
 export const minimumPointsForCluster = writable<number>();
@@ -27,18 +24,14 @@ export const activeDropZone = writable<boolean>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
-export const arrows = writable<arrow[]>(storeFromLocalStorage('arrowsStore', []));
+export const mobileNav = writable<MobileBar | null>(null);
+export const activeMobileNav = writable<boolean>(false);
+export const responsiveType = writable<ResponsiveType>('desktop');
+export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
+//export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
+export const fileUploadStore = writable<FileUpload[]>([]);
 
-const createDropdownStore = () => {
-	const { subscribe, set, update } = writable(null);
-
-	return {
-		subscribe,
-		open: (id: any) => set(id),
-		close: () => set(null),
-		toggle: (id: any) => update((currentId) => (currentId !== id ? id : null))
-	};
-};
+export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
@@ -128,40 +121,76 @@ export const clickedChartIndex = () =>
 
 export const canvasBehavior = () => {
 	return derived(
-		[navBarState, touchState, mouseType],
-		([$navBarState, $touchState, $mouseType]) => {
-			let touchState: TouchState;
+		[navBarState, touchState, touchType, responsiveType],
+		([$navBarState, $touchState, $touchType, $responsiveType]) => {
+			let behavior: TouchState;
 			if ($navBarState === 'drawRectangle' && $touchState === 'isTouching') {
-				touchState = 'isDrawing';
+				behavior = 'isDrawing';
 			} else if ($navBarState === 'eraser' && $touchState === 'isTouching') {
-				touchState = 'isErasing';
+				behavior = 'isErasing';
 			} else if (
 				$navBarState === 'select' &&
 				$touchState === 'isTouching' &&
-				$mouseType !== 'move' &&
-				$mouseType !== ''
+				$touchType !== 'move' &&
+				$touchType !== 'default'
 			) {
-				//This will have to be changed
-				touchState = 'isResizing';
+				behavior = 'isResizing';
 			} else if (
 				$navBarState === 'select' &&
-				$mouseType === 'move' &&
+				$touchType === 'move' &&
 				$touchState === 'isTouching'
 			) {
-				touchState = 'isTranslating';
+				behavior = 'isTranslating';
 			} else if ($navBarState === 'select' && $touchState === 'isHovering') {
-				touchState = 'isHovering';
-			} else if ($navBarState === 'select' && $touchState === 'isTouching') {
-				touchState = 'isTouching';
+				behavior = 'isHovering';
+			} else if (
+				$navBarState === 'select' &&
+				$touchState === 'isTouching' &&
+				$responsiveType === 'desktop' &&
+				$touchType === 'default'
+			) {
+				behavior = 'isTouching';
 			} else if ($navBarState === 'drawArrow' && $touchState === 'isTouching') {
-				touchState = 'isDrawingArrow';
+				behavior = 'isDrawingArrow';
 			} else {
 				return 'default';
 			}
-			return touchState;
+			controlBar(behavior, $responsiveType);
+			return behavior;
 		}
 	);
 };
+
+function controlBar(touchstate: string, responsiveType: string) {
+	if (touchstate === 'isTouching' && responsiveType === 'desktop') {
+		activeSidebar.set(false);
+	} else if (touchstate === 'isTouching' && responsiveType === 'mobile') {
+		activeMobileNav.set(false);
+	} else if (touchstate === 'isErasing' && responsiveType === 'desktop') {
+		activeSidebar.set(false);
+	} else if (touchstate === 'isErasing' && responsiveType === 'mobile') {
+		activeMobileNav.set(false);
+	} else if (
+		(touchstate === 'isResizing' || touchstate === 'isTranslating' || touchstate === 'isDrawing') &&
+		responsiveType === 'desktop'
+	) {
+		activeSidebar.set(true);
+	} else if (
+		(touchstate === 'isResizing' || touchstate === 'isTranslating' || touchstate === 'isDrawing') &&
+		responsiveType === 'mobile'
+	) {
+		activeMobileNav.set(true);
+	}
+}
+
+export const controlSidebar = () =>
+	derived([activeSidebar, activeMobileNav, mobileNav], ([_, $activeMobileNav, $mobileNav]) => {
+		if ($activeMobileNav && $mobileNav === 'sidebar') {
+			activeSidebar.set(true);
+		} else {
+			activeSidebar.set(false);
+		}
+	});
 
 export const columnLabel = (axis: string) =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
@@ -190,18 +219,6 @@ export const columnLabel = (axis: string) =>
 		}
 	});
 
-export const dropdownStore = createDropdownStore();
-export const createFileStore = (filename: string, fileSize: number, dataID: string) => {
-	var tableColumnsSize = {
-		filename: filename,
-		datasetID: dataID,
-		size: fileSize,
-		fileextension: filename.split('.').pop()
-	};
-
-	fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
-};
-
-storeToLocalStorage(fileUploadStore, 'fileUploadStore');
+//storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');
 storeToLocalStorage(arrows, 'arrowsStore');

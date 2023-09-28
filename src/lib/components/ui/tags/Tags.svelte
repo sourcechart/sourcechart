@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { CloseSolid } from 'flowbite-svelte-icons';
+	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 
 	export let items: Array<string> = [];
 	export let removeItem: (item: string) => void;
@@ -35,28 +35,30 @@
 	});
 </script>
 
-<div class=" scrollBarDiv flex justify-start items-center rounded-md overflow-x-auto tagsColor">
+<div
+	class="scrollBarDiv bg-[#1c1c1ccd] flex justify-start items-center rounded-b-md overflow-x-auto border border-1 border-neutral-700/50"
+>
 	{#each items as item, i (i)}
 		<div
 			role="button"
-			class="flex items-center m-2 rounded-sm bg-gray-700 text-white px-4 py-1 text-sm cursor-pointer hover:bg-gray-600 transition duration-150 ease-in-out"
+			class="flex justify-center items-center m-2 rounded-md text-xs bg-neutral-600 border border-1 border-neutral-700 text-white px-2 py-1 cursor-pointer hover:bg-[#9d99dc77] transition duration-150 ease-in-out"
 			tabindex="0"
 			on:click={() => selectItem(i)}
 			on:keydown={(e) => {
 				if (e.key === 'Enter') selectItem(i);
 			}}
 		>
-			<span class="mr-2">{item}</span>
+			<span class="mb-1 mr-1">{item}</span>
 			<div
 				role="button"
-				class="inline-block ml-2 text-xs cursor-pointer hover:text-gray-400"
+				class="ml-2 items-center cursor-pointer hover:text-gray-400"
 				tabindex="0"
 				on:click|stopPropagation={() => removeItem(item)}
 				on:keydown|stopPropagation={(e) => {
 					if (e.key === 'Enter') removeItem(item);
 				}}
 			>
-				<CloseSolid class="w-2 h-2" color="white" />
+				<CloseSolid class="w-3 h-3" color="white" />
 			</div>
 		</div>
 	{/each}
@@ -64,10 +66,6 @@
 
 <style>
 	/* Scrollbar styles */
-
-	.tagsColor {
-		background-color: rgb(18, 18, 18);
-	}
 
 	.scrollBarDiv::-webkit-scrollbar {
 		width: 8px;

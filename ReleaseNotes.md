@@ -2,6 +2,8 @@
 
 ## September 2023
 
+- Removed SQLITEWASM
+- Restyled Landing page and sidebar
 - Added Erase
 - Redid landing page
 - Fixed bug in choosing datasets

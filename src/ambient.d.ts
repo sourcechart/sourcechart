@@ -93,8 +93,6 @@ type Queries = {
 			from: string | undefined | null;
 		};
 	};
-	//filters: Array<Condition>;
-	//having: Array<Condition>;
 };
 
 type Condition = { column: string; filter: string | null | number };
@@ -111,9 +109,10 @@ type DataObject = {
 
 type FileUpload = {
 	filename: string;
-	//columns: string[];
-	size: number;
+	file: File | ExternalDataset;
+	size: number | null;
 	datasetID: string;
+	fileExtension: string | undefined;
 };
 
 type Field = {
@@ -148,6 +147,9 @@ type TouchState =
 type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'drawArrow' | 'textbox';
 
+type MobileBar = 'sidebar' | 'trash';
+type ResponsiveType = 'mobile' | 'desktop';
+
 interface Rectangle {
 	x: number;
 	y: number;
@@ -162,6 +164,15 @@ interface Rectangle {
 type Point = {
 	x: number;
 	y: number;
+};
+
+type Arrow = {
+	startX: number;
+	startY: number;
+	endX: number;
+	endY: number;
+	midX: number;
+	midY: number;
 };
 
 interface Polygon {

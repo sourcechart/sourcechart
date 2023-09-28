@@ -3,45 +3,23 @@
 	import Spinner from 'flowbite-svelte/Spinner.svelte'; //@ts-ignore
 	import Dropzone from 'flowbite-svelte/Dropzone.svelte';
 	import { generateID } from '$lib/io/GenerateID';
-	import { createFileStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
-	import { bufferToHex } from '$lib/io/HexOps';
-	import { onMount } from 'svelte';
+	import { fileUploadStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
 
 	let isLoading = false;
 	let value: string[] = [];
-	let syncWorker: Worker | undefined = undefined;
 
-	const loadWorker = async () => {
-		const SyncWorker = await import('$lib/io/web.worker?worker');
-		syncWorker = new SyncWorker.default();
+	const insertFileHandle = (file: File) => {
+		isLoading = true;
+		var tableColumnsSize = {
+			filename: file.name,
+			file: file,
+			datasetID: generateID(),
+			size: file.size,
+			fileExtension: file.name.split('.').pop()
+		};
+		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 	};
 
-	const uploadToSQLITe = async (file: File) => {
-		isLoading = true; // start the loading process
-		try {
-			var arrayBuffer = await file.arrayBuffer();
-			var id = generateID();
-			var hex = bufferToHex(arrayBuffer);
-
-			createFileStore(file.name, file.size, id);
-			if (syncWorker) {
-				syncWorker.postMessage({
-					filename: file.name,
-					size: file.size,
-					id: id,
-					message: 'initialize',
-					hexadecimal: hex,
-					fileextension: file.name.split('.').pop()
-				});
-			}
-		} catch (error) {
-			console.error('Error uploading to SQLite:', error);
-		} finally {
-			isLoading = false; // end the loading process
-		}
-	};
-
-	//This is used for Drag and Drop Events
 	const dropHandle = (event: DragEvent) => {
 		value = [];
 		event.preventDefault();
@@ -51,7 +29,7 @@
 					const file = item.getAsFile();
 					if (file) {
 						value.push(file.name);
-						uploadToSQLITe(file);
+						insertFileHandle(file);
 					}
 				}
 				activeDropZone.set(false);
@@ -60,7 +38,6 @@
 		} else if (event.dataTransfer) {
 			[...event.dataTransfer.files].forEach((file) => {
 				value.push(file.name);
-				uploadToSQLITe(file);
 			});
 			activeDropZone.set(false);
 			activeSidebar.set(true);
@@ -72,8 +49,8 @@
 		const files = inputElement.files;
 		if (files && files.length > 0) {
 			value.push(files[0].name);
-			[...files].forEach((file) => {
-				uploadToSQLITe(file);
+			[...files].forEach(async (file) => {
+				insertFileHandle(file);
 			});
 			activeDropZone.set(false);
 			activeSidebar.set(true);
@@ -96,11 +73,10 @@
 	const dragOver = (event: DragEvent) => {
 		event.preventDefault();
 	};
-	onMount(loadWorker);
 </script>
 
 <Dropzone
-	defaultClass="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed  selectFieldColor cursor-pointer dark:hover:bg-bray-800  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
+	defaultClass="flex flex-col justify-center items-center w-full h-64  rounded-lg border-2 border-gray-300 border-dashed  selectFieldColor cursor-pointer dark:hover:bg-gray-800  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
 "
 	id="dropzone"
 	on:drop={dropHandle}

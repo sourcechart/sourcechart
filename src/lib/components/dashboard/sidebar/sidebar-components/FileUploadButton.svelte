@@ -1,28 +1,52 @@
 <script lang="ts">
-	import { fileDropdown } from '$lib/io/Stores';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
-	import { PlusSolid } from 'flowbite-svelte-icons';
+	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
 
-	$: numberOfDatasets = fileDropdown();
-
-	const handleClick = () => {
+	const handleClick = (): void => {
 		activeDropZone.set(true);
 		activeSidebar.set(false);
 	};
+
+	let showTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
+
+	const startHover = (): void => {
+		// Show tooltip after 0.8 seconds (800 milliseconds)
+		hoverTimeout = setTimeout(() => {
+			showTooltip = true;
+		}, 800);
+	};
+
+	const endHover = (): void => {
+		// Clear timeout to avoid showing the tooltip if hover duration is less than 0.8 seconds
+		clearTimeout(hoverTimeout);
+		showTooltip = false;
+	};
 </script>
 
-<button
-	class="block w-full selectFieldColor text-left px-3 py-2 dark:text-black hover:bg-gray-200"
-	on:click={handleClick}
->
-	<div class="flex justify-between items-center w-full">
-		<span>Add Dataset [{$numberOfDatasets.length}]</span>
-		<PlusSolid class="w-3 h-3 ml-2 text-white dark:text-white" />
-	</div>
-</button>
+<div class="relative inline-flex">
+	<button
+		aria-label="Add Dataset"
+		on:click={handleClick}
+		on:mouseover={startHover}
+		on:mouseout={endHover}
+		on:blur={() => {
+			null;
+		}}
+		on:focus={() => {
+			null;
+		}}
+	>
+		<PlusSolid class="hover:text-gray-300" />
+	</button>
 
-<style>
-	.selectFieldColor {
-		background-color: #33333d;
-	}
-</style>
+	<!-- Tooltip element -->
+	{#if showTooltip}
+		<div
+			role="tooltip"
+			class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs shadow-md"
+		>
+			Add Dataset
+		</div>
+	{/if}
+</div>

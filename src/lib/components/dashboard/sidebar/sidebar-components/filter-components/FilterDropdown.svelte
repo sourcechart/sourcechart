@@ -82,8 +82,10 @@
 </script>
 
 <div class="relative group" on:click={toggleDropdown} on:keypress={null}>
-	<button class="bg-gray-200 p-2 rounded-none w-full text-black hover:bg-gray-300">
-		Choose Field
+	<button
+		class="bg-neutral-900/80 w-full rounded-sm hover:bg-neutral-900 flex-grow justify-between flex items-center shadow-lg border-neutral-700/50 border border-1"
+	>
+		<span class="text-sm ml-2"> Filter Value </span>
 	</button>
 	<div
 		class={`

@@ -4,9 +4,14 @@
 		mostRecentChartID,
 		canvasBehavior,
 		getChartOptions,
-		activeSidebar
+		activeSidebar,
+		touchType
 	} from '$lib/io/Stores';
-	import { isPointInPolygon } from '../draw-utils/PolygonOperations';
+	import {
+		isPointInPolygon,
+		calculateVertices,
+		generateHandleRectangles
+	} from '../draw-utils/PolygonOperations';
 	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
@@ -62,32 +67,20 @@
 	} else {
 		backupColor = '#9d99dc';
 	}
+
 	onMount(() => {
-		// Add global event listeners
 		window.addEventListener('mousemove', handleMouseMove);
 		window.addEventListener('mouseup', handleMouseUp);
+		window.addEventListener('touchmove', handleMouseMove);
+		window.addEventListener('touchend', handleMouseUp);
 
 		return () => {
-			// Cleanup the global event listeners
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('mouseup', handleMouseUp);
+			window.removeEventListener('touchmove', handleMouseMove);
+			window.removeEventListener('touchend', handleMouseUp);
 		};
 	});
-
-	const calculateVertices = (width: number, height: number, shrink: number = 5): LookupTable => {
-		var vertices: LookupTable = {
-			tl: { x: shrink, y: shrink }, // top-left
-			tr: { x: width - shrink, y: shrink }, // top-right
-			br: { x: width - shrink, y: height - shrink }, // bottom-right
-			bl: { x: shrink, y: height - shrink }, // bottom-left
-			mt: { x: width / 2, y: shrink }, // middle-top
-			mr: { x: width - shrink, y: height / 2 }, // middle-right
-			mb: { x: width / 2, y: height - shrink }, // middle-bottom
-			ml: { x: shrink, y: height / 2 } // middle-left
-		};
-
-		return vertices;
-	};
 
 	const drawRectangleCanvas = (
 		points: LookupTable,
@@ -102,9 +95,15 @@
 		drawRectangle(vertices, context, color);
 	};
 
-	const handleMouseDown = (e: MouseEvent) => {
-		var x = e.clientX; // adjust the mouse x-coordinate by the left offset of the canvas
-		var y = e.clientY;
+	const handleMouseDown = (e: MouseEvent | TouchEvent) => {
+		var x, y;
+		if (e instanceof TouchEvent) {
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else {
+			x = (e as MouseEvent).clientX;
+			y = (e as MouseEvent).clientY;
+		}
 
 		let inPolygon = isPointInPolygon({ x, y }, polygon);
 		if (inPolygon) {
@@ -112,12 +111,23 @@
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;
 		}
+
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+		}
 	};
 
-	const handleMouseMove = (e: MouseEvent) => {
+	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
-		var x = e.clientX;
-		var y = e.clientY;
+
+		var x, y;
+		if (e instanceof TouchEvent) {
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else {
+			x = (e as MouseEvent).clientX;
+			y = (e as MouseEvent).clientY;
+		}
 
 		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
 			mostRecentChartID.set(polygon.id);
@@ -139,6 +149,10 @@
 
 			polygon = newPolygon;
 		}
+
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+		}
 	};
 
 	const updateAllCharts = (updatedPolygon: Polygon) => {
@@ -148,10 +162,18 @@
 		$allCharts[i] = chart;
 	};
 
-	const handleMouseUp = (e: MouseEvent) => {
+	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
-		var x = e.clientX;
-		var y = e.clientY;
+
+		var x, y;
+		if (e instanceof TouchEvent) {
+			x = e.changedTouches[0].clientX;
+			y = e.changedTouches[0].clientY;
+		} else {
+			x = (e as MouseEvent).clientX;
+			y = (e as MouseEvent).clientY;
+		}
+
 		if ($CANVASBEHAVIOR === 'isTranslating') {
 			var dx = x - offsetX;
 			var dy = y - offsetY;
@@ -177,16 +199,6 @@
 	const getPlotHeight = () => {
 		return Math.abs(polygon.vertices[0].y - polygon.vertices[2].y);
 	};
-
-	function generateHandleRectangles(points: LookupTable) {
-		const handleSize = 10;
-		return Object.values(points).map((point) => ({
-			x: point.x - handleSize / 2,
-			y: point.y - handleSize / 2,
-			width: handleSize,
-			height: handleSize
-		}));
-	}
 
 	afterUpdate(() => {
 		// Set canvas width and height based on the polygon dimensions
@@ -224,20 +236,21 @@
 	style="position: absolute; left: {Math.min(
 		polygon.vertices[0].x,
 		polygon.vertices[2].x
-	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px; "
+	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
 >
 	<div
-		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;"
+		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;  cursor: {$touchType} "
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
+		on:touchstart={handleMouseDown}
+		on:touchmove={handleMouseMove}
+		on:touchend={handleMouseUp}
 		class="rounded-sm"
 	>
 		<canvas style="position: absolute;  z-index: {dragging ? 4 : 2};" bind:this={canvas} />
 		<div
-			style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:{dragging
-				? 3
-				: 2};"
+			style="position: absolute; width:  {plotWidth}px; height: {plotHeight}px; z-index:1;"
 			class="overflow-vis"
 		>
 			<Chart {options} renderer={'svg'} />
@@ -274,11 +287,3 @@
 		</svg>
 	</div>
 </div>
-
-<style>
-	.overflow-vis {
-		overflow: visible;
-		width: 100%;
-		height: 100%;
-	}
-</style>

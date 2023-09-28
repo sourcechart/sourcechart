@@ -13,7 +13,13 @@ const drawRectangle = (
 	context.beginPath();
 	vertices.forEach((point, idx) => {
 		if (idx === 0) {
-			if (context) context.moveTo(point.x, point.y);
+			if (context) context.moveTo(point.x, point.y + 5);
+		} else if (idx === 1) {
+			if (context) context.lineTo(point.x - 5, point.y);
+		} else if (idx === 2) {
+			if (context) context.lineTo(point.x, point.y - 5);
+		} else if (idx === 3) {
+			if (context) context.lineTo(point.x + 5, point.y);
 		} else {
 			if (context) context.lineTo(point.x, point.y);
 		}

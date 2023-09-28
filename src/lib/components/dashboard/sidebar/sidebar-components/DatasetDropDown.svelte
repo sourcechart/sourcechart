@@ -8,24 +8,18 @@
 		duckDBInstanceStore,
 		fileUploadStore
 	} from '$lib/io/Stores';
-
-	import { CloseSolid } from 'flowbite-svelte-icons';
+	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
 
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
-	import { hexToBuffer } from '$lib/io/HexOps';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { onMount, onDestroy } from 'svelte';
+	import { onDestroy } from 'svelte';
+
+	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
+	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
 
 	let isDropdownOpen = false;
-	let syncWorker: Worker | undefined = undefined;
-	let selectedDataset: string | null = 'Choose Dataset';
+	let selectedDataset: string | null = '';
 	let dropdownContainer: HTMLElement;
-
-	const handleOutsideClick = (event: MouseEvent) => {
-		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
-			isDropdownOpen = false;
-		}
-	};
 
 	$: {
 		if (isDropdownOpen) {
@@ -36,7 +30,7 @@
 	}
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
-		selectedDataset = $allCharts[$i]?.filename ? $allCharts[$i].filename : 'Choose Dataset';
+		selectedDataset = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 	}
 
@@ -44,29 +38,32 @@
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	const onWorkerMessage = (e: MessageEvent) => {
-		var arrayBuffer = hexToBuffer(e.data.hexadecimal);
-		var dataObject = {
-			buffer: arrayBuffer,
-			filename: e.data.filename
-		};
-		queryDuckDB(dataObject);
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+			isDropdownOpen = false;
+		}
 	};
 
-	const loadWorker = async () => {
-		const SyncWorker = await import('$lib/io/web.worker?worker');
-		syncWorker = new SyncWorker.default();
-	};
+	const queryDuckDB = async (filename: string) => {
+		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
+		if (!dataObject) return;
+		let resp;
+		const db = await DuckDBClient.of([dataObject.file]);
 
-	const queryDuckDB = async (dataObject: DataObject) => {
-		const db = await DuckDBClient.of([dataObject]);
-		var filename = checkNameForSpacesAndHyphens(dataObject.filename);
-		const resp = await db.query(`SELECT * FROM ${filename} LIMIT 0`); //@ts-ignore
+		if (dataObject.file.name) {
+			const sanitizedFilename = checkNameForSpacesAndHyphens(dataObject.file.name);
+			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
+		} else if (dataObject.file.url) {
+			//@ts-ignore
+			console.log(dataObject.file.url); //@ts-ignore
+			resp = await db.query(`SELECT * FROM ${dataObject.file.url} LIMIT 0`); //@ts-ignore
+		} else {
+			return;
+		} //@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
 
 		duckDBInstanceStore.set(db);
-
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			chart.schema = schema;
@@ -75,38 +72,20 @@
 		});
 	};
 
-	const selectFile = (filename: string | null) => {
-		if (filename) {
-			selectedDataset = filename;
-			$chosenFile = filename;
+	const selectFile = (filename: string) => {
+		selectedDataset = filename;
+		$chosenFile = filename;
 
-			if (syncWorker) {
-				syncWorker.postMessage({
-					message: 'query',
-					filename: filename
-				});
-				syncWorker.onmessage = onWorkerMessage;
-			}
+		allCharts.update((charts) => {
+			charts[$i].filename = filename;
+			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID;
+			return charts;
+		});
 
-			allCharts.update((charts) => {
-				let chart = charts[$i];
-				chart.filename = filename;
-				if ($file?.datasetID) chart.datasetID = $file.datasetID;
-				return charts;
-			});
-		}
+		queryDuckDB(filename);
 	};
 
-	const removeFileFromSqlite = (filename: string) => {
-		if (syncWorker) {
-			syncWorker.postMessage({
-				message: 'delete',
-				filename: filename
-			});
-			syncWorker.onmessage = onWorkerMessage;
-			console.log('file deleted from sqlite');
-		}
-
+	const removeFromAllCharts = (filename: string) => {
 		allCharts.update((charts) => {
 			return charts.filter((chart) => chart.filename !== filename);
 		});
@@ -114,6 +93,8 @@
 		fileUploadStore.update((file) => {
 			return file.filter((file) => file.filename !== filename);
 		});
+
+		selectedDataset = 'Select Dataset';
 	};
 
 	const toggleDropdown = () => {
@@ -123,67 +104,79 @@
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
-
-	onMount(loadWorker);
 </script>
 
-<div class="w-full p-4 rounded-sm relative selectFieldColor">
-	<div class="flex justify-between items-center">
+<div class="py-1 flex w-full space-x-1 items-center justify-between">
+	<span class="text-sm font-light text-neutral-300">Datasets</span>
+
+	<div class="relative flex justify-between">
 		<button
 			bind:this={dropdownContainer}
-			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			class="bg-neutral-900 justify-between text-center rounded-sm hover:bg-neutral-900/50 flex items-center border-neutral-700/50 w-48 px-1"
 			on:click={toggleDropdown}
 		>
-			<span class="text-sm ml-2">
-				{selectedDataset}
+			<span class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-1">
+				{selectedDataset || 'Select Dataset'}
 			</span>
+			<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-10" />
 		</button>
-	</div>
-	{#if isDropdownOpen}
-		<button
-			class={`
-            scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
-            rounded shadow-lg transform transition-transform 
-            origin-top overflow-y-auto overflow-x-hidden z-10 
-            ${isDropdownOpen ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
-			on:click={() => (isDropdownOpen = false)}
-		>
-			{#each $datasets as dataset}
-				{#if dataset !== null}
-					<div class="flex justify-between items-center text-gray-400 relative selectFieldColor">
+
+		{#if isDropdownOpen}
+			<div
+				class="scrollBarDiv absolute top-full left-0 rounded-sm bg-neutral-900 w-40 mr-3 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			>
+				{#each $datasets as dataset}
+					{#if dataset !== null}
 						<div
-							class="text-left px-3 py-2 w-full bg-gray-900 dark:text-black hover:bg-gray-700 cursor-pointer truncate pr-8"
-							on:click={() => {
-								selectFile(dataset);
-								isDropdownOpen = false;
-							}}
-							on:keypress={(event) => {
-								if (event.key === 'Enter') {
-									selectFile(dataset);
-									isDropdownOpen = false;
-								}
-							}}
+							class="flex justify-between w-full items-center text-gray-300 relative selectFieldColor hover:bg-neutral-700"
 						>
-							{dataset}
+							<button
+								class="flex-grow text-left text-sm px-3 py-2 cursor-pointer truncate"
+								on:click={() => selectFile(dataset)}
+								on:keypress={(e) => e.key === 'Enter' && selectFile(dataset)}
+							>
+								{dataset}
+							</button>
+							<button
+								class="ml-2 p-2"
+								on:click={(e) => {
+									removeFromAllCharts(dataset);
+									e.stopPropagation();
+								}}
+							>
+								<CloseSolid class="w-4 h-4 hover:text-gray-300 text-white" />
+							</button>
 						</div>
-						<button
-							class="absolute right-0 top-50 transform -translate-y-50 p-2 bg-transparent"
-							on:click={(event) => {
-								event.stopPropagation();
-								removeFileFromSqlite(dataset);
-							}}
-						>
-							<CloseSolid class="w-3 h-3 text-white dark:text-white" />
-						</button>
-					</div>
-				{/if}
-			{/each}
-		</button>
-	{/if}
+					{/if}
+				{/each}
+			</div>
+		{/if}
+	</div>
+	<!-- End of surrounding container -->
+
+	<FileUploadButton />
 </div>
 
 <style>
-	.selectFieldColor {
-		background-color: #33333d;
+	/* For WebKit (Chrome, Safari) */
+	.scrollBarDiv::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.scrollBarDiv::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
+	}
+
+	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(168, 168, 168, 0.5);
+	}
+
+	/* For Firefox */
+	.scrollBarDiv {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+		max-height: 200px; /* Adjust this value to your desired maximum height */
+		overflow-y: auto;
 	}
 </style>

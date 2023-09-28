@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 	import { onDestroy } from 'svelte';
+	import Info from '$lib/components/ui/icons/Info.svelte';
 
 	type SideBarVersion = 'WorkFlow' | 'LowCode';
 	export let sideBarVersion: SideBarVersion;
@@ -76,46 +77,77 @@
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
+	let showInfoTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
+
+	const startInfoHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showInfoTooltip = true;
+		}, 800);
+	};
+
+	const endInfoHover = (): void => {
+		clearTimeout(hoverTimeout);
+		showInfoTooltip = false;
+	};
 </script>
 
-<div class="w-full p-4 rounded-sm relative selectFieldColor">
+<div class="w-full py-4 rounded-sm relative ml-4">
 	<div class="flex justify-between items-center">
 		<button
 			bind:this={dropdownContainer}
-			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
 			on:click={toggleChartDropdown}
 		>
-			<span class="text-sm ml-2">
+			<span class="text-sm ml-2 font-thin text-gray-100">
 				{chosenPlot}
 			</span>
 		</button>
-	</div>
-
-	{#if isChartDropdownOpen}
-		<button
-			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
-			on:click|stopPropagation={closeChartDropdown}
+		<div
+			class="ml-3 relative"
+			on:mouseover={startInfoHover}
+			on:mouseout={endInfoHover}
+			on:blur={() => {
+				null;
+			}}
+			on:focus={() => {
+				null;
+			}}
 		>
-			{#each rectangleCharts as { chartType }, i (i)}
-				<button
-					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
-					on:click={() => {
-						chooseChart(chartType);
-						isChartDropdownOpen = false;
-					}}
+			<Info />
+
+			<!-- Tooltip for Info icon -->
+			{#if showInfoTooltip}
+				<div
+					role="tooltip"
+					class="absolute -left-15 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md z-30"
 				>
-					{chartType}
-				</button>
-			{/each}
-		</button>
-	{/if}
+					Information about the chart type.
+				</div>
+			{/if}
+		</div>
+	</div>
 </div>
+{#if isChartDropdownOpen}
+	<button
+		class="scrollBarDiv bg-neutral-900 absolute rounded-md top-0 left-14 mt-56 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+		on:click|stopPropagation={closeChartDropdown}
+	>
+		{#each rectangleCharts as { chartType }, i (i)}
+			<button
+				class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300"
+				on:click={() => {
+					chooseChart(chartType);
+					isChartDropdownOpen = false;
+				}}
+			>
+				{chartType}
+			</button>
+		{/each}
+	</button>
+{/if}
 
 <style>
-	.selectFieldColor {
-		background-color: #33333d;
-	}
-
 	.scrollBarDiv::-webkit-scrollbar {
 		width: 8px;
 	}
@@ -133,9 +165,5 @@
 	.scrollBarDiv {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
-	}
-
-	.selectFieldColor {
-		background-color: #33333d;
 	}
 </style>

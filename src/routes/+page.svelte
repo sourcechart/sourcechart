@@ -1,262 +1,222 @@
 <script lang="ts">
+	import Arrow from '$lib/components/landing/homepage/icons/Arrow.svelte';
+	import Hand from '$lib/components/landing/homepage/icons/Hand.svelte';
+	import InfinityIcon from '$lib/components/landing/homepage/icons/InfinityIcon.svelte';
+	import Security from '$lib/components/landing/homepage/icons/Security.svelte';
 	import { goto } from '$app/navigation';
-
-	const enterFree = () => {
-		goto('/dashboard');
-	};
 
 	let features = [
 		{
-			title: 'Advanced Data Visualizations',
-			description:
-				'Our platform provides an interactive, visualizations of your complex data, leading to faster and more effective decision-making.'
+			component: Arrow,
+			header: 'A Single Source of Truth',
+			body: 'Our platform provides an  interactive visualizations of your complex data. Leading to faster and more effective decision making.'
 		},
 		{
-			title: 'Robust Analytics',
-			description:
-				'We utilize advanced data analytics techniques to give you a deeper understanding of your business trends and patterns.'
+			component: Hand,
+			header: `Robust Interface`,
+			body: 'Everything is right where you would  expect it to be.'
 		},
 		{
-			title: 'Security and Compliance',
-			description:
-				'SourceChart.io prioritizes data security. Your data never hits our servers to ensure your data remains secure and confidential.'
+			component: Security,
+			header: 'Your data is yours',
+			body: 'Data never leaves your computer. This ensures that your data stays private'
+		},
+		{
+			component: InfinityIcon,
+			header: 'Process gigabytes of data',
+			body: 'Our platform is designed to handle large amounts of data. We are able to process gigabytes of data in seconds.'
 		}
 	];
 </script>
 
-<div class="overflow-visible">
-	<title>SourceChart</title>
-	<nav class="bg-gray-900 p-4 flex justify-between items-center">
-		<a href="/" class="flex items-center text-white space-x-2">
-			<img src="logo1.png" alt="Logo" class="h-10" />
+<div
+	class="w-full h-full font-maven bg-gradient-to-br bg-neutral-800 from-neutral-900 via-neutral-800 to-[#3e3e3e] font-mono"
+>
+	<!-- NavBar -->
+	<section id="navbar" class="py-3 lg:px-32 sm:px-2 md:px-12 flex justify-between items-center">
+		<a href="/" class="w-48">
+			<img src="logo1.png" alt="Logo" class="w-full h-auto" />
 		</a>
-		<button on:click={enterFree} class="hero-button"> Try Now </button>
-	</nav>
-
-	<section class="hero-section">
-		<img
-			src="3d-techno-purple-background-with-flowing-dots.png"
-			alt="Techno Purple Background"
-			class="hero-background"
-		/>
-		<div class="hero-content">
-			<h1 class="hero-title text-6xl">Data Visualizations without the Cloud</h1>
-			<p class="hero-description">Revolutionize your data interactions with SourceChart.io.</p>
-			<button on:click={enterFree} class="hero-button">Try Now</button>
-		</div>
+		<button
+			class="text-neutral-300 bg-transparent border border-gray-400 hover:border-neutral-50 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-sm font-medium hover:bg-neutral-700"
+			on:click={() => goto('/dashboard')}
+		>
+			Login
+		</button>
 	</section>
 
-	<section class="features-section">
-		<h1 class="bg-slate-900 text-4xl">About</h1>
-		<div class="features-grid">
-			<!-- This div will hold the cards -->
-			<div class="feature-card">
-				<p class="feature-description">
-					Experience secure in-browser data visualization with our solution that ensures your data
-					never ventures beyond your device. Visualize and process data directly within your
-					browser, free from cloud-related concerns. Harnessing the power of OPFS API, WASM, and
-					Sveltekit, our platform captures the finesse of excalichart. By integrating SQLiteWASM and
-					DuckDBWASM, we ensure smooth data handling, beautifully brought to life via echarts in
-					Sveltekit. And with the reliability of hosting on Vercel, you get all the convenience
-					without any of the risks. Step into a safer, more efficient visualization journey with us.
-				</p>
-			</div>
-		</div>
-	</section>
+	<!-- Main Content -->
+	<div
+		class="relative w-full h-full sm:px-6 md:px-10 lg:py-12 lg:px-28"
+		style="background-image: url('backlighting.png'); background-size: cover; background-repeat: no-repeat;"
+	>
+		<div class="sm:mt-16" id="space" />
 
-	<section class="features-section">
-		<h1 class="bg-slate-900 text-4xl">Usage</h1>
-		<div class="features-grid">
-			<div class="video-card">
-				<div class="video-container">
-					<!-- renamed class for clarity -->
-					<video autoplay loop muted playsinline class="video-style rounded-xl">
-						<source src="demoMP4.mp4" type="video/mp4" />
-						Your browser does not support the video tag.
-					</video>
+		<!-- Hero Section -->
+		<section class=" h-4/5 py-4 px-2 sm:px-4 md:px-8 lg:px-10 bg-center bg-cover">
+			<div
+				class="text-white flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
+			>
+				<div class="mb-4 md:mb-0 space-y-4">
+					<div class="flex flex-col items-start">
+						<span
+							id="title"
+							class="font-medium block text-4xl md:text-5xl lg:text-6xl xl:text-7xl flex-shrink-0"
+						>
+							Cut through the noise.
+						</span>
+						<span
+							id="subtext"
+							class="font-thin text-sm md:text-base lg:text-lg mt-2 md:mt-4 flex-grow"
+						>
+							SourceChart processes and visualizes gigabytes of data <br /> locally that moves as fast
+							as you think.
+						</span>
+
+						<div class="flex flex-wrap items-center mt-4 space-x-4">
+							<button
+								class="bg-purple-700 border border-white hover:border-neutral-50 hover:text-neutral-50 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-purple-600 transform transition-transform duration-300 ease-in-out hover:scale-105"
+							>
+								<span> Try Now </span>
+							</button>
+
+							<a href="#features-section">
+								<button
+									class="text-neutral-300 border border-white px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-neutral-800 hover:text-neutral-50 hover:border-neutral-50 transform transition-transform duration-300 ease-in-out hover:scale-105"
+								>
+									<span>Learn More</span>
+								</button>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="mt-4 md:mt-0 flex-grow md:w-3/5 lg:w-3/5 xl:w-1/2 2xl:w-3/5 relative z-10">
+					<div class="aspect-ratio-16-9">
+						<img
+							class="object-cover object-center z-10 transform transition-transform duration-300 ease-in-out hover:scale-105"
+							src="hero2.png"
+							alt="Logo"
+						/>
+					</div>
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
+		<div class="h-32" id="space" />
 
-	<section class="features-section">
-		<h1 class="bg-slate-900 text-4xl">Feature Selection</h1>
-		<div class="features-grid">
-			<!-- This div will hold the cards -->
-			{#each features as feature}
-				<div class="feature-card">
-					<h2 class="feature-title">{feature.title}</h2>
-					<p class="feature-description">{feature.description}</p>
+		<!-- Features Section -->
+		<section id="features-section">
+			<h2 class="text-center text-4xl text-gray-300 mb-8">Features</h2>
+			<p class="text-center text-gray-400 mb-16">
+				Most dashboards are designed for data visualization and monitoring purposes. SourceChart is
+				designed to find insights.
+			</p>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+				{#each features as feature}
+					<div
+						class="bg-neutral-800 p-6 rounded-lg space-y-4 mb-4 space-x-4 transform transition-transform duration-300 ease-in-out hover:scale-105"
+					>
+						<svelte:component this={feature.component} />
+						<h3 class="text-2xl text-[#A78BFA]">{feature.header}</h3>
+						<p class="text-gray-400">{feature.body}</p>
+					</div>
+				{/each}
+			</div>
+		</section>
+		<div class="h-20" id="space" />
+
+		<!-- Video Section -->
+		<section>
+			<div class="flex justify-center items-center rounded-lg overflow-hidden">
+				<video autoplay loop muted class="max-w-full h-auto">
+					<source src="demoMP4.mp4" type="video/mp4" />
+					Your browser does not support the video tag.
+				</video>
+			</div>
+		</section>
+
+		<div class="h-24" id="space" />
+
+		<!-- ABOUT US -->
+		<section id="about-us" class="flex flex-col items-center">
+			<h2 class="text-center text-4xl text-gray-300 mb-8 w-full">About Us</h2>
+
+			<div
+				class="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl p-4 h-full md:h-80 sm:h-60 bg-neutral-800 text-neutral-300 rounded-md"
+			>
+				<h1 class="text-3xl font-bold text-white mb-6">Mission</h1>
+				<div class="text-white ml-4 mr-4 leading-relaxed">
+					Created in 2023, we set out with a clear mission - to revolutionize the data processing
+					landscape. At SourceChart, we believe in security, speed, and clarity. Redefine your
+					understanding of data with our swift, lightweight tool, designed to offer in-browser
+					processing without compromise. As our commitment to you, we promise to move as fast as
+					your thoughts, ensuring your data remains anchored and your insights razor-sharp.
 				</div>
-			{/each}
-		</div>
-	</section>
+			</div>
 
-	<footer class="footer bg-gray-900">
-		<div class="legal-section">
-			<a href="/privacy-policy">Privacy Policy</a>
-			<a href="/terms-and-conditions">Terms and Conditions</a>
-			<a href="/disclaimer"> Disclaimer</a>
+			<!-- Space between the sections -->
+			<div class="h-20 w-full" />
+			<!-- Space between the sections -->
+
+			<div
+				class="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl p-4 h-full md:h-80 sm:h-60 bg-neutral-800 text-neutral-300 rounded-md"
+			>
+				<h1 class="text-3xl font-bold text-white mb-6">How it Works</h1>
+				<div class="text-white ml-4 mr-4 leading-relaxed">
+					Our platform invites you to a realm of secure, in-browser data visualization. We
+					understand the essence of peace of mind - that's why your data never leaves your device.
+					Witness the magic as we transform raw data into captivating visual stories, all the while
+					ensuring seamless and secure handling. Supported by our robust hosting, we beckon you to
+					embark on a safer, streamlined visualization odyssey with us.
+				</div>
+			</div>
+		</section>
+
+		<div class="h-20 w-full" />
+
+		<!-- CTA Section -->
+		<section id="JoinUs" class="h-4/5 py-4 px-4 mt-24 text-center">
+			<h2 class="text-2xl font-bold text-white mb-6">Ready to Dive In?</h2>
+			<p class="text-white mb-6">Discover the difference. Join our community today.</p>
+			<button
+				class="text-lg h-14 px-8 border-neutral-300 text-neutral-300 hover:text-neutral-50 hover:border-neutral-50 bg-purple-700 hover:bg-purple-600 font-maven shadow-md transform transition-transform duration-300 ease-in-out hover:scale-105"
+				on:click={() => {
+					goto('/dashboard');
+				}}
+			>
+				Get Started
+			</button>
+		</section>
+	</div>
+
+	<!-- Footer -->
+	<footer class="bg-neutral-900 py-4">
+		<div class="text-center text-neutral-300 space-x-6">
+			<a href="/privacy-policy" class="hover:underline">Privacy Policy</a>
+			<a href="/terms-and-conditions" class="hover:underline">Terms and Conditions</a>
+			<a href="/disclaimer" class="hover:underline">Disclaimer</a>
 		</div>
 	</footer>
-
-	<style>
-		/* HERO SECTION */
-		.hero-section {
-			position: relative;
-			display: flex;
-			align-items: center;
-			padding: 3rem 2rem; /* Added some horizontal padding */
-			color: white;
-			overflow: hidden;
-		}
-
-		.hero-background {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 80%;
-			object-fit: cover;
-			z-index: -1;
-			opacity: 0.9; /* Adjust opacity as needed */
-		}
-
-		.hero-content {
-			position: relative;
-			z-index: 10;
-			text-align: left; /* Center the content of hero-content */
-			padding: 1rem; /* Additional padding to ensure content doesn't touch the edges */
-			max-width: 90%; /* Makes sure the content doesn't span the full width of the hero section, adjust if necessary */
-		}
-		.hero-description {
-			color: white;
-			font-size: 1.5vw; /* Adjusts the font size based on the viewport width */
-			margin-bottom: 2rem;
-		}
-		.hero-description {
-			color: white;
-			font-size: 1.5rem;
-			margin-bottom: 2rem;
-		}
-		.hero-button {
-			padding: 0.75rem 2rem;
-			background-color: #f25c5e;
-			color: white;
-			border: none;
-			border-radius: 0.25rem;
-			font-weight: bold;
-			cursor: pointer;
-			transition: background-color 0.3s;
-		}
-		.hero-button:hover {
-			background-color: #d94b4c;
-		}
-
-		/* FEATURES SECTION */
-		.features-section {
-			display: flex;
-			flex-direction: column; /* Stack children vertically */
-			align-items: center; /* Center children horizontally */
-			padding: 3rem 2rem; /* Added some horizontal padding */
-		}
-
-		.feature-card {
-			flex: 1 1 250px;
-			background-color: white;
-			border-radius: 0.25rem;
-			padding: 2rem;
-			margin: 1rem;
-			box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s;
-		}
-
-		.video-card {
-			width: 100%; /* Adjust this to fit your desired video card width */
-			background-color: white;
-			border-radius: 0.25rem;
-			padding: 2rem;
-			margin: 1rem;
-			box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s;
-			display: flex; /* Makes the card a flex container */
-			justify-content: center; /* Center children horizontally */
-			align-items: center; /* Center children vertically */
-		}
-		.feature-card:hover {
-			transform: translateY(-10px);
-		}
-		.feature-title {
-			font-size: 1.5rem;
-			margin-bottom: 1rem;
-			font-weight: bold;
-		}
-		.feature-description {
-			color: #555;
-		}
-
-		/* FOOTER */
-		.footer {
-			padding: 2rem 2rem; /* Added some horizontal padding */
-			color: white;
-		}
-		.legal-section {
-			display: flex;
-			justify-content: center;
-			gap: 20px;
-		}
-		.legal-section a {
-			text-decoration: none;
-			color: white;
-			transition: color 0.3s;
-		}
-		.legal-section a:hover {
-			color: #f15b5d;
-		}
-
-		/* FEATURES SECTION */
-		.features-section {
-			display: flex;
-			justify-content: space-around;
-			flex-wrap: wrap;
-			padding: 2rem 0; /* adjusted top padding from 3rem to 2rem */
-		}
-
-		.features-grid {
-			display: flex;
-			justify-content: space-around;
-			flex-wrap: wrap;
-			width: 100%;
-		}
-
-		.feature-card {
-			flex: 1 1 250px;
-			background-color: white;
-			border-radius: 0.25rem;
-			padding: 2rem;
-			margin: 1rem;
-			box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-			transition: transform 0.3s;
-		}
-
-		.feature-card:hover {
-			transform: translateY(-10px);
-		}
-
-		@media (max-width: 768px) {
-			.hero-title {
-				font-size: 4vw; /* Increase font size on smaller screens */
-			}
-
-			.hero-description {
-				font-size: 2.5vw; /* Increase font size on smaller screens */
-			}
-		}
-
-		.video-style {
-			width: 80vw; /* 80% of viewport width */
-			height: 45vw; /* Keeping 16:9 aspect ratio */
-			max-width: 100%; /* Ensures the video doesn't overflow its container */
-		}
-	</style>
 </div>
+
+<!-- Font Link -->
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;700&display=swap"
+/>
+
+<style>
+	.font-mono {
+		font-family: 'Oxygen Mono', monospace;
+	}
+	.aspect-ratio-16-9 {
+		padding-bottom: 66.66%;
+		position: relative;
+	}
+	.aspect-ratio-16-9 img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>
