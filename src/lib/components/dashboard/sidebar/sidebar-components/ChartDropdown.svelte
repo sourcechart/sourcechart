@@ -114,13 +114,13 @@
 				null;
 			}}
 		>
-			<Info />
+			<Info class="hover:text-200" />
 
 			<!-- Tooltip for Info icon -->
 			{#if showInfoTooltip && $responsiveType !== 'mobile'}
 				<div
 					role="tooltip"
-					class="absolute -left-15 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md z-30"
+					class="absolute -left-20 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md z-10"
 				>
 					Information about the chart type.
 				</div>

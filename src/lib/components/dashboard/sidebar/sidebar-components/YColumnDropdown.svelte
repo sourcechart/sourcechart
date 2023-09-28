@@ -77,7 +77,7 @@
 		{#if showTooltip && $responsiveType !== 'mobile'}
 			<div
 				role="tooltip"
-				class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md"
+				class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md z-10"
 			>
 				Toggle Dropdown for Y-axis
 			</div>
