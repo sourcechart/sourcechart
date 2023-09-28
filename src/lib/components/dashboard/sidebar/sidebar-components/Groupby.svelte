@@ -58,13 +58,12 @@
 		if (selectedButtons.includes(column)) {
 			selectedButtons = selectedButtons.filter((item) => item !== column);
 			tags = tags.filter((tag) => tag !== column);
-			chart.groupbyColumns = tags;
-		} else {
+		} else if (!tags.includes(column)) {
+			// Explicitly check if column isn't in tags
 			selectedButtons.push(column);
-			tags = [...tags, column];
-			chart.groupbyColumns = tags;
+			tags.push(column);
 		}
-
+		chart.groupbyColumns = tags;
 		$allCharts[$i] = chart;
 	};
 

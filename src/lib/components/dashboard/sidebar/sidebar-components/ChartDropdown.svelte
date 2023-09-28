@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 	import { onDestroy } from 'svelte';
-	import Baseline from '$lib/components/ui/icons/Baseline.svelte';
 	import Info from '$lib/components/ui/icons/Info.svelte';
 
 	type SideBarVersion = 'WorkFlow' | 'LowCode';
@@ -104,7 +103,6 @@
 				{chosenPlot}
 			</span>
 		</button>
-		<!--
 		<div
 			class="ml-3 relative"
 			on:mouseover={startInfoHover}
@@ -118,21 +116,21 @@
 		>
 			<Info />
 
+			<!-- Tooltip for Info icon -->
 			{#if showInfoTooltip}
 				<div
 					role="tooltip"
-					class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md z-30"
+					class="absolute -left-15 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md z-30"
 				>
-					Choose Type of Chart
+					Information about the chart type.
 				</div>
 			{/if}
 		</div>
-		-->
 	</div>
 </div>
 {#if isChartDropdownOpen}
 	<button
-		class="scrollBarDiv bg-neutral-900 absolute rounded-md top-0 left-4 mt-9 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+		class="scrollBarDiv bg-neutral-900 absolute rounded-md top-0 left-14 mt-56 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 		on:click|stopPropagation={closeChartDropdown}
 	>
 		{#each rectangleCharts as { chartType }, i (i)}

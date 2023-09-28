@@ -109,13 +109,13 @@
 <div class="py-1 flex w-full space-x-1 items-center justify-between">
 	<span class="text-sm font-light text-neutral-300">Datasets</span>
 
-	<div class="relative inline-block">
+	<div class="relative flex justify-between">
 		<button
 			bind:this={dropdownContainer}
-			class="bg-neutral-900 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center border-neutral-700/50 min-w-52"
+			class="bg-neutral-900 justify-between text-center rounded-sm hover:bg-neutral-900/50 flex items-center border-neutral-700/50 w-48 px-1"
 			on:click={toggleDropdown}
 		>
-			<span class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-2">
+			<span class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-1">
 				{selectedDataset || 'Select Dataset'}
 			</span>
 			<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-10" />
