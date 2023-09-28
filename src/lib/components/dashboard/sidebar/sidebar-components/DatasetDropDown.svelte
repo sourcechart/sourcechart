@@ -100,11 +100,11 @@
 	<div class="relative inline-block">
 		<button
 			bind:this={dropdownContainer}
-			class="bg-neutral-900 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center mx-auto border-neutral-700/50"
+			class="bg-neutral-900 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center mx-auto border-neutral-700/50 min-w-48"
 			on:click={toggleDropdown}
 		>
 			<span class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-2">
-				{selectedDataset}
+				{selectedDataset || 'Select Dataset'}
 			</span>
 			<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-10" />
 		</button>
@@ -135,6 +135,7 @@
 		{/if}
 	</div>
 	<!-- End of surrounding container -->
+
 	<FileUploadButton />
 </div>
 
