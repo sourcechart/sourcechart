@@ -1,12 +1,5 @@
 <script lang="ts">
 	//@ts-ignore
-	import Table from 'flowbite-svelte/Table.svelte'; //@ts-ignore
-	import TableHead from 'flowbite-svelte/TableHead.svelte'; //@ts-ignore
-	import Button from 'flowbite-svelte/Button.svelte'; //@ts-ignore
-	import TableBody from 'flowbite-svelte/TableBody.svelte'; //@ts-ignore
-	import TableBodyCell from 'flowbite-svelte/TableBodyCell.svelte'; //@ts-ignore
-	import TableBodyRow from 'flowbite-svelte/TableBodyRow.svelte'; //@ts-ignore
-	import TableHeadCell from 'flowbite-svelte/TableHeadCell.svelte'; //@ts-ignore
 	import { generateID } from '$lib/io/GenerateID';
 	import { datasets } from './Datasets';
 	import { fileUploadStore } from '$lib/io/Stores';
@@ -51,68 +44,47 @@
 	};
 </script>
 
-<div class="scrollBarDiv">
-	{#if isLoading}
-		<div class="loading-container flex">
-			<span class="mr-2">Loading...</span>
-		</div>
-	{:else}
-		<Table>
-			<TableHead>
-				<TableHeadCell>Dataset</TableHeadCell>
-				<TableHeadCell>Description</TableHeadCell>
-				<TableHeadCell />
-				<TableBodyCell />
-			</TableHead>
-		</Table>
-		<TableBody>
+<div class="scrollBarDiv w-full h-full table-container overflow-y-auto" style="max-height: 400px;">
+	<table class="w-full bg-neutral-800 text-white border border-neutral-600 rounded-lg">
+		<thead>
+			<tr class="bg-neutral-600">
+				<th class="py-3 px-4 text-left">Dataset</th>
+				<th class="py-3 px-4 text-left">Description</th>
+				<th class="py-3 px-4" />
+				<th class="py-3 px-4" />
+			</tr>
+		</thead>
+		<tbody class="divide-y">
 			{#each datasets as dataset}
-				<TableBodyRow>
-					<TableBodyCell>{dataset.name}</TableBodyCell>
-					<TableBodyCell>{dataset.description}</TableBodyCell>
-
-					<TableBodyCell>
-						<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
-							>Add Dataset</Button
+				<tr class="hover:bg-neutral-700 ml-2 mt-2">
+					<td class="py-2 px-4 text-sm mt-2">{dataset.name}</td>
+					<td class="py-2 px-4 text-sm mt-2">{dataset.description}</td>
+					<td class="py-2 px-4">
+						<button
+							class="px-4 py-2 text-blue-300 hover:underline border border-blue-300 rounded"
+							on:click={() => addURLToDatabase(dataset)}>Add Dataset</button
 						>
-					</TableBodyCell>
-					<TableBodyCell>
-						<Button pill={false} outline on:click={() => downloadRawDataset(dataset)}>
+					</td>
+					<td class="py-2 px-4">
+						<button class="px-4 py-2 text-blue-300 hover:underline">
 							<div class="flex flex-row justify-between items-center">
-								<span class="mr-2">Download Raw CSV</span>
-								<!-- Added the `mr-2` for right margin -->
+								<button
+									on:click={async () => {
+										downloadRawDataset(dataset);
+									}}
+								>
+									<span class="mr-2">Download Raw CSV</span>
+								</button>
 							</div>
-						</Button>
-					</TableBodyCell>
-				</TableBodyRow>
+						</button>
+					</td>
+				</tr>
 			{/each}
-		</TableBody>
-	{/if}
+		</tbody>
+	</table>
 </div>
 
 <style>
-	.table-container {
-		height: 300px; /* Adjust this height as per your needs */
-		overflow-y: auto;
-		overflow-x: auto;
-	}
-
-	.table-container {
-		height: 300px; /* Adjust this height as per your needs */
-		overflow-y: auto;
-		overflow-x: auto;
-		display: flex; /* Add this line */
-		justify-content: center; /* Add this line */
-		align-items: center; /* Add this line */
-	}
-
-	.loading-container {
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
 	.scrollBarDiv::-webkit-scrollbar {
 		width: 8px;
 	}
@@ -131,6 +103,24 @@
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
 		max-height: 200px; /* Adjust this value to your desired maximum height */
+		overflow-y: auto;
+	}
+
+	.scrollBarDiv {
+		height: 300px;
+		overflow-y: auto;
+		overflow-x: auto;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		max-height: 400px; /* Adjust this value to your desired maximum height */
+	}
+
+	/* Updated scrollbar styles for Firefox */
+	.scrollBarDiv {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+		max-height: 400px; /* Adjust this value to your desired maximum height */
 		overflow-y: auto;
 	}
 </style>

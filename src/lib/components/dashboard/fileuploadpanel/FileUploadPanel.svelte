@@ -15,15 +15,16 @@
 </script>
 
 <div
-	class="relative filePanelBackground px-6 pb-8 pt-10 shadow-xl ring-1 ring-gray-900/5 w-auto sm:mx-auto sm:max-w-xl sm:rounded-lg sm:px-10 overflow-hidden"
+	class="relative filePanelBackground px-6 pb-8 pt-10 shadow-xl ring-1 ring-gray-900/5 w-auto sm:mx-auto sm:max-w-xl sm:rounded-lg sm:px-10"
+	style="max-height: unset;"
 >
 	<div class="mx-auto max-w-full">
 		<h1 class="text-xl text-gray-300">Add Data to Plot</h1>
 		<div class="close-button">
 			<CloseButton class="close-button" on:click={handleClick} />
 		</div>
-		<Tabs style="underline" contentClass="p-4 rounded-lg mt-4">
-			<TabItem title="Load Files" open>
+		<Tabs style="underline" contentClass="p-4 rounded-lg mt-4 text-neutral-300">
+			<TabItem class="" title="Load Files" open>
 				<DropZone />
 			</TabItem>
 

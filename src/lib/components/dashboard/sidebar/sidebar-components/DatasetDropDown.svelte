@@ -28,7 +28,6 @@
 	}
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
-		selectedDataset = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 	}
 
@@ -107,7 +106,9 @@
 			class="bg-neutral-900 justify-between text-center rounded-sm hover:bg-neutral-900/50 flex items-center border-neutral-700/50 w-48 px-1"
 			on:click={toggleDropdown}
 		>
-			<span class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-1">
+			<span
+				class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-1 truncate"
+			>
 				{selectedDataset || 'Select Dataset'}
 			</span>
 			<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-10" />
