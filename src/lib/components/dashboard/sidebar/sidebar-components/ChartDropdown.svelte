@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex, responsiveType } from '$lib/io/Stores';
 	import { onDestroy } from 'svelte';
 	import Info from '$lib/components/ui/icons/Info.svelte';
 
@@ -117,7 +117,7 @@
 			<Info />
 
 			<!-- Tooltip for Info icon -->
-			{#if showInfoTooltip}
+			{#if showInfoTooltip && $responsiveType !== 'mobile'}
 				<div
 					role="tooltip"
 					class="absolute -left-15 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md z-30"

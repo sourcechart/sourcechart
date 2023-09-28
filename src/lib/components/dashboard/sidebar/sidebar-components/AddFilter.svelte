@@ -1,6 +1,6 @@
 <script lang="ts">
 	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
-	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex, responsiveType } from '$lib/io/Stores';
 
 	$: i = clickedChartIndex(); //@ts-ignore
 
@@ -47,7 +47,7 @@
 	</button>
 
 	<!-- Tooltip element -->
-	{#if showTooltip}
+	{#if showTooltip && $responsiveType !== 'mobile'}
 		<div
 			role="tooltip"
 			class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md"

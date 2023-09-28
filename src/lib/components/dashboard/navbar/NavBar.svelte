@@ -2,8 +2,8 @@
 
 <script lang="ts">
 	import { Cursor, Rectangle, Eraser, Arrow } from './navbar-icons';
-	import { navBarState, keyPress } from '$lib/io/Stores';
-	import type Node from '$lib/analytics/hdbscan/node';
+	import { navBarState, keyPress, responsiveType } from '$lib/io/Stores';
+
 	let activeIndex: number | null = null;
 
 	let icons: { name: string; mode: NavBar; component: any; index: number; tooltip: string }[] = [
@@ -99,7 +99,7 @@
 					null;
 				}}
 			>
-				{#if showTooltip[index]}
+				{#if showTooltip[index] && $responsiveType !== 'mobile'}
 					<div
 						role="tooltip"
 						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
