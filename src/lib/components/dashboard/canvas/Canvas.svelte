@@ -4,14 +4,13 @@
 	import * as PolyOps from './draw-utils/PolygonOperations';
 	import {
 		navBarState,
-		polygons,
 		mostRecentChartID,
-		mouseType,
-		activeSidebar,
-		allCharts,
+		touchType,
 		touchState,
+		allCharts,
 		canvasBehavior,
-		activeDropZone
+		activeDropZone,
+		responsiveType
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './draw-utils/Draw';
@@ -24,6 +23,7 @@
 	let width: number = 0;
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
+	let touchStartedOnHandle = false;
 
 	let eraserTrail: Point[] = [];
 
@@ -39,11 +39,8 @@
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
 
-	const tolerance: number = 5;
-
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: CANVASBEHAVIOR = canvasBehavior();
-	$: if ($CANVASBEHAVIOR) controlSidebar($CANVASBEHAVIOR);
 
 	if (browser) {
 		onMount(() => {
@@ -54,49 +51,86 @@
 		});
 	}
 
+	let debounceTimer: number | undefined;
+
+	const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
+		clearTimeout(debounceTimer);
+		debounceTimer = window.setTimeout(() => handleMouseMoveUp(x, y), 5);
+	};
+
 	const updateOffset = () => {
 		const rect = canvas.getBoundingClientRect();
 		offsetX = rect.left;
 		offsetY = Math.abs(rect.top - height);
 	};
 
-	function controlSidebar(touchstate: string) {
-		if (touchstate === 'isTouching') {
-			activeSidebar.set(false);
-		} else if (touchstate === 'isErasing') {
-			activeSidebar.set(false);
-		} else if (touchstate === 'isResizing' || touchstate === 'isTranslating') {
-			activeSidebar.set(true);
-		} else if (touchstate === 'isDrawing') {
-			activeSidebar.set(true);
-		} else if (touchstate === 'isDrawingArrow') {
-		}
-	}
+	const handleMouseDown = (e: MouseEvent | TouchEvent): void => {
+		let x: number;
+		let y: number;
 
-	const handleMouseDown = (e: MouseEvent): void => {
-		var x = e.clientX - offsetX + scrollX;
-		var y = e.clientY - offsetY + scrollY;
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+			e.stopPropagation();
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else if (e instanceof MouseEvent) {
+			x = e.clientX;
+			y = e.clientY;
+			x = x - offsetX + scrollX;
+			y = y - offsetY + scrollY;
+		} else {
+			return;
+		}
+
 		startPosition = { x, y };
 
-		touchState.set('isTouching');
-		const containingPolygon = PolyOps.getContainingPolygon(startPosition, $polygons);
-
-		if ($navBarState === 'select' && chartIndex >= 0 && containingPolygon) {
-			const polygon = $allCharts[chartIndex].polygon;
-			if (polygon && PolyOps.isPointInPolygon(startPosition, polygon)) {
-				if (polygon.id) mostRecentChartID.set(polygon.id);
-				touchState.set('isTranslating');
-				return;
-			} else {
-				touchState.set('isTouching');
-				return;
+		// Check if touch/mouse down started on a handle
+		const polygons = $allCharts.map((chart) => chart.polygon);
+		for (let polygon of polygons) {
+			const handlePosition = PolyOps.getHandlesHovered({ x, y }, polygon);
+			if (handlePosition !== 'center' || handlePosition !== null) {
+				touchStartedOnHandle = true;
+				break;
 			}
 		}
+
+		touchState.set('isTouching');
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleGlobalMouseUp);
+		document.addEventListener('touchmove', handleMouseMove, { passive: false });
+		document.addEventListener('touchend', handleGlobalMouseUp, { passive: false });
 	};
 
-	const handleMouseUp = (e: MouseEvent) => {
-		var x = e.clientX - offsetX + scrollX;
-		var y = e.clientY - offsetY + scrollY;
+	const handleGlobalMouseUp = (e: MouseEvent | TouchEvent): void => {
+		// Remove global event listeners first
+		document.removeEventListener('mousemove', handleMouseMove);
+		document.removeEventListener('mouseup', handleGlobalMouseUp);
+		document.removeEventListener('touchmove', handleMouseMove);
+		document.removeEventListener('touchend', handleGlobalMouseUp);
+
+		handleMouseUp(e); // then call your existing handleMouseUp function
+	};
+
+	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
+		let x: number;
+		let y: number;
+
+		if (e instanceof MouseEvent) {
+			x = e.clientX;
+			y = e.clientY;
+			responsiveType.set('desktop');
+		} else if (e instanceof TouchEvent) {
+			responsiveType.set('mobile');
+			x = e.changedTouches[0].clientX;
+			y = e.changedTouches[0].clientY;
+			e.preventDefault();
+			e.stopPropagation();
+		} else {
+			return;
+		}
+
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
 
 		if ($CANVASBEHAVIOR === 'isDrawing') {
 			let targetId = generateID();
@@ -117,41 +151,70 @@
 		navBarState.set('select');
 	};
 
-	const handleMouseMove = (e: MouseEvent) => {
-		if ($CANVASBEHAVIOR === 'isHovering') {
-			handleMouseMoveUp(e.clientX, e.clientY);
+	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+		let x: number;
+		let y: number;
+
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+			e.stopPropagation();
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+			handleTouchMove(x, y);
+		} else if (e instanceof MouseEvent) {
+			x = e.clientX;
+			y = e.clientY;
+			x = x - offsetX + scrollX;
+			y = y - offsetY + scrollY;
 		} else {
-			handleMouseMoveDown(e.clientX, e.clientY);
+			return;
+		}
+
+		if ($CANVASBEHAVIOR === 'isHovering') {
+			debouncedHandleMouseMoveUp(x, y);
+		} else {
+			handleMouseMoveDown(x, y);
 		}
 	};
 
-	const handleMouseMoveUp = (x: number, y: number): void => {
-		x = x - offsetX + scrollX;
-		y = y - offsetY + scrollY;
+	const handleTouchMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
-
 		const polygons = $allCharts.map((chart) => chart.polygon);
-
-		const polygon = polygons.find((polygon) => {
+		let direction: string;
+		polygons.find((polygon) => {
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
-			if (insidePolygon) {
+			if (insidePolygon && touchStartedOnHandle) {
 				hoverPolygon = polygon;
-				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, tolerance);
-				$mouseType = PolyOps.getCursorStyleFromDirection(handlePosition);
-				if (handlePosition) return true; // This will break the .find() loop
+				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
+				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
+				touchType.set(direction);
+				if (handlePosition) return true;
 			}
-			return false; // This will continue to the next item in the .find() loop
 		});
-		if (!polygon) {
-			$mouseType = '';
-		} else if (hoverPolygon && !$mouseType) {
-			$mouseType = 'move';
-		} else {
-			$mouseType = $mouseType || 'isHovering';
-		}
+	};
+
+	const handleMouseMoveUp = (x: number, y: number): void => {
+		currentMousePosition = { x: x, y: y };
+		let hoverPolygon = null;
+		const polygons = $allCharts.map((chart) => chart.polygon);
+		let direction: string;
+		polygons.find((polygon) => {
+			let insidePolygon =
+				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
+			hoverIntersection = insidePolygon ? true : false;
+			if (insidePolygon && touchStartedOnHandle) {
+				hoverPolygon = polygon;
+				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
+				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
+				touchType.set(direction);
+				if (handlePosition) return true;
+			} else {
+				touchType.set('default');
+			}
+		});
 	};
 
 	const handleErase = (x: number, y: number): void => {
@@ -192,13 +255,12 @@
 	const handleResize = (x: number, y: number) => {
 		if (chartIndex !== null) {
 			const polygon = $allCharts[chartIndex].polygon;
-			$allCharts[chartIndex].polygon = resizeRectangle(x, y, polygon, handlePosition);
+			const newPolygon = resizeRectangle(x, y, polygon, handlePosition);
+			$allCharts[chartIndex].polygon = newPolygon;
 		}
 	};
 
 	const handleMouseMoveDown = (x: number, y: number): void => {
-		x = x - offsetX + scrollX;
-		y = y - offsetY + scrollY;
 		switch ($CANVASBEHAVIOR) {
 			case 'isDrawing':
 				handleCreateShapes(x, y);
@@ -218,13 +280,16 @@
 	};
 </script>
 
-<div class="background">
+<div class="bg-neutral-900 w-full h-full top-0 left-0 fixed">
 	<div
 		class="h-full w-full"
-		style={`cursor: ${$mouseType};`}
+		style={`cursor: ${$touchType};`}
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
+		on:touchstart={handleMouseDown}
+		on:touchmove={handleMouseMove}
+		on:touchend={handleMouseUp}
 	>
 		<div id="canvasParent">
 			{#if !$activeDropZone}
@@ -249,14 +314,3 @@
 		}
 	}}
 />
-
-<style>
-	.background {
-		background-color: #121212;
-		width: 100vw;
-		height: 100vh;
-		top: 0;
-		left: 0;
-		position: fixed;
-	}
-</style>

@@ -181,39 +181,33 @@
 
 <div>
 	<!--Chart will hopefully go here -->
-	<div class="relative w-full h-4 bg-gray-300 rounded" bind:this={slider}>
+	<div class="relative w-full h-2 bg-neutral-700 rounded" bind:this={slider}>
 		<div
-			class="absolute top-0 bottom-0 bg-blue-500 rounded"
+			class="absolute inset-y-0 bg-neutral-500"
 			style="left: {100 * start}%; right: {100 * (1 - end)}%;"
 		/>
 
 		<div
-			class="absolute top-1/2 transform -translate-y-1/2 w-6 h-6 bg-blue-600 rounded-full cursor-pointer shadow-md"
+			class="absolute top-1/2 transform -translate-y-1/2 w-3 h-3 bg-neutral-200 shadow-md"
 			use:draggable
 			on:dragmove|preventDefault|stopPropagation={setHandlePosition('start')}
 			style="left: calc({100 * start}% - 0.75rem);"
 		/>
 		<div
-			class="absolute top-1/2 transform -translate-y-1/2 w-6 h-6 bg-blue-600 rounded-full cursor-pointer shadow-md"
+			class="absolute top-1/2 transform -translate-y-1/2 w-3 h-3 bg-neutral-200 shadow-md"
 			use:draggable
 			on:dragmove|preventDefault|stopPropagation={setHandlePosition('end')}
 			style="left: calc({100 * end}% - 0.75rem);"
 		/>
 	</div>
-	<div class="flex justify-between mt-2 text-gray-400">
+	<div class="flex justify-between mt-2 text-xs">
 		{#if lowHandle !== '0' || highHandle !== '1'}
-			<div class="p-2 border rounded shadow-sm">
+			<div class="px-2 py-2 bg-neutral-700/50 shadow-sm">
 				{lowHandle}
 			</div>
-			<div class="p-2 border rounded shadow-sm">
+			<div class="px-2 py-2 shadow-sm bg-neutral-700/50">
 				{highHandle}
 			</div>
 		{/if}
 	</div>
 </div>
-
-<style>
-	.cursor-pointer:active {
-		background-color: #3b82f6; /* Tailwind's blue-500 */
-	}
-</style>

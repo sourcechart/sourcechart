@@ -1,15 +1,3 @@
-/*
-The DuckDB client is how we instantiate the Duckdb WASM database inside the browser.
-
-This system works via making a database out of a webpack that is statically loaded into browser,
-and then hydration is run through the FileStreamer and DuckDBWasm Client.  Given that the files
-are larger, we have to load it into the database in batches. This process is not optimized yet 
-but will be starting in the coming days.
-
-// Adapted from https://observablehq.com/@cmudig/duckdb-client
-// Copyright 2021 CMU Data Interaction Group
-*/
-
 import * as duckdb from '@duckdb/duckdb-wasm';
 import duckdb_wasm from '/node_modules/@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url';
 import mvp_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url';
@@ -18,6 +6,7 @@ import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url'
 import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
 import { checkNameForSpacesAndHyphens } from './FileUtils';
+import { DuckDBDataProtocol } from '@duckdb/duckdb-wasm';
 
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;
@@ -63,20 +52,14 @@ export class DuckDBClient {
 		}
 	}
 
+	/**
+	 * Query the duckdb database via a query string.
+	 *
+	 * @param query
+	 * @param params
+	 * @returns  Promise <Array<any[any]>>
+	 */
 	public async query(query: string, params?: Array<any>): Promise<Array<any[any]>> {
-		/*
-		Query the duckdb database via a query string.
-		
-		Args
-		----
-		query: string
-			Query string
-		 
-		 
-		Returns
-		-------
-		Promise <Array<any[any]>>
-		*/
 		const res = await this.queryStream(query, params);
 		let results = []; //@ts-ignore
 		for await (const rows of res.readRows()) {
@@ -88,8 +71,13 @@ export class DuckDBClient {
 		return results;
 	}
 
+	/**
+	 *
+	 * @param query
+	 * @param params
+	 * @returns
+	 */
 	public async queryRow(query: string, params?: Array<any>) {
-		/*Query a single row*/
 		const result = await this.queryStream(query, params); //@ts-ignore
 		const reader = result.readRows();
 		try {
@@ -128,32 +116,64 @@ export class DuckDBClient {
 	}
 
 	static async of(sources = {}, config: any = {}) {
-		const db: AsyncDuckDB | null = await makeDB(); // If this db does not exist initialize the db
+		const db: AsyncDuckDB | null = await makeDB();
 
-		if (config.query?.castTimeStampToDate === undefined) {
-			config = { ...config, query: { ...config.query, castTimeStampToDate: true } };
-		}
-		if (config.query?.castBigIntToDouble === undefined) {
-			config = { ...config, query: { ...config.query, castBigIntToDouble: true } };
-		}
+		config = mergeWithDefaultConfig(config);
+
 		await db.open(config);
-		await Promise.all(
-			Object.entries(sources).map(async ([name, source]) => {
-				if (source instanceof File) {
-					await insertLargeOrDeformedFile(db, source); //@ts-ignore
-				} else if ('buffer' in source && 'filename' in source) {
-					//@ts-ignore
-					await insertArrayBuffer(db, source); //@ts-ignore
-				} else if ('file' in source) {
-					const { file, ...options } = source; //@ts-ignore
-					await insertFile(db, source.name, file, options);
-				} else {
-					throw new Error(`invalid source: ${source}`);
-				}
-			})
-		);
+		await processSources(db, sources);
+
 		return new DuckDBClient(db);
 	}
+}
+
+function mergeWithDefaultConfig(config: any): any {
+	const defaultQueryConfig = {
+		castTimeStampToDate: true,
+		castBigIntToDouble: true
+	};
+
+	return {
+		...config,
+		query: {
+			...defaultQueryConfig,
+			...config.query
+		}
+	};
+}
+function isBufferSource(source: any): boolean {
+	return 'buffer' in source && 'filename' in source;
+}
+
+function isFileSource(source: any): boolean {
+	return 'file' in source;
+}
+
+async function processSources(db: AsyncDuckDB, sources: any): Promise<void> {
+	await Promise.all(
+		Object.entries(sources).map(async ([name, source]) => {
+			if (source instanceof File) {
+				await insertFileHandle(db, source);
+			} else if (isBufferSource(source)) {
+				//@ts-ignore
+				await insertArrayBuffer(db, source);
+			} else if (typeof source === 'string' && isValidURL(source)) {
+				console.log(source);
+				await insertFileURL(db, source);
+			} else if (isFileSource(source)) {
+				//@ts-ignore
+				const { file, ...options } = source; //@ts-ignore
+				await insertFile(db, source.name, file, options);
+			} else {
+				throw new Error(`invalid source: ${source}`);
+			}
+		})
+	);
+}
+
+function isValidURL(string: string): boolean {
+	const regex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+	return regex.test(string);
 }
 
 async function insertArrayBuffer(db: AsyncDuckDB, source: DataObject) {
@@ -254,15 +274,34 @@ async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any)
 	}
 }
 
-const makeDB = async () => {
-	/*
-	Make DB from the webapp from web assembly worke
+async function insertFileHandle(db: AsyncDuckDB, pickedFile: File) {
+	const supportedExtensions = ['.parquet', '.csv']; // Extend this list if more extensions are supported in the future
+	const fileExtension = pickedFile.name.slice(((pickedFile.name.lastIndexOf('.') - 1) >>> 0) + 2);
+	if (!supportedExtensions.includes(`.${fileExtension}`)) {
+		throw new Error(`Unsupported file type: ${fileExtension}`);
+	}
 
-	Returns
-	-------
-	Async duckdb
+	await db.registerFileHandle(
+		pickedFile.name,
+		pickedFile,
+		DuckDBDataProtocol.BROWSER_FILEREADER,
+		true
+	);
+}
 
-	*/
+async function insertFileURL(db: AsyncDuckDB, url: string) {
+	const filename = url.slice(((url.lastIndexOf('/') - 1) >>> 0) + 2);
+	await db.registerFileURL(filename, url, DuckDBDataProtocol.HTTP, false);
+}
+
+/*
+Make DB from the webapp from web assembly worke
+
+Returns
+-------
+Async duckdb
+*/
+const makeDB = async (): Promise<AsyncDuckDB> => {
 	const MANUAL_BUNDLES: duckdb.DuckDBBundles = {
 		mvp: {
 			mainModule: duckdb_wasm,
@@ -275,7 +314,6 @@ const makeDB = async () => {
 	};
 	// Select a bundle based on browser checks
 	const bundle = await duckdb.selectBundle(MANUAL_BUNDLES);
-	// Instantiate the asynchronus version of DuckDB-wasm
 	const worker = new Worker(bundle.mainWorker!);
 	const logger = new duckdb.ConsoleLogger();
 	const db = new duckdb.AsyncDuckDB(logger, worker);

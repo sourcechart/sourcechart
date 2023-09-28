@@ -9,7 +9,7 @@
 	import FilterDropdown from './FilterDropdown.svelte';
 	import FilterRange from './FilterRange.svelte';
 	import { onDestroy } from 'svelte';
-	import { CloseSolid } from 'flowbite-svelte-icons';
+	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 
 	let dropdownContainer: HTMLElement;
 	let frequencies: { [key: string]: number } = {};
@@ -150,12 +150,12 @@
 	});
 </script>
 
-<div class="w-full p-4 selectFieldColor rounded-sm shadow-xl">
-	<div class="flex justify-between items-center text-gray-400">
+<div class="w-full p-4 bg-neutral-900/80 rounded-sm shadow-xl">
+	<div class="flex justify-between items-center text-white">
 		<div class="relative flex-grow w-full">
 			<button
 				bind:this={dropdownContainer}
-				class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex items-center"
+				class="bg-[#303030] w-full rounded-sm hover:bg-neutral-700 flex items-center"
 				on:click={() => {
 					isFieldDropdown = !isFieldDropdown;
 				}}
@@ -166,10 +166,10 @@
 			{#if isFieldDropdown}
 				<div
 					class={`
-            scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
-            rounded shadow-lg transform transition-transform 
-            origin-top overflow-y-auto overflow-x-hidden z-10 
-            ${isFieldDropdown ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
+					scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
+					rounded shadow-lg transform transition-transform 
+					origin-top overflow-y-auto overflow-x-hidden z-10 
+					${isFieldDropdown ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 				>
 					{#each $columns as column (column)}
 						<button
@@ -191,10 +191,8 @@
 	</div>
 	<div class="mt-4">
 		{#if showRange}
-			<span class="text-sm text-gray-400">Values Ranges</span>
 			<FilterRange {min} {max} column={selectedColumn} prevData={filterData.value} />
 		{:else if showValueDropdown}
-			<span class="text-sm text-gray-400"> Select Value</span>
 			<FilterDropdown column={selectedColumn} items={distinctValuesObject} />
 		{/if}
 	</div>

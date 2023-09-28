@@ -3,6 +3,7 @@
 <script lang="ts">
 	import { Cursor, Rectangle, Eraser, Arrow } from './navbar-icons';
 	import { navBarState, keyPress } from '$lib/io/Stores';
+	let activeIndex: number | null = null;
 
 	let icons: { name: string; mode: NavBar; component: any; index: number }[] = [
 		{
@@ -36,8 +37,6 @@
 		activeIndex = clickedIndex;
 	};
 
-	let activeIndex: number | null = null;
-
 	$: if ($keyPress !== null) {
 		activeIndex = parseInt($keyPress);
 	}
@@ -55,14 +54,12 @@
 	}
 </script>
 
-<div
-	class="rounded-md fixed inset-x-0 top-4 z-50 flex h-10 items-center justify-center background shadow-lg"
->
-	<div class="flex items-center justify-center space-x-4 ml-1 mr-1">
+<div class="flex justify-center h-10 items-center rounded-md shadow-lg bg-neutral-800">
+	<div class="flex items-center justify-center space-x-3 ml-1 mr-1">
 		{#each icons as { name, component, index, mode } (name)}
 			<div
 				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${
-					index === activeIndex ? 'selected' : ''
+					index === activeIndex ? 'bg-[#9d99dc77]' : ''
 				}`}
 				on:keypress={(event) => {
 					if (['0', '1', '2', '3'].includes(event.key)) {
@@ -78,12 +75,13 @@
 		{/each}
 	</div>
 </div>
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Oxygen+Mono:wght@400;500;700&display=swap"
+/>
 
 <style>
-	.background {
-		background-color: #262627;
-	}
-	.selected {
-		background-color: #9d99dc77;
+	.font {
+		font-family: 'Oxygen Mono', monospace;
 	}
 </style>

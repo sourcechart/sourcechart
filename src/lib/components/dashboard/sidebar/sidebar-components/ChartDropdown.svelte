@@ -78,14 +78,14 @@
 	});
 </script>
 
-<div class="w-full p-4 rounded-sm relative selectFieldColor">
+<div class="w-full p-4 rounded-sm relative">
 	<div class="flex justify-between items-center">
 		<button
 			bind:this={dropdownContainer}
-			class="bg-gray-200 w-full rounded-sm hover:bg-gray-300 flex-grow flex items-center"
+			class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
 			on:click={toggleChartDropdown}
 		>
-			<span class="text-sm ml-2">
+			<span class="text-sm ml-2 font-thin text-white">
 				{chosenPlot}
 			</span>
 		</button>
@@ -93,12 +93,12 @@
 
 	{#if isChartDropdownOpen}
 		<button
-			class="scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border rounded shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 h-48"
+			class="scrollBarDiv bg-neutral-900 absolute rounded-md top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			on:click|stopPropagation={closeChartDropdown}
 		>
 			{#each rectangleCharts as { chartType }, i (i)}
 				<button
-					class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+					class="text-left text-xs px-3 py-2 w-full bg-neutral-900 hover:bg-gray-700 cursor-pointer truncate pr-8 relative"
 					on:click={() => {
 						chooseChart(chartType);
 						isChartDropdownOpen = false;
@@ -112,10 +112,6 @@
 </div>
 
 <style>
-	.selectFieldColor {
-		background-color: #33333d;
-	}
-
 	.scrollBarDiv::-webkit-scrollbar {
 		width: 8px;
 	}
@@ -133,9 +129,5 @@
 	.scrollBarDiv {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
-	}
-
-	.selectFieldColor {
-		background-color: #33333d;
 	}
 </style>
