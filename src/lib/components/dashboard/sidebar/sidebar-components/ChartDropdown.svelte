@@ -85,7 +85,7 @@
 			class="bg-neutral-900 w-full rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center"
 			on:click={toggleChartDropdown}
 		>
-			<span class="text-sm ml-2 font-thin text-white">
+			<span class="text-sm ml-2 font-thin text-neutral-300">
 				{chosenPlot}
 			</span>
 		</button>
@@ -93,12 +93,12 @@
 
 	{#if isChartDropdownOpen}
 		<button
-			class="scrollBarDiv bg-neutral-900 absolute rounded-md top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			class="scrollBarDiv bg-neutral-900 absolute rounded-md top-0 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			on:click|stopPropagation={closeChartDropdown}
 		>
 			{#each rectangleCharts as { chartType }, i (i)}
 				<button
-					class="text-left text-xs px-3 py-2 w-full bg-neutral-900 hover:bg-gray-700 cursor-pointer truncate pr-8 relative"
+					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300"
 					on:click={() => {
 						chooseChart(chartType);
 						isChartDropdownOpen = false;

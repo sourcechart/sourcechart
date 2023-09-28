@@ -91,7 +91,7 @@
 			event.stopPropagation();
 		}}
 	>
-		<span class="text-sm ml-1 text-white"> Groupby </span>
+		<span class="text-sm ml-1 text-neutral-300"> Groupby </span>
 	</button>
 
 	<button
@@ -112,11 +112,11 @@
 	{#if isGroupByDropdownOpen}
 		<div
 			bind:this={dropdownContainer}
-			class="scrollBarDiv absolute top-0 rounded-md bg-neutral-900 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			class="scrollBarDiv absolute top-0 rounded-md bg-neutral-900 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 		>
 			{#each $columns as column (column)}
 				<button
-					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm"
+					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300"
 					on:click={() => {
 						addColumnToGroupBy(column);
 						showGroupByAggregator = true;
@@ -132,7 +132,7 @@
 		<div class="-mt-1 bg-[#1c1c1c]">
 			<Tags items={tags} removeItem={removeTag} />
 		</div>
-		<div class="bg-[#1c1c1c] mt-3">
+		<div class="mt-3">
 			<span class="text-sm -mb-1 ml-1">Aggregate</span>
 			<Aggregator />
 		</div>

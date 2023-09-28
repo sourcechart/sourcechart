@@ -58,11 +58,11 @@
 
 	{#if open}
 		<div
-			class="scrollBarDiv bg-neutral-900 rounded-md absolute top-0 left-0 mt-5 border shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			class="scrollBarDiv absolute top-0 rounded-md bg-neutral-900 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 		>
 			{#each $columns as column}
 				<button
-					class="text-left text-xs px-3 py-2 w-full bg-neutral-900 hover:bg-gray-700 cursor-pointer truncate pr-8 relative"
+					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300"
 					on:click={() => handleChoose(column)}
 				>
 					{column}
@@ -71,3 +71,27 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	/* For WebKit (Chrome, Safari) */
+	.scrollBarDiv::-webkit-scrollbar {
+		width: 4px; /* Change this value to make the scrollbar thinner or thicker */
+	}
+
+	.scrollBarDiv::-webkit-scrollbar-thumb {
+		background-color: rgba(255, 255, 255, 0.3);
+		border-radius: 2px; /* Adjust the border-radius as per the new width */
+	}
+
+	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(168, 168, 168, 0.5);
+	}
+
+	/* For Firefox */
+	.scrollBarDiv {
+		scrollbar-width: thin; /* This property can have values of "none", "auto", "thin", and "wide" */
+		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+		max-height: 200px;
+		overflow-y: auto;
+	}
+</style>

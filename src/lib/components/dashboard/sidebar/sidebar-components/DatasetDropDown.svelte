@@ -99,7 +99,7 @@
 
 	<button
 		bind:this={dropdownContainer}
-		class="bg-neutral-900 w-full rounded-sm flex-grow justify-between flex items-center shadow-lg ml-4 border-neutral-700/50"
+		class="bg-neutral-900 w-full rounded-sm flex-grow justify-between flex items-center shadow-lg ml-4 border-neutral-700/50 hover:bg-neutral-900/50"
 		on:click={toggleDropdown}
 	>
 		<span class="text-sm text-white justify-center flex hover:text-neutral-200 font-thin ml-2">
@@ -116,9 +116,9 @@
 			{#each $datasets as dataset}
 				{#if dataset !== null}
 					<div>
-						<div class="flex justify-between items-center text-gray-400 relative selectFieldColor">
+						<div class="flex justify-between items-center text-gray-300 relative selectFieldColor">
 							<div
-								class="text-left text-xs px-3 py-2 w-full bg-neutral-900 hover:bg-gray-700 cursor-pointer truncate pr-8 relative"
+								class="text-left text-sm px-3 py-2 w-full bg-neutral-900 hover:bg-gray-700 cursor-pointer truncate pr-8 relative"
 								on:click={() => selectFile(dataset)}
 								on:keypress={(e) => e.key === 'Enter' && selectFile(dataset)}
 							>
