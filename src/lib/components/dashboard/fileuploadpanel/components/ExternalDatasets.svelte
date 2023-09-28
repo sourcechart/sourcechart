@@ -55,7 +55,6 @@
 	{#if isLoading}
 		<div class="loading-container flex">
 			<span class="mr-2">Loading...</span>
-			<Spinner size={40} />
 		</div>
 	{:else}
 		<Table>
@@ -72,22 +71,23 @@
 					<TableBodyCell>{dataset.name}</TableBodyCell>
 					<TableBodyCell>{dataset.description}</TableBodyCell>
 
-				<TableBodyCell>
-					<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
-						>Add Dataset</Button
-					>
-				</TableBodyCell>
-				<TableBodyCell>
-					<Button pill={false} outline on:click={() => downloadRawDataset(dataset)}>
-						<div class="flex flex-row justify-between items-center">
-							<span class="mr-2">Download Raw CSV</span>
-							<!-- Added the `mr-2` for right margin -->
-						</div>
-					</Button>
-				</TableBodyCell>
-			</TableBodyRow>
-		{/each}
-	</TableBody>
+					<TableBodyCell>
+						<Button pill={false} outline on:click={() => addURLToDatabase(dataset)}
+							>Add Dataset</Button
+						>
+					</TableBodyCell>
+					<TableBodyCell>
+						<Button pill={false} outline on:click={() => downloadRawDataset(dataset)}>
+							<div class="flex flex-row justify-between items-center">
+								<span class="mr-2">Download Raw CSV</span>
+								<!-- Added the `mr-2` for right margin -->
+							</div>
+						</Button>
+					</TableBodyCell>
+				</TableBodyRow>
+			{/each}
+		</TableBody>
+	{/if}
 </div>
 
 <style>
