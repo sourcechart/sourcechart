@@ -7,6 +7,7 @@ import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
 import { checkNameForSpacesAndHyphens } from './FileUtils';
 import { DuckDBDataProtocol } from '@duckdb/duckdb-wasm';
+import ExternalDatasets from '$lib/components/dashboard/fileuploadpanel/components/ExternalDatasets.svelte';
 
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;
@@ -156,10 +157,10 @@ async function processSources(db: AsyncDuckDB, sources: any): Promise<void> {
 				await insertFileHandle(db, source);
 			} else if (isBufferSource(source)) {
 				//@ts-ignore
-				await insertArrayBuffer(db, source);
-			} else if (typeof source === 'string' && isValidURL(source)) {
-				console.log(source);
-				await insertFileURL(db, source);
+				await insertArrayBuffer(db, source); //@ts-ignore
+			} else if (source.url && isValidURL(source.url)) {
+				//@ts-ignore
+				await insertFileURL(db, source.url);
 			} else if (isFileSource(source)) {
 				//@ts-ignore
 				const { file, ...options } = source; //@ts-ignore

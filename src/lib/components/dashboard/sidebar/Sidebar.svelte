@@ -54,9 +54,6 @@
 					<div class="flex justify-between items-center">
 						<span class="text-sm font-light text-neutral-300">Style</span>
 						<ChartDropdown sideBarVersion="LowCode" />
-						<div class="">
-							<Baseline />
-						</div>
 					</div>
 				</button>
 			</div>
