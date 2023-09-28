@@ -94,54 +94,46 @@
 	};
 </script>
 
-<div
-	class="flex items-center w-full bg-neutral-900/80 hover:bg-neutral-900/50 shadow-lg border border-1 border-neutral-700/50"
-	on:mouseover={startGroupByHover}
-	on:mouseout={endGroupByHover}
-	on:blur={() => {
-		null;
-	}}
-	on:focus={() => {
-		null;
-	}}
->
-	<button
-		class="flex-grow text-left mb-1"
-		on:click={(event) => {
-			isGroupByDropdownOpen = !isGroupByDropdownOpen;
-			event.stopPropagation();
+<div bind:this={container} class="relative">
+	<div
+		class="flex items-center w-full bg-neutral-900/80 hover:bg-neutral-900/50 shadow-lg border border-1 border-neutral-700/50"
+		on:mouseover={startGroupByHover}
+		on:mouseout={endGroupByHover}
+		on:blur={() => {
+			null;
+		}}
+		on:focus={() => {
+			null;
 		}}
 	>
-		<span class="text-sm ml-1 text-neutral-300"> Groupby </span>
-	</button>
-
-	<button
-		class=" flex-shrink-0"
-		on:click={() => {
-			showGroupByAggregator = !showGroupByAggregator;
-		}}
-	>
-		{#if !showGroupByAggregator}
-			<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-4" />
-		{:else}
-			<CarrotUp class="h-6 w-6 hover:text-neutral-400 ml-4" />
-		{/if}
-	</button>
-	{#if showGroupByTooltip}
-		<div
-			role="tooltip"
-			class="absolute left-0 transform -translate-y-1/2 p-2 bg-neutral-200 text-gray-700 text-xs rounded shadow-md"
+		<button
+			class="flex-grow text-left mb-1"
+			on:click={(event) => {
+				isGroupByDropdownOpen = !isGroupByDropdownOpen;
+				event.stopPropagation();
+			}}
 		>
-			Click to select columns for grouping.
-		</div>
-	{/if}
-</div>
+			<span class="text-sm ml-1 text-neutral-300"> Groupby </span>
+		</button>
 
-<div>
+		<button
+			class="flex-shrink-0"
+			on:click={() => {
+				showGroupByAggregator = !showGroupByAggregator;
+			}}
+		>
+			{#if !showGroupByAggregator}
+				<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-4" />
+			{:else}
+				<CarrotUp class="h-6 w-6 hover:text-neutral-400 ml-4" />
+			{/if}
+		</button>
+	</div>
+
 	{#if isGroupByDropdownOpen}
 		<div
 			bind:this={dropdownContainer}
-			class="scrollBarDiv absolute top-0 rounded-md bg-neutral-900 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			class="scrollBarDiv absolute top-full left-0 rounded-md bg-neutral-900 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 		>
 			{#each $columns as column (column)}
 				<button
@@ -156,17 +148,17 @@
 			{/each}
 		</div>
 	{/if}
-
-	{#if showGroupByAggregator}
-		<div class="-mt-1 bg-[#1c1c1c]">
-			<Tags items={tags} removeItem={removeTag} />
-		</div>
-		<div class="mt-3">
-			<span class="text-sm -mb-1 ml-1">Aggregate</span>
-			<Aggregator />
-		</div>
-	{/if}
 </div>
+
+{#if showGroupByAggregator}
+	<div class="-mt-1 bg-[#1c1c1c]">
+		<Tags items={tags} removeItem={removeTag} />
+	</div>
+	<div class="mt-3">
+		<span class="text-sm -mb-1 ml-1">Aggregate</span>
+		<Aggregator />
+	</div>
+{/if}
 
 <style>
 	/* For WebKit (Chrome, Safari) */

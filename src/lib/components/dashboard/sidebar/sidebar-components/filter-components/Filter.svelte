@@ -166,14 +166,14 @@
 			{#if isFieldDropdown}
 				<div
 					class={`
-					scrollBarDiv bg-gray-900 absolute top-full w-full mt-2 border
+					scrollBarDiv bg-neutral-900 absolute top-full w-full mt-2 
 					rounded shadow-lg transform transition-transform 
 					origin-top overflow-y-auto overflow-x-hidden z-10 
 					${isFieldDropdown ? 'translate-y-0 opacity-100' : 'translate-y-1/2 opacity-0'}`}
 				>
 					{#each $columns as column (column)}
 						<button
-							class="block w-full text-left px-3 py-2 hover:bg-gray-200"
+							class="block w-full text-left px-3 py-2 hover:bg-neutral-800 bg-neutral-900 text-xs"
 							on:click={() => {
 								addColumnToFilter(column);
 								isFieldDropdown = false;
