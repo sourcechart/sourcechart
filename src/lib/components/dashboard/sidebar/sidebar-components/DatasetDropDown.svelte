@@ -47,9 +47,19 @@
 	const queryDuckDB = async (filename: string) => {
 		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
 		if (!dataObject) return;
+		let resp;
 		const db = await DuckDBClient.of([dataObject.file]);
-		const sanitizedFilename = checkNameForSpacesAndHyphens(dataObject.file.name);
-		const resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
+
+		if (dataObject.file.name) {
+			const sanitizedFilename = checkNameForSpacesAndHyphens(dataObject.file.name);
+			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
+		} else if (dataObject.file.url) {
+			//@ts-ignore
+			console.log(dataObject.file.url); //@ts-ignore
+			resp = await db.query(`SELECT * FROM ${dataObject.file.url} LIMIT 0`); //@ts-ignore
+		} else {
+			return;
+		} //@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
 
@@ -83,6 +93,8 @@
 		fileUploadStore.update((file) => {
 			return file.filter((file) => file.filename !== filename);
 		});
+
+		selectedDataset = 'Select Dataset';
 	};
 
 	const toggleDropdown = () => {
@@ -94,13 +106,13 @@
 	});
 </script>
 
-<div class="py-1 flex w-full space-x-3 items-center justify-between">
+<div class="py-1 flex w-full space-x-1 items-center justify-between">
 	<span class="text-sm font-light text-neutral-300">Datasets</span>
 
 	<div class="relative inline-block">
 		<button
 			bind:this={dropdownContainer}
-			class="bg-neutral-900 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center mx-auto border-neutral-700/50 min-w-48"
+			class="bg-neutral-900 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center border-neutral-700/50 min-w-52"
 			on:click={toggleDropdown}
 		>
 			<span class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-2">
@@ -111,7 +123,7 @@
 
 		{#if isDropdownOpen}
 			<div
-				class="scrollBarDiv absolute top-full left-0 rounded-md bg-neutral-900 w-48 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+				class="scrollBarDiv absolute top-full left-0 rounded-sm bg-neutral-900 w-40 mr-3 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			>
 				{#each $datasets as dataset}
 					{#if dataset !== null}
@@ -125,8 +137,14 @@
 							>
 								{dataset}
 							</button>
-							<button class="ml-2 p-2" on:click={(e) => e.stopPropagation()}>
-								<CloseSolid class="w-4 h- text-white" />
+							<button
+								class="ml-2 p-2"
+								on:click={(e) => {
+									removeFromAllCharts(dataset);
+									e.stopPropagation();
+								}}
+							>
+								<CloseSolid class="w-4 h-4 hover:text-gray-300 text-white" />
 							</button>
 						</div>
 					{/if}

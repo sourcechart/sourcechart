@@ -18,11 +18,41 @@
 			return charts;
 		});
 	};
+
+	let showTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
+
+	const startHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showTooltip = true;
+		}, 800);
+	};
+
+	const endHover = (): void => {
+		clearTimeout(hoverTimeout);
+		showTooltip = false;
+	};
 </script>
 
-<!-- "Add Filter" Button -->
-<button on:click={addFilterToSidebar}>
-	<PlusSolid />
-</button>
+<div class="relative inline-flex">
+	<button
+		aria-label="Add Filter"
+		on:click={addFilterToSidebar}
+		on:mouseover={startHover}
+		on:mouseout={endHover}
+		on:focus={() => null}
+		on:blur={() => null}
+	>
+		<PlusSolid />
+	</button>
 
-<!-- Display Each Filter Component Underneath the Add Filter Button -->
+	<!-- Tooltip element -->
+	{#if showTooltip}
+		<div
+			role="tooltip"
+			class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md"
+		>
+			Add Filter
+		</div>
+	{/if}
+</div>

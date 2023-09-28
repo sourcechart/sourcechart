@@ -79,10 +79,31 @@
 		document.removeEventListener('click', handleOutsideClick);
 		document.removeEventListener('keydown', handleEscapeKey);
 	});
+	let showGroupByTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
+
+	const startGroupByHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showGroupByTooltip = true;
+		}, 3000);
+	};
+
+	const endGroupByHover = (): void => {
+		clearTimeout(hoverTimeout);
+		showGroupByTooltip = false;
+	};
 </script>
 
 <div
 	class="flex items-center w-full bg-neutral-900/80 hover:bg-neutral-900/50 shadow-lg border border-1 border-neutral-700/50"
+	on:mouseover={startGroupByHover}
+	on:mouseout={endGroupByHover}
+	on:blur={() => {
+		null;
+	}}
+	on:focus={() => {
+		null;
+	}}
 >
 	<button
 		class="flex-grow text-left mb-1"
@@ -106,6 +127,14 @@
 			<CarrotUp class="h-6 w-6 hover:text-neutral-400 ml-4" />
 		{/if}
 	</button>
+	{#if showGroupByTooltip}
+		<div
+			role="tooltip"
+			class="absolute left-0 transform -translate-y-1/2 p-2 bg-neutral-200 text-gray-700 text-xs rounded shadow-md"
+		>
+			Click to select columns for grouping.
+		</div>
+	{/if}
 </div>
 
 <div>

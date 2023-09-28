@@ -42,17 +42,46 @@
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
+
+	let showTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
+
+	const startHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showTooltip = true;
+		}, 800);
+	};
+
+	const endHover = (): void => {
+		clearTimeout(hoverTimeout);
+		showTooltip = false;
+	};
 </script>
 
 <div bind:this={container} class="flex-grow relative">
 	<div class="flex items-center">
 		<button
+			aria-label="Toggle Dropdown"
 			class="mx-auto bg-neutral-900 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center border-neutral-700/50"
 			on:click={() => (open = !open)}
+			on:mouseover={startHover}
+			on:mouseout={endHover}
+			on:blur={null}
+			on:focus={null}
 		>
 			<span class="text-sm text-neutral-300 ml-1">Y</span>
 			<span class="text-sm text-gray-100 w-full justify-center"> {currentValue} </span>
 		</button>
+
+		<!-- Tooltip element -->
+		{#if showTooltip}
+			<div
+				role="tooltip"
+				class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md"
+			>
+				Toggle Dropdown for Y-axis
+			</div>
+		{/if}
 	</div>
 	{#if open}
 		<div
