@@ -62,9 +62,9 @@
 			</div>
 
 			<!--Filters-->
-			<div class="p-2 hover:bg-[#303030] hover:round-md">
+			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<div class="flex justify-between items-center w-full">
-					<span class="text-sm font-light text-neutral-300 ml-1">Filters</span>
+					<span class="text-sm font-light text-neutral-300">Filters</span>
 					<AddFilter />
 				</div>
 
@@ -76,10 +76,10 @@
 			</div>
 
 			<!--Export-->
-			<div class="py-2 px-2 hover:bg-[#303030] hover:round-md">
+			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
 					<div class="flex justify-between">
-						<span class="text-sm font-light text-neutral-300 ml-1">Export</span>
+						<span class="text-sm font-light text-neutral-300">Export</span>
 						<ExportToCSV />
 						<div class="ml-3">
 							<Download />

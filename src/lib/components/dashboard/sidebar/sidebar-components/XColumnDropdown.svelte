@@ -62,7 +62,7 @@
 		>
 			{#each $columns as column}
 				<button
-					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300"
+					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300 truncate"
 					on:click={() => handleChoose(column)}
 				>
 					{column}
