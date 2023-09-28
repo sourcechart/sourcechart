@@ -56,7 +56,7 @@
 		<button
 			class="flex items-center justify-center w-auto truncate p-2 rounded-md hover:bg-[#9d99dc77] text-center shadow-md {selectedAggregator ===
 			agg
-				? 'bg-[#9d99dc77]'
+				? 'bg-[#908bd971]'
 				: 'bg-neutral-600/90'}"
 			on:click={() => {
 				selectAggregator(agg);

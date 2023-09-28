@@ -3,32 +3,37 @@
 <script lang="ts">
 	import { Cursor, Rectangle, Eraser, Arrow } from './navbar-icons';
 	import { navBarState, keyPress } from '$lib/io/Stores';
+	import type Node from '$lib/analytics/hdbscan/node';
 	let activeIndex: number | null = null;
 
-	let icons: { name: string; mode: NavBar; component: any; index: number }[] = [
+	let icons: { name: string; mode: NavBar; component: any; index: number; tooltip: string }[] = [
 		{
 			name: 'Cursor',
 			mode: 'select',
 			component: Cursor,
-			index: 1
+			index: 1,
+			tooltip: 'Select Items'
 		},
 		{
 			name: 'Rectangle',
 			mode: 'drawRectangle',
 			component: Rectangle,
-			index: 2
+			index: 2,
+			tooltip: 'Draw Rectangle'
 		},
 		{
 			name: 'Arrow',
 			mode: 'drawArrow',
 			component: Arrow,
-			index: 3
+			index: 3,
+			tooltip: 'Draw Arrow'
 		},
 		{
 			name: 'Eraser',
 			mode: 'eraser',
 			component: Eraser,
-			index: 0
+			index: 0,
+			tooltip: 'Erase Canvas'
 		}
 	];
 
@@ -52,14 +57,34 @@
 			navBarState.set(selectedIcon.mode);
 		}
 	}
+
+	// Tooltip functionality
+	let hoveredIndex: number | null = null;
+	let hoverTimeout: NodeJS.Timeout;
+
+	const startHover = (index: number): void => {
+		hoveredIndex = index;
+		hoverTimeout = setTimeout(() => {
+			showTooltip[index] = true;
+		}, 500); // Show tooltip after 500ms
+	};
+
+	const endHover = (): void => {
+		clearTimeout(hoverTimeout);
+		showTooltip = {};
+		hoveredIndex = null;
+	};
+
+	// Tooltip state for each icon
+	let showTooltip: { [key: number]: boolean } = {};
 </script>
 
 <div class="flex justify-center h-10 items-center rounded-md shadow-lg bg-neutral-800">
 	<div class="flex items-center justify-center space-x-3 ml-1 mr-1">
-		{#each icons as { name, component, index, mode } (name)}
+		{#each icons as { name, component, index, mode, tooltip } (name)}
 			<div
-				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${
-					index === activeIndex ? 'bg-[#9d99dc77]' : ''
+				class={`flex items-center hover:bg-neutral-700/90 justify-center mx-1 rounded-md overflow-hidden ${
+					index === activeIndex ? 'bg-[#908bd971] hover:bg-[#908bd971]' : ''
 				}`}
 				on:keypress={(event) => {
 					if (['0', '1', '2', '3'].includes(event.key)) {
@@ -67,14 +92,31 @@
 					}
 				}}
 				on:click={() => setMode(mode, index)}
+				on:mouseover={() => startHover(index)}
+				on:mouseout={endHover}
+				on:blur={endHover}
+				on:focus={() => {
+					null;
+				}}
 			>
+				{#if showTooltip[index]}
+					<div
+						role="tooltip"
+						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
+					>
+						{tooltip}
+					</div>
+				{/if}
 				<div class="relative flex flex-row justify-items-center">
 					<svelte:component this={component} />
+
+					<!-- Tooltip element for each icon -->
 				</div>
 			</div>
 		{/each}
 	</div>
 </div>
+
 <link
 	rel="stylesheet"
 	href="https://fonts.googleapis.com/css2?family=Oxygen+Mono:wght@400;500;700&display=swap"

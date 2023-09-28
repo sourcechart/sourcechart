@@ -7,11 +7,9 @@
 	import TableBodyCell from 'flowbite-svelte/TableBodyCell.svelte'; //@ts-ignore
 	import TableBodyRow from 'flowbite-svelte/TableBodyRow.svelte'; //@ts-ignore
 	import TableHeadCell from 'flowbite-svelte/TableHeadCell.svelte'; //@ts-ignore
-	import Spinner from 'flowbite-svelte/Spinner.svelte'; //@ts-ignore
 	import { generateID } from '$lib/io/GenerateID';
 	import { datasets } from './Datasets';
 	import { fileUploadStore } from '$lib/io/Stores';
-	import AddFilter from '../../sidebar/sidebar-components/AddFilter.svelte';
 
 	let isLoading = false;
 

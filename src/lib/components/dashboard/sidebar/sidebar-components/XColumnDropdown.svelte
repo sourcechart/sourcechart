@@ -4,6 +4,19 @@
 
 	export let open = false;
 	let currentValue: string = '';
+	let showTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
+
+	const startHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showTooltip = true;
+		}, 800);
+	};
+
+	const endHover = (): void => {
+		clearTimeout(hoverTimeout);
+		showTooltip = false;
+	};
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
@@ -48,17 +61,32 @@
 <div bind:this={container} class="flex-grow relative w-full">
 	<div class="flex items-center justify-between">
 		<button
+			aria-label="Toggle Dropdown"
 			class="bg-neutral-900 w-full justify-center text-center rounded-sm hover:bg-neutral-900/50 flex-grow flex items-center mx-auto border-neutral-700/50"
 			on:click={() => (open = !open)}
+			on:mouseover={startHover}
+			on:mouseout={endHover}
+			on:focus={() => null}
+			on:blur={() => null}
 		>
 			<span class="text-sm text-neutral-300 ml-1">X</span>
 			<span class="text-sm text-gray-100 w-full"> {currentValue} </span>
 		</button>
+
+		<!-- Tooltip element -->
+		{#if showTooltip}
+			<div
+				role="tooltip"
+				class="absolute left-0 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded shadow-md"
+			>
+				Toggle Dropdown for X-axis
+			</div>
+		{/if}
 	</div>
 
 	{#if open}
 		<div
-			class="scrollBarDiv absolute top-0 rounded-md bg-neutral-900 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			class="scrollBarDiv absolute top-0 rounded-sm bg-neutral-900 left-0 mt-5 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 		>
 			{#each $columns as column}
 				<button
