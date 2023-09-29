@@ -53,6 +53,8 @@
 
 	let debounceTimer: number | undefined;
 
+	$: console.log($allCharts);
+
 	const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
 		clearTimeout(debounceTimer);
 		debounceTimer = window.setTimeout(() => handleMouseMoveUp(x, y), 5);
