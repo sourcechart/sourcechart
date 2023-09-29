@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { clickedChartIndex, allCharts, duckDBInstanceStore } from '$lib/io/Stores';
+	import {
+		clickedChartIndex,
+		allCharts,
+		duckDBInstanceStore,
+		responsiveType
+	} from '$lib/io/Stores';
+	import Download from '$lib/components/ui/icons/Download.svelte';
 	import { DataIO } from '$lib/io/DataIO';
 
 	$: i = clickedChartIndex();
@@ -26,23 +32,31 @@
 	};
 </script>
 
-<div class="relative inline-block">
-	<button
+<div class="relative">
+	<div
 		aria-label="Export to CSV"
-		class="block selectFieldColor text-left py-2 dark:text-black w-full h-5"
-		on:click={exportToCSV}
-		on:mouseover={startHover}
-		on:mouseout={endHover}
-		on:focus={() => null}
-		on:blur={() => null}
-	/>
-	<!-- Tooltip element -->
-	{#if showTooltip}
-		<div
-			role="tooltip"
-			class="absolute left-full top-1/2 transform -translate-y-1/2 p-2 bg-neutral-200 text-gray-700 text-xs rounded shadow-md"
-		>
-			Export to CSV
+		class="selectFieldColor py-2 dark:text-black w-full h-5 flex justify-between items-center"
+	>
+		<span class="text-sm font-light text-neutral-300">Export</span>
+		<div class="relative ml-3">
+			<button
+				on:mouseover={startHover}
+				on:mouseout={endHover}
+				on:focus={() => null}
+				on:blur={() => null}
+				on:click={exportToCSV}
+			>
+				<Download class="hover:text-gray-200 text-neutral-300" />
+			</button>
+
+			{#if showTooltip && $responsiveType !== 'mobile'}
+				<div
+					role="tooltip"
+					class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded shadow-md"
+				>
+					Export to CSV
+				</div>
+			{/if}
 		</div>
-	{/if}
+	</div>
 </div>
