@@ -83,8 +83,8 @@
 	<div class="flex items-center justify-center space-x-3 ml-1 mr-1">
 		{#each icons as { name, component, index, mode, tooltip } (name)}
 			<div
-				class={`flex items-center hover:bg-neutral-700/90 justify-center mx-1 rounded-md overflow-hidden ${
-					index === activeIndex ? 'bg-[#908bd971] hover:bg-[#908bd971]' : ''
+				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
+					index === activeIndex ? 'bg-[#908bd971] hover:bg-[#908bd971]' : 'hover:bg-neutral-700/90'
 				}`}
 				on:keypress={(event) => {
 					if (['0', '1', '2', '3'].includes(event.key)) {
