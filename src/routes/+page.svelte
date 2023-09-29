@@ -34,12 +34,12 @@
 >
 	<!-- NavBar -->
 	<section id="navbar" class="py-3 lg:px-32 sm:px-2 md:px-12 flex justify-between items-center">
-		<a href="/" class="w-48">
+		<a href="/" class="w-52">
 			<img src="logo1.png" alt="Logo" class="w-full h-auto" />
 		</a>
 		<button
-			class="text-neutral-300 bg-transparent border border-gray-400 hover:border-neutral-50 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-sm font-medium hover:bg-neutral-700"
-			on:click={() => goto('/dashboard')}
+			class="text-neutral-300 bg-transparent border border-neutral-300 hover:text-neutral-50 hover:border-neutral-50 bg-purple-700 hover:bg-purple-600 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-sm font-medium
+			on:click={() => goto('/dashboard')}"
 		>
 			Login
 		</button>
@@ -80,6 +80,7 @@
 								<span> Try Now </span>
 							</button>
 
+							<!--
 							<a href="#features-section">
 								<button
 									class="text-neutral-300 border border-white px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-neutral-800 hover:text-neutral-50 hover:border-neutral-50 transform transition-transform duration-300 ease-in-out hover:scale-105"
@@ -87,6 +88,7 @@
 									<span>Learn More</span>
 								</button>
 							</a>
+							-->
 						</div>
 					</div>
 				</div>
@@ -103,29 +105,13 @@
 		</section>
 		<div class="h-32" id="space" />
 
-		<!-- Features Section -->
-		<section id="features-section">
+		<!-- Video Section -->
+		<section>
 			<h2 class="text-center text-4xl text-gray-300 mb-8">Features</h2>
 			<p class="text-center text-gray-400 mb-16">
 				Most dashboards are designed for data visualization and monitoring purposes. SourceChart is
 				designed to find insights.
 			</p>
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-				{#each features as feature}
-					<div
-						class="bg-neutral-800 p-6 rounded-lg space-y-4 mb-4 space-x-4 transform transition-transform duration-300 ease-in-out hover:scale-105"
-					>
-						<svelte:component this={feature.component} />
-						<h3 class="text-2xl text-[#A78BFA]">{feature.header}</h3>
-						<p class="text-gray-400">{feature.body}</p>
-					</div>
-				{/each}
-			</div>
-		</section>
-		<div class="h-20" id="space" />
-
-		<!-- Video Section -->
-		<section>
 			<div class="flex justify-center items-center rounded-lg overflow-hidden">
 				<video autoplay loop muted class="max-w-full h-auto">
 					<source src="demoMP4.mp4" type="video/mp4" />
@@ -133,45 +119,23 @@
 				</video>
 			</div>
 		</section>
+		<div class="h-20" id="space" />
 
-		<div class="h-24" id="space" />
-
-		<!-- ABOUT US -->
-		<section id="about-us" class="flex flex-col items-center">
-			<h2 class="text-center text-4xl text-gray-300 mb-8 w-full">About Us</h2>
-
-			<div
-				class="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl p-4 h-full md:h-80 sm:h-60 bg-neutral-800 text-neutral-300 rounded-md"
-			>
-				<h1 class="text-3xl font-bold text-white mb-6">Mission</h1>
-				<div class="text-white ml-4 mr-4 leading-relaxed">
-					Created in 2023, we set out with a clear mission - to revolutionize the data processing
-					landscape. At SourceChart, we believe in security, speed, and clarity. Redefine your
-					understanding of data with our swift, lightweight tool, designed to offer in-browser
-					processing without compromise. As our commitment to you, we promise to move as fast as
-					your thoughts, ensuring your data remains anchored and your insights razor-sharp.
-				</div>
-			</div>
-
-			<!-- Space between the sections -->
-			<div class="h-20 w-full" />
-			<!-- Space between the sections -->
-
-			<div
-				class="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl p-4 h-full md:h-80 sm:h-60 bg-neutral-800 text-neutral-300 rounded-md"
-			>
-				<h1 class="text-3xl font-bold text-white mb-6">How it Works</h1>
-				<div class="text-white ml-4 mr-4 leading-relaxed">
-					Our platform invites you to a realm of secure, in-browser data visualization. We
-					understand the essence of peace of mind - that's why your data never leaves your device.
-					Witness the magic as we transform raw data into captivating visual stories, all the while
-					ensuring seamless and secure handling. Supported by our robust hosting, we beckon you to
-					embark on a safer, streamlined visualization odyssey with us.
-				</div>
+		<!-- Features Section -->
+		<section id="features-section">
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+				{#each features as feature}
+					<div
+						class="bg-neutral-800 p-6 rounded-lg space-y-4 mb-4 space-x-4 transform transition-transform duration-300 ease-in-out hover:scale-105"
+					>
+						<svelte:component this={feature.component} />
+						<h3 class="text-2xl text-[#A78BFA]">{feature.header}</h3>
+						<p class="text-gray-400 text-md">{feature.body}</p>
+					</div>
+				{/each}
 			</div>
 		</section>
-
-		<div class="h-20 w-full" />
+		<div class="h-20" id="space" />
 
 		<!-- CTA Section -->
 		<section id="JoinUs" class="h-4/5 py-4 px-4 mt-24 text-center">
@@ -198,10 +162,9 @@
 	</footer>
 </div>
 
-<!-- Font Link -->
 <link
+	href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&family=M+PLUS+Rounded+1c:wght@300&family=Oxygen+Mono&family=Victor+Mono:wght@200&display=swap"
 	rel="stylesheet"
-	href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;700&display=swap"
 />
 
 <style>
