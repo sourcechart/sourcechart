@@ -43,6 +43,21 @@
 		}
 	};
 
+<<<<<<< HEAD
+=======
+	$: {
+		if (open) {
+			document.addEventListener('click', handleOutsideClick);
+		} else {
+			document.removeEventListener('click', handleOutsideClick);
+		}
+	}
+
+	$: if ($allCharts.length > 0 && $allCharts[$i] && $allCharts[$i].yColumn !== null) {
+		currentValue = $allCharts[$i].xColumn;
+	}
+
+>>>>>>> master
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});

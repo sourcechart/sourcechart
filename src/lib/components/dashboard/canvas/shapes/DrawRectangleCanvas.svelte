@@ -124,7 +124,6 @@
 
 	const handleClickOutside = (e: MouseEvent | TouchEvent) => {
 		const target = e.target as Node;
-		console.log('triggering');
 		if (dataAvailable && container && !container.contains(target)) {
 			isRectangleVisible = false;
 		}
@@ -287,7 +286,13 @@
 					width={points.br.x - points.tl.x}
 					height={points.br.y - points.tl.y}
 					fill="transparent"
+<<<<<<< HEAD
 					stroke="#9d99dc"
+=======
+					stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
+						? '#9d99dc'
+						: backupColor}
+>>>>>>> master
 				/>
 
 				{#each handles as handle}
