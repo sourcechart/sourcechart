@@ -2,7 +2,7 @@
 	//@ts-ignore
 	import { generateID } from '$lib/io/GenerateID';
 	import { datasets } from './Datasets';
-	import { fileUploadStore } from '$lib/io/Stores';
+	import { fileUploadStore, activeDropZone } from '$lib/io/Stores';
 
 	let isLoading = false;
 
@@ -17,6 +17,7 @@
 		};
 
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
+		activeDropZone.set(false);
 	};
 
 	function downloadRawCSV(csvData: string, filename: string) {
@@ -44,39 +45,34 @@
 	};
 </script>
 
-<div class="scrollBarDiv w-96 table-container overflow-y-auto" style="max-height: 400px;">
+<div class="overflow-y-auto scrollBarDiv">
 	<table class="w-full bg-neutral-800 text-white border border-neutral-600 rounded-lg">
 		<thead>
-			<tr class="bg-neutral-600">
-				<th class="py-3 px-4 text-left">Dataset</th>
-				<th class="py-3 px-4 text-left">Description</th>
-				<th class="py-3 px-4" />
-				<th class="py-3 px-4" />
+			<tr>
+				<th class="py-2 px-2 sm:px-4 text-sm border-b border-neutral-6 text-left 00">Name</th>
+				<th class="hidden md:table-cell py-2 px-2 sm:px-4 text-sm border-b border-neutral-600"
+					>Description</th
+				>
+				<th class="py-2 px-2 sm:px-4 text-sm border-b border-neutral-600">Actions</th>
+				<th class="py-2 px-2 sm:px-4 text-sm border-b border-neutral-600">Download</th>
 			</tr>
 		</thead>
-		<tbody class="divide-y">
+		<tbody>
 			{#each datasets as dataset}
-				<tr class="hover:bg-neutral-700 ml-2 mt-2">
-					<td class="py-2 px-4 text-sm mt-2">{dataset.name}</td>
-					<td class="py-2 px-4 text-sm mt-2">{dataset.description}</td>
-					<td class="py-2 px-4">
-						<button
-							class="px-4 py-2 text-blue-300 hover:underline border border-blue-300 rounded"
-							on:click={() => addURLToDatabase(dataset)}>Add Dataset</button
-						>
-					</td>
-					<td class="py-2 px-4">
-						<button class="px-4 py-2 text-blue-300 hover:underline">
-							<div class="flex flex-row justify-between items-center">
-								<button
-									on:click={async () => {
-										downloadRawDataset(dataset);
-									}}
-								>
-									<span class="mr-2">Download Raw CSV</span>
-								</button>
-							</div>
+				<tr class="hover:bg-neutral-700">
+					<td class="py-2 px-2 sm:px-4 text-sm mt-2">{dataset.name}</td>
+					<td class="hidden md:table-cell py-2 px-2 sm:px-4 text-sm mt-2">{dataset.description}</td>
+					<td class="py-2 px-2 sm:px-4">
+						<button class="text-blue-300 hover:underline border border-blue-300 rounded">
+							Add Dataset
 						</button>
+					</td>
+					<td class="py-2 px-2 sm:px-4">
+						<div class="text-blue-300 hover:underline flex justify-between items-center">
+							<button on:click={async () => downloadRawDataset(dataset)}>
+								<span class="mr-2">Download Raw CSV</span>
+							</button>
+						</div>
 					</td>
 				</tr>
 			{/each}
@@ -85,6 +81,19 @@
 </div>
 
 <style>
+	.scrollBarDiv {
+		/* Remove the fixed height */
+		max-height: 14rem; /* Or adjust this to a value that fits your design better */
+
+		/* Overflow properties */
+		overflow-y: auto;
+		overflow-x: auto;
+
+		/* Scrollbar styles for Webkit browsers */
+		scrollbar-width: thin;
+		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+	}
+
 	.scrollBarDiv::-webkit-scrollbar {
 		width: 8px;
 	}
@@ -96,31 +105,5 @@
 
 	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
 		background-color: rgba(168, 168, 168, 0.5);
-	}
-
-	/* For Firefox */
-	.scrollBarDiv {
-		scrollbar-width: thin;
-		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
-		max-height: 200px; /* Adjust this value to your desired maximum height */
-		overflow-y: auto;
-	}
-
-	.scrollBarDiv {
-		height: 300px;
-		overflow-y: auto;
-		overflow-x: auto;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		max-height: 400px; /* Adjust this value to your desired maximum height */
-	}
-
-	/* Updated scrollbar styles for Firefox */
-	.scrollBarDiv {
-		scrollbar-width: thin;
-		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
-		max-height: 400px; /* Adjust this value to your desired maximum height */
-		overflow-y: auto;
 	}
 </style>

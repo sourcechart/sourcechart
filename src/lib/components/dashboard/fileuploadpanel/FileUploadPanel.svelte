@@ -15,33 +15,26 @@
 </script>
 
 <div
-	class="relative filePanelBackground px-6 pb-8 pt-10 shadow-xl ring-1 ring-gray-900/5 w-auto sm:mx-auto sm:max-w-xl sm:rounded-lg sm:px-10"
-	style="max-height: unset;"
+	class="relative bg-[#2c2d2d] px-6 pb-16 pt-20 shadow-xl h-96 ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-xl sm:rounded-lg sm:px-10"
 >
-	<div class="mx-auto max-w-full">
-		<h1 class="text-xl text-gray-300">Add Data to Plot</h1>
-		<div class="close-button">
-			<CloseButton class="close-button" on:click={handleClick} />
-		</div>
+	<ExternalDatasets />
+</div>
+
+<!--
 		<Tabs style="underline" contentClass="p-4 rounded-lg mt-4 text-neutral-300">
 			<TabItem class="" title="Load Files" open>
 				<DropZone />
 			</TabItem>
 
 			<TabItem title="External Datasets">
-				<ExternalDatasets />
 			</TabItem>
 		</Tabs>
-	</div>
-</div>
+	-->
 
 <style>
 	.close-button {
 		position: absolute;
 		top: 10px;
 		right: 10px;
-	}
-	.filePanelBackground {
-		background-color: #2c2d2d;
 	}
 </style>
