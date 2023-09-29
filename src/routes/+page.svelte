@@ -38,8 +38,8 @@
 			<img src="logo1.png" alt="Logo" class="w-full h-auto" />
 		</a>
 		<button
-			class="text-neutral-300 bg-transparent border border-neutral-300 hover:text-neutral-50 hover:border-neutral-50 bg-purple-700 hover:bg-purple-600 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-sm font-medium
-			on:click={() => goto('/dashboard')}"
+			class="text-neutral-300 bg-transparent border border-neutral-300 hover:text-neutral-50 hover:border-neutral-50 bg-purple-700 hover:bg-purple-600 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-sm font-medium"
+			on:click={() => goto('/dashboard')}
 		>
 			Login
 		</button>
@@ -76,6 +76,9 @@
 						<div class="flex flex-wrap items-center mt-4 space-x-4">
 							<button
 								class="bg-purple-700 border border-white hover:border-neutral-50 hover:text-neutral-50 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-purple-600 transform transition-transform duration-300 ease-in-out hover:scale-105"
+								on:click={() => {
+									goto('/dashboard');
+								}}
 							>
 								<span> Try Now </span>
 							</button>
