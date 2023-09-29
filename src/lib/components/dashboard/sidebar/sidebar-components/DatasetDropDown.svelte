@@ -29,6 +29,7 @@
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
 		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
+		selectedDataset = $chosenFile;
 	}
 
 	$: file = getFileFromStore();
@@ -103,7 +104,7 @@
 	<div class="relative flex justify-between">
 		<button
 			bind:this={dropdownContainer}
-			class="bg-neutral-900 justify-between text-center rounded-sm hover:bg-neutral-900/50 flex items-center border-neutral-700/50 w-48 px-1"
+			class="bg-neutral-900 justify-between text-center rounded-sm hover:bg-neutral-900/50 flex items-center border-neutral-700/50 w-44 px-1"
 			on:click={toggleDropdown}
 		>
 			<span
@@ -111,7 +112,7 @@
 			>
 				{selectedDataset || 'Select Dataset'}
 			</span>
-			<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-10" />
+			<CarrotDown class="hover:text-neutral-400 " />
 		</button>
 
 		{#if isDropdownOpen}

@@ -11,7 +11,7 @@ export const touchState = writable<TouchState>('isHovering');
 export const mostRecentChartID = writable<string>();
 export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
-export const activeSidebar = writable<boolean>();
+export const activeSidebar = writable<boolean>(false);
 export const clearChartOptions = writable<boolean>(false);
 export const timesVisitedDashboard = writable<number>(0);
 export const groupbyColumns = writable<string[]>([]);
@@ -26,10 +26,11 @@ export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
 export const mobileNav = writable<MobileBar | null>(null);
 export const activeMobileNav = writable<boolean>(false);
-export const responsiveType = writable<ResponsiveType>('desktop');
+export const responsiveType = writable<ResponsiveType>();
 export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
 //export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const fileUploadStore = writable<FileUpload[]>([]);
+export const insideOutsideClick = writable<string>('outside');
 
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 
@@ -179,7 +180,7 @@ function controlBar(touchstate: string, responsiveType: string) {
 		(touchstate === 'isResizing' || touchstate === 'isTranslating' || touchstate === 'isDrawing') &&
 		responsiveType === 'mobile'
 	) {
-		activeMobileNav.set(true);
+		activeMobileNav.set(false);
 	}
 }
 

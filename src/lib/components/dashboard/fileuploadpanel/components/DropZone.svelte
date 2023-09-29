@@ -75,7 +75,7 @@
 </script>
 
 <Dropzone
-	defaultClass="flex flex-col justify-center items-center w-full h-64  rounded-lg border-2 border-gray-300 border-dashed  selectFieldColor cursor-pointer dark:hover:bg-gray-800  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
+	defaultClass="flex flex-col justify-center items-center w-full h-64  rounded-lg border-2 border-gray-300 border-dashed  selectFieldColor cursor-pointer dark:hover:bg-gray-800  hover:bg-neutral-600 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
 "
 	id="dropzone"
 	on:drop={dropHandle}

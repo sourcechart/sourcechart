@@ -62,11 +62,12 @@
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
 	$: dataAvailable = options?.xAxis?.data?.length > 0;
+	$: isRectangleVisible = !dataAvailable || (dataAvailable && $mostRecentChartID === polygon.id);
 
 	$: if (dataAvailable) {
 		backupColor = 'transparent';
 	} else {
-		backupColor = 'transparent';
+		backupColor = '#9d99dc';
 	}
 
 	onMount(() => {
@@ -74,12 +75,14 @@
 		window.addEventListener('mouseup', handleMouseUp);
 		window.addEventListener('touchmove', handleMouseMove);
 		window.addEventListener('touchend', handleMouseUp);
+		document.addEventListener('mousedown', handleClickOutside);
 
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('mouseup', handleMouseUp);
 			window.removeEventListener('touchmove', handleMouseMove);
 			window.removeEventListener('touchend', handleMouseUp);
+			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	});
 
@@ -115,6 +118,16 @@
 
 		if (e instanceof TouchEvent) {
 			e.preventDefault();
+		}
+		isRectangleVisible = true;
+	};
+
+	const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+		const target = e.target as Node;
+		let container;
+		if (polygon.id) container = document.getElementById(polygon.id);
+		if (dataAvailable && container && !container.contains(target)) {
+			isRectangleVisible = false;
 		}
 	};
 
@@ -228,7 +241,7 @@
 
 	$: plotWidth = getPlotWidth();
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
-	$: handles = generateHandleRectangles(points);
+	$: handles = generateHandleRectangles(points, 9);
 	$: plotHeight = getPlotHeight();
 </script>
 
@@ -237,7 +250,13 @@
 	style="position: absolute; left: {Math.min(
 		polygon.vertices[0].x,
 		polygon.vertices[2].x
-	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
+	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px; "
+	on:click={() => {
+		isRectangleVisible = true;
+	}}
+	on:keypress={() => {
+		null;
+	}}
 >
 	<div
 		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;  cursor: {$touchType} "
@@ -260,33 +279,32 @@
 			style="position: absolute; width: {plotWidth}px; height: {plotHeight}px;"
 			viewBox={`0 0 ${plotWidth} ${plotHeight}`}
 		>
-			<rect
-				x={points.tl.x}
-				y={points.tl.y}
-				width={points.br.x - points.tl.x}
-				height={points.br.y - points.tl.y}
-				fill="transparent"
-				stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
-					? '#9d99dc'
-					: backupColor}
-			/>
-
-			{#each handles as handle}
+			{#if isRectangleVisible}
 				<rect
-					x={handle.x}
-					y={handle.y}
-					width={handle.width}
-					height={handle.height}
-					fill={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
-						? '#121212'
-						: backupColor}
+					x={points.tl.x}
+					y={points.tl.y}
+					width={points.br.x - points.tl.x}
+					height={points.br.y - points.tl.y}
+					fill="transparent"
 					stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
 						? '#9d99dc'
 						: backupColor}
-					rx="3"
-					ry="3"
 				/>
-			{/each}
+
+				{#each handles as handle}
+					<rect
+						x={handle.x}
+						y={handle.y}
+						width={handle.width}
+						height={handle.height}
+						fill="#121212"
+						stroke="#9d99dc"
+						stroke-width="0.8"
+						rx="2"
+						ry="2"
+					/>
+				{/each}
+			{/if}
 		</svg>
 	</div>
 </div>

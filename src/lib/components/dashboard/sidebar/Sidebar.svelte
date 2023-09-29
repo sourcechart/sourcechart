@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { clickInside } from '$lib/actions/MouseActions';
 	import { activeSidebar } from '$lib/io/Stores';
-	import Download from '$lib/components/ui/icons/Download.svelte';
-	import Baseline from '$lib/components/ui/icons/Baseline.svelte';
 	import Filter from './sidebar-components/filter-components/Filter.svelte';
 	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
 	import XColumnDropdown from './sidebar-components/XColumnDropdown.svelte';

@@ -53,6 +53,8 @@
 
 	let debounceTimer: number | undefined;
 
+	$: console.log($allCharts);
+
 	const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
 		clearTimeout(debounceTimer);
 		debounceTimer = window.setTimeout(() => handleMouseMoveUp(x, y), 5);
@@ -188,7 +190,7 @@
 			hoverIntersection = insidePolygon ? true : false;
 			if (insidePolygon && touchStartedOnHandle) {
 				hoverPolygon = polygon;
-				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
+				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, true);
 				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
 				touchType.set(direction);
 				if (handlePosition) return true;
@@ -207,7 +209,7 @@
 			hoverIntersection = insidePolygon ? true : false;
 			if (insidePolygon && touchStartedOnHandle) {
 				hoverPolygon = polygon;
-				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon);
+				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, false);
 				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
 				touchType.set(direction);
 				if (handlePosition) return true;
