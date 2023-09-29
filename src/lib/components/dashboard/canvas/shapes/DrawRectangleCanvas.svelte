@@ -124,8 +124,7 @@
 
 	const handleClickOutside = (e: MouseEvent | TouchEvent) => {
 		const target = e.target as Node;
-		let container;
-		if (polygon.id) container = document.getElementById(polygon.id);
+		console.log('triggering');
 		if (dataAvailable && container && !container.contains(target)) {
 			isRectangleVisible = false;
 		}
@@ -243,9 +242,11 @@
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
 	$: handles = generateHandleRectangles(points, 9);
 	$: plotHeight = getPlotHeight();
+	let container;
 </script>
 
 <div
+	bind:this={container}
 	id={polygon.id}
 	style="position: absolute; left: {Math.min(
 		polygon.vertices[0].x,
