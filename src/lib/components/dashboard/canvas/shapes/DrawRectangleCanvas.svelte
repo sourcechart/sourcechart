@@ -241,7 +241,7 @@
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
 	$: handles = generateHandleRectangles(points, 9);
 	$: plotHeight = getPlotHeight();
-	let container;
+	let container: HTMLElement;
 </script>
 
 <div
