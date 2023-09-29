@@ -140,8 +140,7 @@ const doLinesIntersect = (a1: Point, a2: Point, b1: Point, b2: Point): boolean =
 	return false;
 };
 
-function generateHandleRectangles(points: LookupTable) {
-	const handleSize = 10;
+function generateHandleRectangles(points: LookupTable, handleSize: number = 10) {
 	return Object.values(points).map((point) => ({
 		x: point.x - handleSize / 2,
 		y: point.y - handleSize / 2,
@@ -154,10 +153,14 @@ const isWithinHandle = (
 	mouseX: number,
 	mouseY: number,
 	handle: Point,
-	handleType: HandlePosition
+	handleType: HandlePosition,
+	isTouchEvent: boolean = false
 ): boolean => {
 	const handleSize = 10;
-	const tolerance = 5;
+	const baseTolerance = 5;
+	const touchIncreaseFactor = 3.2; // Adjust this value as needed for the desired increase in tolerance for touch
+
+	const tolerance = isTouchEvent ? baseTolerance * touchIncreaseFactor : baseTolerance;
 
 	let xOffset = handleSize / 2 + tolerance;
 	let yOffset = handleSize / 2 + tolerance;
@@ -176,7 +179,11 @@ const isWithinHandle = (
 	);
 };
 
-const getHandlesHovered = (currentMousePosition: Point, polygon: Polygon): HandlePosition => {
+const getHandlesHovered = (
+	currentMousePosition: Point,
+	polygon: Polygon,
+	isTouchEvent: boolean = false
+): HandlePosition => {
 	const handlesArray = calculateRectangleHandles(polygon);
 	const handleTypes: HandlePosition[] = ['nw', 'ne', 'se', 'sw', 'n', 'e', 's', 'w'];
 
@@ -186,7 +193,8 @@ const getHandlesHovered = (currentMousePosition: Point, polygon: Polygon): Handl
 				currentMousePosition.x,
 				currentMousePosition.y,
 				handlesArray[i],
-				handleTypes[i]
+				handleTypes[i],
+				isTouchEvent
 			)
 		) {
 			return handleTypes[i];

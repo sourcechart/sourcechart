@@ -3,7 +3,7 @@
 	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
 
 	export let open = false;
-	let currentValue: string = '';
+	let currentValue: string | null = '';
 	let showTooltip: boolean = false;
 	let hoverTimeout: NodeJS.Timeout;
 
@@ -28,6 +28,10 @@
 		} else {
 			document.removeEventListener('click', handleOutsideClick);
 		}
+	}
+
+	$: if ($allCharts.length > 0 && $allCharts[$i] && $allCharts[$i].xColumn !== null) {
+		currentValue = $allCharts[$i].xColumn;
 	}
 
 	const handleChoose = (column: string) => {

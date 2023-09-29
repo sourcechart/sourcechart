@@ -34,6 +34,15 @@
 		chart.groupbyColumns = [];
 		$allCharts[$i] = chart;
 	}
+
+	$: {
+		if (isGroupByDropdownOpen) {
+			document.addEventListener('click', handleOutsideClick);
+		} else {
+			document.removeEventListener('click', handleOutsideClick);
+		}
+	}
+
 	const handleEscapeKey = (event: KeyboardEvent) => {
 		if (event.key === 'Escape') {
 			isGroupByDropdownOpen = false;
@@ -44,14 +53,6 @@
 			isGroupByDropdownOpen = false;
 		}
 	};
-
-	$: {
-		if (isGroupByDropdownOpen) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
-	}
 
 	const addColumnToGroupBy = (column: string) => {
 		let chart = $allCharts[$i];

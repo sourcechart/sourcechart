@@ -3,7 +3,7 @@
 
 	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
 	export let open = false;
-	let currentValue: string = '';
+	let currentValue: string | null = '';
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
@@ -37,6 +37,10 @@
 		} else {
 			document.removeEventListener('click', handleOutsideClick);
 		}
+	}
+
+	$: if ($allCharts.length > 0 && $allCharts[$i] && $allCharts[$i].yColumn !== null) {
+		currentValue = $allCharts[$i].xColumn;
 	}
 
 	onDestroy(() => {
