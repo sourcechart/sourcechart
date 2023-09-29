@@ -124,8 +124,6 @@
 
 	const handleClickOutside = (e: MouseEvent | TouchEvent) => {
 		const target = e.target as Node;
-		let container;
-		if (polygon.id) container = document.getElementById(polygon.id);
 		if (dataAvailable && container && !container.contains(target)) {
 			isRectangleVisible = false;
 		}
@@ -243,9 +241,11 @@
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
 	$: handles = generateHandleRectangles(points, 9);
 	$: plotHeight = getPlotHeight();
+	let container;
 </script>
 
 <div
+	bind:this={container}
 	id={polygon.id}
 	style="position: absolute; left: {Math.min(
 		polygon.vertices[0].x,
@@ -286,9 +286,7 @@
 					width={points.br.x - points.tl.x}
 					height={points.br.y - points.tl.y}
 					fill="transparent"
-					stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
-						? '#9d99dc'
-						: backupColor}
+					stroke="#9d99dc"
 				/>
 
 				{#each handles as handle}

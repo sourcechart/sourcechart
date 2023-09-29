@@ -7,6 +7,18 @@
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
+	$: {
+		if (open) {
+			document.addEventListener('click', handleOutsideClick);
+		} else {
+			document.removeEventListener('click', handleOutsideClick);
+		}
+	}
+
+	$: if ($allCharts.length > 0 && $allCharts[$i] && $allCharts[$i].yColumn !== null) {
+		currentValue = $allCharts[$i].yColumn;
+	}
+
 	let container: HTMLElement;
 
 	const handleChoose = (column: string) => {
@@ -30,18 +42,6 @@
 			open = false;
 		}
 	};
-
-	$: {
-		if (open) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
-	}
-
-	$: if ($allCharts.length > 0 && $allCharts[$i] && $allCharts[$i].yColumn !== null) {
-		currentValue = $allCharts[$i].xColumn;
-	}
 
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
@@ -94,7 +94,10 @@
 			{#each $columns as column}
 				<button
 					class="block w-full text-left px-3 py-2 text-gray-300 hover:bg-neutral-700 font-thin text-sm truncate"
-					on:click={() => handleChoose(column)}
+					on:click={() => {
+						handleChoose(column);
+						open = false;
+					}}
 				>
 					{column}
 				</button>
