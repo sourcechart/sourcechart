@@ -77,7 +77,7 @@
 		{#if showTooltip && $responsiveType !== 'mobile'}
 			<div
 				role="tooltip"
-				class="absolute left-0 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded shadow-md"
+				class="absolute left-0 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded shadow-md z-10"
 			>
 				Toggle Dropdown for X-axis
 			</div>

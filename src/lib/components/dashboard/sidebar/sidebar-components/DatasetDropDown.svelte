@@ -9,11 +9,9 @@
 		fileUploadStore
 	} from '$lib/io/Stores';
 	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
-
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { onDestroy } from 'svelte';
-
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
 
@@ -30,7 +28,6 @@
 	}
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
-		selectedDataset = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
 	}
 
@@ -45,44 +42,38 @@
 	};
 
 	const queryDuckDB = async (filename: string) => {
+		selectedDataset = filename;
+		chosenFile.set(filename);
 		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
 		if (!dataObject) return;
 		let resp;
+		let fname = filename;
 		const db = await DuckDBClient.of([dataObject.file]);
+		//@ts-ignore
 
-		if (dataObject.file.name) {
+		if (dataObject.file.url) {
+			//@ts-ignore
+			resp = await db.query(`SELECT * FROM '${dataObject.file.url}' LIMIT 0`); //@ts-ignore
+			fname = `${dataObject.file.url}`;
+		} else if (dataObject.file.name) {
 			const sanitizedFilename = checkNameForSpacesAndHyphens(dataObject.file.name);
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
-		} else if (dataObject.file.url) {
-			//@ts-ignore
-			console.log(dataObject.file.url); //@ts-ignore
-			resp = await db.query(`SELECT * FROM ${dataObject.file.url} LIMIT 0`); //@ts-ignore
 		} else {
 			return;
 		} //@ts-ignore
+
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
 
 		duckDBInstanceStore.set(db);
 		allCharts.update((charts) => {
 			let chart = charts[$i];
+			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID;
+			charts[$i].filename = fname;
 			chart.schema = schema;
 			chart.columns = columns;
 			return charts;
 		});
-	};
-
-	const selectFile = (filename: string) => {
-		selectedDataset = filename;
-		$chosenFile = filename;
-
-		allCharts.update((charts) => {
-			charts[$i].filename = filename;
-			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID;
-			return charts;
-		});
-
-		queryDuckDB(filename);
 	};
 
 	const removeFromAllCharts = (filename: string) => {
@@ -115,7 +106,9 @@
 			class="bg-neutral-900 justify-between text-center rounded-sm hover:bg-neutral-900/50 flex items-center border-neutral-700/50 w-48 px-1"
 			on:click={toggleDropdown}
 		>
-			<span class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-1">
+			<span
+				class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-1 truncate"
+			>
 				{selectedDataset || 'Select Dataset'}
 			</span>
 			<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-10" />
@@ -132,8 +125,8 @@
 						>
 							<button
 								class="flex-grow text-left text-sm px-3 py-2 cursor-pointer truncate"
-								on:click={() => selectFile(dataset)}
-								on:keypress={(e) => e.key === 'Enter' && selectFile(dataset)}
+								on:click={async () => queryDuckDB(dataset)}
+								on:keypress={async (e) => e.key === 'Enter' && queryDuckDB(dataset)}
 							>
 								{dataset}
 							</button>
@@ -152,7 +145,6 @@
 			</div>
 		{/if}
 	</div>
-	<!-- End of surrounding container -->
 
 	<FileUploadButton />
 </div>
