@@ -61,11 +61,12 @@
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
+	$: dataAvailable = options?.xAxis?.data?.length > 0;
 
 	$: if (dataAvailable) {
 		backupColor = 'transparent';
 	} else {
-		backupColor = '#9d99dc';
+		backupColor = 'transparent';
 	}
 
 	onMount(() => {
