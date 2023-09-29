@@ -66,7 +66,7 @@
 	$: if (dataAvailable) {
 		backupColor = 'transparent';
 	} else {
-		backupColor = '#9d99dc';
+		backupColor = 'transparent';
 	}
 
 	onMount(() => {

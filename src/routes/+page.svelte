@@ -38,8 +38,13 @@
 			<img src="logo1.png" alt="Logo" class="w-full h-auto" />
 		</a>
 		<button
+<<<<<<< HEAD
 			class="text-neutral-300 bg-transparent border border-neutral-300 hover:text-neutral-50 hover:border-neutral-50 bg-purple-700 hover:bg-purple-600 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-sm font-medium"
 			on:click={() => goto('/dashboard')}
+=======
+			class="text-neutral-300 bg-transparent border border-neutral-300 hover:text-neutral-50 hover:border-neutral-50 bg-purple-700 hover:bg-purple-600 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-sm font-medium
+			on:click={() => goto('/dashboard')}"
+>>>>>>> master
 		>
 			Login
 		</button>
