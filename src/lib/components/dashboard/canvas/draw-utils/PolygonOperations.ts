@@ -140,8 +140,7 @@ const doLinesIntersect = (a1: Point, a2: Point, b1: Point, b2: Point): boolean =
 	return false;
 };
 
-function generateHandleRectangles(points: LookupTable) {
-	const handleSize = 10;
+function generateHandleRectangles(points: LookupTable, handleSize: number = 10) {
 	return Object.values(points).map((point) => ({
 		x: point.x - handleSize / 2,
 		y: point.y - handleSize / 2,

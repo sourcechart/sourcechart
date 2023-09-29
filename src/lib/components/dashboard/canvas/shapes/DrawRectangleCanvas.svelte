@@ -241,7 +241,7 @@
 
 	$: plotWidth = getPlotWidth();
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
-	$: handles = generateHandleRectangles(points);
+	$: handles = generateHandleRectangles(points, 9);
 	$: plotHeight = getPlotHeight();
 </script>
 
@@ -250,7 +250,7 @@
 	style="position: absolute; left: {Math.min(
 		polygon.vertices[0].x,
 		polygon.vertices[2].x
-	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px;"
+	)}px; top: {Math.min(polygon.vertices[0].y, polygon.vertices[2].y)}px; "
 	on:click={() => {
 		isRectangleVisible = true;
 	}}
@@ -299,8 +299,9 @@
 						height={handle.height}
 						fill="#121212"
 						stroke="#9d99dc"
-						rx="3"
-						ry="3"
+						stroke-width="0.8"
+						rx="2"
+						ry="2"
 					/>
 				{/each}
 			{/if}
