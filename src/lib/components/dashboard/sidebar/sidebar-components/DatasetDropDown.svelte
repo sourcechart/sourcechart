@@ -63,7 +63,7 @@
 			return;
 		} //@ts-ignore
 
-		var schema = resp.schema; //@ts-ignore
+		var schema = resp.schema;
 		var columns = schema.map((item) => item['name']);
 
 		duckDBInstanceStore.set(db);
