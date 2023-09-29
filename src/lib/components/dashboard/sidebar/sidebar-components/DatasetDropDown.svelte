@@ -112,7 +112,7 @@
 			>
 				{selectedDataset || 'Select Dataset'}
 			</span>
-			<CarrotDown class="hover:text-neutral-400 " />
+			<CarrotDown class=" hover:text-neutral-400 " />
 		</button>
 
 		{#if isDropdownOpen}
