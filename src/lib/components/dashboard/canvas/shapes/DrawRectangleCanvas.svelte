@@ -286,9 +286,7 @@
 					width={points.br.x - points.tl.x}
 					height={points.br.y - points.tl.y}
 					fill="transparent"
-					stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
-						? '#9d99dc'
-						: backupColor}
+					stroke="#9d99dc"
 				/>
 
 				{#each handles as handle}

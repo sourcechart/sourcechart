@@ -44,7 +44,7 @@
 	};
 </script>
 
-<div class="scrollBarDiv w-full h-full table-container overflow-y-auto" style="max-height: 400px;">
+<div class="scrollBarDiv w-96 table-container overflow-y-auto" style="max-height: 400px;">
 	<table class="w-full bg-neutral-800 text-white border border-neutral-600 rounded-lg">
 		<thead>
 			<tr class="bg-neutral-600">
