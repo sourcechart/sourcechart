@@ -66,7 +66,7 @@
 	$: if (dataAvailable) {
 		backupColor = 'transparent';
 	} else {
-		backupColor = 'transparent';
+		backupColor = '#9d99dc';
 	}
 
 	onMount(() => {
@@ -277,7 +277,9 @@
 					y={handle.y}
 					width={handle.width}
 					height={handle.height}
-					fill="#121212"
+					fill={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
+						? '#121212'
+						: backupColor}
 					stroke={$activeSidebar && ($mostRecentChartID === polygon.id || polygon.id === undefined)
 						? '#9d99dc'
 						: backupColor}
