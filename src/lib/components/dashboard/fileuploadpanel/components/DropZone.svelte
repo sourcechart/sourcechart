@@ -1,6 +1,4 @@
 <script lang="ts">
-	//@ts-ignore
-	import Dropzone from 'flowbite-svelte/Dropzone.svelte';
 	import { generateID } from '$lib/io/GenerateID';
 	import { fileUploadStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
 
@@ -74,13 +72,31 @@
 	};
 </script>
 
-<Dropzone
-	defaultClass="flex flex-col justify-center items-center w-full h-64  rounded-lg border-2 border-gray-300 border-dashed  selectFieldColor cursor-pointer dark:hover:bg-gray-800  hover:bg-neutral-600 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
+<input
+	type="file"
+	id="fileInput"
+	class="hidden"
+	accept=".csv,.parquet,.json,.txt"
+	on:change={handleChange}
+	multiple
+/>
+<div
+	class="flex flex-col justify-center items-center w-full h-64 rounded-lg border-2 border-gray-300 border-dashed selectFieldColor cursor-pointer hover:bg-neutral-600 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
 "
 	id="dropzone"
 	on:drop={dropHandle}
 	on:dragover={dragOver}
 	on:change={handleChange}
+	on:click={() => {
+		const input = document.getElementById('fileInput');
+		input?.click();
+	}}
+	on:keypress={(event) => {
+		if (event.key === 'Enter') {
+			const input = document.getElementById('fileInput');
+			input?.click();
+		}
+	}}
 >
 	<svg
 		aria-hidden="true"
@@ -104,4 +120,4 @@
 	{:else}
 		<p>{showFiles(value)}</p>
 	{/if}
-</Dropzone>
+</div>
