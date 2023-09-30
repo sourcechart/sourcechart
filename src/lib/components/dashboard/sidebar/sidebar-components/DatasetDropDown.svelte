@@ -47,24 +47,22 @@
 	}
 
 	onMount(async () => {
-		// Get all stored file handles
 		const storedFiles = await values();
 
-		// Iterate over the stored files
 		storedFiles.forEach((file) => {
 			fileUploadStore.update((store) => {
 				const fileIndex = store.findIndex((f) => f.filename === file.name);
 
 				if (fileIndex > -1) {
-					store[fileIndex].filename = file.name; // This might be redundant but ensures filename is updated
-					store[fileIndex].file = file; // Update the file object
+					store[fileIndex].filename = file.name;
+					store[fileIndex].file = file;
 					store[fileIndex].size = file.size;
 					store[fileIndex].fileExtension = file.name.split('.').pop();
 				} else {
 					store.push({
 						filename: file.name,
 						file: file,
-						datasetID: generateID(), // Generate a new datasetID
+						datasetID: generateID(),
 						size: file.size,
 						fileExtension: file.name.split('.').pop()
 					});

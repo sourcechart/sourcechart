@@ -23,10 +23,8 @@
 		try {
 			const [fileHandle] = await window.showOpenFilePicker();
 			const file = await fileHandle.getFile();
-			console.log(fileHandle, file);
-
 			value.push(file.name);
-			insertFileHandle(file); // Adapt insertFileHandle as necessary
+			insertFileHandle(file);
 		} catch (err) {
 			console.error('Error accessing file:', err);
 		}
