@@ -4,7 +4,6 @@
 		mostRecentChartID,
 		canvasBehavior,
 		getChartOptions,
-		activeSidebar,
 		touchType
 	} from '$lib/io/Stores';
 	import {

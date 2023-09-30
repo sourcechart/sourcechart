@@ -31,12 +31,9 @@
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	$: console.log($i);
 	$: if ($allCharts.length > 0 && $allCharts[$i]) {
-		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
-		selectedDataset = $chosenFile;
 		const dataObject = $fileUploadStore.find((file) => file.filename === $chosenFile);
-		//selectedDataset = dataObject?.filename || 'Select Dataset';
+		selectedDataset = dataObject?.filename || 'Select Dataset';
 	}
 
 	const handleOutsideClick = (event: MouseEvent) => {
@@ -46,19 +43,19 @@
 	};
 
 	const queryDuckDB = async (filename: string) => {
-		selectedDataset = filename;
+		let resp;
+		let fname = filename;
+
 		chosenFile.set(filename);
 		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
 		if (!dataObject) return;
-		let resp;
-		let fname = filename;
-		const db = await DuckDBClient.of([dataObject.file]);
-		//@ts-ignore
 
+		const db = await DuckDBClient.of([dataObject.file]); //@ts-ignore
 		if (dataObject.file.url) {
 			//@ts-ignore
 			resp = await db.query(`SELECT * FROM '${dataObject.file.url}' LIMIT 0`); //@ts-ignore
 			fname = `${dataObject.file.url}`;
+			selectedDataset = dataObject.filename;
 		} else if (dataObject.file.name) {
 			const sanitizedFilename = checkNameForSpacesAndHyphens(dataObject.file.name);
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
@@ -66,7 +63,7 @@
 			return;
 		} //@ts-ignore
 
-		var schema = resp.schema;
+		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
 
 		duckDBInstanceStore.set(db);
