@@ -22,6 +22,9 @@
 			appearance={{
 				theme: ThemeSupa
 			}}
+			additionalData={{
+				organization_id: data
+			}}
 		/>
 	</div>
 </div>

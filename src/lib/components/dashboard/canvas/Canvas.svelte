@@ -102,7 +102,6 @@
 	};
 
 	const handleGlobalMouseUp = (e: MouseEvent | TouchEvent): void => {
-		// Remove global event listeners first
 		document.removeEventListener('mousemove', handleMouseMove);
 		document.removeEventListener('mouseup', handleGlobalMouseUp);
 		document.removeEventListener('touchmove', handleMouseMove);

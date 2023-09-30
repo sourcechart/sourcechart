@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-
 	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
 	export let open = false;
+
 	let currentValue: string | null = '';
+	let showTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
+	let container: HTMLElement;
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
@@ -15,11 +18,28 @@
 		}
 	}
 
-	$: if ($allCharts.length > 0 && $allCharts[$i] && $allCharts[$i].yColumn !== null) {
+	$: if (
+		$allCharts.length > 0 &&
+		$allCharts[$i] &&
+		$allCharts[$i].yColumn !== null &&
+		$allCharts[$i].filename !== null &&
+		$allCharts[$i].filename !== undefined
+	) {
 		currentValue = $allCharts[$i].yColumn;
+	} else {
+		currentValue = '';
 	}
 
-	let container: HTMLElement;
+	const startHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showTooltip = true;
+		}, 800);
+	};
+
+	const endHover = (): void => {
+		clearTimeout(hoverTimeout);
+		showTooltip = false;
+	};
 
 	const handleChoose = (column: string) => {
 		allCharts.update((charts) => {
@@ -46,20 +66,6 @@
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
-
-	let showTooltip: boolean = false;
-	let hoverTimeout: NodeJS.Timeout;
-
-	const startHover = (): void => {
-		hoverTimeout = setTimeout(() => {
-			showTooltip = true;
-		}, 800);
-	};
-
-	const endHover = (): void => {
-		clearTimeout(hoverTimeout);
-		showTooltip = false;
-	};
 </script>
 
 <div bind:this={container} class="flex-grow relative">

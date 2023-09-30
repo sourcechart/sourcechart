@@ -6,7 +6,7 @@ import eh_worker from '@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url'
 import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
 import { checkNameForSpacesAndHyphens } from './FileUtils';
-import { DuckDBDataProtocol } from '@duckdb/duckdb-wasm';
+import { DuckDBDataProtocol, LogLevel } from '@duckdb/duckdb-wasm';
 import ExternalDatasets from '$lib/components/dashboard/fileuploadpanel/components/ExternalDatasets.svelte';
 
 export class DuckDBClient {
@@ -316,7 +316,7 @@ const makeDB = async (): Promise<AsyncDuckDB> => {
 	// Select a bundle based on browser checks
 	const bundle = await duckdb.selectBundle(MANUAL_BUNDLES);
 	const worker = new Worker(bundle.mainWorker!);
-	const logger = new duckdb.ConsoleLogger();
+	const logger = new duckdb.ConsoleLogger(LogLevel.NONE);
 	const db = new duckdb.AsyncDuckDB(logger, worker);
 	await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
 	return db;

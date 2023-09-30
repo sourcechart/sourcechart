@@ -32,7 +32,7 @@
 	$: i = clickedChartIndex();
 
 	$: {
-		if ($allCharts[$i]?.chartOptions?.series[0]?.type) {
+		if ($allCharts[$i].chartType) {
 			chosenPlot = capitalizeFirstLetter($allCharts[$i].chartOptions.series[0].type);
 		} else {
 			chosenPlot = 'Bar Chart (Default)';
@@ -46,17 +46,16 @@
 	const chooseChart = (plot: string) => {
 		chosenPlot = plot;
 		plot = plot.toLowerCase();
+
 		allCharts.update((charts) => {
-			charts.forEach((chart) => {
-				chart.chartType = plot;
-				if (plot === 'area') {
-					chart.chartOptions.series[0].type = 'line';
-					chart.chartOptions.series[0].areaStyle = {};
-				} else {
-					chart.chartOptions.series[0].type = plot;
-				}
-			});
-			return charts;
+			if ($i < 0 || $i >= charts.length) {
+				console.error('Index out of range');
+				return charts;
+			}
+			let updatedChart = charts[$i];
+			updatedChart.chartType = plot;
+			charts[$i] = updatedChart;
+			return [...charts];
 		});
 	};
 
