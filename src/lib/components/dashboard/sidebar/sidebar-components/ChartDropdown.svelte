@@ -31,8 +31,6 @@
 
 	$: i = clickedChartIndex();
 
-	$: console.log($allCharts[$i]);
-
 	$: {
 		if ($allCharts[$i].chartType) {
 			chosenPlot = capitalizeFirstLetter($allCharts[$i].chartOptions.series[0].type);
