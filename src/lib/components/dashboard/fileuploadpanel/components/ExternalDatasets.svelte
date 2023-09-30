@@ -63,14 +63,10 @@
 					<td class="py-2 px-2 sm:px-4 text-sm mt-2">{dataset.name}</td>
 					<td class="hidden md:table-cell py-2 px-2 sm:px-4 text-sm mt-2">{dataset.description}</td>
 					<td class="py-2 px-2 sm:px-4">
-<<<<<<< HEAD
 						<button
 							class="text-blue-300 hover:underline border border-blue-300 rounded"
 							on:click={() => addURLToDatabase(dataset)}
 						>
-=======
-						<button class="text-blue-300 hover:underline border border-blue-300 rounded">
->>>>>>> master
 							Add Dataset
 						</button>
 					</td>

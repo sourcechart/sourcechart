@@ -29,9 +29,16 @@
 			document.removeEventListener('click', handleOutsideClick);
 		}
 	}
-
-	$: if ($allCharts.length > 0 && $allCharts[$i] && $allCharts[$i].xColumn !== null) {
+	$: if (
+		$allCharts.length > 0 &&
+		$allCharts[$i] &&
+		$allCharts[$i].xColumn !== null &&
+		$allCharts[$i].filename !== null &&
+		$allCharts[$i].filename !== undefined
+	) {
 		currentValue = $allCharts[$i].xColumn;
+	} else {
+		currentValue = '';
 	}
 
 	const handleChoose = (column: string) => {

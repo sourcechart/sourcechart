@@ -27,14 +27,17 @@
 		}
 	}
 
-	$: if ($allCharts.length > 0 && $allCharts[$i]) {
-		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
-		selectedDataset = $chosenFile;
-	}
-
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
+
+	$: console.log($i);
+	$: if ($allCharts.length > 0 && $allCharts[$i]) {
+		$chosenFile = $allCharts[$i]?.filename ? $allCharts[$i].filename : '';
+		selectedDataset = $chosenFile;
+		const dataObject = $fileUploadStore.find((file) => file.filename === $chosenFile);
+		//selectedDataset = dataObject?.filename || 'Select Dataset';
+	}
 
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
