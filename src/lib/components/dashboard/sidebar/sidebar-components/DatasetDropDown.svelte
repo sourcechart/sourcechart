@@ -8,24 +8,19 @@
 		duckDBInstanceStore,
 		fileUploadStore
 	} from '$lib/io/Stores';
-	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
+
+	import { generateID } from '$lib/io/GenerateID';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import { values } from 'idb-keyval';
+	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
 
 	let isDropdownOpen = false;
 	let selectedDataset: string | null = '';
 	let dropdownContainer: HTMLElement;
-
-	$: {
-		if (isDropdownOpen) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
-	}
 
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
@@ -42,6 +37,42 @@
 	} else {
 		selectedDataset = 'Select Dataset';
 	}
+
+	$: {
+		if (isDropdownOpen) {
+			document.addEventListener('click', handleOutsideClick);
+		} else {
+			document.removeEventListener('click', handleOutsideClick);
+		}
+	}
+
+	onMount(async () => {
+		// Get all stored file handles
+		const storedFiles = await values();
+
+		// Iterate over the stored files
+		storedFiles.forEach((file) => {
+			fileUploadStore.update((store) => {
+				const fileIndex = store.findIndex((f) => f.filename === file.name);
+
+				if (fileIndex > -1) {
+					store[fileIndex].filename = file.name; // This might be redundant but ensures filename is updated
+					store[fileIndex].file = file; // Update the file object
+					store[fileIndex].size = file.size;
+					store[fileIndex].fileExtension = file.name.split('.').pop();
+				} else {
+					store.push({
+						filename: file.name,
+						file: file,
+						datasetID: generateID(), // Generate a new datasetID
+						size: file.size,
+						fileExtension: file.name.split('.').pop()
+					});
+				}
+				return store;
+			});
+		});
+	});
 
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {

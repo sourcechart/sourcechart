@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { generateID } from '$lib/io/GenerateID';
 	import { fileUploadStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
+	import { set } from 'idb-keyval';
 
 	let isLoading = false;
 	let value: string[] = [];
 
-	const insertFileHandle = (file: File) => {
+	const insertFileHandle = async (file: File) => {
 		isLoading = true;
 		var tableColumnsSize = {
 			filename: file.name,
@@ -15,6 +16,20 @@
 			fileExtension: file.name.split('.').pop()
 		};
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
+		await set(file.name, file);
+	};
+
+	const selectFile = async () => {
+		try {
+			const [fileHandle] = await window.showOpenFilePicker();
+			const file = await fileHandle.getFile();
+			console.log(fileHandle, file);
+
+			value.push(file.name);
+			insertFileHandle(file); // Adapt insertFileHandle as necessary
+		} catch (err) {
+			console.error('Error accessing file:', err);
+		}
 	};
 
 	const dropHandle = (event: DragEvent) => {
@@ -41,18 +56,23 @@
 		}
 	};
 
-	const handleChange = (event: Event) => {
+	/*
+	const handleChange = async (event: Event) => {
 		const inputElement = event.target as HTMLInputElement;
 		const files = inputElement.files;
 		if (files && files.length > 0) {
 			value.push(files[0].name);
-			[...files].forEach(async (file) => {
+			for (let file of files) {
 				insertFileHandle(file);
-			});
+
+				// Get a handle to the file on the user's file system
+				const fileHandle = await window.showOpenFilePicker();
+				console.log(fileHandle);
+			}
 			activeDropZone.set(false);
 			activeSidebar.set(true);
 		}
-	};
+	};*/
 
 	const showFiles = (files: string[]): string => {
 		if (files.length === 1) return files[0];
@@ -72,29 +92,16 @@
 	};
 </script>
 
-<input
-	type="file"
-	id="fileInput"
-	class="hidden"
-	accept=".csv,.parquet,.json,.txt"
-	on:change={handleChange}
-	multiple
-/>
 <div
 	class="flex flex-col justify-center items-center w-full h-64 rounded-lg border-2 border-gray-300 border-dashed selectFieldColor cursor-pointer hover:bg-neutral-600 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
 "
 	id="dropzone"
 	on:drop={dropHandle}
 	on:dragover={dragOver}
-	on:change={handleChange}
-	on:click={() => {
-		const input = document.getElementById('fileInput');
-		input?.click();
-	}}
+	on:click={selectFile}
 	on:keypress={(event) => {
 		if (event.key === 'Enter') {
-			const input = document.getElementById('fileInput');
-			input?.click();
+			selectFile();
 		}
 	}}
 >

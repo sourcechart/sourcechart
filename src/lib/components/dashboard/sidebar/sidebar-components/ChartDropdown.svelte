@@ -1,12 +1,14 @@
 <script lang="ts">
+	type SideBarVersion = 'WorkFlow' | 'LowCode';
+
 	import { allCharts, clickedChartIndex, responsiveType } from '$lib/io/Stores';
 	import { onDestroy } from 'svelte';
 	import Info from '$lib/components/ui/icons/Info.svelte';
-
-	type SideBarVersion = 'WorkFlow' | 'LowCode';
 	export let sideBarVersion: SideBarVersion;
-	let dropdownContainer: HTMLElement;
 
+	let dropdownContainer: HTMLElement;
+	let showInfoTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
 	let chosenPlot: string = 'Bar Chart (Default)';
 	let isChartDropdownOpen: boolean = false;
 	let rectangleCharts: any[] = [
@@ -44,9 +46,7 @@
 	}
 
 	const chooseChart = (plot: string) => {
-		chosenPlot = plot;
 		plot = plot.toLowerCase();
-
 		allCharts.update((charts) => {
 			if ($i < 0 || $i >= charts.length) {
 				console.error('Index out of range');
@@ -73,12 +73,6 @@
 		}
 	};
 
-	onDestroy(() => {
-		document.removeEventListener('click', handleOutsideClick);
-	});
-	let showInfoTooltip: boolean = false;
-	let hoverTimeout: NodeJS.Timeout;
-
 	const startInfoHover = (): void => {
 		hoverTimeout = setTimeout(() => {
 			showInfoTooltip = true;
@@ -89,6 +83,10 @@
 		clearTimeout(hoverTimeout);
 		showInfoTooltip = false;
 	};
+
+	onDestroy(() => {
+		document.removeEventListener('click', handleOutsideClick);
+	});
 </script>
 
 <div class="w-full py-4 rounded-sm relative ml-4">
