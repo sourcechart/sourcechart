@@ -9,15 +9,12 @@
 	const insertFileHandle = async (file: File, fileHandle: any) => {
 		isLoading = true;
 		var tableColumnsSize = {
-			filename: file.name,
 			externalDataset: null,
 			fileHandle: fileHandle,
-			datasetID: generateID(),
-			size: file.size,
-			fileExtension: file.name.split('.').pop()
+			datasetID: generateID()
 		};
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
-		await set(file.name, fileHandle); // Store the fileHandle, not the file.
+		await set(file.name, fileHandle);
 	};
 
 	const selectFile = async () => {

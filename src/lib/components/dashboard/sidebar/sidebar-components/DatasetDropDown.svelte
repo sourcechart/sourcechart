@@ -51,7 +51,6 @@
 		for (const fileHandle of storedFileHandles) {
 			let permission = await fileHandle.queryPermission();
 
-			// If permission hasn't been granted yet, request it
 			if (permission !== 'granted') {
 				permission = await fileHandle.requestPermission();
 				if (permission !== 'granted') {
@@ -59,23 +58,18 @@
 				}
 			}
 
-			const file = await fileHandle.getFile();
-
 			fileUploadStore.update((store) => {
 				const fileIndex = store.findIndex((f) => f.filename === file.name);
 
 				if (fileIndex > -1) {
 					store[fileIndex].filename = file.name;
 					store[fileIndex].fileHandle = fileHandle;
-					store[fileIndex].size = file.size;
-					store[fileIndex].fileExtension = file.name.split('.').pop();
 				} else {
 					store.push({
+						externalDataset: null,
 						filename: file.name,
 						fileHandle: fileHandle,
-						datasetID: generateID(),
-						size: file.size,
-						fileExtension: file.name.split('.').pop()
+						datasetID: generateID()
 					});
 				}
 				return store;
@@ -95,18 +89,18 @@
 
 		chosenFile.set(filename);
 		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
-		if (!dataObject || !dataObject.fileHandle) return;
+		if (!dataObject) return;
+		let db: DuckDBClient;
 
-		const file = await dataObject.fileHandle.getFile();
-
-		const db = await DuckDBClient.of([file]);
-		//if (dataObject.file.url) {
-		//@ts-ignore
-		//	resp = await db.query(`SELECT * FROM '${dataObject.file.url}' LIMIT 0`); //@ts-ignore
-		//	fname = `${dataObject.file.url}`;
-		//	selectedDataset = dataObject.filename;
-		//} else
-		if (file.name) {
+		if (dataObject?.externalDataset?.url) {
+			//@ts-ignore
+			db = await DuckDBClient.of([]);
+			resp = await db.query(`SELECT * FROM '${dataObject?.externalDataset?.url}' LIMIT 0`);
+			fname = `${dataObject?.externalDataset?.url}`;
+			selectedDataset = dataObject.filename;
+		} else if (dataObject.fileHandle) {
+			const file = await dataObject.fileHandle.getFile();
+			db = await DuckDBClient.of([file]);
 			const sanitizedFilename = checkNameForSpacesAndHyphens(file.name);
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
 		} else {

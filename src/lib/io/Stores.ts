@@ -28,8 +28,7 @@ export const mobileNav = writable<MobileBar | null>(null);
 export const activeMobileNav = writable<boolean>(false);
 export const responsiveType = writable<ResponsiveType>();
 export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
-//export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
-export const fileUploadStore = writable<FileUpload[]>([]);
+export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const insideOutsideClick = writable<string>('outside');
 
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
@@ -220,6 +219,6 @@ export const columnLabel = (axis: string) =>
 		}
 	});
 
-//storeToLocalStorage(fileUploadStore, 'fileUploadStore');
+storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');
 storeToLocalStorage(arrows, 'arrowsStore');
