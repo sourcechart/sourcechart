@@ -31,9 +31,16 @@
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	$: if ($allCharts.length > 0 && $allCharts[$i]) {
+	$: if (
+		$allCharts.length > 0 &&
+		$allCharts[$i] &&
+		$allCharts[$i].filename !== null &&
+		$allCharts[$i].filename !== undefined
+	) {
 		const dataObject = $fileUploadStore.find((file) => file.filename === $chosenFile);
 		selectedDataset = dataObject?.filename || 'Select Dataset';
+	} else {
+		selectedDataset = 'Select Dataset';
 	}
 
 	const handleOutsideClick = (event: MouseEvent) => {
