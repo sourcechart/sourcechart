@@ -6,17 +6,17 @@
 	let isLoading = false;
 	let value: string[] = [];
 
-	const insertFileHandle = async (file: File) => {
+	const insertFileHandle = async (file: File, fileHandle: any) => {
 		isLoading = true;
 		var tableColumnsSize = {
 			filename: file.name,
-			file: file,
+			fileHandle: fileHandle,
 			datasetID: generateID(),
 			size: file.size,
 			fileExtension: file.name.split('.').pop()
 		};
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
-		await set(file.name, file);
+		await set(file.name, fileHandle); // Store the fileHandle, not the file.
 	};
 
 	const selectFile = async () => {
@@ -24,7 +24,7 @@
 			const [fileHandle] = await window.showOpenFilePicker();
 			const file = await fileHandle.getFile();
 			value.push(file.name);
-			insertFileHandle(file);
+			insertFileHandle(file, fileHandle); // Pass both file and fileHandle
 		} catch (err) {
 			console.error('Error accessing file:', err);
 		}
@@ -34,12 +34,16 @@
 		value = [];
 		event.preventDefault();
 		if (event.dataTransfer?.items) {
-			[...event.dataTransfer.items].forEach((item) => {
+			[...event.dataTransfer.items].forEach(async (item) => {
 				if (item.kind === 'file') {
-					const file = item.getAsFile();
-					if (file) {
-						value.push(file.name);
-						insertFileHandle(file);
+					const fileHandle = item.webkitGetAsEntry();
+					if (fileHandle) {
+						//@ts-ignore
+						const file = await fileHandle.getFile();
+						if (file) {
+							value.push(file.name);
+							insertFileHandle(file, fileHandle);
+						}
 					}
 				}
 				activeDropZone.set(false);
