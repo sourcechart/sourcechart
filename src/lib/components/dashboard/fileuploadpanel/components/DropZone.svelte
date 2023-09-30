@@ -10,6 +10,7 @@
 		isLoading = true;
 		var tableColumnsSize = {
 			filename: file.name,
+			externalDataset: null,
 			fileHandle: fileHandle,
 			datasetID: generateID(),
 			size: file.size,
@@ -21,6 +22,7 @@
 
 	const selectFile = async () => {
 		try {
+			//@ts-ignore
 			const [fileHandle] = await window.showOpenFilePicker();
 			const file = await fileHandle.getFile();
 			value.push(file.name);

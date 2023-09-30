@@ -111,7 +111,8 @@ type FileHandle = any; // You can use a more specific type if you have a type de
 
 type FileUpload = {
 	filename: string;
-	fileHandle: FileHandle;
+	externalDataset: ExternalDataset | null;
+	fileHandle: FileHandle | null;
 	size: number | null;
 	datasetID: string;
 	fileExtension: string | undefined;

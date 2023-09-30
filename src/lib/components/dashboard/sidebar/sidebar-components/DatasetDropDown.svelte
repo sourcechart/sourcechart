@@ -8,7 +8,7 @@
 		duckDBInstanceStore,
 		fileUploadStore
 	} from '$lib/io/Stores';
-
+	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
 	import { generateID } from '$lib/io/GenerateID';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
@@ -98,7 +98,6 @@
 		if (!dataObject || !dataObject.fileHandle) return;
 
 		const file = await dataObject.fileHandle.getFile();
-		console.log(dataObject);
 
 		const db = await DuckDBClient.of([file]);
 		//if (dataObject.file.url) {
@@ -136,6 +135,14 @@
 		fileUploadStore.update((file) => {
 			return file.filter((file) => file.filename !== filename);
 		});
+
+		removeFromIndexedDB('keyval-store', 'keyval', filename)
+			.then(() => {
+				console.log('Item removed!');
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
 
 		selectedDataset = 'Select Dataset';
 	};
