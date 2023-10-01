@@ -26,15 +26,14 @@
 
 	$: i = clickedChartIndex();
 
-	$: {
-		if ($allCharts[$i].chartType) {
-			chosenPlot = capitalizeFirstLetter($allCharts[$i].chartOptions.series[0].type);
-		} else {
-			chosenPlot = 'Bar Chart (Default)';
-		}
+	$: if ($allCharts[$i]?.chartType) {
+		chosenPlot = capitalizeFirstLetter($allCharts[$i].chartType);
+	} else {
+		chosenPlot = 'Bar Chart (Default)';
 	}
 
-	function capitalizeFirstLetter(string: string) {
+	function capitalizeFirstLetter(string: string | null) {
+		if (!string) return '';
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 
@@ -43,20 +42,33 @@
 		plot = plot.toLowerCase();
 
 		allCharts.update((charts) => {
-			let chart = charts[$i];
-			chart.chartType = plot;
+			let updatedChart = charts[$i];
+			updatedChart.chartType = plot;
+
 			if (plot === 'area') {
-				chart.chartOptions.series[0].type = 'line';
-				chart.chartOptions.series[0].areaStyle = {};
+				updatedChart.chartOptions.series[0].type = 'line';
+				updatedChart.chartOptions.series[0].areaStyle = {};
 			} else {
-				chart.chartOptions.series[0].type = plot;
+				updatedChart.chartOptions.series[0].type = plot;
 			}
-			return charts;
+			charts[$i] = updatedChart;
+			return [...charts];
 		});
 	};
 
 	const closeChartDropdown = () => {
 		isChartDropdownOpen = false;
+	};
+
+	const startInfoHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showInfoTooltip = true;
+		}, 800);
+	};
+
+	const endInfoHover = (): void => {
+		clearTimeout(hoverTimeout);
+		showInfoTooltip = false;
 	};
 
 	const toggleChartDropdown = () => {
@@ -72,17 +84,6 @@
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
-
-	const startInfoHover = (): void => {
-		hoverTimeout = setTimeout(() => {
-			showInfoTooltip = true;
-		}, 800);
-	};
-
-	const endInfoHover = (): void => {
-		clearTimeout(hoverTimeout);
-		showInfoTooltip = false;
-	};
 </script>
 
 <div class="w-full py-4 rounded-sm relative ml-4">
