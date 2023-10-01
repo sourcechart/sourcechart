@@ -152,7 +152,9 @@ export class Query {
 		}
 
 		const queryParts = [`SELECT ${columns} FROM ${file}`, filters];
-		return queryParts.join(' ').trim();
+		const query = queryParts.join(' ').trim();
+		console.log(query);
+		return query;
 	}
 
 	private checkAggregator(
