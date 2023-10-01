@@ -11,7 +11,7 @@
 	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { onDestroy } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { values } from 'idb-keyval';
 	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
@@ -39,6 +39,13 @@
 			document.removeEventListener('click', handleOutsideClick);
 		}
 	}
+
+	onMount(() => {
+		$fileUploadStore.forEach(async (file) => {
+			console.log(file.filename);
+			await queryDuckDB(file.filename);
+		});
+	});
 
 	function extractFilenameFromURLOrString(input: string): string {
 		try {
@@ -80,7 +87,6 @@
 	};
 
 	const queryDuckDB = async (filename: string) => {
-		console.log('queryDuckDB', filename);
 		let resp;
 		let fname = filename;
 
@@ -100,7 +106,6 @@
 			db = await DuckDBClient.of([file]);
 			const sanitizedFilename = checkNameForSpacesAndHyphens(file.name);
 			selectedDataset = dataset.filename;
-
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
 		} else {
 			return;
