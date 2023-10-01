@@ -42,7 +42,6 @@
 
 	onMount(() => {
 		$fileUploadStore.forEach(async (file) => {
-			console.log(file.filename);
 			await queryDuckDB(file.filename);
 		});
 	});
