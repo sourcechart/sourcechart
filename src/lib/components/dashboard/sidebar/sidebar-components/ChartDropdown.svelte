@@ -27,7 +27,7 @@
 	$: i = clickedChartIndex();
 
 	$: {
-		if ($allCharts[$i]?.chartOptions?.series[0]?.type) {
+		if ($allCharts[$i].chartType) {
 			chosenPlot = capitalizeFirstLetter($allCharts[$i].chartOptions.series[0].type);
 		} else {
 			chosenPlot = 'Bar Chart (Default)';
@@ -41,6 +41,7 @@
 	const chooseChart = (plot: string) => {
 		chosenPlot = plot;
 		plot = plot.toLowerCase();
+
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			chart.chartType = plot;
