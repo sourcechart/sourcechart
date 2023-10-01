@@ -80,12 +80,10 @@
 
 		chosenFile.set(filename);
 		const dataset = $fileUploadStore.find((file) => file.filename === filename);
-		console.log(dataset);
 		if (!dataset) return;
 		let db: DuckDBClient;
 
 		if (dataset?.externalDataset?.url) {
-			//@ts-ignore
 			db = await DuckDBClient.of([]);
 			resp = await db.query(`SELECT * FROM '${dataset?.externalDataset?.url}' LIMIT 0`);
 			fname = `${dataset?.externalDataset?.url}`;
@@ -98,8 +96,8 @@
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
 		} else {
 			return;
-		} //@ts-ignore
-
+		}
+		//@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
 

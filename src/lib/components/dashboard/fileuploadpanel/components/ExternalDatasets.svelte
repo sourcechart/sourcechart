@@ -1,13 +1,9 @@
 <script lang="ts">
-	//@ts-ignore
 	import { generateID } from '$lib/io/GenerateID';
 	import { datasets } from './Datasets';
 	import { fileUploadStore, activeDropZone } from '$lib/io/Stores';
 
-	let isLoading = false;
-
 	const addURLToDatabase = (dataset: ExternalDataset) => {
-		isLoading = true;
 		var tableColumnsSize = {
 			filename: dataset.name,
 			externalDataset: dataset,

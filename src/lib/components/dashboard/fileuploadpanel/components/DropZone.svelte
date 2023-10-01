@@ -57,24 +57,6 @@
 		}
 	};
 
-	/*
-	const handleChange = async (event: Event) => {
-		const inputElement = event.target as HTMLInputElement;
-		const files = inputElement.files;
-		if (files && files.length > 0) {
-			value.push(files[0].name);
-			for (let file of files) {
-				insertFileHandle(file);
-
-				// Get a handle to the file on the user's file system
-				const fileHandle = await window.showOpenFilePicker();
-				console.log(fileHandle);
-			}
-			activeDropZone.set(false);
-			activeSidebar.set(true);
-		}
-	};*/
-
 	const showFiles = (files: string[]): string => {
 		if (files.length === 1) return files[0];
 		let concat = '';
