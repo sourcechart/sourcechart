@@ -25,14 +25,8 @@
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	$: if (
-		$allCharts.length > 0 &&
-		$allCharts[$i] &&
-		$allCharts[$i].filename !== null &&
-		$allCharts[$i].filename !== undefined
-	) {
-		const dataObject = $fileUploadStore.find((file) => file.filename === $chosenFile);
-		selectedDataset = dataObject?.filename || 'Select Dataset';
+	$: if ($allCharts[$i]?.filename) {
+		selectedDataset = extractFilenameFromURLOrString($allCharts[$i].filename);
 	} else {
 		selectedDataset = 'Select Dataset';
 	}
@@ -42,6 +36,16 @@
 			document.addEventListener('click', handleOutsideClick);
 		} else {
 			document.removeEventListener('click', handleOutsideClick);
+		}
+	}
+
+	function extractFilenameFromURLOrString(input: string): string {
+		try {
+			const path = new URL(input).pathname;
+			const parts = path.split('/');
+			return parts[parts.length - 1];
+		} catch {
+			return input;
 		}
 	}
 
@@ -75,6 +79,7 @@
 	};
 
 	const queryDuckDB = async (filename: string) => {
+		console.log('queryDuckDB', filename);
 		let resp;
 		let fname = filename;
 
@@ -93,6 +98,8 @@
 			const file = await fileHandle.getFile();
 			db = await DuckDBClient.of([file]);
 			const sanitizedFilename = checkNameForSpacesAndHyphens(file.name);
+			selectedDataset = dataset.filename;
+
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
 		} else {
 			return;
