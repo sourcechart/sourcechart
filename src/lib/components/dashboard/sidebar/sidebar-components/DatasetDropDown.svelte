@@ -9,10 +9,10 @@
 		fileUploadStore
 	} from '$lib/io/Stores';
 	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
-	import { generateID } from '$lib/io/GenerateID';
+	// import { generateID } from '$lib/io/GenerateID';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { values } from 'idb-keyval';
 	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
@@ -46,40 +46,32 @@
 		}
 	}
 
-	onMount(async () => {
-		const storedFileHandles = await values();
-		for (const fileHandle of storedFileHandles) {
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+			isDropdownOpen = false;
+		}
+	};
+
+	const getFileHandleFromIDB = async (filename: string) => {
+		try {
+			const storedFileHandles = await values();
+			const fileHandle = storedFileHandles.find((file) => file.name === filename);
+
+			if (!fileHandle) {
+				throw new Error(`No fileHandle found for filename: ${filename}`);
+			}
 			let permission = await fileHandle.queryPermission();
 
 			if (permission !== 'granted') {
 				permission = await fileHandle.requestPermission();
 				if (permission !== 'granted') {
-					continue; // skip this fileHandle if permission wasn't granted upon request
+					return; // skip this fileHandle if permission wasn't granted upon request
 				}
 			}
-
-			fileUploadStore.update((store) => {
-				const fileIndex = store.findIndex((f) => f.filename === file.name);
-
-				if (fileIndex > -1) {
-					store[fileIndex].filename = file.name;
-					store[fileIndex].fileHandle = fileHandle;
-				} else {
-					store.push({
-						externalDataset: null,
-						filename: file.name,
-						fileHandle: fileHandle,
-						datasetID: generateID()
-					});
-				}
-				return store;
-			});
-		}
-	});
-
-	const handleOutsideClick = (event: MouseEvent) => {
-		if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
-			isDropdownOpen = false;
+			return fileHandle;
+		} catch (error) {
+			console.error('Error fetching fileHandle from IDB:', error);
+			throw error; // You can either re-throw the error or handle it based on your application's requirements
 		}
 	};
 
@@ -99,7 +91,8 @@
 			fname = `${dataObject?.externalDataset?.url}`;
 			selectedDataset = dataObject.filename;
 		} else if (dataObject.fileHandle) {
-			const file = await dataObject.fileHandle.getFile();
+			const fileHandle = await getFileHandleFromIDB(dataObject.filename);
+			const file = await fileHandle.getFile();
 			db = await DuckDBClient.of([file]);
 			const sanitizedFilename = checkNameForSpacesAndHyphens(file.name);
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore

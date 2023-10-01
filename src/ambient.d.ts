@@ -114,6 +114,8 @@ type FileUpload = {
 	externalDataset: ExternalDataset | null;
 	fileHandle: FileHandle | null;
 	datasetID: string;
+	fileExtension: string | undefined;
+	size: number | null;
 };
 
 type Field = {
