@@ -107,12 +107,15 @@ type DataObject = {
 	filename: string;
 };
 
+type FileHandle = any; // You can use a more specific type if you have a type definition for file handles
+
 type FileUpload = {
 	filename: string;
-	file: File | ExternalDataset;
-	size: number | null;
+	externalDataset: ExternalDataset | null;
+	//fileHandle: FileHandle | null;
 	datasetID: string;
 	fileExtension: string | undefined;
+	size: number | null;
 };
 
 type Field = {

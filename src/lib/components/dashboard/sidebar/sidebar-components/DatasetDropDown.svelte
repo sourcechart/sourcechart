@@ -8,16 +8,29 @@
 		duckDBInstanceStore,
 		fileUploadStore
 	} from '$lib/io/Stores';
-	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
+	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { onDestroy } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import { values } from 'idb-keyval';
+	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
 
 	let isDropdownOpen = false;
 	let selectedDataset: string | null = '';
 	let dropdownContainer: HTMLElement;
+
+	$: file = getFileFromStore();
+	$: i = clickedChartIndex();
+	$: datasets = fileDropdown();
+
+	$: if ($allCharts[$i]?.filename) {
+		// @ts-ignore
+		selectedDataset = extractFilenameFromURLOrString($allCharts[$i].filename);
+	} else {
+		selectedDataset = 'Select Dataset';
+	}
 
 	$: {
 		if (isDropdownOpen) {
@@ -27,20 +40,21 @@
 		}
 	}
 
-	$: file = getFileFromStore();
-	$: i = clickedChartIndex();
-	$: datasets = fileDropdown();
+	onMount(() => {
+		$fileUploadStore.forEach(async (file) => {
+			console.log(file.filename);
+			await queryDuckDB(file.filename);
+		});
+	});
 
-	$: if (
-		$allCharts.length > 0 &&
-		$allCharts[$i] &&
-		$allCharts[$i].filename !== null &&
-		$allCharts[$i].filename !== undefined
-	) {
-		const dataObject = $fileUploadStore.find((file) => file.filename === $chosenFile);
-		selectedDataset = dataObject?.filename || 'Select Dataset';
-	} else {
-		selectedDataset = 'Select Dataset';
+	function extractFilenameFromURLOrString(input: string): string {
+		try {
+			const path = new URL(input).pathname;
+			const parts = path.split('/');
+			return parts[parts.length - 1];
+		} catch {
+			return input;
+		}
 	}
 
 	const handleOutsideClick = (event: MouseEvent) => {
@@ -49,27 +63,54 @@
 		}
 	};
 
+	const getFileHandleFromIDB = async (filename: string) => {
+		try {
+			const storedFileHandles = await values();
+			const fileHandle = storedFileHandles.find((file) => file.name === filename);
+
+			if (!fileHandle) {
+				throw new Error(`No fileHandle found for filename: ${filename}`);
+			}
+			let permission = await fileHandle.queryPermission();
+
+			if (permission !== 'granted') {
+				permission = await fileHandle.requestPermission();
+				if (permission !== 'granted') {
+					return;
+				}
+			}
+			return fileHandle;
+		} catch (error) {
+			console.error('Error fetching fileHandle from IDB:', error);
+			throw error; // You can either re-throw the error or handle it based on your application's requirements
+		}
+	};
+
 	const queryDuckDB = async (filename: string) => {
 		let resp;
 		let fname = filename;
 
 		chosenFile.set(filename);
-		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
-		if (!dataObject) return;
+		const dataset = $fileUploadStore.find((file) => file.filename === filename);
+		if (!dataset) return;
+		let db: DuckDBClient;
 
-		const db = await DuckDBClient.of([dataObject.file]); //@ts-ignore
-		if (dataObject.file.url) {
-			//@ts-ignore
-			resp = await db.query(`SELECT * FROM '${dataObject.file.url}' LIMIT 0`); //@ts-ignore
-			fname = `${dataObject.file.url}`;
-			selectedDataset = dataObject.filename;
-		} else if (dataObject.file.name) {
-			const sanitizedFilename = checkNameForSpacesAndHyphens(dataObject.file.name);
+		if (dataset?.externalDataset?.url) {
+			db = await DuckDBClient.of([]);
+			resp = await db.query(`SELECT * FROM '${dataset?.externalDataset?.url}' LIMIT 0`);
+			fname = `${dataset?.externalDataset?.url}`;
+			selectedDataset = dataset.filename;
+		} else if (dataset.filename) {
+			const fileHandle = await getFileHandleFromIDB(dataset.filename);
+			const file = await fileHandle.getFile();
+			db = await DuckDBClient.of([file]);
+			const sanitizedFilename = checkNameForSpacesAndHyphens(file.name);
+			selectedDataset = dataset.filename;
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
 		} else {
 			return;
-		} //@ts-ignore
-
+		}
+		//@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
 
@@ -92,6 +133,14 @@
 		fileUploadStore.update((file) => {
 			return file.filter((file) => file.filename !== filename);
 		});
+
+		removeFromIndexedDB('keyval-store', 'keyval', filename)
+			.then(() => {
+				console.log('Item removed!');
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
 
 		selectedDataset = 'Select Dataset';
 	};

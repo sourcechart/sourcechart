@@ -1,32 +1,48 @@
 <script lang="ts">
 	import { generateID } from '$lib/io/GenerateID';
 	import { fileUploadStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
+	import { set } from 'idb-keyval';
 
-	let isLoading = false;
 	let value: string[] = [];
 
-	const insertFileHandle = (file: File) => {
-		isLoading = true;
+	const insertFileHandle = async (file: File, fileHandle: any) => {
 		var tableColumnsSize = {
 			filename: file.name,
-			file: file,
-			datasetID: generateID(),
 			size: file.size,
-			fileExtension: file.name.split('.').pop()
+			fileExtension: file.name.split('.').pop(),
+			externalDataset: null,
+			datasetID: generateID()
 		};
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
+		await set(file.name, fileHandle);
+	};
+
+	const selectFile = async () => {
+		try {
+			//@ts-ignore
+			const [fileHandle] = await window.showOpenFilePicker();
+			const file = await fileHandle.getFile();
+			value.push(file.name);
+			insertFileHandle(file, fileHandle); // Pass both file and fileHandle
+		} catch (err) {
+			console.error('Error accessing file:', err);
+		}
 	};
 
 	const dropHandle = (event: DragEvent) => {
 		value = [];
 		event.preventDefault();
 		if (event.dataTransfer?.items) {
-			[...event.dataTransfer.items].forEach((item) => {
+			[...event.dataTransfer.items].forEach(async (item) => {
 				if (item.kind === 'file') {
-					const file = item.getAsFile();
-					if (file) {
-						value.push(file.name);
-						insertFileHandle(file);
+					const fileHandle = item.webkitGetAsEntry();
+					if (fileHandle) {
+						//@ts-ignore
+						const file = await fileHandle.getFile();
+						if (file) {
+							value.push(file.name);
+							insertFileHandle(file, fileHandle);
+						}
 					}
 				}
 				activeDropZone.set(false);
@@ -35,19 +51,6 @@
 		} else if (event.dataTransfer) {
 			[...event.dataTransfer.files].forEach((file) => {
 				value.push(file.name);
-			});
-			activeDropZone.set(false);
-			activeSidebar.set(true);
-		}
-	};
-
-	const handleChange = (event: Event) => {
-		const inputElement = event.target as HTMLInputElement;
-		const files = inputElement.files;
-		if (files && files.length > 0) {
-			value.push(files[0].name);
-			[...files].forEach(async (file) => {
-				insertFileHandle(file);
 			});
 			activeDropZone.set(false);
 			activeSidebar.set(true);
@@ -72,29 +75,16 @@
 	};
 </script>
 
-<input
-	type="file"
-	id="fileInput"
-	class="hidden"
-	accept=".csv,.parquet,.json,.txt"
-	on:change={handleChange}
-	multiple
-/>
 <div
 	class="flex flex-col justify-center items-center w-full h-64 rounded-lg border-2 border-gray-300 border-dashed selectFieldColor cursor-pointer hover:bg-neutral-600 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
 "
 	id="dropzone"
 	on:drop={dropHandle}
 	on:dragover={dragOver}
-	on:change={handleChange}
-	on:click={() => {
-		const input = document.getElementById('fileInput');
-		input?.click();
-	}}
+	on:click={selectFile}
 	on:keypress={(event) => {
 		if (event.key === 'Enter') {
-			const input = document.getElementById('fileInput');
-			input?.click();
+			selectFile();
 		}
 	}}
 >
