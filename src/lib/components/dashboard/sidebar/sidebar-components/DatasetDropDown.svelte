@@ -9,7 +9,6 @@
 		fileUploadStore
 	} from '$lib/io/Stores';
 	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
-	// import { generateID } from '$lib/io/GenerateID';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { onDestroy } from 'svelte';
@@ -65,7 +64,7 @@
 			if (permission !== 'granted') {
 				permission = await fileHandle.requestPermission();
 				if (permission !== 'granted') {
-					return; // skip this fileHandle if permission wasn't granted upon request
+					return;
 				}
 			}
 			return fileHandle;
@@ -80,18 +79,19 @@
 		let fname = filename;
 
 		chosenFile.set(filename);
-		const dataObject = $fileUploadStore.find((file) => file.filename === filename);
-		if (!dataObject) return;
+		const dataset = $fileUploadStore.find((file) => file.filename === filename);
+		console.log(dataset);
+		if (!dataset) return;
 		let db: DuckDBClient;
 
-		if (dataObject?.externalDataset?.url) {
+		if (dataset?.externalDataset?.url) {
 			//@ts-ignore
 			db = await DuckDBClient.of([]);
-			resp = await db.query(`SELECT * FROM '${dataObject?.externalDataset?.url}' LIMIT 0`);
-			fname = `${dataObject?.externalDataset?.url}`;
-			selectedDataset = dataObject.filename;
-		} else if (dataObject.fileHandle) {
-			const fileHandle = await getFileHandleFromIDB(dataObject.filename);
+			resp = await db.query(`SELECT * FROM '${dataset?.externalDataset?.url}' LIMIT 0`);
+			fname = `${dataset?.externalDataset?.url}`;
+			selectedDataset = dataset.filename;
+		} else if (dataset.filename) {
+			const fileHandle = await getFileHandleFromIDB(dataset.filename);
 			const file = await fileHandle.getFile();
 			db = await DuckDBClient.of([file]);
 			const sanitizedFilename = checkNameForSpacesAndHyphens(file.name);

@@ -10,7 +10,6 @@
 		isLoading = true;
 		var tableColumnsSize = {
 			filename: dataset.name,
-			fileHandle: null,
 			externalDataset: dataset,
 			datasetID: generateID(),
 			size: null,

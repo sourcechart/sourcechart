@@ -3,17 +3,14 @@
 	import { fileUploadStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
 	import { set } from 'idb-keyval';
 
-	let isLoading = false;
 	let value: string[] = [];
 
 	const insertFileHandle = async (file: File, fileHandle: any) => {
-		isLoading = true;
 		var tableColumnsSize = {
 			filename: file.name,
 			size: file.size,
 			fileExtension: file.name.split('.').pop(),
 			externalDataset: null,
-			fileHandle: fileHandle,
 			datasetID: generateID()
 		};
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
