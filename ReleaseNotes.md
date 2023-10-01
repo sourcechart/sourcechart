@@ -1,5 +1,9 @@
 # Release Notes
 
+## October 2023
+
+- Can persist file handles with DuckDB
+
 ## September 2023
 
 - Removed SQLITEWASM
