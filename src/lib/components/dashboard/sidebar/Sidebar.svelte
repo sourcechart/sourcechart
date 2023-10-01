@@ -47,11 +47,12 @@
 			</div>
 
 			<!--Options-->
+
 			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 				<button class="w-full">
 					<div class="flex justify-between items-center">
 						<span class="text-sm font-light text-neutral-300">Style</span>
-						<ChartDropdown sideBarVersion="LowCode" />
+						<ChartDropdown />
 					</div>
 				</button>
 			</div>

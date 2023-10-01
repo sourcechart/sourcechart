@@ -3,10 +3,9 @@
 	import { onDestroy } from 'svelte';
 	import Info from '$lib/components/ui/icons/Info.svelte';
 
-	type SideBarVersion = 'WorkFlow' | 'LowCode';
-	export let sideBarVersion: SideBarVersion;
 	let dropdownContainer: HTMLElement;
-
+	let showInfoTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
 	let chosenPlot: string = 'Bar Chart (Default)';
 	let isChartDropdownOpen: boolean = false;
 	let rectangleCharts: any[] = [
@@ -16,10 +15,6 @@
 		{ chartType: 'Line' },
 		{ chartType: 'Area' }
 	];
-
-	if (sideBarVersion === 'WorkFlow') {
-		rectangleCharts = [...rectangleCharts, { chartType: 'Density' }];
-	}
 
 	$: {
 		if (isChartDropdownOpen) {
@@ -48,14 +43,15 @@
 		plot = plot.toLowerCase();
 
 		allCharts.update((charts) => {
-			if ($i < 0 || $i >= charts.length) {
-				console.error('Index out of range');
-				return charts;
+			let chart = charts[$i];
+			chart.chartType = plot;
+			if (plot === 'area') {
+				chart.chartOptions.series[0].type = 'line';
+				chart.chartOptions.series[0].areaStyle = {};
+			} else {
+				chart.chartOptions.series[0].type = plot;
 			}
-			let updatedChart = charts[$i];
-			updatedChart.chartType = plot;
-			charts[$i] = updatedChart;
-			return [...charts];
+			return charts;
 		});
 	};
 
@@ -76,8 +72,6 @@
 	onDestroy(() => {
 		document.removeEventListener('click', handleOutsideClick);
 	});
-	let showInfoTooltip: boolean = false;
-	let hoverTimeout: NodeJS.Timeout;
 
 	const startInfoHover = (): void => {
 		hoverTimeout = setTimeout(() => {
