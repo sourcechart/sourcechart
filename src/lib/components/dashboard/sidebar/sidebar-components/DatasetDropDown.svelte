@@ -26,6 +26,7 @@
 	$: datasets = fileDropdown();
 
 	$: if ($allCharts[$i]?.filename) {
+		// @ts-ignore
 		selectedDataset = extractFilenameFromURLOrString($allCharts[$i].filename);
 	} else {
 		selectedDataset = 'Select Dataset';

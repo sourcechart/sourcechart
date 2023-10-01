@@ -1,10 +1,7 @@
 <script lang="ts">
-	type SideBarVersion = 'WorkFlow' | 'LowCode';
-
 	import { allCharts, clickedChartIndex, responsiveType } from '$lib/io/Stores';
 	import { onDestroy } from 'svelte';
 	import Info from '$lib/components/ui/icons/Info.svelte';
-	export let sideBarVersion: SideBarVersion;
 
 	let dropdownContainer: HTMLElement;
 	let showInfoTooltip: boolean = false;
@@ -19,10 +16,6 @@
 		{ chartType: 'Area' }
 	];
 
-	if (sideBarVersion === 'WorkFlow') {
-		rectangleCharts = [...rectangleCharts, { chartType: 'Density' }];
-	}
-
 	$: {
 		if (isChartDropdownOpen) {
 			document.addEventListener('click', handleOutsideClick);
@@ -34,7 +27,7 @@
 	$: i = clickedChartIndex();
 
 	$: {
-		if ($allCharts[$i].chartType) {
+		if ($allCharts[$i]?.chartOptions?.series[0]?.type) {
 			chosenPlot = capitalizeFirstLetter($allCharts[$i].chartOptions.series[0].type);
 		} else {
 			chosenPlot = 'Bar Chart (Default)';
@@ -46,16 +39,18 @@
 	}
 
 	const chooseChart = (plot: string) => {
+		chosenPlot = plot;
 		plot = plot.toLowerCase();
 		allCharts.update((charts) => {
-			if ($i < 0 || $i >= charts.length) {
-				console.error('Index out of range');
-				return charts;
+			let chart = charts[$i];
+			chart.chartType = plot;
+			if (plot === 'area') {
+				chart.chartOptions.series[0].type = 'line';
+				chart.chartOptions.series[0].areaStyle = {};
+			} else {
+				chart.chartOptions.series[0].type = plot;
 			}
-			let updatedChart = charts[$i];
-			updatedChart.chartType = plot;
-			charts[$i] = updatedChart;
-			return [...charts];
+			return charts;
 		});
 	};
 
@@ -73,6 +68,10 @@
 		}
 	};
 
+	onDestroy(() => {
+		document.removeEventListener('click', handleOutsideClick);
+	});
+
 	const startInfoHover = (): void => {
 		hoverTimeout = setTimeout(() => {
 			showInfoTooltip = true;
@@ -83,10 +82,6 @@
 		clearTimeout(hoverTimeout);
 		showInfoTooltip = false;
 	};
-
-	onDestroy(() => {
-		document.removeEventListener('click', handleOutsideClick);
-	});
 </script>
 
 <div class="w-full py-4 rounded-sm relative ml-4">
