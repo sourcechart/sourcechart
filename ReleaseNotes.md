@@ -2,6 +2,8 @@
 
 ## October 2023
 
+- made the mobile smoother.
+- Fixed INDEXDB annoying bug.
 - Can persist file handles with DuckDB
 
 ## September 2023
