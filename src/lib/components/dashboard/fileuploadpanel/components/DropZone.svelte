@@ -35,6 +35,7 @@
 		if (event.dataTransfer?.items) {
 			[...event.dataTransfer.items].forEach(async (item) => {
 				if (item.kind === 'file') {
+					//@ts-ignore
 					const fileHandle = await item.getAsFileSystemHandle();
 					if (fileHandle) {
 						const file = await fileHandle.getFile();
