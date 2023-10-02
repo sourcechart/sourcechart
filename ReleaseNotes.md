@@ -2,6 +2,7 @@
 
 ## October 2023
 
+- fixed dropzone file drag over
 - made the mobile smoother.
 - Fixed INDEXDB annoying bug.
 - Can persist file handles with DuckDB
