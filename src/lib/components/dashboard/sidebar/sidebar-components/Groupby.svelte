@@ -29,11 +29,9 @@
 	$: if ($allCharts.length > 0 && $allCharts[$i]?.groupbyColumns) {
 		//@ts-ignore
 		let schemaNames = $allCharts[$i].schema.map((item) => item.name);
-
 		let validGroupByColumns = $allCharts[$i].groupbyColumns.filter((column) =>
 			schemaNames.includes(column)
 		);
-
 		tags = validGroupByColumns;
 		$allCharts[$i].groupbyColumns = validGroupByColumns;
 	}
@@ -45,12 +43,10 @@
 		$allCharts[$i] = chart;
 	}
 
-	$: {
-		if (isGroupByDropdownOpen) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
+	$: if (isGroupByDropdownOpen) {
+		document.addEventListener('click', handleOutsideClick);
+	} else {
+		document.removeEventListener('click', handleOutsideClick);
 	}
 
 	const startGroupByHover = (): void => {
