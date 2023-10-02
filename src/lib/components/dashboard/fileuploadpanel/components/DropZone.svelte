@@ -35,9 +35,8 @@
 		if (event.dataTransfer?.items) {
 			[...event.dataTransfer.items].forEach(async (item) => {
 				if (item.kind === 'file') {
-					const fileHandle = item.webkitGetAsEntry();
+					const fileHandle = await item.getAsFileSystemHandle();
 					if (fileHandle) {
-						//@ts-ignore
 						const file = await fileHandle.getFile();
 						if (file) {
 							value.push(file.name);
@@ -70,8 +69,20 @@
 		return concat;
 	};
 
+	const dragLeave = (event: DragEvent) => {
+		event.preventDefault();
+		const dropzone = document.getElementById('dropzone');
+		if (dropzone) {
+			dropzone.classList.remove('hover:bg-neutral-600');
+		}
+	};
+
 	const dragOver = (event: DragEvent) => {
 		event.preventDefault();
+		const dropzone = document.getElementById('dropzone');
+		if (dropzone) {
+			dropzone.classList.add('hover:bg-neutral-600');
+		}
 	};
 </script>
 
@@ -81,6 +92,7 @@
 	id="dropzone"
 	on:drop={dropHandle}
 	on:dragover={dragOver}
+	on:dragleave={dragLeave}
 	on:click={selectFile}
 	on:keypress={(event) => {
 		if (event.key === 'Enter') {
