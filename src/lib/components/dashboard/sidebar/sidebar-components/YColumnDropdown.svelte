@@ -26,6 +26,16 @@
 		$allCharts[$i].filename !== undefined
 	) {
 		currentValue = $allCharts[$i].yColumn;
+
+		// Check if xColumn value exists in schema's name
+		let yColumnExistsInSchema = $allCharts[$i].schema.some(
+			(item: { name: string }) => item.name === currentValue
+		);
+
+		// If xColumn value doesn't exist in schema's name, set currentValue to ''
+		if (!yColumnExistsInSchema) {
+			currentValue = '';
+		}
 	} else {
 		currentValue = '';
 	}

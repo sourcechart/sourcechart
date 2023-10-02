@@ -4,7 +4,8 @@
 		clearChartOptions,
 		allCharts,
 		clickedChart,
-		clickedChartIndex
+		clickedChartIndex,
+		showGroupByAggregator
 	} from '$lib/io/Stores';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
 	import CarrotUp from '$lib/components/ui/icons/CarrotUp.svelte';
@@ -18,14 +19,21 @@
 	let tags: Array<string> = [];
 	let selectedButtons: Array<string> = [];
 	let isGroupByDropdownOpen: boolean = false;
-	let showGroupByAggregator: boolean = false;
+	let showGroupByTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
 
 	$: columns = getColumnsFromFile();
 	$: clickChart = clickedChart();
 	$: i = clickedChartIndex();
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]?.groupbyColumns) {
-		tags = $allCharts[$i].groupbyColumns;
+		//@ts-ignore
+		let schemaNames = $allCharts[$i].schema.map((item) => item.name);
+		let validGroupByColumns = $allCharts[$i].groupbyColumns.filter((column) =>
+			schemaNames.includes(column)
+		);
+		tags = validGroupByColumns;
+		$allCharts[$i].groupbyColumns = validGroupByColumns;
 	}
 
 	$: if ($clearChartOptions && tags.length > 0 && $clickChart?.groupbyColumns) {
@@ -35,13 +43,22 @@
 		$allCharts[$i] = chart;
 	}
 
-	$: {
-		if (isGroupByDropdownOpen) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
+	$: if (isGroupByDropdownOpen) {
+		document.addEventListener('click', handleOutsideClick);
+	} else {
+		document.removeEventListener('click', handleOutsideClick);
 	}
+
+	const startGroupByHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showGroupByTooltip = true;
+		}, 3000);
+	};
+
+	const endGroupByHover = (): void => {
+		clearTimeout(hoverTimeout);
+		showGroupByTooltip = false;
+	};
 
 	const handleEscapeKey = (event: KeyboardEvent) => {
 		if (event.key === 'Escape') {
@@ -60,7 +77,6 @@
 			selectedButtons = selectedButtons.filter((item) => item !== column);
 			tags = tags.filter((tag) => tag !== column);
 		} else if (!tags.includes(column)) {
-			// Explicitly check if column isn't in tags
 			selectedButtons.push(column);
 			tags.push(column);
 		}
@@ -79,19 +95,6 @@
 		document.removeEventListener('click', handleOutsideClick);
 		document.removeEventListener('keydown', handleEscapeKey);
 	});
-	let showGroupByTooltip: boolean = false;
-	let hoverTimeout: NodeJS.Timeout;
-
-	const startGroupByHover = (): void => {
-		hoverTimeout = setTimeout(() => {
-			showGroupByTooltip = true;
-		}, 3000);
-	};
-
-	const endGroupByHover = (): void => {
-		clearTimeout(hoverTimeout);
-		showGroupByTooltip = false;
-	};
 </script>
 
 <div bind:this={container} class="relative">
@@ -119,10 +122,10 @@
 		<button
 			class="flex-shrink-0"
 			on:click={() => {
-				showGroupByAggregator = !showGroupByAggregator;
+				$showGroupByAggregator = !$showGroupByAggregator;
 			}}
 		>
-			{#if !showGroupByAggregator}
+			{#if !$showGroupByAggregator}
 				<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-4" />
 			{:else}
 				<CarrotUp class="h-6 w-6 hover:text-neutral-400 ml-4" />
@@ -150,7 +153,7 @@
 					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300 truncate"
 					on:click={() => {
 						addColumnToGroupBy(column);
-						showGroupByAggregator = true;
+						showGroupByAggregator.set(true);
 					}}
 				>
 					{column}
@@ -160,7 +163,7 @@
 	{/if}
 </div>
 
-{#if showGroupByAggregator}
+{#if $showGroupByAggregator}
 	<div class="-mt-1 bg-[#1c1c1c]">
 		<Tags items={tags} removeItem={removeTag} />
 	</div>
