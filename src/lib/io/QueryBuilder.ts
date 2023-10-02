@@ -108,7 +108,8 @@ export class Query {
 
 	private getAllColumns(processedYColumn?: string): string[] {
 		const baseColumns = [
-			this.queryObject.queries.select.basic.xColumn.column,
+			// @ts-ignore
+			checkNameForSpacesAndHyphens(this.queryObject.queries.select.basic.xColumn.column),
 			processedYColumn || this.queryObject.queries.select.basic.yColumn.column // Use processed yColumn if available
 		];
 
@@ -153,7 +154,6 @@ export class Query {
 
 		const queryParts = [`SELECT ${columns} FROM ${file}`, filters];
 		const query = queryParts.join(' ').trim();
-		console.log(query);
 		return query;
 	}
 

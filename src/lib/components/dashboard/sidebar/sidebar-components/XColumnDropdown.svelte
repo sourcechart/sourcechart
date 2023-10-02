@@ -6,7 +6,9 @@
 	let currentValue: string | null = '';
 	let showTooltip: boolean = false;
 	let hoverTimeout: NodeJS.Timeout;
+	let container: HTMLElement;
 
+	$: console.log(currentValue, $allCharts[$i]);
 	const startHover = (): void => {
 		hoverTimeout = setTimeout(() => {
 			showTooltip = true;
@@ -20,7 +22,6 @@
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
-	let container: HTMLElement;
 
 	$: {
 		if (open) {
@@ -29,6 +30,7 @@
 			document.removeEventListener('click', handleOutsideClick);
 		}
 	}
+
 	$: if (
 		$allCharts.length > 0 &&
 		$allCharts[$i] &&
@@ -37,6 +39,16 @@
 		$allCharts[$i].filename !== undefined
 	) {
 		currentValue = $allCharts[$i].xColumn;
+
+		// Check if xColumn value exists in schema's name
+		let xColumnExistsInSchema = $allCharts[$i].schema.some(
+			(item: { name: string }) => item.name === currentValue
+		);
+
+		// If xColumn value doesn't exist in schema's name, set currentValue to ''
+		if (!xColumnExistsInSchema) {
+			currentValue = '';
+		}
 	} else {
 		currentValue = '';
 	}
