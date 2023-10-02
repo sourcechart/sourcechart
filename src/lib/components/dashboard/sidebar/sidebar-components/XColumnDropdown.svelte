@@ -8,7 +8,6 @@
 	let hoverTimeout: NodeJS.Timeout;
 	let container: HTMLElement;
 
-	$: console.log(currentValue, $allCharts[$i]);
 	const startHover = (): void => {
 		hoverTimeout = setTimeout(() => {
 			showTooltip = true;

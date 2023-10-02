@@ -19,6 +19,8 @@
 	let tags: Array<string> = [];
 	let selectedButtons: Array<string> = [];
 	let isGroupByDropdownOpen: boolean = false;
+	let showGroupByTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
 
 	$: columns = getColumnsFromFile();
 	$: clickChart = clickedChart();
@@ -43,6 +45,17 @@
 		}
 	}
 
+	const startGroupByHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showGroupByTooltip = true;
+		}, 3000);
+	};
+
+	const endGroupByHover = (): void => {
+		clearTimeout(hoverTimeout);
+		showGroupByTooltip = false;
+	};
+
 	const handleEscapeKey = (event: KeyboardEvent) => {
 		if (event.key === 'Escape') {
 			isGroupByDropdownOpen = false;
@@ -60,7 +73,6 @@
 			selectedButtons = selectedButtons.filter((item) => item !== column);
 			tags = tags.filter((tag) => tag !== column);
 		} else if (!tags.includes(column)) {
-			// Explicitly check if column isn't in tags
 			selectedButtons.push(column);
 			tags.push(column);
 		}
@@ -79,19 +91,6 @@
 		document.removeEventListener('click', handleOutsideClick);
 		document.removeEventListener('keydown', handleEscapeKey);
 	});
-	let showGroupByTooltip: boolean = false;
-	let hoverTimeout: NodeJS.Timeout;
-
-	const startGroupByHover = (): void => {
-		hoverTimeout = setTimeout(() => {
-			showGroupByTooltip = true;
-		}, 3000);
-	};
-
-	const endGroupByHover = (): void => {
-		clearTimeout(hoverTimeout);
-		showGroupByTooltip = false;
-	};
 </script>
 
 <div bind:this={container} class="relative">
