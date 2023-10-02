@@ -8,10 +8,13 @@ export function stripSpaces(name: string): string {
 	return f_name.split(' ').join('_').replace('(|)/g', '');
 }
 
-export function checkNameForSpacesAndHyphens(column: string) {
+export function checkNameForSpacesAndHyphens(column?: string | null) {
+	if (!column) return ''; // Return an empty string for null or undefined values
+
 	if (!column.match('^[a-zA-Z0-9]+$')) {
 		column = ['"', column, '"'].join('');
 	}
+
 	return column;
 }
 

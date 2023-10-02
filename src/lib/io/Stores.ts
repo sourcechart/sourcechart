@@ -30,7 +30,7 @@ export const responsiveType = writable<ResponsiveType>();
 export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
 export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const insideOutsideClick = writable<string>('outside');
-export const showGroupByAggregator = writable<boolean>(false);
+export const showGroupByAggregator = writable<boolean>(true);
 
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 

@@ -27,8 +27,7 @@
 	$: i = clickedChartIndex();
 
 	$: if ($allCharts.length > 0 && $allCharts[$i]?.groupbyColumns) {
-		//@ts-ignore
-		let schemaNames = $allCharts[$i].schema.map((item) => item.name);
+		let schemaNames = $allCharts[$i].schema.map((item: { name: string }) => item.name);
 		let validGroupByColumns = $allCharts[$i].groupbyColumns.filter((column) =>
 			schemaNames.includes(column)
 		);
