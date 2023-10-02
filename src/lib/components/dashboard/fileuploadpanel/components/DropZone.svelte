@@ -24,6 +24,8 @@
 			const file = await fileHandle.getFile();
 			value.push(file.name);
 			insertFileHandle(file, fileHandle); // Pass both file and fileHandle
+			activeDropZone.set(false);
+			activeSidebar.set(true);
 		} catch (err) {
 			console.error('Error accessing file:', err);
 		}
