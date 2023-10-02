@@ -85,8 +85,8 @@
 			<div
 				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
 					index === activeIndex
-						? 'bg-[#908bd971] hover:bg-[#908bd971]'
-						: 'hover:text-neutral-700/90'
+						? 'bg-[#908bd971]'
+						: 'hover:text-neutral-700/90 hover:bg-neutral-500'
 				}`}
 				on:keypress={(event) => {
 					if (['0', '1', '2', '3'].includes(event.key)) {
