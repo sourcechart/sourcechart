@@ -107,17 +107,29 @@ export class Query {
 	}
 
 	private getAllColumns(processedYColumn?: string): string[] {
-		const baseColumns = [
-			// @ts-ignore
-			checkNameForSpacesAndHyphens(this.queryObject.queries.select.basic.xColumn.column),
-			processedYColumn || this.queryObject.queries.select.basic.yColumn.column // Use processed yColumn if available
-		];
+		// Sanitize xColumn
+		const sanitizedXColumn = checkNameForSpacesAndHyphens(
+			this.queryObject.queries.select.basic.xColumn.column
+		);
+
+		// Sanitize both potential sources of yColumn
+		const defaultYColumn = checkNameForSpacesAndHyphens(
+			this.queryObject.queries.select.basic.yColumn.column
+		);
+		const sanitizedProcessedYColumn = processedYColumn
+			? checkNameForSpacesAndHyphens(processedYColumn)
+			: defaultYColumn;
+
+		const baseColumns = [sanitizedXColumn, sanitizedProcessedYColumn];
 
 		if (this.queryObject.queries.select.basic.legendKey) {
-			baseColumns.push(this.queryObject.queries.select.basic.legendKey);
+			// Sanitize legendKey and add to the baseColumns
+			baseColumns.push(
+				checkNameForSpacesAndHyphens(this.queryObject.queries.select.basic.legendKey)
+			);
 		}
 
-		const uniqueColumns = [...new Set(baseColumns.filter(Boolean))]; //@ts-ignore
+		const uniqueColumns = [...new Set(baseColumns.filter(Boolean))];
 		return uniqueColumns;
 	}
 
