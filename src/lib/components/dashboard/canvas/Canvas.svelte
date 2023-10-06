@@ -286,9 +286,6 @@
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
-		on:touchstart={handleMouseDown}
-		on:touchmove={handleMouseMove}
-		on:touchend={handleMouseUp}
 	>
 		<div id="canvasParent">
 			{#if !$activeDropZone}

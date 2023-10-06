@@ -9,7 +9,7 @@
 			externalDataset: dataset,
 			datasetID: generateID(),
 			size: null,
-			fileExtension: dataset.name.split('.').pop()
+			fileExtension: ''
 		};
 
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);

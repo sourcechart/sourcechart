@@ -45,6 +45,7 @@ export class Query {
 
 	private getBasicQuery() {
 		let yColumn = this.checkSelectBlock().yColumn;
+
 		var groupby = this.constructGroupBy();
 		var aggregator = this.queryObject.queries.select.basic.yColumn.aggregator;
 		var groupbyColumns = this.queryObject.queries.select.basic.groupbyColumns;
@@ -65,6 +66,7 @@ export class Query {
 				filters = this.constructFilters(filterColumns, false);
 			}
 		}
+
 		//@ts-ignore
 		const columns = this.getAllColumns(yColumn);
 		var selectQuery = this.constructSelect(columns.join(', '), this.checkSelectBlock().file);
@@ -113,17 +115,13 @@ export class Query {
 		);
 
 		// Sanitize both potential sources of yColumn
-		const defaultYColumn = checkNameForSpacesAndHyphens(
-			this.queryObject.queries.select.basic.yColumn.column
-		);
-		const sanitizedProcessedYColumn = processedYColumn
-			? checkNameForSpacesAndHyphens(processedYColumn)
-			: defaultYColumn;
+		//const defaultYColumn = checkNameForSpacesAndHyphens(
+		//	this.queryObject.queries.select.basic.yColumn.column
+		//);
 
-		const baseColumns = [sanitizedXColumn, sanitizedProcessedYColumn];
+		const baseColumns = [sanitizedXColumn, processedYColumn];
 
 		if (this.queryObject.queries.select.basic.legendKey) {
-			// Sanitize legendKey and add to the baseColumns
 			baseColumns.push(
 				checkNameForSpacesAndHyphens(this.queryObject.queries.select.basic.legendKey)
 			);
