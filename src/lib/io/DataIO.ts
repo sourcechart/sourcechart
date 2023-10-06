@@ -188,7 +188,6 @@ class DataIO {
 
 	public async updateChart() {
 		console.warn = () => {};
-
 		const queryString = this.query();
 		const results = await this.getDataResults(this.db, queryString);
 		if (this.chart.workflow === 'basic') {
