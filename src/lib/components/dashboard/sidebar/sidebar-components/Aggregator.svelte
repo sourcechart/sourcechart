@@ -50,7 +50,7 @@
 </script>
 
 <div
-	class="scrollBarDiv bg-[#1c1c1ccd] flex justify-evenly items-center rounded-md overflow-x-auto py-2.5 border border-1 border-neutral-700/50"
+	class="scrollBarDiv bg-[#1c1c1ccd] flex justify-evenly items-center rounded-sm overflow-x-auto py-2.5 border border-1 border-neutral-700/50"
 >
 	{#each aggs as agg}
 		<button

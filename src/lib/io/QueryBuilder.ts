@@ -121,7 +121,7 @@ export class Query {
 			);
 		}
 
-		const uniqueColumns = [...new Set(baseColumns.filter(Boolean))];
+		const uniqueColumns = [...new Set(baseColumns.filter(Boolean))]; //@ts-ignore
 		return uniqueColumns;
 	}
 

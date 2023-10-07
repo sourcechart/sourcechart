@@ -36,7 +36,7 @@
 </script>
 
 <div
-	class="scrollBarDiv bg-[#1c1c1ccd] flex justify-start items-center rounded-b-md overflow-x-auto border border-1 border-neutral-700/50"
+	class="scrollBarDiv bg-[#1c1c1ccd] flex justify-start items-center rounded-md overflow-x-auto border border-1 border-neutral-700/50"
 >
 	{#each items as item, i (i)}
 		<div
