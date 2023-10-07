@@ -20,13 +20,14 @@
 
 	onMount(() => {
 		document.addEventListener('keydown', handleKeyPress);
+
 		return () => {
 			document.removeEventListener('keydown', handleKeyPress);
 		};
 	});
 </script>
 
-<div class="w-screen h-screen overflow-hidden">
+<div class="w-screen h-screen overflow-hidden bg-neutral-900">
 	<div class="flex justify-center items-center fixed top-4 left-1/2 -translate-x-1/2 z-30">
 		<NavBar />
 	</div>

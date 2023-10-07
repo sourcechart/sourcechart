@@ -279,7 +279,7 @@
 	};
 </script>
 
-<div class="bg-neutral-900 w-full h-full top-0 left-0 fixed">
+<div class="w-full h-full top-0 left-0 fixed">
 	<div
 		class="h-full w-full"
 		style={`cursor: ${$touchType};`}

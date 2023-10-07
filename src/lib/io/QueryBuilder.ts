@@ -109,15 +109,9 @@ export class Query {
 	}
 
 	private getAllColumns(processedYColumn?: string): string[] {
-		// Sanitize xColumn
 		const sanitizedXColumn = checkNameForSpacesAndHyphens(
 			this.queryObject.queries.select.basic.xColumn.column
 		);
-
-		// Sanitize both potential sources of yColumn
-		//const defaultYColumn = checkNameForSpacesAndHyphens(
-		//	this.queryObject.queries.select.basic.yColumn.column
-		//);
 
 		const baseColumns = [sanitizedXColumn, processedYColumn];
 

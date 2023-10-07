@@ -110,7 +110,7 @@
 
 		let inPolygon = isPointInPolygon({ x, y }, polygon);
 		if (inPolygon) {
-			mostRecentChartID.set(polygon.id);
+			mostRecentChartID.set(polygon?.id);
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;

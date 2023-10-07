@@ -1,5 +1,10 @@
 /**  State Management for eCharts Stores **/
-import { storeToLocalStorage, storeFromLocalStorage } from '$lib/io/Storage';
+import {
+	storeToLocalStorage,
+	storeFromLocalStorage,
+	storeFromSessionStorage,
+	storeToSessionStorage
+} from '$lib/io/Storage';
 import type { DuckDBClient } from './DuckDBClient';
 import { writable, derived } from 'svelte/store';
 import { DataIO } from '$lib/io/DataIO';
@@ -8,7 +13,7 @@ export const globalMouseState = writable<boolean>(false);
 export const isMouseDown = writable<boolean>(false);
 export const navBarState = writable<NavBar>('select');
 export const touchState = writable<TouchState>('isHovering');
-export const mostRecentChartID = writable<string>();
+export const mostRecentChartID = writable<string | null>(null);
 export const chosenFile = writable<string | null>('');
 export const newChartID = writable<string>();
 export const activeSidebar = writable<boolean>(false);
@@ -20,18 +25,18 @@ export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
 export const minimumPointsForCluster = writable<number>();
 export const duckDBInstanceStore = writable<DuckDBClient>();
-export const activeDropZone = writable<boolean>(true);
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
 export const mobileNav = writable<MobileBar | null>(null);
 export const activeMobileNav = writable<boolean>(false);
 export const responsiveType = writable<ResponsiveType>();
-export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
-export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const insideOutsideClick = writable<string>('outside');
 export const showGroupByAggregator = writable<boolean>(true);
 
+export const activeDropZone = writable<boolean>(storeFromSessionStorage('activeDropZone', true));
+export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
+export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 
 export const getFileFromStore = () =>
@@ -223,3 +228,4 @@ export const columnLabel = (axis: string) =>
 storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');
 storeToLocalStorage(arrows, 'arrowsStore');
+storeToSessionStorage(activeDropZone, 'activeDropZone');

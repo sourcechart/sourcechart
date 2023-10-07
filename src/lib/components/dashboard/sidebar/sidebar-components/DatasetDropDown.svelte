@@ -26,7 +26,6 @@
 	$: datasets = fileDropdown();
 
 	$: if ($allCharts[$i]?.filename) {
-		// @ts-ignore
 		selectedDataset = extractFilenameFromURLOrString($allCharts[$i].filename);
 	} else {
 		selectedDataset = 'Select Dataset';
@@ -41,18 +40,22 @@
 	}
 
 	onMount(() => {
+		document.addEventListener('click', handleOutsideClick);
 		$fileUploadStore.forEach(async (file) => {
-			if (file.externalDataset?.url) await queryDuckDB(file.filename);
+			if (file.externalDataset?.url) await queryDuckDB(file.filename, true);
 		});
+		return () => {
+			document.removeEventListener('click', handleOutsideClick);
+		};
 	});
 
-	function extractFilenameFromURLOrString(input: string): string {
-		try {
+	function extractFilenameFromURLOrString(input: string | null): string {
+		if (input) {
 			const path = new URL(input).pathname;
 			const parts = path.split('/');
 			return parts[parts.length - 1];
-		} catch {
-			return input;
+		} else {
+			return 'Select Dataset';
 		}
 	}
 
@@ -85,7 +88,7 @@
 		}
 	};
 
-	const queryDuckDB = async (filename: string) => {
+	const queryDuckDB = async (filename: string, mount?: boolean) => {
 		let resp;
 		let fname = filename;
 
@@ -116,8 +119,8 @@
 		duckDBInstanceStore.set(db);
 		allCharts.update((charts) => {
 			let chart = charts[$i];
-			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID;
-			charts[$i].filename = fname;
+			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID; //This is a hack so it doesn't load on the mount
+			if (!mount) charts[$i].filename = fname;
 			chart.schema = schema;
 			chart.columns = columns;
 			return charts;
