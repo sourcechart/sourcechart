@@ -1,10 +1,9 @@
 <script lang="ts">
-	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
+	import Filter from '$lib/components/ui/icons/FilterIcon.svelte';
 	import { allCharts, clickedChartIndex, responsiveType } from '$lib/io/Stores';
 
-	$: i = clickedChartIndex(); //@ts-ignore
-
-	let filterIDCounter = 0; // Add this line at the top
+	$: i = clickedChartIndex();
+	let filterIDCounter = 0;
 
 	const addFilterToSidebar = () => {
 		filterIDCounter += 1;
@@ -43,7 +42,7 @@
 		on:focus={() => null}
 		on:blur={() => null}
 	>
-		<PlusSolid />
+		<Filter class="hover:text-neutral-300" />
 	</button>
 
 	<!-- Tooltip element -->

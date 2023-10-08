@@ -7,12 +7,11 @@
 		clickedChartIndex,
 		showGroupByAggregator
 	} from '$lib/io/Stores';
+	import Group from '$lib/components/ui/icons/Group.svelte';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
-	//import CarrotUp from '$lib/components/ui/icons/CarrotUp.svelte';
 	import { onDestroy } from 'svelte';
 	import { Tags } from '$lib/components/ui/tags';
 	import Aggregator from './Aggregator.svelte';
-
 	let dropdownContainer: HTMLElement;
 	let container: HTMLElement;
 
@@ -108,20 +107,29 @@
 			null;
 		}}
 	>
+		<span class="text-sm text-neutral-300">Groupby</span>
 		<button
-			class="flex w-full items-center h-7 justify-between bg-neutral-900/80 hover:bg-neutral-900/50 rounded-sm border border-1 border-neutral-700/50"
+			class="flex w-full items-center justify-between mx-2 bg-neutral-900/80 hover:bg-neutral-900/50 rounded-sm"
 			on:click={(event) => {
 				isGroupByDropdownOpen = !isGroupByDropdownOpen;
 				event.stopPropagation();
 			}}
 		>
-			<span class="text-sm text-neutral-300 px-1"> Groupby </span>
+			<span class="text-sm ml-2 text-neutral-200">Choose Columns </span>
 			<CarrotDown class="hover:text-neutral-300" />
 		</button>
+		<button
+			on:click={() => {
+				$showGroupByAggregator = !$showGroupByAggregator;
+			}}
+		>
+			<Group class="hover:text-neutral-300 ml-1" />
+		</button>
+
 		{#if isGroupByDropdownOpen}
 			<div
 				bind:this={dropdownContainer}
-				class="scrollBarDiv absolute top-full left-0 rounded-md bg-neutral-900 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+				class="scrollBarDiv absolute top-full left-16 rounded-sm bg-neutral-900 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			>
 				{#each $columns as column (column)}
 					<button
@@ -149,15 +157,11 @@
 	{/if}
 	-->
 </div>
-
-{#if tags.length > 0}
-	<div class="mt-2 bg-[#1c1c1c]">
+{#if $showGroupByAggregator}
+	<div class="mt-2">
 		<Tags items={tags} removeItem={removeTag} />
 	</div>
-	<div class="mt-3">
-		<span class="text-sm -mb-1 text-neutral-300">Aggregate</span>
-		<Aggregator />
-	</div>
+	<Aggregator />
 {/if}
 
 <style>

@@ -90,7 +90,9 @@
 			on:focus={null}
 		>
 			<span class="text-sm text-neutral-300 ml-1">Y</span>
-			<span class="text-sm text-gray-100 w-full justify-center"> {currentValue} </span>
+			<span class="text-sm text-gray-100 w-full justify-center truncate px-3">
+				{currentValue}
+			</span>
 		</button>
 
 		<!-- Tooltip element -->

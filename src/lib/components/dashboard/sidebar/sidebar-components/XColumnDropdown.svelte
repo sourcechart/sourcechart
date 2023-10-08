@@ -92,7 +92,7 @@
 			on:blur={() => null}
 		>
 			<span class="text-sm text-neutral-300 ml-1">X</span>
-			<span class="text-sm text-gray-100 w-full"> {currentValue} </span>
+			<span class="text-sm text-gray-100 w-full px-3 truncate"> {currentValue} </span>
 		</button>
 
 		<!-- Tooltip element -->

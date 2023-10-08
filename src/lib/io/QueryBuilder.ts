@@ -126,12 +126,12 @@ export class Query {
 	}
 
 	private checkXColumnInGroupBy(groupby: Array<string>, xColumn: string) {
-		if (groupby.find((item) => item === xColumn)) {
-			//If X column is in the group
-			return groupby.join(', ');
-		} else {
-			return '';
-		}
+		//if (groupby.find((item) => item === xColumn)) {
+		//If X column is in the group
+		return groupby.join(', ');
+		//}//else {
+		//return '';
+		//}
 	}
 
 	private getAllColumnsQuery(): string {

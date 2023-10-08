@@ -108,7 +108,7 @@
 				null;
 			}}
 		>
-			<Info class="hover:text-200" />
+			<Info class="hover:text-neutral-300" />
 
 			<!-- Tooltip for Info icon -->
 			{#if showInfoTooltip && $responsiveType !== 'mobile'}
