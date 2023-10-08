@@ -1,9 +1,15 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import Arrow from '$lib/components/landing/homepage/icons/Arrow.svelte';
 	import Hand from '$lib/components/landing/homepage/icons/Hand.svelte';
 	import InfinityIcon from '$lib/components/landing/homepage/icons/InfinityIcon.svelte';
 	import Security from '$lib/components/landing/homepage/icons/Security.svelte';
-	import { goto } from '$app/navigation';
+
+	let isOpen = false;
+
+	function toggleMenu() {
+		isOpen = !isOpen;
+	}
 
 	let features = [
 		{
@@ -27,93 +33,209 @@
 			body: 'Our platform is designed to handle large amounts of data. We are able to process gigabytes of data in seconds.'
 		}
 	];
+
+	function closeMenu() {
+		isOpen = false;
+	}
 </script>
 
-<div
-	class="w-full h-full font-maven bg-gradient-to-br bg-neutral-800 from-neutral-900 via-neutral-800 to-[#3e3e3e] font-mono"
->
-	<!-- NavBar -->
-	<section id="navbar" class="py-3 lg:px-32 sm:px-2 md:px-12 flex justify-between items-center">
-		<a href="/" class="w-52">
-			<img src="logo1.png" alt="Logo" class="w-full h-auto" />
-		</a>
-		<button
-			class="text-neutral-300 bg-transparent border border-neutral-300 hover:text-neutral-50 hover:border-neutral-50 bg-purple-700 hover:bg-purple-600 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-sm font-medium"
-			on:click={() => goto('/dashboard')}
-		>
-			Login
-		</button>
-	</section>
-
-	<!-- Main Content -->
-	<div
-		class="relative w-full h-full sm:px-6 md:px-10 lg:py-12 lg:px-28"
-		style="background-image: url('backlighting.png'); background-size: cover; background-repeat: no-repeat;"
-	>
-		<div class="sm:mt-16" id="space" />
-
-		<!-- Hero Section -->
-		<section class=" h-4/5 py-4 px-2 sm:px-4 md:px-8 lg:px-10 bg-center bg-cover">
-			<div
-				class="text-white flex flex-col md:flex-row lg:flex-row space-y-4 md:space-y-0 lg:space-y-0 md:space-x-6 lg:space-x-6 ml-2 sm:ml-3 md:ml-4 lg:ml-8 mr-2 sm:mr-3 md:mr-4 lg:mr-4"
-			>
-				<div class="mb-4 md:mb-0 space-y-4">
-					<div class="flex flex-col items-start">
-						<span
-							id="title"
-							class="font-medium block text-4xl md:text-5xl lg:text-6xl xl:text-7xl flex-shrink-0"
-						>
-							Cut through the noise.
-						</span>
-						<span
-							id="subtext"
-							class="font-thin text-sm md:text-base lg:text-lg mt-2 md:mt-4 flex-grow"
-						>
-							SourceChart processes and visualizes gigabytes of data <br /> locally that moves as fast
-							as you think.
-						</span>
-
-						<div class="flex flex-wrap items-center mt-4 space-x-4">
-							<button
-								class="bg-purple-700 border border-white hover:border-neutral-50 hover:text-neutral-50 px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-purple-600 transform transition-transform duration-300 ease-in-out hover:scale-105"
-								on:click={() => {
-									goto('/dashboard');
-								}}
-							>
-								<span> Try Now </span>
-							</button>
-
-							<!--
-							<a href="#features-section">
-								<button
-									class="text-neutral-300 border border-white px-8 sm:px-10 md:px-12 py-2 sm:py-3 text-xs sm:text-sm md:text-base lg:text-lg shadow-lg leading-normal tracking-tight hover:bg-neutral-800 hover:text-neutral-50 hover:border-neutral-50 transform transition-transform duration-300 ease-in-out hover:scale-105"
-								>
-									<span>Learn More</span>
-								</button>
-							</a>
-							-->
-						</div>
-					</div>
-				</div>
-				<div class="mt-4 md:mt-0 flex-grow md:w-3/5 lg:w-3/5 xl:w-1/2 2xl:w-3/5 relative z-10">
-					<div class="aspect-ratio-16-9">
-						<img
-							class="object-cover object-center z-10 transform transition-transform duration-300 ease-in-out hover:scale-105"
-							src="hero2.png"
-							alt="Logo"
+<svelte:head>
+	<title>SourceChart</title>
+	<meta name="description" content="Landing page for sourcechart" />
+</svelte:head>
+<header class="mb-12">
+	<nav class="bg-gray-100 py-3 fixed w-full z-20 top-0 left-0">
+		<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+			<a href="/" class="flex items-center space-x-2">
+				<img src="/logo.png" width="50" height="50" alt="Logo" />
+				<span class="self-center text-2xl font-semibold whitespace-nowrap text-purple-500"
+					>SourceChart</span
+				>
+			</a>
+			<div class="relative inline-block">
+				<button
+					on:click={toggleMenu}
+					type="button"
+					class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+				>
+					<span class="sr-only">Open main menu</span>
+					<svg
+						class="w-5 h-5"
+						aria-hidden="true"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 17 14"
+					>
+						<path
+							stroke="currentColor"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M1 1h15M1 7h15M1 13h15"
 						/>
-					</div>
+					</svg>
+				</button>
+
+				<div
+					class={`${
+						isOpen ? '' : 'hidden'
+					} items-center justify-center w-full mt-3 bg-white shadow-md absolute z-10 top-full left-0 rounded-lg md:relative md:top-auto md:left-auto md:mt-0 md:bg-transparent md:shadow-none md:flex md:w-auto md:order-1`}
+					id="navbar-sticky"
+				>
+					<ul
+						class="flex flex-col p-4 md:p-0 font-medium border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0"
+					>
+						<li on:click={closeMenu}>
+							<a
+								href="/"
+								class="block py-2 pl-3 pr-4 text-white bg-purple-700 rounded md:bg-transparent md:text-purple-700 md:p-0"
+								aria-current="page"
+							>
+								Home
+							</a>
+						</li>
+						<li on:click={closeMenu}>
+							<a
+								href="#features"
+								class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-700 md:p-0"
+							>
+								Features
+							</a>
+						</li>
+						<li on:click={closeMenu}>
+							<a
+								href="#about"
+								class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-700 md:p-0"
+							>
+								About
+							</a>
+						</li>
+						<li on:click={closeMenu}>
+							<a
+								href="#contact"
+								class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-700 md:p-0"
+							>
+								Contact
+							</a>
+						</li>
+					</ul>
 				</div>
 			</div>
-		</section>
-		<div class="h-32" id="space" />
+		</div>
+	</nav>
+</header>
 
-		<!-- Video Section -->
-		<section>
-			<h2 class="text-center text-4xl text-gray-300 mb-8">Features</h2>
-			<p class="text-center text-gray-400 mb-16">
+<section id="hero" class=" px-6 pt-12 bg-gray-100">
+	<div class="grid max-w-screen-xl py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-0 lg:pt-16 lg:grid-cols-12">
+		<div class="mr-auto place-self-center lg:col-span-7">
+			<h1
+				class="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl text-zinc-900"
+			>
+				Cut through the
+				<span class="underline underline-offset-2 decoration-8 decoration-purple-400">noise</span>
+			</h1>
+			<p class="max-w-2xl mb-6 font-light lg:mb-8 md:text-lg lg:text-xl text-zinc-900">
+				Process and visualize gigabytes of data that moves as fast as you think. While never leaving
+				your browser.
+			</p>
+			<button
+				on:click={() => {
+					goto('/dashboard');
+				}}
+				type="button"
+				class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg md:text-lg px-6 py-2 text-center mr-3 md:mr-0"
+				>Try Now</button
+			>
+		</div>
+		<div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
+			<img src="/hero2.png" width="617" height="697" alt="House" />
+		</div>
+	</div>
+</section>
+
+<section id="features" class="px-6 bg-white py-6">
+	<h2 class="font-bold text-2xl md:text-4xl lg:text-5xl text-center text-zinc-900 mb-2">
+		Features
+	</h2>
+	<div
+		class="grid max-w-screen-xl grid-cols-1 place-items-center px-4 py-4 mx-auto gap-8 xl:gap-0 lg:py-12 md:grid-cols-3"
+	>
+		<div class="flex flex-col space-y-2 items-start px-6 py-3">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="55"
+				height="58"
+				viewBox="0 0 55 58"
+				fill="none"
+				class="text-indigo-500"
+			>
+				<path
+					fill-rule="evenodd"
+					clip-rule="evenodd"
+					d="M45.2856 28.6429C45.2856 30.5749 46.8164 32.1469 48.6979 32.1469C49.6466 32.1469 50.4166 32.9376 50.4166 33.9119V40.2681C50.4166 45.6431 46.1587 50.0155 40.9246 50.0155H14.0777C8.84352 50.0155 4.58331 45.6431 4.58331 40.2681V33.9119C4.58331 32.9376 5.35331 32.1469 6.30206 32.1469C8.18581 32.1469 9.71665 30.5749 9.71665 28.6429C9.71665 26.7602 8.24769 25.3435 6.30206 25.3435C5.84602 25.3435 5.4106 25.1576 5.08748 24.8258C4.76435 24.494 4.58331 24.0445 4.58331 23.5786L4.5879 17.0152C4.5879 11.6403 8.84581 7.2655 14.08 7.2655H40.92C46.1541 7.2655 50.4144 11.6403 50.4144 17.0152L50.4166 23.3738C50.4166 23.8398 50.2356 24.2916 49.9148 24.6211C49.5916 24.9529 49.1562 25.1388 48.6979 25.1388C46.8164 25.1388 45.2856 26.7108 45.2856 28.6429ZM32.6607 30.1797L35.3626 27.4781C35.8324 27.0121 35.9951 26.325 35.7912 25.6896C35.5895 25.0542 35.0624 24.6024 34.4253 24.5106L30.6922 23.9505L29.0216 20.477C28.7351 19.8793 28.153 19.5075 27.5045 19.5051H27.4999C26.8537 19.5051 26.2716 19.8769 25.9805 20.4747L24.3099 23.9505L20.5837 24.5082C19.9397 24.6024 19.4126 25.0542 19.2087 25.6896C19.007 26.325 19.1697 27.0121 19.6372 27.4781L22.3391 30.1797L21.702 33.9991C21.592 34.658 21.851 35.3122 22.378 35.7052C22.676 35.9241 23.022 36.037 23.3726 36.037C23.6407 36.037 23.9112 35.9688 24.1587 35.8346L27.4999 34.032L30.8343 35.8299C31.4118 36.1476 32.097 36.0982 32.6218 35.7029C33.1512 35.3122 33.4101 34.658 33.3001 33.9991L32.6607 30.1797Z"
+					fill="currentColor"
+				/>
+			</svg>
+			<h3 class="font-bold text-lg text-zinc-800">A Single Source of Truth</h3>
+			<p class="text-gray-500">
+				Our platform provides an interactive visualizations of your complex data. Leading to faster
+				and more effective decision making.
+			</p>
+		</div>
+		<div class="flex flex-col space-y-2 items-start px-6 py-6">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="51"
+				height="51"
+				viewBox="0 0 51 51"
+				fill="none"
+				class="text-indigo-500"
+			>
+				<path
+					fill-rule="evenodd"
+					clip-rule="evenodd"
+					d="M7.4375 21.6358C7.4375 12.0527 15.6057 4.30713 25.4861 4.30713C35.3943 4.30713 43.5625 12.0527 43.5625 21.6358C43.5625 26.4648 41.7711 30.948 38.8227 34.7479C35.57 38.9395 31.5608 42.5914 27.0482 45.458C26.0153 46.1205 25.0832 46.1705 23.9497 45.458C19.4113 42.5914 15.4022 38.9395 12.1773 34.7479C9.22671 30.948 7.4375 26.4648 7.4375 21.6358ZM19.5377 22.1754C19.5377 25.3857 22.2098 27.9106 25.4861 27.9106C28.7645 27.9106 31.4622 25.3857 31.4622 22.1754C31.4622 18.9901 28.7645 16.3422 25.4861 16.3422C22.2098 16.3422 19.5377 18.9901 19.5377 22.1754Z"
+					fill="currentColor"
+				/>
+			</svg>
+			<h3 class="font-bold text-lg text-zinc-800">Your data is yours</h3>
+			<p class="text-gray-500">
+				Data never leaves your computer. This ensures that your data stays private and everything is
+				right where you would expect it to be.
+			</p>
+		</div>
+		<div class="flex flex-col space-y-2 items-start px-6 py-6">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="42"
+				height="42"
+				viewBox="0 0 42 42"
+				fill="none"
+				class="text-indigo-500"
+			>
+				<path
+					d="M20.6679 0.65332C16.1173 14.2562 8.26773 31.1598 0 41.6277L20.6679 33.3768L41.3844 41.6277C33.1182 31.1598 25.263 14.2562 20.6679 0.65332Z"
+					fill="currentColor"
+				/>
+			</svg>
+			<h3 class="font-bold text-lg text-zinc-800">Process gigabytes of data</h3>
+			<p class="text-gray-500">
+				Our platform is designed to handle large amounts of data. We are able to process gigabytes
+				of data in seconds.
+			</p>
+		</div>
+	</div>
+</section>
+<section id="about" class="px-6 bg-gray-100 py-6">
+	<h2 class="font-bold text-2xl md:text-4xl lg:text-5xl text-center text-zinc-900">About</h2>
+	<div
+		class="grid max-w-screen-xl grid-cols-1 place-items-center p-4 mx-auto gap-8 xl:gap-0 lg:py-12 md:grid-cols-1"
+	>
+		<div class="flex flex-col space-y-2 items-center px-6 py-2 text-center">
+			<p class="text-gray-500 mb-2">
 				Most dashboards are designed for data visualization and monitoring purposes. SourceChart is
-				designed to find insights.
+				designed to find insights using in browser databases. That way your data stays secure, and
+				your browser doesn't run out of memory
 			</p>
 			<div class="flex justify-center items-center rounded-lg overflow-hidden">
 				<video autoplay loop muted class="max-w-full h-auto">
@@ -121,68 +243,58 @@
 					Your browser does not support the video tag.
 				</video>
 			</div>
-		</section>
-		<div class="h-20" id="space" />
+		</div>
+	</div>
+</section>
 
-		<!-- Features Section -->
-		<section id="features-section">
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-				{#each features as feature}
-					<div
-						class="bg-neutral-800 p-6 rounded-lg space-y-4 mb-4 space-x-4 transform transition-transform duration-300 ease-in-out hover:scale-105"
-					>
-						<svelte:component this={feature.component} />
-						<h3 class="text-2xl text-[#A78BFA]">{feature.header}</h3>
-						<p class="text-gray-400 text-md">{feature.body}</p>
-					</div>
-				{/each}
-			</div>
-		</section>
-		<div class="h-20" id="space" />
-
-		<!-- CTA Section -->
-		<section id="JoinUs" class="h-4/5 py-4 px-4 mt-24 text-center">
-			<h2 class="text-2xl font-bold text-white mb-6">Ready to Dive In?</h2>
-			<p class="text-white mb-6">Discover the difference. Join our community today.</p>
+<section id="contact" class="px-6 py-12 bg-white">
+	<div class="flex justify-center items-center h-full max-w-screen-xl mx-auto">
+		<div class="text-center">
+			<h3 class="font-bold text-4xl text-purple-800 mb-4">Ready to Dive In?</h3>
+			<p class="font-medium text-lg py-2 text-gray-600 mb-4">
+				Discover the difference. Join our community today.
+			</p>
 			<button
-				class="text-lg h-14 px-8 border-neutral-300 text-neutral-300 hover:text-neutral-50 hover:border-neutral-50 bg-purple-700 hover:bg-purple-600 font-maven shadow-md transform transition-transform duration-300 ease-in-out hover:scale-105"
 				on:click={() => {
 					goto('/dashboard');
 				}}
+				type="button"
+				class="w-48 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-lg px-6 py-3 text-center shadow-lg transform transition hover:scale-105"
 			>
 				Get Started
 			</button>
-		</section>
-	</div>
-
-	<!-- Footer -->
-	<footer class="bg-neutral-900 py-4">
-		<div class="text-center text-neutral-300 space-x-6">
-			<a href="/privacy-policy" class="hover:underline">Privacy Policy</a>
-			<a href="/terms-and-conditions" class="hover:underline">Terms and Conditions</a>
-			<a href="/disclaimer" class="hover:underline">Disclaimer</a>
 		</div>
-	</footer>
-</div>
+	</div>
+</section>
 
-<link
-	href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&family=M+PLUS+Rounded+1c:wght@300&family=Oxygen+Mono&family=Victor+Mono:wght@200&display=swap"
-	rel="stylesheet"
-/>
+<footer class="bg-[#001246]">
+	<div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
+		<div class="md:flex md:justify-between">
+			<div class="mb-6 md:mb-0">
+				<a href="/" class="flex items-center space-x-2">
+					<img src="/logo1.png" class="w-60" alt="Logo" />
+				</a>
+			</div>
 
-<style>
-	.font-mono {
-		font-family: 'Oxygen Mono', monospace;
-	}
-	.aspect-ratio-16-9 {
-		padding-bottom: 66.66%;
-		position: relative;
-	}
-	.aspect-ratio-16-9 img {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+			<div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-2">
+				<div>
+					<h2 class="mb-6 text-sm font-semibold uppercase text-white">Legal</h2>
+					<ul class=" text-gray-400 font-medium">
+						<li class="mb-4">
+							<a href="/privacy-policy" class="hover:underline">Privacy Policy</a>
+						</li>
+						<li>
+							<a href="/terms-and-conditions" class="hover:underline">Terms &amp; Conditions</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<hr class="my-6 sm:mx-auto border-gray-700 lg:my-8" />
+		<div class="sm:flex sm:items-center sm:justify-between">
+			<span class="text-sm sm:text-center text-gray-400"
+				>© 2023 <a href="disclaimer" class="hover:underline">SourceChart™</a>. All Rights Reserved.
+			</span>
+		</div>
+	</div>
+</footer>
