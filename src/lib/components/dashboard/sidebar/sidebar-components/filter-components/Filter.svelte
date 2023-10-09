@@ -16,7 +16,7 @@
 	let distinctValuesObject: Array<any>;
 	let dataValue: string | number | object;
 	let selectedColumns: string[] = [];
-	let selectedColumn: string = 'Add Field';
+	let selectedColumn: string = 'Add Filter';
 	let showRange = false;
 	let showValueDropdown = false;
 	let isFieldDropdown = false;

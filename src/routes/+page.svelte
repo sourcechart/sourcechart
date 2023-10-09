@@ -46,11 +46,6 @@
 							About
 						</a>
 					</li>
-					<li>
-						<a href="#contact" class="p-3 text-gray-900 hover:bg-gray-100 hover:text-purple-700">
-							Contact
-						</a>
-					</li>
 				</ul>
 			</div>
 
@@ -122,14 +117,6 @@
 									About
 								</a>
 							</li>
-							<li on:click={closeMenu} on:keyup={closeMenu}>
-								<a
-									href="#contact"
-									class="flex justify-center p-3 text-gray-900 hover:bg-gray-100 hover:text-purple-700"
-								>
-									Contact
-								</a>
-							</li>
 						</ul>
 					</div>
 				</div>
@@ -166,7 +153,7 @@
 	</div>
 </section>
 
-<section id="features" class="px-6 bg-white py-6">
+<section id="features" class="px-6 bg-white py-12">
 	<h2 class="font-bold text-2xl md:text-4xl lg:text-5xl text-center text-zinc-900 mb-2">
 		Features
 	</h2>
