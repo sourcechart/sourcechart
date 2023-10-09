@@ -1,38 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import Arrow from '$lib/components/landing/homepage/icons/Arrow.svelte';
-	import Hand from '$lib/components/landing/homepage/icons/Hand.svelte';
-	import InfinityIcon from '$lib/components/landing/homepage/icons/InfinityIcon.svelte';
-	import Security from '$lib/components/landing/homepage/icons/Security.svelte';
 
 	let isOpen = false;
 
 	function toggleMenu() {
 		isOpen = !isOpen;
 	}
-
-	let features = [
-		{
-			component: Arrow,
-			header: 'A Single Source of Truth',
-			body: 'Our platform provides an  interactive visualizations of your complex data. Leading to faster and more effective decision making.'
-		},
-		{
-			component: Hand,
-			header: `Robust Interface`,
-			body: 'Everything is right where you would  expect it to be.'
-		},
-		{
-			component: Security,
-			header: 'Your data is yours',
-			body: 'Data never leaves your computer. This ensures that your data stays private'
-		},
-		{
-			component: InfinityIcon,
-			header: 'Process gigabytes of data',
-			body: 'Our platform is designed to handle large amounts of data. We are able to process gigabytes of data in seconds.'
-		}
-	];
 
 	function closeMenu() {
 		isOpen = false;
@@ -45,80 +18,120 @@
 </svelte:head>
 <header class="mb-12">
 	<nav class="bg-gray-100 py-3 fixed w-full z-20 top-0 left-0">
-		<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+		<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 space-x-4">
+			<!-- Logo on the left -->
 			<a href="/" class="flex items-center space-x-2">
-				<img src="/logo.png" width="50" height="50" alt="Logo" />
-				<span class="self-center text-2xl font-semibold whitespace-nowrap text-purple-500"
-					>SourceChart</span
-				>
+				<img src="/logo1.png" class="w-48" alt="Logo" />
 			</a>
-			<div class="relative inline-block">
+
+			<!-- Navigation Links -->
+			<div class="hidden md:flex items-center space-x-4">
+				<ul class="flex flex-row font-medium">
+					<li>
+						<a
+							href="/"
+							class="p-3 text-gray-900 hover:bg-gray-100 hover:text-purple-700"
+							aria-current="page"
+						>
+							Home
+						</a>
+					</li>
+					<li>
+						<a href="#features" class="p-3 text-gray-900 hover:bg-gray-100 hover:text-purple-700">
+							Features
+						</a>
+					</li>
+					<li>
+						<a href="#about" class="p-3 text-gray-900 hover:bg-gray-100 hover:text-purple-700">
+							About
+						</a>
+					</li>
+					<li>
+						<a href="#contact" class="p-3 text-gray-900 hover:bg-gray-100 hover:text-purple-700">
+							Contact
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="flex space-x-4 items-center">
+				<!-- Login Button on the right -->
 				<button
-					on:click={toggleMenu}
+					on:click={() => {
+						goto('/dashboard');
+					}}
 					type="button"
-					class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+					class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg md:text-lg px-6 py-2"
 				>
-					<span class="sr-only">Open main menu</span>
-					<svg
-						class="w-5 h-5"
-						aria-hidden="true"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 17 14"
-					>
-						<path
-							stroke="currentColor"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M1 1h15M1 7h15M1 13h15"
-						/>
-					</svg>
+					Login
 				</button>
 
-				<div
-					class={`${
-						isOpen ? '' : 'hidden'
-					} items-center justify-center w-full mt-3 bg-white shadow-md absolute z-10 top-full left-0 rounded-lg md:relative md:top-auto md:left-auto md:mt-0 md:bg-transparent md:shadow-none md:flex md:w-auto md:order-1`}
-					id="navbar-sticky"
-				>
-					<ul
-						class="flex flex-col p-4 md:p-0 font-medium border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0"
+				<!-- Dropdown menu button for small screens -->
+				<div class="md:hidden relative inline-block flex-grow-0">
+					<button
+						on:click={toggleMenu}
+						type="button"
+						class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
 					>
-						<li on:click={closeMenu}>
-							<a
-								href="/"
-								class="block py-2 pl-3 pr-4 text-white bg-purple-700 rounded md:bg-transparent md:text-purple-700 md:p-0"
-								aria-current="page"
-							>
-								Home
-							</a>
-						</li>
-						<li on:click={closeMenu}>
-							<a
-								href="#features"
-								class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-700 md:p-0"
-							>
-								Features
-							</a>
-						</li>
-						<li on:click={closeMenu}>
-							<a
-								href="#about"
-								class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-700 md:p-0"
-							>
-								About
-							</a>
-						</li>
-						<li on:click={closeMenu}>
-							<a
-								href="#contact"
-								class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-700 md:p-0"
-							>
-								Contact
-							</a>
-						</li>
-					</ul>
+						<span class="sr-only">Open main menu</span>
+						<svg
+							class="w-5 h-5"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 17 14"
+						>
+							<path
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M1 1h15M1 7h15M1 13h15"
+							/>
+						</svg>
+					</button>
+					<div
+						class={`${
+							isOpen ? '' : 'hidden'
+						}  mt-1 bg-white border border-gray-200 shadow-md absolute z-10 top-full right-0 rounded-lg`}
+						id="navbar-sticky"
+					>
+						<ul class="flex flex-col font-medium divide-y divide-gray-200">
+							<li on:click={closeMenu} on:keyup={closeMenu}>
+								<a
+									href="/"
+									class="flex p-3 text-gray-900 hover:bg-gray-100 hover:text-purple-700 justify-center"
+									aria-current="page"
+								>
+									Home
+								</a>
+							</li>
+							<li on:click={closeMenu} on:keyup={closeMenu}>
+								<a
+									href="#features"
+									class="flex justify-center p-3 text-gray-900 hover:bg-gray-100 hover:text-purple-700"
+								>
+									Features
+								</a>
+							</li>
+							<li on:click={closeMenu} on:keyup={closeMenu}>
+								<a
+									href="#about"
+									class="flex justify-center p-3 text-gray-900 hover:bg-gray-100 hover:text-purple-700"
+								>
+									About
+								</a>
+							</li>
+							<li on:click={closeMenu} on:keyup={closeMenu}>
+								<a
+									href="#contact"
+									class="flex justify-center p-3 text-gray-900 hover:bg-gray-100 hover:text-purple-700"
+								>
+									Contact
+								</a>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
