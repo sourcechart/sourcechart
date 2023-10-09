@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Filter from './sidebar-components/filter-components/Filter.svelte';
-	import FilterIcon from '$lib/components/ui/icons/FilterIcon.svelte';
 	import DatasetDropDown from './sidebar-components/DatasetDropDown.svelte';
 	import XColumnDropdown from './sidebar-components/XColumnDropdown.svelte';
 	import YColumnDropdown from './sidebar-components/YColumnDropdown.svelte';
@@ -9,158 +8,118 @@
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
 	import { clickInside } from '$lib/actions/MouseActions';
-	import { DataIO } from '$lib/io/DataIO';
+	import { activeSidebar, clickedChartIndex, allCharts, lockSidebar } from '$lib/io/Stores';
+	import ChevronDown from '$lib/components/ui/icons/ChevronDown.svelte';
+	import ChevronLeft from '$lib/components/ui/icons/ChevronLeft.svelte';
+	import ChevronRight from '$lib/components/ui/icons/ChevronRight.svelte';
 
-	import {
-		activeSidebar,
-		activeDropZone,
-		clickedChartIndex,
-		allCharts,
-		duckDBInstanceStore,
-		responsiveType
-	} from '$lib/io/Stores';
-	import Group from '$lib/components/ui/icons/Group.svelte';
-
-	import DataVisIcon from '$lib/components/ui/icons/DataVisIcon.svelte';
-	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
-	import Info from '$lib/components/ui/icons/Info.svelte';
-	import ArrowDown from '$lib/components/ui/icons/ArrowDown.svelte';
 	$: i = clickedChartIndex();
 	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
-
-	$: chartConfig = $allCharts[$i];
-
-	const exportToCSV = async () => {
-		const db = $duckDBInstanceStore;
-		const data = new DataIO(db, chartConfig);
-		await data.queryExportCSV();
-	};
 </script>
 
-{#if $activeSidebar}
-	<div
-		use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
-		class="bg-neutral-800 fixed overflow-hidden h-3/4 w-72 rounded-md shadow-lg mt-10"
-	>
-		<div
-			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-700/80"
-		>
-			<div class="py-2 px-3 hover:bg-[#303030] hover:rounded-md">
-				<div class="w-full flex justify-between items-center ml-0">
-					<DatasetDropDown />
+<div class="flex fixed overflow-hidden mt-10 h-full justify-between w-80">
+	<div>
+		{#if $activeSidebar || ($lockSidebar && !$activeSidebar)}
+			<div
+				use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
+				class="bg-neutral-800 fixed overflow-hidden h-3/5 w-72 rounded-md shadow-lg"
+			>
+				<div
+					class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-700/80"
+				>
+					<div class="py-4 px-3 hover:bg-[#303030] hover:rounded-md">
+						<div class="w-full flex justify-between items-center ml-0">
+							<DatasetDropDown />
+						</div>
+					</div>
+
+					<!-- X and Y dropdown-->
+					<div class="py-4 px-3 w-full hover:bg-[#303030]">
+						<div class="flex items-center justify-between space-x-3 mt-1">
+							<span class="text-sm text-neutral-300">Select</span>
+							<div class="w-1/2 flex">
+								<XColumnDropdown />
+							</div>
+							<div class="w-1/2 flex">
+								<YColumnDropdown />
+							</div>
+						</div>
+					</div>
+
+					<!--GroupBy-->
+					<div class="py-4 px-3 hover:bg-[#303030]">
+						<div class="my-1">
+							<Groupby />
+						</div>
+					</div>
+
+					<!--Filters-->
+					<div class="py-4 px-3 hover:bg-[#303030] hover:round-md">
+						<div class="flex justify-between items-center w-full">
+							<span class="text-sm font-light text-neutral-300">Filters</span>
+							<AddFilter />
+						</div>
+
+						{#each filterColumns as filterData}
+							<div class="mt-2">
+								<Filter {filterData} />
+							</div>
+						{/each}
+					</div>
+
+					<!--Analysis-->
+					<!--
+						<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
+							<button class="w-full">
+								<div class="flex justify-between items-center">
+									<span class="text-sm font-light text-neutral-300">Analysis</span>
+								</div>
+							</button>
+						</div>
+					-->
+
+					<!--Options-->
+					<div class="py-4 px-3 hover:bg-[#303030] hover:round-md">
+						<button class="w-full">
+							<div class="flex justify-between items-center">
+								<span class="text-sm font-light text-neutral-300">Style</span>
+								<ChartDropdown />
+							</div>
+						</button>
+					</div>
+
+					<!--Export-->
+					<div class="py-4 px-3 hover:bg-[#303030] hover:round-md">
+						<ExportToCSV />
+					</div>
+					<div>
+						<div />
+					</div>
 				</div>
 			</div>
-
-			<!-- X and Y dropdown-->
-			<div class="py-2 px-3 w-full hover:bg-[#303030]">
-				<div class="flex items-center justify-between space-x-3 mt-1">
-					<span class="text-sm text-neutral-300">Select</span>
-					<div class="w-1/2 flex">
-						<XColumnDropdown />
-					</div>
-					<div class="w-1/2 flex">
-						<YColumnDropdown />
-					</div>
-				</div>
-			</div>
-			<!--GroupBy-->
-			<div class="py-2 px-3 hover:bg-[#303030]">
-				<div class="my-1">
-					<Groupby />
-				</div>
-			</div>
-			<!--Filters-->
-			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
-				<div class="flex justify-between items-center w-full">
-					<span class="text-sm font-light text-neutral-300">Filters</span>
-					<AddFilter />
-				</div>
-
-				{#each filterColumns as filterData}
-					<div class="mt-2">
-						<Filter {filterData} />
-					</div>
-				{/each}
-			</div>
-
-			<!--Analysis-->
-			<!--
-			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
-				<button class="w-full">
-					<div class="flex justify-between items-center">
-						<span class="text-sm font-light text-neutral-300">Analysis</span>
-					</div>
-				</button>
-			</div>
-			-->
-
-			<!--Options-->
-			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
-				<button class="w-full">
-					<div class="flex justify-between items-center">
-						<span class="text-sm font-light text-neutral-300">Style</span>
-						<ChartDropdown />
-					</div>
-				</button>
-			</div>
-
-			<!--Export-->
-			<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
-				<ExportToCSV />
-			</div>
-			<div />
-		</div>
+		{/if}
 	</div>
-{:else}
 	<div
-		use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
-		on:click={() => ($activeSidebar = true)}
-		on:keypress={() => ($activeSidebar = true)}
-		class="bg-neutral-800 fixed overflow-hidden rounded-md shadow-lg mt-20"
+		class="transform transition-transform ease-out duration-200 {$activeSidebar || $lockSidebar
+			? 'translate-x-0'
+			: '-translate-x-72'}"
 	>
-		<div
-			class="overflow-y-auto overflow-x-hidden sidebar-inner w-full h-full divide-y divide-neutral-700/80"
+		<button
+			class="bg-neutral-600 h-5 w-5 rounded-sm flex justify-center items-center hover:bg-neutral-600/80 mt-1"
+			on:click={() => {
+				$lockSidebar = !$lockSidebar;
+			}}
 		>
-			<!-- Plus Solid -->
-			<div class="p-6 hover:bg-[#303030]">
-				<button on:click={() => activeDropZone.set(true)}>
-					<PlusSolid class="h-5 w-5 hover:text-neutral-300" />
-				</button>
-			</div>
-
-			<div class="p-6 hover:bg-[#303030]">
-				<DataVisIcon class="h-5 w-5 hover:text-neutral-300" />
-			</div>
-
-			<!-- Group -->
-			<div class="p-6 hover:bg-[#303030]">
-				<Group class="h-5 w-5 hover:text-neutral-300" />
-			</div>
-
-			<!-- Aggregator -->
-
-			<!-- Info -->
-			<div class="p-6 hover:bg-[#303030]">
-				<Info class="h-5 w-5 hover:text-neutral-300" />
-			</div>
-
-			<!-- Arrow Down -->
-
-			<!-- Filter -->
-			<div class="p-6 hover:bg-[#303030]">
-				<AddFilter />
-			</div>
-
-			<div class="p-6 hover:bg-[#303030]">
-				<button on:click={exportToCSV}>
-					<ArrowDown class="h-5 w-5 hover:text-neutral-300" />
-				</button>
-			</div>
-
-			<!-- Other original components can be added here as needed -->
-		</div>
+			{#if $lockSidebar}
+				<ChevronDown class="hover:text-neutral-300 text-neutral-200" />
+			{:else if !$activeSidebar && !$lockSidebar}
+				<ChevronRight class="hover:text-neutral-300 text-neutral-200" />
+			{:else}
+				<ChevronLeft class="hover:text-neutral-300 text-neutral-200" />
+			{/if}
+		</button>
 	</div>
-{/if}
+</div>
 
 <link
 	rel="stylesheet"

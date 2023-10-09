@@ -38,6 +38,7 @@ export const activeDropZone = writable<boolean>(storeFromSessionStorage('activeD
 export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
 export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
+export const lockSidebar = writable<boolean>(false);
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
