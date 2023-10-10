@@ -90,13 +90,16 @@
 	};
 </script>
 
-<div>
-	<span class="text-black text-sm">
-		Upload CSV, , GeoJSON or saved map Json. Read more about supported file formats.
+<div class="mb-2">
+	<span class="text-black textSize font-light">
+		Upload <span class="font-medium text-gray-neutral-800 textSize">CSV</span>,
+		<span class="font-medium text-gray-neutral-800 textSize">Text</span>, or
+		<span class="font-medium text-gray-neutral-800 textSize">Parquet</span>
+		Files
 	</span>
 </div>
 <div
-	class="flex flex-col justify-center items-center h-96 rounded-sm border-2 border-gray-300 border-dashed cursor-pointer hover:bg-neutral-100 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+	class="flex flex-col justify-center items-center h-96 rounded-sm border-gray-300 cursor-pointer hover:bg-slate-50 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 custom-dashed"
 	id="dropzone"
 	on:drop={dropHandle}
 	on:dragover={dragOver}
@@ -133,8 +136,28 @@
 		<p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
 			<span class="font-semibold">Click to upload</span> or drag and drop
 		</p>
-		<p class="text-xs text-gray-500 dark:text-gray-400">CSV, Parquet, Text, JSON</p>
 	{:else}
 		<p>{showFiles(value)}</p>
 	{/if}
+
+	<div class="mt-20 flex justify-center">
+		<span class="text-gray-400 text-sm px-10">
+			*sourcechart.io is a client-side application without a backend. Data lives only on your
+			machine/browser. Data you upload is not sent to any server.
+		</span>
+	</div>
 </div>
+
+<style>
+	.textSize {
+		font-size: 0.95rem;
+	}
+	.custom-dashed {
+		border-width: 1px;
+		border-style: dashed;
+		border-image-source: linear-gradient(to bottom, gray 50%, transparent 50%),
+			linear-gradient(to right, gray 50%, transparent 50%);
+		border-image-slice: 1;
+		border-image-repeat: round;
+	}
+</style>

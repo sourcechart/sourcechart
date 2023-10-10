@@ -1,10 +1,8 @@
 <script lang="ts">
-	import Tabs from '$lib/components/ui/tabs/Tabs.svelte'; //@ts-ignore
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import DropZone from './components/DropZone.svelte';
 	import ExternalDatasets from './components/ExternalDatasets.svelte';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
-	import Tutorials from './components/Tutorials.svelte';
 	import CheatSheet from './components/CheatSheet.svelte';
 
 	const handleClick = () => {
@@ -12,23 +10,34 @@
 		activeSidebar.set(true);
 	};
 
-	let items = [
+	let items: {
+		title: string;
+		value: number;
+		component: any; // Specify a more precise type if possible
+	}[] = [
 		{
 			title: 'Load Files',
 			component: DropZone,
 			value: 1
 		},
-		{
-			title: 'External Datasets',
-			component: ExternalDatasets,
-			value: 2
-		},
+
 		{
 			title: 'Cheat Sheet',
 			component: CheatSheet,
+			value: 2
+		},
+		{
+			title: 'External Datasets',
+			component: ExternalDatasets,
 			value: 3
 		}
 	];
+
+	export let activeTabValue: number = 1;
+	const handleTabClick = (tabValue: number) => () => (activeTabValue = tabValue);
+	const handleKeyPress = (e: KeyboardEvent, tabValue: number) => {
+		if (e.key === 'Enter') handleTabClick(tabValue)();
+	};
 </script>
 
 <div
@@ -40,7 +49,44 @@
 			<CloseSolid class="text-black h-6 w-6" />
 		</button>
 		<div class="mt-4 w-full">
-			<Tabs {items} />
+			<div class="divide-y">
+				<div>
+					<ul class="flex flex-wrap list-none space-x-8">
+						{#each items as item}
+							<li>
+								<div
+									on:click={handleTabClick(item.value)}
+									on:keypress={(e) => handleKeyPress(e, item.value)}
+									class={`py-2 cursor-pointer  rounded-sm  ${
+										activeTabValue === item.value ? 'border-b-2 border-neutral-800' : ''
+									}`}
+									role="tab"
+									tabindex="0"
+								>
+									<span
+										class={` ${
+											activeTabValue === item.value
+												? 'text-neutral-800 hover:text-neutral-900 textsize'
+												: 'text-neutral-400 hover:text-neutral-600 textsize'
+										}`}
+									>
+										{item.title}
+									</span>
+								</div>
+							</li>
+						{/each}
+					</ul>
+				</div>
+				<div>
+					{#each items as item}
+						{#if activeTabValue == item.value}
+							<div class="mb-2.5 py-6 rounded-b-md">
+								<svelte:component this={item.component} />
+							</div>
+						{/if}
+					{/each}
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -57,5 +103,15 @@
 		/* Scrollbar styles for Webkit browsers */
 		scrollbar-width: thin;
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
+	}
+
+	.textsize {
+		font-size: 0.95rem;
+	}
+	.tab-active {
+		background-color: #ffffff; /* bg-white */
+		color: #4b5563; /* text-gray-700 */
+		border-color: #e5e7eb; /* border-gray-300 */
+		border-bottom: 0;
 	}
 </style>

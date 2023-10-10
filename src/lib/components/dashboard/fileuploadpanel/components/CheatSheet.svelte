@@ -32,7 +32,7 @@
 <div class="p-4 flex justify-between space-x-4">
 	<div class="w-2/5">
 		<h2 class="text-lg text-neutral-950 font-semibold mb-2">Editor Cheat Sheet</h2>
-		<table class="w-full bg-white shadow-md rounded-md">
+		<table class="w-full bg-white shadow-md rounded-lg">
 			<tbody>
 				{#each editorItems as item}
 					<tr class="border border-gray-300">
