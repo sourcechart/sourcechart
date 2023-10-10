@@ -9,7 +9,6 @@
 	} from '$lib/io/Stores';
 	import Group from '$lib/components/ui/icons/Group.svelte';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
-	import { onDestroy } from 'svelte';
 	import { Tags } from '$lib/components/ui/tags';
 	import Aggregator from './Aggregator.svelte';
 	let dropdownContainer: HTMLElement;
@@ -39,12 +38,6 @@
 		let chart: Chart = $allCharts[$i];
 		chart.groupbyColumns = [];
 		$allCharts[$i] = chart;
-	}
-
-	$: if (isGroupByDropdownOpen) {
-		document.addEventListener('click', handleOutsideClick);
-	} else {
-		document.removeEventListener('click', handleOutsideClick);
 	}
 
 	const startGroupByHover = (): void => {
@@ -88,11 +81,6 @@
 		chart.groupbyColumns = tags;
 		$allCharts[$i] = chart;
 	};
-
-	onDestroy(() => {
-		document.removeEventListener('click', handleOutsideClick);
-		document.removeEventListener('keydown', handleEscapeKey);
-	});
 </script>
 
 <div bind:this={container} class="relative">
@@ -109,7 +97,7 @@
 	>
 		<span class="text-sm text-neutral-300">Groupby</span>
 		<button
-			class="flex w-full items-center justify-between mx-2 bg-neutral-900/80 hover:bg-neutral-900/50 rounded-sm"
+			class="flex w-full items-center justify-between ml-2 mr-2 bg-neutral-900/80 hover:bg-neutral-900/50 rounded-sm"
 			on:click={(event) => {
 				isGroupByDropdownOpen = !isGroupByDropdownOpen;
 				event.stopPropagation();

@@ -19,7 +19,7 @@
 
 <div class="flex fixed overflow-hidden mt-10 h-full justify-between w-80">
 	<div>
-		{#if $activeSidebar || ($lockSidebar && !$activeSidebar)}
+		{#if $activeSidebar || $lockSidebar}
 			<div
 				use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
 				class="bg-neutral-800 fixed overflow-hidden h-3/5 w-72 rounded-md shadow-lg"
@@ -92,6 +92,7 @@
 					<div class="py-4 px-3 hover:bg-[#303030] hover:round-md">
 						<ExportToCSV />
 					</div>
+					<!-- Space-->
 					<div>
 						<div />
 					</div>
@@ -100,7 +101,7 @@
 		{/if}
 	</div>
 	<div
-		class="transform transition-transform ease-out duration-200 {$activeSidebar || $lockSidebar
+		class="transform transition-transform ease-out duration-300 {$activeSidebar || $lockSidebar
 			? 'translate-x-0'
 			: '-translate-x-72'}"
 	>

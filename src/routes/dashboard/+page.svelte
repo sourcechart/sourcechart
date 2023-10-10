@@ -27,28 +27,30 @@
 	});
 </script>
 
-<div class="w-screen h-screen overflow-hidden bg-neutral-900">
-	<div class="flex justify-center items-center fixed top-4 left-1/2 -translate-x-1/2 z-30">
+<div class="w-screen h-screen overflow-hidden bg-neutral-900 }">
+	<div class="flex justify-center items-center fixed top-4 left-1/2 -translate-x-1/2 z-10">
 		<NavBar />
 	</div>
 
 	<div
-		class="flex justify-center items-center fixed bottom-4 left-1/2 -translate-x-1/2 z-30 sm:block md:hidden"
+		class="flex justify-center items-center fixed bottom-4 left-1/2 -translate-x-1/2 z-10 sm:block md:hidden"
 	>
 		<MobileSidebar />
 	</div>
 
-	<div class="absolute z-30 ml-6 mt-6">
+	<div class="absolute z-10 ml-6 mt-6">
 		<Sidebar />
 	</div>
-	<div class="relative">
-		{#if $activeDropZone}
-			<div class="z-30 absolute inset-0 flex justify-center items-center w-screen h-screen">
-				<FileUploadPanel />
-			</div>
-		{/if}
-		<div class="z-0 relative w-screen h-screen">
-			<Canvas />
-		</div>
+
+	<div class="relative z-0 w-screen h-screen">
+		<Canvas />
 	</div>
+
+	{#if $activeDropZone}
+		<div class="z-20 fixed inset-0 bg-black/60" />
+
+		<div class="z-30 fixed inset-0 flex justify-center items-center w-screen h-screen">
+			<FileUploadPanel />
+		</div>
+	{/if}
 </div>

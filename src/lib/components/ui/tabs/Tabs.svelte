@@ -18,7 +18,7 @@
 	{#each items as item}
 		<li>
 			<span
-				class={`tab ${activeTabValue === item.value ? 'tab-active' : ''}`}
+				class={`tab text-neutral-400 text-sm ${activeTabValue === item.value ? 'tab-active' : ''}`}
 				on:click={handleClick(item.value)}
 				on:keypress={(e) => handleKeyPress(e, item.value)}
 				role="tab"
@@ -32,7 +32,7 @@
 
 {#each items as item}
 	{#if activeTabValue == item.value}
-		<div class="mb-2.5 p-10 rounded-b-md">
+		<div class="mb-2.5 py-6 rounded-b-md">
 			<svelte:component this={item.component} />
 		</div>
 	{/if}

@@ -42,7 +42,7 @@
 </script>
 
 <div class="overflow-y-auto scrollBarDiv">
-	<table class="w-full bg-neutral-800 text-white border border-neutral-600 rounded-lg">
+	<table class="w-full bg-neutral-800 text-white border border-neutral-600">
 		<thead>
 			<tr>
 				<th class="py-2 px-2 sm:px-4 text-sm border-b border-neutral-6 text-left 00">Name</th>
@@ -82,7 +82,7 @@
 <style>
 	.scrollBarDiv {
 		/* Remove the fixed height */
-		max-height: 14rem; /* Or adjust this to a value that fits your design better */
+		max-height: 26rem; /* Or adjust this to a value that fits your design better */
 
 		/* Overflow properties */
 		overflow-y: auto;

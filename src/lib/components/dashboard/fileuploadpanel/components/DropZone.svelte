@@ -1,9 +1,17 @@
 <script lang="ts">
 	import { generateID } from '$lib/io/GenerateID';
 	import { fileUploadStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
+	import Document from '$lib/components/ui/icons/Document.svelte';
 	import { set } from 'idb-keyval';
 
 	let value: string[] = [];
+
+	let fileInputIcons = [
+		{ icon: Document, color: 'text-blue-500', filetype: 'csv' },
+		{ icon: Document, color: 'text-blue-500', filetype: 'json' },
+		{ icon: Document, color: 'text-blue-500', filetype: 'parquet' },
+		{ icon: Document, color: 'text-blue-500', filetype: 'text' }
+	];
 
 	const insertFileHandle = async (file: File, fileHandle: any) => {
 		var tableColumnsSize = {
@@ -89,9 +97,13 @@
 	};
 </script>
 
+<div>
+	<span class="text-black text-sm">
+		Upload CSV, , GeoJSON or saved map Json. Read more about supported file formats.
+	</span>
+</div>
 <div
-	class="flex flex-col justify-center items-center w-full h-64 rounded-lg border-2 border-gray-300 border-dashed selectFieldColor cursor-pointer hover:bg-neutral-600 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
-"
+	class="flex flex-col justify-center items-center h-96 rounded-sm border-2 border-gray-300 border-dashed selectFieldColor cursor-pointer hover:bg-neutral-100 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
 	id="dropzone"
 	on:drop={dropHandle}
 	on:dragover={dragOver}
@@ -103,6 +115,12 @@
 		}
 	}}
 >
+	<div class="flex space-x-8">
+		<Document class="h-10 w-10" filetype="CSV" />
+		<Document filetype="text" />
+		<Document filetype="parquet" />
+	</div>
+
 	<svg
 		aria-hidden="true"
 		class="mb-3 w-10 h-10 text-gray-400"
@@ -117,6 +135,7 @@
 			d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
 		/></svg
 	>
+
 	{#if value.length === 0}
 		<p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
 			<span class="font-semibold">Click to upload</span> or drag and drop

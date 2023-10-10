@@ -11,7 +11,7 @@
 	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import { values } from 'idb-keyval';
 	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
@@ -31,22 +31,10 @@
 		selectedDataset = 'Select Dataset';
 	}
 
-	$: {
-		if (isDropdownOpen) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
-	}
-
 	onMount(() => {
-		document.addEventListener('click', handleOutsideClick);
 		$fileUploadStore.forEach(async (file) => {
 			if (file.externalDataset?.url) await queryDuckDB(file.filename, true);
 		});
-		return () => {
-			document.removeEventListener('click', handleOutsideClick);
-		};
 	});
 
 	function extractFilenameFromURLOrString(input: string | null): string {
@@ -150,10 +138,6 @@
 	const toggleDropdown = () => {
 		isDropdownOpen = !isDropdownOpen;
 	};
-
-	onDestroy(() => {
-		document.removeEventListener('click', handleOutsideClick);
-	});
 </script>
 
 <div class="py-1 flex w-full space-x-1 items-center justify-between">
@@ -184,7 +168,10 @@
 						>
 							<button
 								class="flex-grow text-left text-sm px-3 py-2 cursor-pointer truncate"
-								on:click={async () => queryDuckDB(dataset)}
+								on:click={async () => {
+									queryDuckDB(dataset);
+									isDropdownOpen = false;
+								}}
 								on:keypress={async (e) => e.key === 'Enter' && queryDuckDB(dataset)}
 							>
 								{dataset}

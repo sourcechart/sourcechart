@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
 	export let open = false;
 
@@ -10,13 +10,6 @@
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
-	$: {
-		if (open) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
-	}
 
 	$: if (
 		$allCharts.length > 0 &&
@@ -72,10 +65,6 @@
 			open = false;
 		}
 	};
-
-	onDestroy(() => {
-		document.removeEventListener('click', handleOutsideClick);
-	});
 </script>
 
 <div bind:this={container} class="flex-grow relative">
