@@ -33,7 +33,7 @@ export const activeMobileNav = writable<boolean>(false);
 export const responsiveType = writable<ResponsiveType>();
 export const insideOutsideClick = writable<string>('outside');
 export const showGroupByAggregator = writable<boolean>(true);
-
+export const tabValue = writable<number>(1);
 export const activeDropZone = writable<boolean>(storeFromSessionStorage('activeDropZone', true));
 export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
 export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));

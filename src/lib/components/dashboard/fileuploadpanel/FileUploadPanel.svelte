@@ -2,11 +2,12 @@
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import DropZone from './components/DropZone.svelte';
 	import ExternalDatasets from './components/ExternalDatasets.svelte';
-	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
+	import { activeDropZone, activeSidebar, tabValue } from '$lib/io/Stores';
 	import CheatSheet from './components/CheatSheet.svelte';
 	import ChevronRight from '$lib/components/ui/icons/ChevronRight.svelte';
 
 	const handleClick = () => {
+		tabValue.set(1);
 		activeDropZone.set(false);
 		activeSidebar.set(true);
 	};
