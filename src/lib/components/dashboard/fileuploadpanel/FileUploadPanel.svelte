@@ -5,7 +5,7 @@
 	import ExternalDatasets from './components/ExternalDatasets.svelte';
 	import { activeDropZone, activeSidebar } from '$lib/io/Stores';
 	import Tutorials from './components/Tutorials.svelte';
-	import Faq from './components/FAQ.svelte';
+	import CheatSheet from './components/CheatSheet.svelte';
 
 	const handleClick = () => {
 		activeDropZone.set(false);
@@ -24,14 +24,9 @@
 			value: 2
 		},
 		{
-			title: 'FAQ',
-			component: Faq,
+			title: 'Cheat Sheet',
+			component: CheatSheet,
 			value: 3
-		},
-		{
-			title: 'Tutorials',
-			component: Tutorials,
-			value: 4
 		}
 	];
 </script>

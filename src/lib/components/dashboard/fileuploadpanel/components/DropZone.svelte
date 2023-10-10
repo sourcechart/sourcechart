@@ -96,7 +96,7 @@
 	</span>
 </div>
 <div
-	class="flex flex-col justify-center items-center h-96 rounded-sm border-2 border-gray-300 border-dashed selectFieldColor cursor-pointer hover:bg-neutral-100 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+	class="flex flex-col justify-center items-center h-96 rounded-sm border-2 border-gray-300 border-dashed cursor-pointer hover:bg-neutral-100 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
 	id="dropzone"
 	on:drop={dropHandle}
 	on:dragover={dragOver}
@@ -108,7 +108,7 @@
 		}
 	}}
 >
-	<div class="flex space-x-8 justify-between">
+	<div class="flex flex-row space-x-4 items-center mr-2 mb-6">
 		<Document filetype="CSV" />
 		<Document filetype="text" />
 		<Document filetype="parquet" />

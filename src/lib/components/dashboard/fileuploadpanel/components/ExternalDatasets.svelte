@@ -2,6 +2,7 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { datasets } from './Datasets';
 	import { fileUploadStore, activeDropZone } from '$lib/io/Stores';
+	import Download from '$lib/components/ui/icons/Download.svelte';
 
 	const addURLToDatabase = (dataset: ExternalDataset) => {
 		var tableColumnsSize = {
@@ -42,41 +43,48 @@
 </script>
 
 <div class="overflow-y-auto scrollBarDiv">
-	<table class="w-full bg-white text-gray-500">
+	<table class="w-full bg-white text-neutral-950 divide-y divide-neutral-300">
 		<thead>
 			<tr>
-				<th class="py-2 px-2 sm:px-4 text-sm border-neutral-6 text-left flex justify-center"
+				<th
+					class="py-2 px-2 sm:px-4 text-sm border-b border-neutral-300 text-left flex justify-center text-neutral-950"
 					>Dataset Name</th
 				>
-				<th class="hidden md:table-cell py-2 px-2 sm:px-4 text-sm justify-center">Description</th>
-				<th class="py-2 px-2 sm:px-4 text-sm flex justify-center">Actions</th>
-				<th class="py-2 px-2 sm:px-4 text-sm">Download</th>
+				<th
+					class="hidden md:table-cell py-2 px-2 sm:px-4 text-sm border-b border-neutral-300 justify-center text-neutral-950"
+					>Description</th
+				>
+				<th
+					class="py-2 px-2 sm:px-4 text-sm flex justify-center border-b border-neutral-300 text-neutral-950"
+					>Actions</th
+				>
+				<th class="py-2 px-2 sm:px-4 text-sm border-b border-neutral-300 text-neutral-950"
+					>Download</th
+				>
 			</tr>
 		</thead>
-		<tbody class="border border-1 border-neutral-200">
+		<tbody>
 			{#each datasets as dataset, index}
-				<tr class={index % 2 === 0 ? 'bg-neutral-600/10' : ''}>
-					<td class="py-2 px-2 sm:px-4 text-xs mt-2">{dataset.name}</td>
-					<td class="hidden md:table-cell py-2 px-2 sm:px-4 text-xs mt-2">{dataset.description}</td>
+				<tr
+					class={index % 2 === 0 ? 'bg-neutral-100 hover:bg-neutral-200' : 'hover:bg-neutral-200'}
+				>
+					<td class="py-2 px-2 sm:px-4 text-xs">{dataset.name}</td>
+					<td class="hidden md:table-cell py-2 px-2 sm:px-4 text-xs">{dataset.description}</td>
 					<td class="p-1 sm:px-4">
 						<button
-							class="text-blue-300 text-sm hover:underline border border-blue-300 rounded"
+							class="bg-[#8884c0] hover:bg-[#807cb7] active:bg-[#7976ab] text-sm text-white p-2 rounded"
 							on:click={() => addURLToDatabase(dataset)}
 						>
 							Add Dataset
 						</button>
 					</td>
-					<td class="p-1 sm:px-4">
-						<div
-							class="text-blue-300 border-blue-300 hover:underline text-sm flex justify-between items-center"
+					<td class="p-1 sm:px-4 flex items-center justify-center">
+						<button
+							class="bg-[#8884c0] hover:bg-[#807cb7] active:bg-[#7976ab] text-white p-2 text-sm transition duration-200 ease-in-out shadow-md rounded-full flex items-center justify-center"
+							on:click={async () => downloadRawDataset(dataset)}
 						>
-							<button
-								class="text-blue-300 text-sm hover:underline border border-blue-300 rounded"
-								on:click={async () => downloadRawDataset(dataset)}
-							>
-								<span class="mr-2">Download Raw CSV</span>
-							</button>
-						</div>
+							<Download class="h-6 w-6 " />
+						</button>
 					</td>
 				</tr>
 			{/each}
