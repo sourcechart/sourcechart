@@ -42,33 +42,38 @@
 </script>
 
 <div class="overflow-y-auto scrollBarDiv">
-	<table class="w-full bg-neutral-800 text-white border border-neutral-600">
+	<table class="w-full bg-white text-gray-500">
 		<thead>
 			<tr>
-				<th class="py-2 px-2 sm:px-4 text-sm border-b border-neutral-6 text-left 00">Name</th>
-				<th class="hidden md:table-cell py-2 px-2 sm:px-4 text-sm border-b border-neutral-600"
-					>Description</th
+				<th class="py-2 px-2 sm:px-4 text-sm border-neutral-6 text-left flex justify-center"
+					>Dataset Name</th
 				>
-				<th class="py-2 px-2 sm:px-4 text-sm border-b border-neutral-600">Actions</th>
-				<th class="py-2 px-2 sm:px-4 text-sm border-b border-neutral-600">Download</th>
+				<th class="hidden md:table-cell py-2 px-2 sm:px-4 text-sm justify-center">Description</th>
+				<th class="py-2 px-2 sm:px-4 text-sm flex justify-center">Actions</th>
+				<th class="py-2 px-2 sm:px-4 text-sm">Download</th>
 			</tr>
 		</thead>
-		<tbody>
-			{#each datasets as dataset}
-				<tr class="hover:bg-neutral-700">
-					<td class="py-2 px-2 sm:px-4 text-sm mt-2">{dataset.name}</td>
-					<td class="hidden md:table-cell py-2 px-2 sm:px-4 text-sm mt-2">{dataset.description}</td>
-					<td class="py-2 px-2 sm:px-4">
+		<tbody class="border border-1 border-neutral-200">
+			{#each datasets as dataset, index}
+				<tr class={index % 2 === 0 ? 'bg-neutral-600/10' : ''}>
+					<td class="py-2 px-2 sm:px-4 text-xs mt-2">{dataset.name}</td>
+					<td class="hidden md:table-cell py-2 px-2 sm:px-4 text-xs mt-2">{dataset.description}</td>
+					<td class="p-1 sm:px-4">
 						<button
-							class="text-blue-300 hover:underline border border-blue-300 rounded"
+							class="text-blue-300 text-sm hover:underline border border-blue-300 rounded"
 							on:click={() => addURLToDatabase(dataset)}
 						>
 							Add Dataset
 						</button>
 					</td>
-					<td class="py-2 px-2 sm:px-4">
-						<div class="text-blue-300 hover:underline flex justify-between items-center">
-							<button on:click={async () => downloadRawDataset(dataset)}>
+					<td class="p-1 sm:px-4">
+						<div
+							class="text-blue-300 border-blue-300 hover:underline text-sm flex justify-between items-center"
+						>
+							<button
+								class="text-blue-300 text-sm hover:underline border border-blue-300 rounded"
+								on:click={async () => downloadRawDataset(dataset)}
+							>
 								<span class="mr-2">Download Raw CSV</span>
 							</button>
 						</div>
@@ -81,28 +86,10 @@
 
 <style>
 	.scrollBarDiv {
-		/* Remove the fixed height */
-		max-height: 26rem; /* Or adjust this to a value that fits your design better */
+		max-height: 24rem; /* Adjust to fit your design */
 
 		/* Overflow properties */
 		overflow-y: auto;
 		overflow-x: auto;
-
-		/* Scrollbar styles for Webkit browsers */
-		scrollbar-width: thin;
-		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
-	}
-
-	.scrollBarDiv::-webkit-scrollbar {
-		width: 8px;
-	}
-
-	.scrollBarDiv::-webkit-scrollbar-thumb {
-		background-color: rgba(255, 255, 255, 0.3);
-		border-radius: 4px;
-	}
-
-	.scrollBarDiv::-webkit-scrollbar-thumb:hover {
-		background-color: rgba(168, 168, 168, 0.5);
 	}
 </style>

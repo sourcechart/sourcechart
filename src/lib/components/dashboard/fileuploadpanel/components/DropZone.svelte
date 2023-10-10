@@ -6,13 +6,6 @@
 
 	let value: string[] = [];
 
-	let fileInputIcons = [
-		{ icon: Document, color: 'text-blue-500', filetype: 'csv' },
-		{ icon: Document, color: 'text-blue-500', filetype: 'json' },
-		{ icon: Document, color: 'text-blue-500', filetype: 'parquet' },
-		{ icon: Document, color: 'text-blue-500', filetype: 'text' }
-	];
-
 	const insertFileHandle = async (file: File, fileHandle: any) => {
 		var tableColumnsSize = {
 			filename: file.name,
@@ -115,8 +108,8 @@
 		}
 	}}
 >
-	<div class="flex space-x-8">
-		<Document class="h-10 w-10" filetype="CSV" />
+	<div class="flex space-x-8 justify-between">
+		<Document filetype="CSV" />
 		<Document filetype="text" />
 		<Document filetype="parquet" />
 	</div>
