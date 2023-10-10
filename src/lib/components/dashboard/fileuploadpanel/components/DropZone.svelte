@@ -133,8 +133,8 @@
 	>
 
 	{#if value.length === 0}
-		<p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-			<span class="font-semibold">Click to upload</span> or drag and drop
+		<p class="mb-2 text-lg text-gray-500 dark:text-gray-400">
+			<span class="font-semibold">DRAG & Drop</span> or click to upload
 		</p>
 	{:else}
 		<p>{showFiles(value)}</p>
