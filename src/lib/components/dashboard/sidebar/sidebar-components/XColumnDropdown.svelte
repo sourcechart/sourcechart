@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
-
+	import { onMount } from 'svelte';
 	export let open = false;
 	let currentValue: string | null = '';
 	let showTooltip: boolean = false;

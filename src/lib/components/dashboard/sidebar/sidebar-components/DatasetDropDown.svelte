@@ -26,9 +26,26 @@
 	$: datasets = fileDropdown();
 
 	$: if ($allCharts[$i]?.filename) {
-		selectedDataset = extractFilenameFromURLOrString($allCharts[$i].filename);
+		if (isURL($allCharts[$i].filename)) {
+			selectedDataset = extractFilenameFromURLOrString($allCharts[$i].filename);
+		} else {
+			selectedDataset = $allCharts[$i].filename;
+		}
 	} else {
 		selectedDataset = 'Select Dataset';
+	}
+
+	function isURL(input: string | null): boolean {
+		if (!input) {
+			return false; // Default to false if input is null or empty.
+		}
+		// More comprehensive regex pattern for URL detection.
+		// Covers http, https, ftp, file protocols, IP addresses, localhost, and more.
+		const urlPattern = /^(https?|ftp|file):\/\/|^(localhost|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/\S*)?$/;
+
+		const filenamePattern = /^[^\/\\]*\.([a-z0-9]+)$/i;
+
+		return urlPattern.test(input) || !filenamePattern.test(input);
 	}
 
 	onMount(() => {
@@ -82,6 +99,7 @@
 
 		chosenFile.set(filename);
 		const dataset = $fileUploadStore.find((file) => file.filename === filename);
+
 		if (!dataset) return;
 		let db: DuckDBClient;
 
@@ -150,7 +168,7 @@
 			on:click={toggleDropdown}
 		>
 			<span
-				class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-1 truncate"
+				class="text-sm text-gray-100 justify-start flex hover:text-neutral-200 font-thin ml-1 truncate"
 			>
 				{selectedDataset || 'Select Dataset'}
 			</span>

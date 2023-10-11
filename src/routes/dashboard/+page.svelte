@@ -90,6 +90,6 @@
 				Open Help and Tips
 			</div>
 		{/if}
-		<Help class="text-white hover:text-neutral-100" />
+		<Help class="text-neutral-300 hover:text-neutral-400" />
 	</button>
 </div>

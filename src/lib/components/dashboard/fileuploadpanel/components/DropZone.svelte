@@ -5,15 +5,18 @@
 	import { set } from 'idb-keyval';
 
 	let value: string[] = [];
+	let isDragging = false;
 
 	const insertFileHandle = async (file: File, fileHandle: any) => {
 		var tableColumnsSize = {
 			filename: file.name,
 			size: file.size,
-			fileExtension: file.name.split('.').pop(),
+			fileExtension: '',
 			externalDataset: null,
 			datasetID: generateID()
 		};
+
+		console.log(tableColumnsSize);
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 		await set(file.name, fileHandle);
 	};
@@ -79,9 +82,12 @@
 		if (dropzone) {
 			dropzone.classList.remove('hover:bg-neutral-600');
 		}
+		isDragging = false;
 	};
 
 	const dragOver = (event: DragEvent) => {
+		isDragging = true;
+
 		event.preventDefault();
 		const dropzone = document.getElementById('dropzone');
 		if (dropzone) {
@@ -99,7 +105,9 @@
 	</span>
 </div>
 <div
-	class="flex flex-col justify-center items-center h-96 rounded-sm border-gray-300 cursor-pointer hover:bg-slate-50 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 custom-dashed"
+	class=" {isDragging
+		? 'bg-slate-50'
+		: ''} flex flex-col justify-center items-center h-96 rounded-sm border-gray-300 cursor-pointer hover:bg-slate-50 custom-dashed"
 	id="dropzone"
 	on:drop={dropHandle}
 	on:dragover={dragOver}
