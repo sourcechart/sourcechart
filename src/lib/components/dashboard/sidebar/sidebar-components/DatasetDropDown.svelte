@@ -11,7 +11,7 @@
 	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import { values } from 'idb-keyval';
 	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
@@ -26,33 +26,41 @@
 	$: datasets = fileDropdown();
 
 	$: if ($allCharts[$i]?.filename) {
-		// @ts-ignore
-		selectedDataset = extractFilenameFromURLOrString($allCharts[$i].filename);
+		if (isURL($allCharts[$i].filename)) {
+			selectedDataset = extractFilenameFromURLOrString($allCharts[$i].filename);
+		} else {
+			selectedDataset = $allCharts[$i].filename;
+		}
 	} else {
 		selectedDataset = 'Select Dataset';
 	}
 
-	$: {
-		if (isDropdownOpen) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
+	function isURL(input: string | null): boolean {
+		if (!input) {
+			return false; // Default to false if input is null or empty.
 		}
+		// More comprehensive regex pattern for URL detection.
+		// Covers http, https, ftp, file protocols, IP addresses, localhost, and more.
+		const urlPattern = /^(https?|ftp|file):\/\/|^(localhost|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/\S*)?$/;
+
+		const filenamePattern = /^[^\/\\]*\.([a-z0-9]+)$/i;
+
+		return urlPattern.test(input) || !filenamePattern.test(input);
 	}
 
 	onMount(() => {
 		$fileUploadStore.forEach(async (file) => {
-			if (file.externalDataset?.url) await queryDuckDB(file.filename);
+			if (file.externalDataset?.url) await queryDuckDB(file.filename, true);
 		});
 	});
 
-	function extractFilenameFromURLOrString(input: string): string {
-		try {
+	function extractFilenameFromURLOrString(input: string | null): string {
+		if (input) {
 			const path = new URL(input).pathname;
 			const parts = path.split('/');
 			return parts[parts.length - 1];
-		} catch {
-			return input;
+		} else {
+			return 'Select Dataset';
 		}
 	}
 
@@ -85,12 +93,13 @@
 		}
 	};
 
-	const queryDuckDB = async (filename: string) => {
+	const queryDuckDB = async (filename: string, mount?: boolean) => {
 		let resp;
 		let fname = filename;
 
 		chosenFile.set(filename);
 		const dataset = $fileUploadStore.find((file) => file.filename === filename);
+
 		if (!dataset) return;
 		let db: DuckDBClient;
 
@@ -116,8 +125,8 @@
 		duckDBInstanceStore.set(db);
 		allCharts.update((charts) => {
 			let chart = charts[$i];
-			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID;
-			charts[$i].filename = fname;
+			if ($file?.datasetID) charts[$i].datasetID = $file.datasetID; //This is a hack so it doesn't load on the mount
+			if (!mount) charts[$i].filename = fname;
 			chart.schema = schema;
 			chart.columns = columns;
 			return charts;
@@ -147,10 +156,6 @@
 	const toggleDropdown = () => {
 		isDropdownOpen = !isDropdownOpen;
 	};
-
-	onDestroy(() => {
-		document.removeEventListener('click', handleOutsideClick);
-	});
 </script>
 
 <div class="py-1 flex w-full space-x-1 items-center justify-between">
@@ -163,7 +168,7 @@
 			on:click={toggleDropdown}
 		>
 			<span
-				class="text-sm text-gray-100 justify-center flex hover:text-neutral-200 font-thin ml-1 truncate"
+				class="text-sm text-gray-100 justify-start flex hover:text-neutral-200 font-thin ml-1 truncate"
 			>
 				{selectedDataset || 'Select Dataset'}
 			</span>
@@ -181,7 +186,10 @@
 						>
 							<button
 								class="flex-grow text-left text-sm px-3 py-2 cursor-pointer truncate"
-								on:click={async () => queryDuckDB(dataset)}
+								on:click={async () => {
+									queryDuckDB(dataset);
+									isDropdownOpen = false;
+								}}
 								on:keypress={async (e) => e.key === 'Enter' && queryDuckDB(dataset)}
 							>
 								{dataset}

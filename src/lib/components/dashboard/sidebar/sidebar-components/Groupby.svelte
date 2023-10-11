@@ -7,12 +7,10 @@
 		clickedChartIndex,
 		showGroupByAggregator
 	} from '$lib/io/Stores';
+	import Group from '$lib/components/ui/icons/Group.svelte';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
-	import CarrotUp from '$lib/components/ui/icons/CarrotUp.svelte';
-	import { onDestroy } from 'svelte';
 	import { Tags } from '$lib/components/ui/tags';
 	import Aggregator from './Aggregator.svelte';
-
 	let dropdownContainer: HTMLElement;
 	let container: HTMLElement;
 
@@ -40,12 +38,6 @@
 		let chart: Chart = $allCharts[$i];
 		chart.groupbyColumns = [];
 		$allCharts[$i] = chart;
-	}
-
-	$: if (isGroupByDropdownOpen) {
-		document.addEventListener('click', handleOutsideClick);
-	} else {
-		document.removeEventListener('click', handleOutsideClick);
 	}
 
 	const startGroupByHover = (): void => {
@@ -89,16 +81,11 @@
 		chart.groupbyColumns = tags;
 		$allCharts[$i] = chart;
 	};
-
-	onDestroy(() => {
-		document.removeEventListener('click', handleOutsideClick);
-		document.removeEventListener('keydown', handleEscapeKey);
-	});
 </script>
 
 <div bind:this={container} class="relative">
 	<div
-		class="flex items-center w-full bg-neutral-900/80 hover:bg-neutral-900/50 shadow-lg border border-1 border-neutral-700/50"
+		class="flex items-center"
 		on:mouseover={startGroupByHover}
 		on:mouseout={endGroupByHover}
 		on:blur={() => {
@@ -108,29 +95,46 @@
 			null;
 		}}
 	>
+		<span class="text-sm text-neutral-300">Groupby</span>
 		<button
-			class="flex-grow text-left mb-1"
+			class="flex w-full items-center justify-between ml-2 mr-2 bg-neutral-900/80 hover:bg-neutral-900/50 rounded-sm"
 			on:click={(event) => {
 				isGroupByDropdownOpen = !isGroupByDropdownOpen;
 				event.stopPropagation();
 			}}
 		>
-			<span class="text-sm ml-1 text-neutral-300"> Groupby </span>
+			<span class="text-sm ml-2 text-neutral-200">Choose Columns </span>
+			<CarrotDown class="hover:text-neutral-300" />
 		</button>
-
 		<button
-			class="flex-shrink-0"
 			on:click={() => {
 				$showGroupByAggregator = !$showGroupByAggregator;
 			}}
 		>
-			{#if !$showGroupByAggregator}
-				<CarrotDown class="h-6 w-6 hover:text-neutral-400 ml-4" />
-			{:else}
-				<CarrotUp class="h-6 w-6 hover:text-neutral-400 ml-4" />
-			{/if}
+			<Group class="hover:text-neutral-300 ml-1" />
 		</button>
-		<!--
+
+		{#if isGroupByDropdownOpen}
+			<div
+				bind:this={dropdownContainer}
+				class="scrollBarDiv absolute top-full left-16 rounded-sm bg-neutral-900 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			>
+				{#each $columns as column (column)}
+					<button
+						class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300 truncate"
+						on:click={() => {
+							addColumnToGroupBy(column);
+							showGroupByAggregator.set(true);
+						}}
+					>
+						{column}
+					</button>
+				{/each}
+			</div>
+		{/if}
+	</div>
+
+	<!--
 	{#if showGroupByTooltip}
 		<div
 			role="tooltip"
@@ -140,36 +144,12 @@
 		</div>
 	{/if}
 	-->
-	</div>
-
-	{#if isGroupByDropdownOpen}
-		<div
-			bind:this={dropdownContainer}
-			class="scrollBarDiv absolute top-full left-0 rounded-md bg-neutral-900 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-		>
-			{#each $columns as column (column)}
-				<button
-					class="block w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300 truncate"
-					on:click={() => {
-						addColumnToGroupBy(column);
-						showGroupByAggregator.set(true);
-					}}
-				>
-					{column}
-				</button>
-			{/each}
-		</div>
-	{/if}
 </div>
-
 {#if $showGroupByAggregator}
-	<div class="-mt-1 bg-[#1c1c1c]">
+	<div class="mt-2">
 		<Tags items={tags} removeItem={removeTag} />
 	</div>
-	<div class="mt-3">
-		<span class="text-sm -mb-1 ml-1">Aggregate</span>
-		<Aggregator />
-	</div>
+	<Aggregator />
 {/if}
 
 <style>

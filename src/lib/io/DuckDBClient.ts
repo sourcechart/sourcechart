@@ -7,7 +7,6 @@ import type { AsyncDuckDB, AsyncDuckDBConnection } from '@duckdb/duckdb-wasm';
 import { FileStreamer } from './FileStreamer';
 import { checkNameForSpacesAndHyphens } from './FileUtils';
 import { DuckDBDataProtocol, LogLevel } from '@duckdb/duckdb-wasm';
-import ExternalDatasets from '$lib/components/dashboard/fileuploadpanel/components/ExternalDatasets.svelte';
 
 export class DuckDBClient {
 	_db: AsyncDuckDB | null = null;

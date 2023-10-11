@@ -36,19 +36,19 @@
 </script>
 
 <div
-	class="scrollBarDiv bg-[#1c1c1ccd] flex justify-start items-center rounded-b-md overflow-x-auto border border-1 border-neutral-700/50"
+	class="scrollBarDiv bg-[#1c1c1ccd] flex justify-start items-center rounded-md overflow-x-auto border border-1 border-neutral-700/50"
 >
 	{#each items as item, i (i)}
 		<div
 			role="button"
-			class="flex justify-center items-center m-2 rounded-md text-xs bg-neutral-600 border border-1 border-neutral-700 text-white px-2 py-1 cursor-pointer hover:bg-[#9d99dc77] transition duration-150 ease-in-out"
+			class="flex justify-between items-center m-1 rounded-md text-xs bg-zinc-900 border border-1 border-neutral-700 text-white p-2 cursor-pointer hover:bg-[#9d99dc77] transition duration-150 ease-in-out"
 			tabindex="0"
 			on:click={() => selectItem(i)}
 			on:keydown={(e) => {
 				if (e.key === 'Enter') selectItem(i);
 			}}
 		>
-			<span class="mb-1 mr-1">{item}</span>
+			<span>{item}</span>
 			<div
 				role="button"
 				class="ml-2 items-center cursor-pointer hover:text-gray-400"
@@ -58,7 +58,7 @@
 					if (e.key === 'Enter') removeItem(item);
 				}}
 			>
-				<CloseSolid class="w-3 h-3" color="white" />
+				<CloseSolid class="w-3 h-3 mt-0.5" color="white" />
 			</div>
 		</div>
 	{/each}

@@ -109,15 +109,9 @@ export class Query {
 	}
 
 	private getAllColumns(processedYColumn?: string): string[] {
-		// Sanitize xColumn
 		const sanitizedXColumn = checkNameForSpacesAndHyphens(
 			this.queryObject.queries.select.basic.xColumn.column
 		);
-
-		// Sanitize both potential sources of yColumn
-		//const defaultYColumn = checkNameForSpacesAndHyphens(
-		//	this.queryObject.queries.select.basic.yColumn.column
-		//);
 
 		const baseColumns = [sanitizedXColumn, processedYColumn];
 
@@ -127,17 +121,17 @@ export class Query {
 			);
 		}
 
-		const uniqueColumns = [...new Set(baseColumns.filter(Boolean))];
+		const uniqueColumns = [...new Set(baseColumns.filter(Boolean))]; //@ts-ignore
 		return uniqueColumns;
 	}
 
 	private checkXColumnInGroupBy(groupby: Array<string>, xColumn: string) {
-		if (groupby.find((item) => item === xColumn)) {
-			//If X column is in the group
-			return groupby.join(', ');
-		} else {
-			return '';
-		}
+		//if (groupby.find((item) => item === xColumn)) {
+		//If X column is in the group
+		return groupby.join(', ');
+		//}//else {
+		//return '';
+		//}
 	}
 
 	private getAllColumnsQuery(): string {

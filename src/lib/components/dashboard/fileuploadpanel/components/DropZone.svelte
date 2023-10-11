@@ -1,18 +1,22 @@
 <script lang="ts">
 	import { generateID } from '$lib/io/GenerateID';
 	import { fileUploadStore, activeDropZone, activeSidebar } from '$lib/io/Stores';
+	import Document from '$lib/components/ui/icons/Document.svelte';
 	import { set } from 'idb-keyval';
 
 	let value: string[] = [];
+	let isDragging = false;
 
 	const insertFileHandle = async (file: File, fileHandle: any) => {
 		var tableColumnsSize = {
 			filename: file.name,
 			size: file.size,
-			fileExtension: file.name.split('.').pop(),
+			fileExtension: '',
 			externalDataset: null,
 			datasetID: generateID()
 		};
+
+		console.log(tableColumnsSize);
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 		await set(file.name, fileHandle);
 	};
@@ -78,9 +82,12 @@
 		if (dropzone) {
 			dropzone.classList.remove('hover:bg-neutral-600');
 		}
+		isDragging = false;
 	};
 
 	const dragOver = (event: DragEvent) => {
+		isDragging = true;
+
 		event.preventDefault();
 		const dropzone = document.getElementById('dropzone');
 		if (dropzone) {
@@ -89,9 +96,18 @@
 	};
 </script>
 
+<div class="mb-2">
+	<span class="text-black textSize font-light">
+		Upload <span class="font-medium text-gray-neutral-800 textSize">CSV</span>,
+		<span class="font-medium text-gray-neutral-800 textSize">Text</span>, or
+		<span class="font-medium text-gray-neutral-800 textSize">Parquet</span>
+		Files
+	</span>
+</div>
 <div
-	class="flex flex-col justify-center items-center w-full h-64 rounded-lg border-2 border-gray-300 border-dashed selectFieldColor cursor-pointer hover:bg-neutral-600 dark:border-neutral-600 dark:hover:border-gray-500 dark:hover:bg-gray-600
-"
+	class=" {isDragging
+		? 'bg-slate-50'
+		: ''} flex flex-col justify-center items-center h-96 rounded-sm border-gray-300 cursor-pointer hover:bg-slate-50 custom-dashed"
 	id="dropzone"
 	on:drop={dropHandle}
 	on:dragover={dragOver}
@@ -103,6 +119,12 @@
 		}
 	}}
 >
+	<div class="flex flex-row space-x-4 items-center mr-2 mb-6">
+		<Document filetype="CSV" />
+		<Document filetype="text" />
+		<Document filetype="parquet" />
+	</div>
+
 	<svg
 		aria-hidden="true"
 		class="mb-3 w-10 h-10 text-gray-400"
@@ -117,12 +139,33 @@
 			d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
 		/></svg
 	>
+
 	{#if value.length === 0}
-		<p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-			<span class="font-semibold">Click to upload</span> or drag and drop
+		<p class="mb-2 text-lg text-gray-500 dark:text-gray-400">
+			<span class="font-semibold">DRAG & Drop</span> or click to upload
 		</p>
-		<p class="text-xs text-gray-500 dark:text-gray-400">CSV, Parquet, Text, JSON</p>
 	{:else}
 		<p>{showFiles(value)}</p>
 	{/if}
+
+	<div class="mt-20 flex justify-center">
+		<span class="text-gray-400 text-sm px-10">
+			*sourcechart.io is a client-side application without a backend. Data lives only on your
+			machine/browser. Data you upload is not sent to any server.
+		</span>
+	</div>
 </div>
+
+<style>
+	.textSize {
+		font-size: 0.95rem;
+	}
+	.custom-dashed {
+		border-width: 1px;
+		border-style: dashed;
+		border-image-source: linear-gradient(to bottom, gray 50%, transparent 50%),
+			linear-gradient(to right, gray 50%, transparent 50%);
+		border-image-slice: 1;
+		border-image-repeat: round;
+	}
+</style>

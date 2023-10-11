@@ -1,7 +1,7 @@
-import Cursor from './Cursor.svelte';
-import Rectangle from './Rectangle.svelte';
-import Eraser from './Eraser.svelte';
-import Text from './Text.svelte';
-import Arrow from './Arrow.svelte';
+import Cursor from '../../../ui/icons/Cursor.svelte';
+import Rectangle from '../../../ui/icons/Rectangle.svelte';
+import Eraser from '../../../ui/icons/Eraser.svelte';
+import Text from '../../../ui/icons/Text.svelte';
+import Arrow from '../../../ui/icons/Arrow.svelte';
 
 export { Cursor, Rectangle, Eraser, Text, Arrow };

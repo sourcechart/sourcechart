@@ -46,7 +46,7 @@
 				on:blur={() => null}
 				on:click={exportToCSV}
 			>
-				<Download class="hover:text-gray-200 text-neutral-300" />
+				<Download class="hover:text-neutral-300 " />
 			</button>
 
 			{#if showTooltip && $responsiveType !== 'mobile'}
