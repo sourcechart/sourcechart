@@ -38,7 +38,6 @@
 
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
-	var TouchEvent: any;
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: CANVASBEHAVIOR = canvasBehavior();
@@ -69,15 +68,12 @@
 		let x: number;
 		let y: number;
 
-		console.log(e);
-
-		if (typeof TouchEvent !== 'undefined' && e instanceof TouchEvent) {
+		if (e instanceof TouchEvent) {
 			responsiveType.set('mobile');
 
-			e.preventDefault();
-			e.stopPropagation();
-			x = e.touches[0].clientX; //@ts-ignore
-			y = e.touches[0].clientY; //@ts-ignore
+			//@ts-ignore
+			x = e.touches[0].clientX - offsetX + scrollX; //@ts-ignore
+			y = e.touches[0].clientY - offsetY + scrollY;
 		} else if (e instanceof MouseEvent) {
 			responsiveType.set('desktop');
 
@@ -104,8 +100,8 @@
 		touchState.set('isTouching');
 		document.addEventListener('mousemove', handleMouseMove);
 		document.addEventListener('mouseup', handleGlobalMouseUp);
-		document.addEventListener('touchmove', handleMouseMove, { passive: false });
-		document.addEventListener('touchend', handleGlobalMouseUp, { passive: false });
+		document.addEventListener('touchmove', handleMouseMove);
+		document.addEventListener('touchend', handleGlobalMouseUp);
 	};
 
 	const handleGlobalMouseUp = (e: MouseEvent | TouchEvent): void => {
@@ -127,8 +123,6 @@
 		} else if (typeof TouchEvent !== 'undefined' && e instanceof TouchEvent) {
 			x = e.changedTouches[0].clientX;
 			y = e.changedTouches[0].clientY;
-			e.preventDefault();
-			e.stopPropagation();
 		} else {
 			return;
 		}
@@ -160,8 +154,6 @@
 		let y: number;
 
 		if (typeof TouchEvent !== 'undefined' && e instanceof TouchEvent) {
-			e.preventDefault();
-			e.stopPropagation(); //@ts-ignore
 			x = e.touches[0].clientX; //@ts-ignore
 			y = e.touches[0].clientY;
 			handleTouchMove(x, y);
@@ -311,8 +303,8 @@
 	on:mousedown={handleMouseDown}
 	on:mousemove={handleMouseMove}
 	on:mouseup={handleMouseUp}
-	on:touchmove={handleMouseMove}
 	on:touchstart={handleMouseDown}
+	on:touchmove={handleMouseMove}
 	on:touchend={handleMouseUp}
 />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />

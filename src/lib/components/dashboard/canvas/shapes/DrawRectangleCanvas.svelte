@@ -20,6 +20,7 @@
 
 	let offsetX = 0;
 	let offsetY = 0;
+	let container: HTMLElement;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let dragging = false;
@@ -72,16 +73,10 @@
 	onMount(() => {
 		window.addEventListener('mousemove', handleMouseMove);
 		window.addEventListener('mouseup', handleMouseUp);
-		window.addEventListener('touchmove', handleMouseMove, { passive: false });
-		window.addEventListener('touchend', handleMouseUp, { passive: false });
-		document.addEventListener('mousedown', handleClickOutside, { passive: false });
 
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('mouseup', handleMouseUp);
-			window.removeEventListener('touchmove', handleMouseMove);
-			window.removeEventListener('touchend', handleMouseUp);
-			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	});
 
@@ -133,6 +128,7 @@
 		if (!dragging) return;
 
 		var x, y;
+
 		if (e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
@@ -160,10 +156,6 @@
 			updateAllCharts(newPolygon);
 
 			polygon = newPolygon;
-		}
-
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
 		}
 	};
 
@@ -199,6 +191,7 @@
 			polygon.vertices[3].x = dx;
 			polygon.vertices[3].y = dy + canvas.height;
 
+			console.log('polygon', polygon);
 			updateAllCharts(polygon);
 			dragging = false;
 		}
@@ -241,7 +234,6 @@
 	$: points = calculateVertices(rectWidth, rectHeight, 5);
 	$: handles = generateHandleRectangles(points, 9);
 	$: plotHeight = getPlotHeight();
-	let container: HTMLElement;
 </script>
 
 <div
