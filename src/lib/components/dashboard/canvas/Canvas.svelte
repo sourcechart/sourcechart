@@ -38,6 +38,7 @@
 
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
+	var TouchEvent: any;
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: CANVASBEHAVIOR = canvasBehavior();
@@ -70,7 +71,7 @@
 
 		console.log(e);
 
-		if (e instanceof TouchEvent) {
+		if (typeof TouchEvent !== 'undefined' && e instanceof TouchEvent) {
 			responsiveType.set('mobile');
 
 			e.preventDefault();
@@ -123,7 +124,7 @@
 		if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
-		} else if (e instanceof TouchEvent) {
+		} else if (typeof TouchEvent !== 'undefined' && e instanceof TouchEvent) {
 			x = e.changedTouches[0].clientX;
 			y = e.changedTouches[0].clientY;
 			e.preventDefault();
@@ -158,7 +159,7 @@
 		let x: number;
 		let y: number;
 
-		if (e instanceof TouchEvent) {
+		if (typeof TouchEvent !== 'undefined' && e instanceof TouchEvent) {
 			e.preventDefault();
 			e.stopPropagation();
 			x = e.touches[0].clientX;
@@ -284,16 +285,7 @@
 </script>
 
 <div class="w-full h-full top-0 left-0 fixed">
-	<div
-		class="h-full w-full"
-		style={`cursor: ${$touchType};`}
-		on:mousedown={handleMouseDown}
-		on:mousemove={handleMouseMove}
-		on:mouseup={handleMouseUp}
-		on:touchstart={handleMouseDown}
-		on:touchmove={handleMouseMove}
-		on:touchend={handleMouseUp}
-	>
+	<div class="h-full w-full" style={`cursor: ${$touchType};`}>
 		<div id="canvasParent">
 			{#if !$activeDropZone}
 				{#each $allCharts as chart (chart.chartID)}
@@ -315,6 +307,24 @@
 			width = window.innerWidth;
 			height = window.innerHeight;
 		}
+	}}
+	on:mousedown={(e) => {
+		handleMouseDown(e);
+	}}
+	on:mousemove={(e) => {
+		handleMouseMove(e);
+	}}
+	on:mouseup={(e) => {
+		handleMouseUp(e);
+	}}
+	on:touchmove={(e) => {
+		handleMouseMove(e);
+	}}
+	on:touchstart={(e) => {
+		handleMouseDown(e);
+	}}
+	on:touchend={(e) => {
+		handleMouseUp(e);
 	}}
 />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
