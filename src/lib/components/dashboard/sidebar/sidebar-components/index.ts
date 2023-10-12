@@ -1,5 +1,4 @@
 import DatasetDropDown from './DatasetDropDown.svelte';
-import ColumnDropDown from './ColumnDropDrown.svelte';
 import Groupby from './Groupby.svelte';
 import Aggregator from './Aggregator.svelte';
 import FileUploadButton from './FileUploadButton.svelte';
@@ -12,7 +11,6 @@ import ExportToCSV from './ExportToCSV.svelte';
 export {
 	Tags,
 	DatasetDropDown,
-	ColumnDropDown,
 	Groupby,
 	Aggregator,
 	FileUploadButton,

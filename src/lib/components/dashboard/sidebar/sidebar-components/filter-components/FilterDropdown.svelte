@@ -8,8 +8,6 @@
 	let filterValues: string[] = [];
 	let isDropdownOpen: boolean = false;
 
-	$: console.log('items', items, filterValues);
-
 	$: i = clickedChartIndex();
 
 	$: {

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { allCharts, clickedChartIndex, responsiveType } from '$lib/io/Stores';
-	import { onDestroy } from 'svelte';
 	import Info from '$lib/components/ui/icons/Info.svelte';
 
 	let dropdownContainer: HTMLElement;
@@ -15,14 +14,6 @@
 		{ chartType: 'Line' },
 		{ chartType: 'Area' }
 	];
-
-	$: {
-		if (isChartDropdownOpen) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
-	}
 
 	$: i = clickedChartIndex();
 
@@ -80,10 +71,6 @@
 			closeChartDropdown();
 		}
 	};
-
-	onDestroy(() => {
-		document.removeEventListener('click', handleOutsideClick);
-	});
 </script>
 
 <div class="w-full py-4 rounded-sm relative ml-4">
@@ -108,7 +95,7 @@
 				null;
 			}}
 		>
-			<Info class="hover:text-200" />
+			<Info class="hover:text-neutral-300" />
 
 			<!-- Tooltip for Info icon -->
 			{#if showInfoTooltip && $responsiveType !== 'mobile'}

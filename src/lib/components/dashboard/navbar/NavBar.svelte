@@ -1,5 +1,3 @@
-<!-- Navbar.svelte -->
-
 <script lang="ts">
 	import { Cursor, Rectangle, Eraser, Arrow } from './navbar-icons';
 	import { navBarState, keyPress, responsiveType } from '$lib/io/Stores';
@@ -80,42 +78,99 @@
 </script>
 
 <div class="flex justify-center h-10 items-center rounded-md shadow-lg bg-neutral-800">
-	<div class="flex items-center justify-center space-x-3 ml-1 mr-1">
-		{#each icons as { name, component, index, mode, tooltip } (name)}
+	<div class="divide-x divide-neutral-700 flex items-center justify-items-center space-x-2">
+		<div
+			on:click={() => setMode('select', 1)}
+			on:mouseover={() => startHover(1)}
+			on:mouseout={endHover}
+			on:keypress={null}
+			on:blur={null}
+			on:focus={null}
+			class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
+				activeIndex === 1 ? 'bg-[#908bd971]' : 'hover:text-neutral-700/90 hover:bg-neutral-500'
+			}`}
+		>
+			<Cursor />
+			{#if showTooltip[1] && $responsiveType !== 'mobile'}
+				<div
+					role="tooltip"
+					class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
+				>
+					Select Items
+				</div>
+			{/if}
+		</div>
+
+		<div class="flex items-center justify-items-center">
+			<!-- Rectangle Icon -->
 			<div
-				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
-					index === activeIndex
-						? 'bg-[#908bd971]'
-						: 'hover:text-neutral-700/90 hover:bg-neutral-500'
-				}`}
-				on:keypress={(event) => {
-					if (['0', '1', '2', '3'].includes(event.key)) {
-						keyPress.set(event.key);
-					}
-				}}
-				on:click={() => setMode(mode, index)}
-				on:mouseover={() => startHover(index)}
+				on:click={() => setMode('drawRectangle', 2)}
+				on:keypress={null}
+				on:mouseover={() => startHover(2)}
 				on:mouseout={endHover}
-				on:blur={endHover}
-				on:focus={() => {
-					null;
-				}}
+				on:blur={null}
+				on:focus={null}
+				class={`flex items-center justify-center ml-2 rounded-md overflow-hidden ${
+					activeIndex === 2 ? 'bg-[#908bd971]' : 'hover:text-neutral-700/90 hover:bg-neutral-500'
+				}`}
 			>
-				{#if showTooltip[index] && $responsiveType !== 'mobile'}
+				<Rectangle />
+				{#if showTooltip[2] && $responsiveType !== 'mobile'}
 					<div
 						role="tooltip"
 						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
 					>
-						{tooltip}
+						Draw Rectangle
 					</div>
 				{/if}
-				<div class="relative flex flex-row justify-items-center">
-					<svelte:component this={component} />
-
-					<!-- Tooltip element for each icon -->
-				</div>
 			</div>
-		{/each}
+
+			<!-- Arrow Icon -->
+			<div
+				on:click={() => setMode('drawArrow', 3)}
+				on:keypress={null}
+				on:mouseover={() => startHover(3)}
+				on:mouseout={endHover}
+				on:blur={null}
+				on:focus={null}
+				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${
+					activeIndex === 3 ? 'bg-[#908bd971]' : 'hover:text-neutral-700/90 hover:bg-neutral-500'
+				}`}
+			>
+				<Arrow />
+				{#if showTooltip[3] && $responsiveType !== 'mobile'}
+					<div
+						role="tooltip"
+						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
+					>
+						Draw Arrow
+					</div>
+				{/if}
+			</div>
+
+			<!-- Eraser Icon -->
+			<div
+				on:click={() => setMode('eraser', 0)}
+				on:keypress={null}
+				on:mouseover={() => startHover(0)}
+				on:mouseout={endHover}
+				on:blur={null}
+				on:focus={null}
+				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${
+					activeIndex === 0 ? 'bg-[#908bd971]' : 'hover:text-neutral-700/90 hover:bg-neutral-500'
+				}`}
+			>
+				<Eraser />
+				{#if showTooltip[0] && $responsiveType !== 'mobile'}
+					<div
+						role="tooltip"
+						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
+					>
+						Erase Canvas
+					</div>
+				{/if}
+			</div>
+		</div>
 	</div>
 </div>
 

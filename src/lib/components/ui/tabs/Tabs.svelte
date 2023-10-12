@@ -14,40 +14,48 @@
 	};
 </script>
 
-<ul class="flex flex-wrap list-none">
-	{#each items as item}
-		<li>
-			<span
-				class={`tab ${activeTabValue === item.value ? 'tab-active' : ''}`}
-				on:click={handleClick(item.value)}
-				on:keypress={(e) => handleKeyPress(e, item.value)}
-				role="tab"
-				tabindex="0"
-			>
-				{item.title}
-			</span>
-		</li>
-	{/each}
-</ul>
-
-{#each items as item}
-	{#if activeTabValue == item.value}
-		<div class="mb-2.5 p-10 rounded-b-md">
-			<svelte:component this={item.component} />
-		</div>
-	{/if}
-{/each}
+<div class="divide-y">
+	<div>
+		<ul class="flex flex-wrap list-none space-x-8">
+			{#each items as item}
+				<li>
+					<div
+						on:click={handleClick(item.value)}
+						on:keypress={(e) => handleKeyPress(e, item.value)}
+						class={`py-2 cursor-pointer  rounded-sm  ${
+							activeTabValue === item.value ? 'border-b-2 border-neutral-800' : ''
+						}`}
+						role="tab"
+						tabindex="0"
+					>
+						<span
+							class={` ${
+								activeTabValue === item.value
+									? 'text-neutral-800 hover:text-neutral-900 textsize'
+									: 'text-neutral-400 hover:text-neutral-600 textsize'
+							}`}
+						>
+							{item.title}
+						</span>
+					</div>
+				</li>
+			{/each}
+		</ul>
+	</div>
+	<div>
+		{#each items as item}
+			{#if activeTabValue == item.value}
+				<div class="mb-2.5 py-6 rounded-b-md">
+					<svelte:component this={item.component} />
+				</div>
+			{/if}
+		{/each}
+	</div>
+</div>
 
 <style>
-	.tab {
-		padding: 0.5rem 1rem;
-		cursor: pointer;
-		border-radius: 0.375rem 0.375rem 0 0;
-		border: 1px solid transparent;
-		transition: all 0.3s ease-in-out;
-	}
-	.tab:hover {
-		border-color: #e5e7eb; /* gray-300 */
+	.textsize {
+		font-size: 0.95rem;
 	}
 	.tab-active {
 		background-color: #ffffff; /* bg-white */

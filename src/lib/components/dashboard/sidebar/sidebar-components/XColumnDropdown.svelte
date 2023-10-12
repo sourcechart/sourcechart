@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
 	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
-
+	import { onMount } from 'svelte';
 	export let open = false;
 	let currentValue: string | null = '';
 	let showTooltip: boolean = false;
@@ -21,14 +20,6 @@
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
-
-	$: {
-		if (open) {
-			document.addEventListener('click', handleOutsideClick);
-		} else {
-			document.removeEventListener('click', handleOutsideClick);
-		}
-	}
 
 	$: if (
 		$allCharts.length > 0 &&
@@ -74,10 +65,6 @@
 			open = false;
 		}
 	};
-
-	onDestroy(() => {
-		document.removeEventListener('click', handleOutsideClick);
-	});
 </script>
 
 <div bind:this={container} class="flex-grow relative w-full">
@@ -92,7 +79,7 @@
 			on:blur={() => null}
 		>
 			<span class="text-sm text-neutral-300 ml-1">X</span>
-			<span class="text-sm text-gray-100 w-full"> {currentValue} </span>
+			<span class="text-sm text-gray-100 w-full px-3 truncate"> {currentValue} </span>
 		</button>
 
 		<!-- Tooltip element -->
