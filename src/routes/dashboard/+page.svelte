@@ -35,12 +35,13 @@
 		<NavBar />
 	</div>
 
+	<!--
 	<div
 		class="flex justify-center items-center fixed bottom-4 left-1/2 -translate-x-1/2 z-10 sm:block md:hidden"
 	>
 		<MobileSidebar />
 	</div>
-
+	-->
 	<div class="absolute z-10 ml-6 mt-6">
 		<Sidebar />
 	</div>
