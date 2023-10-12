@@ -58,6 +58,11 @@
 		}
 	};
 
+	let eventListeners = {
+		mouseMove: (e: MouseEvent) => handleMouseMove(e),
+		mouseUp: (e: MouseEvent) => handleMouseUp(e)
+	};
+
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
@@ -109,6 +114,8 @@
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;
+			window.addEventListener('mousemove', eventListeners.mouseMove);
+			window.addEventListener('mouseup', eventListeners.mouseUp);
 		}
 
 		if (e instanceof TouchEvent) {
@@ -130,6 +137,7 @@
 		var x, y;
 
 		if (e instanceof TouchEvent) {
+			e.preventDefault();
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
 		} else {
@@ -139,23 +147,16 @@
 
 		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
 			mostRecentChartID.set(polygon.id);
+			let dx = x - offsetX;
+			let dy = y - offsetY;
+			polygon.vertices = [
+				{ x: dx, y: dy },
+				{ x: dx + canvas.width, y: dy },
+				{ x: dx + canvas.width, y: dy + canvas.height },
+				{ x: dx, y: dy + canvas.height }
+			];
 
-			var newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
-			var dx = x - offsetX;
-			var dy = y - offsetY;
-
-			newPolygon.vertices[0].x = dx;
-			newPolygon.vertices[0].y = dy;
-			newPolygon.vertices[1].x = dx + canvas.width;
-			newPolygon.vertices[1].y = dy;
-			newPolygon.vertices[2].x = dx + canvas.width;
-			newPolygon.vertices[2].y = dy + canvas.height;
-			newPolygon.vertices[3].x = dx;
-			newPolygon.vertices[3].y = dy + canvas.height;
-
-			updateAllCharts(newPolygon);
-
-			polygon = newPolygon;
+			updateAllCharts(polygon);
 		}
 	};
 
@@ -173,6 +174,7 @@
 		if (e instanceof TouchEvent) {
 			x = e.changedTouches[0].clientX;
 			y = e.changedTouches[0].clientY;
+			e.preventDefault();
 		} else {
 			x = (e as MouseEvent).clientX;
 			y = (e as MouseEvent).clientY;
@@ -191,10 +193,12 @@
 			polygon.vertices[3].x = dx;
 			polygon.vertices[3].y = dy + canvas.height;
 
-			console.log('polygon', polygon);
 			updateAllCharts(polygon);
 			dragging = false;
 		}
+
+		window.removeEventListener('mousemove', eventListeners.mouseMove);
+		window.removeEventListener('mouseup', eventListeners.mouseUp);
 	};
 
 	const getPlotWidth = () => {
