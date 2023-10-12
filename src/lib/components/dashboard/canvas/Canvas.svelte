@@ -76,8 +76,8 @@
 
 			e.preventDefault();
 			e.stopPropagation();
-			x = e.touches[0].clientX;
-			y = e.touches[0].clientY;
+			x = e.touches[0].clientX; //@ts-ignore
+			y = e.touches[0].clientY; //@ts-ignore
 		} else if (e instanceof MouseEvent) {
 			responsiveType.set('desktop');
 
@@ -161,8 +161,8 @@
 
 		if (typeof TouchEvent !== 'undefined' && e instanceof TouchEvent) {
 			e.preventDefault();
-			e.stopPropagation();
-			x = e.touches[0].clientX;
+			e.stopPropagation(); //@ts-ignore
+			x = e.touches[0].clientX; //@ts-ignore
 			y = e.touches[0].clientY;
 			handleTouchMove(x, y);
 		} else if (e instanceof MouseEvent) {
@@ -308,23 +308,11 @@
 			height = window.innerHeight;
 		}
 	}}
-	on:mousedown={(e) => {
-		handleMouseDown(e);
-	}}
-	on:mousemove={(e) => {
-		handleMouseMove(e);
-	}}
-	on:mouseup={(e) => {
-		handleMouseUp(e);
-	}}
-	on:touchmove={(e) => {
-		handleMouseMove(e);
-	}}
-	on:touchstart={(e) => {
-		handleMouseDown(e);
-	}}
-	on:touchend={(e) => {
-		handleMouseUp(e);
-	}}
+	on:mousedown={handleMouseDown}
+	on:mousemove={handleMouseMove}
+	on:mouseup={handleMouseUp}
+	on:touchmove={handleMouseMove}
+	on:touchstart={handleMouseDown}
+	on:touchend={handleMouseUp}
 />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
