@@ -72,9 +72,9 @@
 	onMount(() => {
 		window.addEventListener('mousemove', handleMouseMove);
 		window.addEventListener('mouseup', handleMouseUp);
-		window.addEventListener('touchmove', handleMouseMove);
-		window.addEventListener('touchend', handleMouseUp);
-		document.addEventListener('mousedown', handleClickOutside);
+		window.addEventListener('touchmove', handleMouseMove, { passive: false });
+		window.addEventListener('touchend', handleMouseUp, { passive: false });
+		document.addEventListener('mousedown', handleClickOutside, { passive: false });
 
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);

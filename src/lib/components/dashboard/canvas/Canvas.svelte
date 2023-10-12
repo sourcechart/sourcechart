@@ -68,12 +68,18 @@
 		let x: number;
 		let y: number;
 
+		console.log(e);
+
 		if (e instanceof TouchEvent) {
+			responsiveType.set('mobile');
+
 			e.preventDefault();
 			e.stopPropagation();
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
 		} else if (e instanceof MouseEvent) {
+			responsiveType.set('desktop');
+
 			x = e.clientX;
 			y = e.clientY;
 			x = x - offsetX + scrollX;
@@ -117,9 +123,7 @@
 		if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
-			responsiveType.set('desktop');
 		} else if (e instanceof TouchEvent) {
-			responsiveType.set('mobile');
 			x = e.changedTouches[0].clientX;
 			y = e.changedTouches[0].clientY;
 			e.preventDefault();
@@ -286,6 +290,9 @@
 		on:mousedown={handleMouseDown}
 		on:mousemove={handleMouseMove}
 		on:mouseup={handleMouseUp}
+		on:touchstart={handleMouseDown}
+		on:touchmove={handleMouseMove}
+		on:touchend={handleMouseUp}
 	>
 		<div id="canvasParent">
 			{#if !$activeDropZone}
@@ -310,3 +317,4 @@
 		}
 	}}
 />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
