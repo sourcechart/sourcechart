@@ -62,12 +62,17 @@
 		mouseMove: (e: MouseEvent) => handleMouseMove(e),
 		mouseUp: (e: MouseEvent) => handleMouseUp(e)
 	};
+	let rafId: number;
 
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
 	$: dataAvailable = options?.xAxis?.data?.length > 0;
 	$: isRectangleVisible = !dataAvailable || (dataAvailable && $mostRecentChartID === polygon.id);
+	$: plotWidth = getPlotWidth();
+	$: points = calculateVertices(rectWidth, rectHeight, 5);
+	$: handles = generateHandleRectangles(points, 9);
+	$: plotHeight = getPlotHeight();
 
 	$: if (dataAvailable) {
 		backupColor = 'transparent';
@@ -76,12 +81,12 @@
 	}
 
 	onMount(() => {
-		window.addEventListener('mousemove', handleMouseMove);
-		window.addEventListener('mouseup', handleMouseUp);
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleMouseUp);
 
 		return () => {
-			window.removeEventListener('mousemove', handleMouseMove);
-			window.removeEventListener('mouseup', handleMouseUp);
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
 		};
 	});
 
@@ -114,8 +119,8 @@
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;
-			window.addEventListener('mousemove', eventListeners.mouseMove);
-			window.addEventListener('mouseup', eventListeners.mouseUp);
+			document.addEventListener('mousemove', eventListeners.mouseMove);
+			document.addEventListener('mouseup', eventListeners.mouseUp);
 		}
 
 		if (e instanceof TouchEvent) {
@@ -131,24 +136,12 @@
 		}
 	};
 
-	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
-		if (!dragging) return;
-
-		var x, y;
-
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
-			x = e.touches[0].clientX;
-			y = e.touches[0].clientY;
-		} else {
-			x = (e as MouseEvent).clientX;
-			y = (e as MouseEvent).clientY;
-		}
-
+	const updateCanvasPosition = (x: number, y: number) => {
 		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
 			mostRecentChartID.set(polygon.id);
 			let dx = x - offsetX;
 			let dy = y - offsetY;
+
 			polygon.vertices = [
 				{ x: dx, y: dy },
 				{ x: dx + canvas.width, y: dy },
@@ -160,6 +153,24 @@
 		}
 	};
 
+	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+		if (!dragging) return;
+
+		let x: number;
+		let y: number;
+
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else {
+			x = (e as MouseEvent).clientX;
+			y = (e as MouseEvent).clientY;
+		}
+		cancelAnimationFrame(rafId);
+		rafId = requestAnimationFrame(() => updateCanvasPosition(x, y));
+	};
+
 	const updateAllCharts = (updatedPolygon: Polygon) => {
 		let i = $allCharts.findIndex((chart) => chart.chartID === polygon.id);
 		let chart = $allCharts[i];
@@ -169,6 +180,7 @@
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
+		cancelAnimationFrame(rafId);
 
 		var x, y;
 		if (e instanceof TouchEvent) {
@@ -233,11 +245,6 @@
 			drawRectangleCanvas(points, context, 'transparent');
 		}
 	});
-
-	$: plotWidth = getPlotWidth();
-	$: points = calculateVertices(rectWidth, rectHeight, 5);
-	$: handles = generateHandleRectangles(points, 9);
-	$: plotHeight = getPlotHeight();
 </script>
 
 <div
