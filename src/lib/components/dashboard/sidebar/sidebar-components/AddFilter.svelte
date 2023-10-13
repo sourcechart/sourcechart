@@ -20,16 +20,36 @@
 
 	let showTooltip: boolean = false;
 	let hoverTimeout: NodeJS.Timeout;
-
-	const startHover = (): void => {
-		hoverTimeout = setTimeout(() => {
-			showTooltip = true;
-		}, 800);
-	};
+	let isPressed = false;
 
 	const endHover = (): void => {
 		clearTimeout(hoverTimeout);
 		showTooltip = false;
+	};
+
+	const startPress = (): void => {
+		isPressed = true;
+		startHover(); // Show tooltip immediately when pressed
+	};
+
+	const endPress = (): void => {
+		isPressed = false;
+		endHover();
+	};
+
+	const handleLongPress = (): void => {
+		if (isPressed) {
+			// Logic for long press action. You can call any function or perform any action here.
+			addFilterToSidebar();
+		}
+	};
+
+	// Update startHover method to also handle the long press
+	const startHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showTooltip = true;
+			handleLongPress(); // Handle the long press after the timeout
+		}, 800);
 	};
 </script>
 
