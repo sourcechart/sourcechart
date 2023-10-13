@@ -59,9 +59,10 @@
 	};
 
 	let eventListeners = {
-		mouseMove: (e: MouseEvent) => handleMouseMove(e),
-		mouseUp: (e: MouseEvent) => handleMouseUp(e)
+		pointerMove: (e: PointerEvent) => handlePointerMove(e),
+		pointerUp: (e: PointerEvent) => handlePointerUp(e)
 	};
+
 	let rafId: number;
 
 	$: CANVASBEHAVIOR = canvasBehavior();
@@ -81,15 +82,14 @@
 	}
 
 	onMount(() => {
-		document.addEventListener('mousemove', handleMouseMove);
-		document.addEventListener('mouseup', handleMouseUp);
+		document.addEventListener('pointermove', handlePointerMove);
+		document.addEventListener('pointerup', handlePointerUp);
 
 		return () => {
-			document.removeEventListener('mousemove', handleMouseMove);
-			document.removeEventListener('mouseup', handleMouseUp);
+			document.removeEventListener('pointermove', handlePointerMove);
+			document.removeEventListener('pointerup', handlePointerUp);
 		};
 	});
-
 	const drawRectangleCanvas = (
 		points: LookupTable,
 		context: CanvasRenderingContext2D,
@@ -103,15 +103,9 @@
 		drawRectangle(vertices, context, color);
 	};
 
-	const handleMouseDown = (e: MouseEvent | TouchEvent) => {
-		var x, y;
-		if (e instanceof TouchEvent) {
-			x = e.touches[0].clientX;
-			y = e.touches[0].clientY;
-		} else {
-			x = (e as MouseEvent).clientX;
-			y = (e as MouseEvent).clientY;
-		}
+	const handlePointerDown = (e: PointerEvent) => {
+		let x = e.clientX;
+		let y = e.clientY;
 
 		let inPolygon = isPointInPolygon({ x, y }, polygon);
 		if (inPolygon) {
@@ -119,8 +113,8 @@
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;
-			document.addEventListener('mousemove', eventListeners.mouseMove);
-			document.addEventListener('mouseup', eventListeners.mouseUp);
+			document.addEventListener('pointermove', eventListeners.pointerMove);
+			document.addEventListener('pointerup', eventListeners.pointerUp);
 		}
 
 		if (e instanceof TouchEvent) {
@@ -129,7 +123,7 @@
 		isRectangleVisible = true;
 	};
 
-	const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+	const handleClickOutside = (e: PointerEvent) => {
 		const target = e.target as Node;
 		if (dataAvailable && container && !container.contains(target)) {
 			isRectangleVisible = false;
@@ -153,20 +147,12 @@
 		}
 	};
 
-	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+	const handlePointerMove = (e: PointerEvent) => {
 		if (!dragging) return;
 
-		let x: number;
-		let y: number;
+		let x = e.clientX;
+		let y = e.clientY;
 
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
-			x = e.touches[0].clientX;
-			y = e.touches[0].clientY;
-		} else {
-			x = (e as MouseEvent).clientX;
-			y = (e as MouseEvent).clientY;
-		}
 		cancelAnimationFrame(rafId);
 		rafId = requestAnimationFrame(() => updateCanvasPosition(x, y));
 	};
@@ -178,19 +164,12 @@
 		$allCharts[i] = chart;
 	};
 
-	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
+	const handlePointerUp = (e: PointerEvent) => {
 		if (!dragging) return;
 		cancelAnimationFrame(rafId);
 
-		var x, y;
-		if (e instanceof TouchEvent) {
-			x = e.changedTouches[0].clientX;
-			y = e.changedTouches[0].clientY;
-			e.preventDefault();
-		} else {
-			x = (e as MouseEvent).clientX;
-			y = (e as MouseEvent).clientY;
-		}
+		let x = e.clientX;
+		let y = e.clientY;
 
 		if ($CANVASBEHAVIOR === 'isTranslating') {
 			var dx = x - offsetX;
@@ -209,8 +188,8 @@
 			dragging = false;
 		}
 
-		window.removeEventListener('mousemove', eventListeners.mouseMove);
-		window.removeEventListener('mouseup', eventListeners.mouseUp);
+		window.removeEventListener('pointermove', eventListeners.pointerMove);
+		window.removeEventListener('pointerup', eventListeners.pointerUp);
 	};
 
 	const getPlotWidth = () => {
@@ -263,12 +242,9 @@
 >
 	<div
 		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;  cursor: {$touchType} "
-		on:mousedown={handleMouseDown}
-		on:mousemove={handleMouseMove}
-		on:mouseup={handleMouseUp}
-		on:touchstart={handleMouseDown}
-		on:touchmove={handleMouseMove}
-		on:touchend={handleMouseUp}
+		on:pointerdown={handlePointerDown}
+		on:pointermove={handlePointerMove}
+		on:pointerup={handlePointerUp}
 		class="rounded-sm"
 	>
 		<canvas style="position: absolute;  z-index: {dragging ? 4 : 2};" bind:this={canvas} />

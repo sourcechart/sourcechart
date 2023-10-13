@@ -9,8 +9,8 @@
 		touchState,
 		allCharts,
 		canvasBehavior,
-		activeDropZone,
-		responsiveType
+		activeDropZone
+		//responsiveType
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './draw-utils/Draw';
@@ -64,26 +64,9 @@
 		offsetY = Math.abs(rect.top - height);
 	};
 
-	const handleMouseDown = (e: MouseEvent | TouchEvent): void => {
-		let x: number;
-		let y: number;
-
-		if (e instanceof TouchEvent) {
-			responsiveType.set('mobile');
-
-			//@ts-ignore
-			x = e.touches[0].clientX - offsetX + scrollX; //@ts-ignore
-			y = e.touches[0].clientY - offsetY + scrollY;
-		} else if (e instanceof MouseEvent) {
-			responsiveType.set('desktop');
-
-			x = e.clientX;
-			y = e.clientY;
-			x = x - offsetX + scrollX;
-			y = y - offsetY + scrollY;
-		} else {
-			return;
-		}
+	const handlePointerDown = (e: PointerEvent): void => {
+		let x = e.clientX - offsetX + scrollX;
+		let y = e.clientY - offsetY + scrollY;
 
 		startPosition = { x, y };
 
@@ -98,34 +81,13 @@
 		}
 
 		touchState.set('isTouching');
-		document.addEventListener('mousemove', handleMouseMove);
-		document.addEventListener('mouseup', handleGlobalMouseUp);
-		document.addEventListener('touchmove', handleMouseMove);
-		document.addEventListener('touchend', handleGlobalMouseUp);
+		document.addEventListener('pointermove', handlePointerMove);
+		document.addEventListener('pointerup', handlePointerUp);
 	};
 
-	const handleGlobalMouseUp = (e: MouseEvent | TouchEvent): void => {
-		document.removeEventListener('mousemove', handleMouseMove);
-		document.removeEventListener('mouseup', handleGlobalMouseUp);
-		document.removeEventListener('touchmove', handleMouseMove);
-		document.removeEventListener('touchend', handleGlobalMouseUp);
-
-		handleMouseUp(e); // then call your existing handleMouseUp function
-	};
-
-	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
-		let x: number;
-		let y: number;
-
-		if (e instanceof MouseEvent) {
-			x = e.clientX;
-			y = e.clientY;
-		} else if (typeof TouchEvent !== 'undefined' && e instanceof TouchEvent) {
-			x = e.changedTouches[0].clientX;
-			y = e.changedTouches[0].clientY;
-		} else {
-			return;
-		}
+	const handlePointerUp = (e: PointerEvent) => {
+		let x = e.clientX - offsetX + scrollX;
+		let y = e.clientY - offsetY + scrollY;
 
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
@@ -149,10 +111,11 @@
 		navBarState.set('select');
 	};
 
-	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
-		let x: number;
-		let y: number;
+	const handlePointerMove = (e: PointerEvent) => {
+		let x = e.clientX - offsetX + scrollX;
+		let y = e.clientY - offsetY + scrollY;
 
+		/*
 		if (typeof TouchEvent !== 'undefined' && e instanceof TouchEvent) {
 			x = e.touches[0].clientX; //@ts-ignore
 			y = e.touches[0].clientY;
@@ -164,7 +127,7 @@
 			y = y - offsetY + scrollY;
 		} else {
 			return;
-		}
+		}*/
 
 		if ($CANVASBEHAVIOR === 'isHovering') {
 			debouncedHandleMouseMoveUp(x, y);
@@ -300,11 +263,8 @@
 			height = window.innerHeight;
 		}
 	}}
-	on:mousedown={handleMouseDown}
-	on:mousemove={handleMouseMove}
-	on:mouseup={handleMouseUp}
-	on:touchstart={handleMouseDown}
-	on:touchmove={handleMouseMove}
-	on:touchend={handleMouseUp}
+	on:pointerdown={handlePointerDown}
+	on:pointermove={handlePointerMove}
+	on:pointerup={handlePointerUp}
 />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />

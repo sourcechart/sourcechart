@@ -7,7 +7,6 @@
 	import Safety from '$lib/components/ui/icons/Safety.svelte';
 	import { onMount } from 'svelte';
 	import { activeDropZone, keyPress, tabValue, responsiveType } from '$lib/io/Stores';
-	// import { setLocalStorage } from '$lib/io/Storage';
 
 	let hoverHelp = false; // Declare a new variable
 	let hoverSecure = false;
