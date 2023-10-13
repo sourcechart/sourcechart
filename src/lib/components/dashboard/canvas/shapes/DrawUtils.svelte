@@ -70,7 +70,7 @@
 		if (e instanceof MouseEvent) {
 			startX = e.clientX;
 			startY = e.clientY;
-		} else if (e instanceof TouchEvent) {
+		} else if (window.TouchEvent && e instanceof TouchEvent) {
 			if (e.touches.length > 0) {
 				startX = e.touches[0].clientX;
 				startY = e.touches[0].clientY;
@@ -116,7 +116,7 @@
 		if (e instanceof MouseEvent) {
 			clientX = e.clientX;
 			clientY = e.clientY;
-		} else if (e instanceof TouchEvent) {
+		} else if (window.TouchEvent && e instanceof TouchEvent) {
 			if (e.touches.length > 0) {
 				clientX = e.touches[0].clientX;
 				clientY = e.touches[0].clientY;
@@ -179,7 +179,7 @@
 		if (e instanceof MouseEvent) {
 			clientX = e.clientX;
 			clientY = e.clientY;
-		} else if (e instanceof TouchEvent) {
+		} else if (window.TouchEvent && e instanceof TouchEvent) {
 			if (e.changedTouches.length > 0) {
 				clientX = e.changedTouches[0].clientX;
 				clientY = e.changedTouches[0].clientY;

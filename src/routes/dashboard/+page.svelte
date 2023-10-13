@@ -107,7 +107,7 @@
 		on:touchstart={startPressSecure}
 		on:touchend={endPressSecure}
 	>
-		{#if hoverSecure && ($responsiveType === 'mobile' || isPressedSecure)}
+		{#if hoverSecure && ($responsiveType === 'touch' || isPressedSecure)}
 			<div
 				class="absolute mt-2 w-48 p-2 bg-neutral-700 text-neutral-200 rounded-md text-sm right-full mr-2 transform translate-x-25 shadow-lg"
 			>
@@ -134,7 +134,7 @@
 		on:touchstart={startPressHelp}
 		on:touchend={endPressHelp}
 	>
-		{#if hoverHelp && ($responsiveType === 'mobile' || isPressedHelp)}
+		{#if hoverHelp && ($responsiveType === 'touch' || isPressedHelp)}
 			<div
 				class="absolute mt-2 w-48 p-2 bg-neutral-700 text-neutral-200 rounded-md text-sm right-full mr-2 transform translate-x-25 shadow-lg"
 			>

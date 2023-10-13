@@ -59,10 +59,9 @@
 	};
 
 	let eventListeners = {
-		pointerMove: (e: PointerEvent) => handlePointerMove(e),
-		pointerUp: (e: PointerEvent) => handlePointerUp(e)
+		mouseMove: (e: MouseEvent) => handleMouseMove(e),
+		mouseUp: (e: MouseEvent) => handleMouseUp(e)
 	};
-
 	let rafId: number;
 
 	$: CANVASBEHAVIOR = canvasBehavior();
@@ -81,15 +80,6 @@
 		backupColor = '#9d99dc';
 	}
 
-	onMount(() => {
-		document.addEventListener('pointermove', handlePointerMove);
-		document.addEventListener('pointerup', handlePointerUp);
-
-		return () => {
-			document.removeEventListener('pointermove', handlePointerMove);
-			document.removeEventListener('pointerup', handlePointerUp);
-		};
-	});
 	const drawRectangleCanvas = (
 		points: LookupTable,
 		context: CanvasRenderingContext2D,
@@ -103,9 +93,15 @@
 		drawRectangle(vertices, context, color);
 	};
 
-	const handlePointerDown = (e: PointerEvent) => {
-		let x = e.clientX;
-		let y = e.clientY;
+	const handleMouseDown = (e: MouseEvent | TouchEvent) => {
+		var x, y;
+		if (window.TouchEvent && e instanceof TouchEvent) {
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else {
+			x = (e as MouseEvent).clientX;
+			y = (e as MouseEvent).clientY;
+		}
 
 		let inPolygon = isPointInPolygon({ x, y }, polygon);
 		if (inPolygon) {
@@ -113,8 +109,8 @@
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;
-			document.addEventListener('pointermove', eventListeners.pointerMove);
-			document.addEventListener('pointerup', eventListeners.pointerUp);
+			document.addEventListener('mousemove', eventListeners.mouseMove);
+			document.addEventListener('mouseup', eventListeners.mouseUp);
 		}
 
 		if (e instanceof TouchEvent) {
@@ -123,7 +119,7 @@
 		isRectangleVisible = true;
 	};
 
-	const handleClickOutside = (e: PointerEvent) => {
+	const handleClickOutside = (e: MouseEvent | TouchEvent) => {
 		const target = e.target as Node;
 		if (dataAvailable && container && !container.contains(target)) {
 			isRectangleVisible = false;
@@ -147,12 +143,20 @@
 		}
 	};
 
-	const handlePointerMove = (e: PointerEvent) => {
+	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
 
-		let x = e.clientX;
-		let y = e.clientY;
+		let x: number;
+		let y: number;
 
+		if (window.TouchEvent && e instanceof TouchEvent) {
+			e.preventDefault();
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
+		} else {
+			x = (e as MouseEvent).clientX;
+			y = (e as MouseEvent).clientY;
+		}
 		cancelAnimationFrame(rafId);
 		rafId = requestAnimationFrame(() => updateCanvasPosition(x, y));
 	};
@@ -164,12 +168,19 @@
 		$allCharts[i] = chart;
 	};
 
-	const handlePointerUp = (e: PointerEvent) => {
+	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
 		cancelAnimationFrame(rafId);
 
-		let x = e.clientX;
-		let y = e.clientY;
+		var x, y;
+		if (window.TouchEvent && e instanceof TouchEvent) {
+			x = e.changedTouches[0].clientX;
+			y = e.changedTouches[0].clientY;
+			e.preventDefault();
+		} else {
+			x = (e as MouseEvent).clientX;
+			y = (e as MouseEvent).clientY;
+		}
 
 		if ($CANVASBEHAVIOR === 'isTranslating') {
 			var dx = x - offsetX;
@@ -188,8 +199,8 @@
 			dragging = false;
 		}
 
-		window.removeEventListener('pointermove', eventListeners.pointerMove);
-		window.removeEventListener('pointerup', eventListeners.pointerUp);
+		window.removeEventListener('mousemove', eventListeners.mouseMove);
+		window.removeEventListener('mouseup', eventListeners.mouseUp);
 	};
 
 	const getPlotWidth = () => {
@@ -242,9 +253,6 @@
 >
 	<div
 		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;  cursor: {$touchType} "
-		on:pointerdown={handlePointerDown}
-		on:pointermove={handlePointerMove}
-		on:pointerup={handlePointerUp}
 		class="rounded-sm"
 	>
 		<canvas style="position: absolute;  z-index: {dragging ? 4 : 2};" bind:this={canvas} />
@@ -285,3 +293,36 @@
 		</svg>
 	</div>
 </div>
+
+<svelte:window
+	on:mousedown={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseDown(e);
+		}
+	}}
+	on:mousemove={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseMove(e);
+		}
+	}}
+	on:mouseup={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseUp(e);
+		}
+	}}
+	on:touchstart={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseDown(e);
+		}
+	}}
+	on:touchmove={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseMove(e);
+		}
+	}}
+	on:touchend={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseUp(e);
+		}
+	}}
+/>

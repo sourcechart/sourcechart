@@ -151,7 +151,6 @@ type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'cente
 type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'drawArrow' | 'textbox';
 
 type MobileBar = 'sidebar' | 'trash';
-type ResponsiveType = 'mobile' | 'desktop';
 
 interface Rectangle {
 	x: number;
