@@ -75,8 +75,6 @@
 
 	// Tooltip state for each icon
 	let showTooltip: { [key: number]: boolean } = {};
-
-	$: console.log($responsiveType);
 </script>
 
 <div class="flex justify-center h-10 items-center rounded-md shadow-lg bg-neutral-800">

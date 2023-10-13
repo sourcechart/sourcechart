@@ -12,12 +12,45 @@
 	import ChevronDown from '$lib/components/ui/icons/ChevronDown.svelte';
 	import ChevronLeft from '$lib/components/ui/icons/ChevronLeft.svelte';
 	import ChevronRight from '$lib/components/ui/icons/ChevronRight.svelte';
+	import { onMount } from 'svelte';
 
 	$: i = clickedChartIndex();
 	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
+
+	let screenSize: 'large' | 'small' = 'large';
+	let sidebarElement: HTMLElement;
+
+	let width: number = 0;
+	const handleResize = (): void => {
+		screenSize = width <= 768 ? 'small' : 'large';
+	};
+
+	const handleClickOutside = (event: Event): void => {
+		const target = event.target as Node;
+
+		if (!sidebarElement.contains(target) && !$lockSidebar) {
+			$activeSidebar = false;
+		}
+	};
+
+	onMount(() => {
+		width = window.innerWidth;
+		window.addEventListener('resize', handleResize);
+		window.addEventListener('click', handleClickOutside);
+		return (): void => {
+			window.removeEventListener('resize', handleResize);
+			window.removeEventListener('click', handleClickOutside);
+		};
+	});
 </script>
 
-<div class="flex fixed overflow-hidden mt-10 h-full justify-between w-80">
+<div
+	bind:this={sidebarElement}
+	class="flex fixed overflow-hidden mt-10 h-full justify-between w-80 {$activeSidebar ||
+	$lockSidebar
+		? ''
+		: 'inactive-sidebar'}"
+>
 	<div>
 		{#if $activeSidebar || $lockSidebar}
 			<div
@@ -108,7 +141,12 @@
 		<button
 			class="bg-neutral-600 h-5 w-5 rounded-sm flex justify-center items-center hover:bg-neutral-600/80 mt-1"
 			on:click={() => {
-				$lockSidebar = !$lockSidebar;
+				if (screenSize === 'small') {
+					$activeSidebar = !$activeSidebar;
+					lockSidebar.set(false);
+				} else {
+					$lockSidebar = !$lockSidebar;
+				}
 			}}
 		>
 			{#if $lockSidebar}
@@ -125,6 +163,13 @@
 <link
 	rel="stylesheet"
 	href="https://fonts.googleapis.com/css2?family=Oxygen+Mono:wght@400;500;700&display=swap"
+/>
+<svelte:window
+	on:resize={() => {
+		if (typeof window !== undefined) {
+			width = window.innerWidth;
+		}
+	}}
 />
 
 <style>
@@ -145,5 +190,8 @@
 	.sidebar-inner {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
+	}
+	.inactive-sidebar {
+		pointer-events: none;
 	}
 </style>

@@ -190,15 +190,6 @@ function controlBar(touchstate: string, responsiveType: string) {
 	}
 }
 
-export const controlSidebar = () =>
-	derived([activeSidebar, activeMobileNav, mobileNav], ([_, $activeMobileNav, $mobileNav]) => {
-		if ($activeMobileNav && $mobileNav === 'sidebar') {
-			activeSidebar.set(true);
-		} else {
-			activeSidebar.set(false);
-		}
-	});
-
 export const columnLabel = (axis: string) =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {
 		const options = $allCharts.find(

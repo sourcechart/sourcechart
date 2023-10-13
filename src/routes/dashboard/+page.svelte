@@ -2,7 +2,6 @@
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 	import Canvas from '$lib/components/dashboard/canvas/Canvas.svelte';
 	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
-	import MobileSidebar from '$lib/components/dashboard/sidebar/MobileSidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 	import Help from '$lib/components/ui/icons/Help.svelte';
 	import Safety from '$lib/components/ui/icons/Safety.svelte';
@@ -35,13 +34,6 @@
 		<NavBar />
 	</div>
 
-	<!--
-	<div
-		class="flex justify-center items-center fixed bottom-4 left-1/2 -translate-x-1/2 z-10 sm:block md:hidden"
-	>
-		<MobileSidebar />
-	</div>
-	-->
 	<div class="absolute z-10 ml-6 mt-6">
 		<Sidebar />
 	</div>

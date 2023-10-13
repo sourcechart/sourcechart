@@ -191,3 +191,9 @@ interface MouseEventExtended extends MouseEvent {
 	offsetX: number;
 	offsetY: number;
 }
+
+interface Shapes {
+	Polygon: Polygon;
+	Rectangle: Rectangle;
+	Arrow: Arrow;
+}
