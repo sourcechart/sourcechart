@@ -19,6 +19,8 @@
 
 	let offsetX = 0;
 	let offsetY = 0;
+	let velocity = { x: 0, y: 0 };
+
 	let container: HTMLElement;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -93,7 +95,8 @@
 	};
 
 	const handleMouseDown = (e: MouseEvent | TouchEvent) => {
-		var x, y;
+		let x: number;
+		let y: number;
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
@@ -112,9 +115,6 @@
 			document.addEventListener('mouseup', eventListeners.mouseUp);
 		}
 
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
-		}
 		isRectangleVisible = true;
 	};
 
@@ -150,6 +150,7 @@
 
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			e.preventDefault();
+			e.stopPropagation();
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
 		} else {
@@ -171,11 +172,13 @@
 		if (!dragging) return;
 		cancelAnimationFrame(rafId);
 
-		var x, y;
+		let x: number;
+		let y: number;
 		if (window.TouchEvent && e instanceof TouchEvent) {
+			e.preventDefault();
+			e.stopPropagation();
 			x = e.changedTouches[0].clientX;
 			y = e.changedTouches[0].clientY;
-			e.preventDefault();
 		} else {
 			x = (e as MouseEvent).clientX;
 			y = (e as MouseEvent).clientY;
