@@ -46,12 +46,11 @@
 
 <div
 	bind:this={sidebarElement}
-	class="flex fixed overflow-hidden mt-10 h-full justify-between w-80 {$activeSidebar ||
-	$lockSidebar
+	class="flex fixed overflow-hidden mt-10 h-full justify-between {$activeSidebar || $lockSidebar
 		? ''
-		: 'inactive-sidebar'}"
+		: 'pointer-events-none'}"
 >
-	<div>
+	<div class={$activeSidebar || $lockSidebar ? '' : 'inactive-sidebar'}>
 		{#if $activeSidebar || $lockSidebar}
 			<div
 				use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
@@ -133,31 +132,32 @@
 			</div>
 		{/if}
 	</div>
-	<div
-		class="transform transition-transform ease-out duration-300 {$activeSidebar || $lockSidebar
-			? 'translate-x-0'
-			: '-translate-x-72'}"
+</div>
+<div
+	class="transform transition-transform ease-out duration-300 left-72 ml-4 {$activeSidebar ||
+	$lockSidebar
+		? 'translate-x-0'
+		: '-translate-x-72'} absolute mt-10"
+>
+	<button
+		class="bg-neutral-600 h-5 w-5 rounded-sm flex justify-center items-center hover:bg-neutral-600/80 mt-1"
+		on:click={() => {
+			if (screenSize === 'small') {
+				$activeSidebar = !$activeSidebar;
+				lockSidebar.set(false);
+			} else {
+				$lockSidebar = !$lockSidebar;
+			}
+		}}
 	>
-		<button
-			class="bg-neutral-600 h-5 w-5 rounded-sm flex justify-center items-center hover:bg-neutral-600/80 mt-1"
-			on:click={() => {
-				if (screenSize === 'small') {
-					$activeSidebar = !$activeSidebar;
-					lockSidebar.set(false);
-				} else {
-					$lockSidebar = !$lockSidebar;
-				}
-			}}
-		>
-			{#if $lockSidebar}
-				<ChevronDown class="hover:text-neutral-300 text-neutral-200" />
-			{:else if !$activeSidebar && !$lockSidebar}
-				<ChevronRight class="hover:text-neutral-300 text-neutral-200" />
-			{:else}
-				<ChevronLeft class="hover:text-neutral-300 text-neutral-200" />
-			{/if}
-		</button>
-	</div>
+		{#if $lockSidebar}
+			<ChevronDown class="hover:text-neutral-300 text-neutral-200" />
+		{:else if !$activeSidebar && !$lockSidebar}
+			<ChevronRight class="hover:text-neutral-300 text-neutral-200" />
+		{:else}
+			<ChevronLeft class="hover:text-neutral-300 text-neutral-200" />
+		{/if}
+	</button>
 </div>
 
 <link
@@ -191,7 +191,7 @@
 		scrollbar-width: thin;
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
 	}
-	.inactive-sidebar {
+	.inactive-sidebar > div:first-child {
 		pointer-events: none;
 	}
 </style>
