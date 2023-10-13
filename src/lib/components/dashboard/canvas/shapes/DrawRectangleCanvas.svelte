@@ -14,7 +14,6 @@
 	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
-	import { onMount } from 'svelte';
 
 	export let polygon: Polygon;
 
