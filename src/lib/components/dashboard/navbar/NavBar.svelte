@@ -106,7 +106,7 @@
 			class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
 				activeIndex === 1
 					? 'bg-[#6f6599]'
-					: $responsiveType !== 'mobile' || isPressed
+					: $responsiveType !== 'touch' || isPressed
 					? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 					: ''
 			}`}
@@ -135,7 +135,7 @@
 				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
 					activeIndex === 2
 						? 'bg-[#6f6599]'
-						: $responsiveType !== 'mobile' || isPressed
+						: $responsiveType !== 'touch' || isPressed
 						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 						: ''
 				}`}
@@ -164,7 +164,7 @@
 				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
 					activeIndex === 3
 						? 'bg-[#6f6599]'
-						: $responsiveType !== 'mobile' || isPressed
+						: $responsiveType !== 'touch' || isPressed
 						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 						: ''
 				}`}
@@ -193,13 +193,13 @@
 				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
 					activeIndex === 0
 						? 'bg-[#6f6599]'
-						: $responsiveType !== 'mobile' || isPressed
+						: $responsiveType !== 'touch' || isPressed
 						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 						: ''
 				}`}
 			>
 				<Eraser />
-				{#if showTooltip[0] && $responsiveType !== 'mobile'}
+				{#if showTooltip[0]}
 					<div
 						role="tooltip"
 						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
