@@ -4,7 +4,8 @@
 		mostRecentChartID,
 		canvasBehavior,
 		getChartOptions,
-		touchType
+		touchType,
+		activeSidebar
 	} from '$lib/io/Stores';
 	import {
 		isPointInPolygon,
@@ -15,6 +16,16 @@
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
 	import { onMount } from 'svelte';
+
+	onMount(() => {
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleMouseUp);
+
+		return () => {
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
+		};
+	});
 
 	export let polygon: Polygon;
 
@@ -116,6 +127,8 @@
 		let inPolygon = isPointInPolygon({ x, y }, polygon);
 		if (inPolygon) {
 			if (polygon?.id) mostRecentChartID.set(polygon.id);
+
+			activeSidebar.set(true);
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;
@@ -127,13 +140,6 @@
 			e.preventDefault();
 		}
 		isRectangleVisible = true;
-	};
-
-	const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-		const target = e.target as Node;
-		if (dataAvailable && container && !container.contains(target)) {
-			isRectangleVisible = false;
-		}
 	};
 
 	const updateCanvasPosition = (x: number, y: number) => {

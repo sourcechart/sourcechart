@@ -153,7 +153,7 @@ export const canvasBehavior = () => {
 			} else if (
 				$navBarState === 'select' &&
 				$touchState === 'isTouching' &&
-				$responsiveType === 'desktop' &&
+				$responsiveType === 'mouse' &&
 				$touchType === 'default'
 			) {
 				behavior = 'isTouching';
@@ -162,33 +162,11 @@ export const canvasBehavior = () => {
 			} else {
 				return 'default';
 			}
-			controlBar(behavior, $responsiveType);
+			//controlBar(behavior, $responsiveType);
 			return behavior;
 		}
 	);
 };
-
-function controlBar(touchstate: string, responsiveType: string) {
-	if (touchstate === 'isTouching' && responsiveType === 'desktop') {
-		activeSidebar.set(false);
-	} else if (touchstate === 'isTouching' && responsiveType === 'mobile') {
-		activeMobileNav.set(false);
-	} else if (touchstate === 'isErasing' && responsiveType === 'desktop') {
-		activeSidebar.set(false);
-	} else if (touchstate === 'isErasing' && responsiveType === 'mobile') {
-		activeMobileNav.set(false);
-	} else if (
-		(touchstate === 'isResizing' || touchstate === 'isTranslating' || touchstate === 'isDrawing') &&
-		responsiveType === 'desktop'
-	) {
-		activeSidebar.set(true);
-	} else if (
-		(touchstate === 'isResizing' || touchstate === 'isTranslating' || touchstate === 'isDrawing') &&
-		responsiveType === 'mobile'
-	) {
-		activeMobileNav.set(false);
-	}
-}
 
 export const columnLabel = (axis: string) =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {

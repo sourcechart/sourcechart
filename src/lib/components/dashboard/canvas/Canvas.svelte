@@ -10,7 +10,9 @@
 		allCharts,
 		canvasBehavior,
 		activeDropZone,
-		responsiveType
+		responsiveType,
+		activeSidebar,
+		activeMobileNav
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './draw-utils/Draw';
@@ -18,6 +20,7 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
+	$: console.log($touchState, $touchType);
 	let scrollX: number = 0;
 	let scrollY: number = 0;
 	let width: number = 0;
@@ -42,6 +45,27 @@
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: CANVASBEHAVIOR = canvasBehavior();
+
+	$: controlBar($CANVASBEHAVIOR, $responsiveType);
+
+	function controlBar(touchstate: string, responsiveType: string) {
+		if (touchstate === 'isErasing' && responsiveType === 'mouse') {
+			activeSidebar.set(false);
+		} else if (
+			(touchstate === 'isResizing' ||
+				touchstate === 'isTranslating' ||
+				touchstate === 'isDrawing') &&
+			responsiveType === 'mouse'
+		) {
+			activeSidebar.set(true);
+		} else if (
+			touchstate === 'isTouching' &&
+			responsiveType === 'mouse' &&
+			$touchType === 'default'
+		) {
+			activeSidebar.set(false);
+		}
+	}
 
 	if (browser) {
 		onMount(() => {
@@ -68,12 +92,12 @@
 		let y: number;
 
 		if (window.TouchEvent && e instanceof TouchEvent) {
-			responsiveType.set('mobile');
+			responsiveType.set('touch');
 
 			x = e.touches[0].clientX - offsetX + scrollX;
 			y = e.touches[0].clientY - offsetY + scrollY;
 		} else if (e instanceof MouseEvent) {
-			responsiveType.set('desktop');
+			responsiveType.set('mouse');
 
 			x = e.clientX;
 			y = e.clientY;
@@ -167,12 +191,16 @@
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
+
 			if (insidePolygon && touchStartedOnHandle) {
 				hoverPolygon = polygon;
 				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, true);
 				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
 				touchType.set(direction);
 				if (handlePosition) return true;
+			} else {
+				activeSidebar.set(false);
+				touchType.set('default');
 			}
 		});
 	};

@@ -29,7 +29,7 @@
 		const target = event.target as Node;
 
 		if (!sidebarElement.contains(target) && !$lockSidebar) {
-			$activeSidebar = false;
+			//$activeSidebar = false;
 		}
 	};
 
@@ -42,6 +42,7 @@
 			window.removeEventListener('click', handleClickOutside);
 		};
 	});
+	$: console.log($activeSidebar, screenSize);
 </script>
 
 <div
@@ -143,7 +144,7 @@
 		class="bg-neutral-600 h-5 w-5 rounded-sm flex justify-center items-center hover:bg-neutral-600/80 mt-1"
 		on:click={() => {
 			if (screenSize === 'small') {
-				$activeSidebar = !$activeSidebar;
+				//$activeSidebar = !$activeSidebar;
 				lockSidebar.set(false);
 			} else {
 				$lockSidebar = !$lockSidebar;
