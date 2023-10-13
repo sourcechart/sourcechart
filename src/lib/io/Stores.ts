@@ -30,7 +30,7 @@ export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
 export const mobileNav = writable<MobileBar | null>(null);
 export const activeMobileNav = writable<boolean>(false);
-export const responsiveType = writable<ResponsiveType>();
+export const responsiveType = writable<string>();
 export const insideOutsideClick = writable<string>('outside');
 export const showGroupByAggregator = writable<boolean>(true);
 export const tabValue = writable<number>(1);
@@ -189,15 +189,6 @@ function controlBar(touchstate: string, responsiveType: string) {
 		activeMobileNav.set(false);
 	}
 }
-
-export const controlSidebar = () =>
-	derived([activeSidebar, activeMobileNav, mobileNav], ([_, $activeMobileNav, $mobileNav]) => {
-		if ($activeMobileNav && $mobileNav === 'sidebar') {
-			activeSidebar.set(true);
-		} else {
-			activeSidebar.set(false);
-		}
-	});
 
 export const columnLabel = (axis: string) =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {

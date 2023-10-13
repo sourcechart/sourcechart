@@ -2,8 +2,12 @@
 	import Filter from '$lib/components/ui/icons/FilterIcon.svelte';
 	import { allCharts, clickedChartIndex, responsiveType } from '$lib/io/Stores';
 
-	$: i = clickedChartIndex();
 	let filterIDCounter = 0;
+	let showTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
+	let isPressed = false;
+
+	$: i = clickedChartIndex();
 
 	const addFilterToSidebar = () => {
 		filterIDCounter += 1;
@@ -18,18 +22,34 @@
 		});
 	};
 
-	let showTooltip: boolean = false;
-	let hoverTimeout: NodeJS.Timeout;
-
-	const startHover = (): void => {
-		hoverTimeout = setTimeout(() => {
-			showTooltip = true;
-		}, 800);
-	};
-
 	const endHover = (): void => {
 		clearTimeout(hoverTimeout);
 		showTooltip = false;
+	};
+
+	const startPress = (): void => {
+		isPressed = true;
+		startHover(); // Show tooltip immediately when pressed
+	};
+
+	const endPress = (): void => {
+		isPressed = false;
+		endHover();
+	};
+
+	const handleLongPress = (): void => {
+		if (isPressed) {
+			// Logic for long press action. You can call any function or perform any action here.
+			addFilterToSidebar();
+		}
+	};
+
+	// Update startHover method to also handle the long press
+	const startHover = (): void => {
+		hoverTimeout = setTimeout(() => {
+			showTooltip = true;
+			handleLongPress(); // Handle the long press after the timeout
+		}, 800);
 	};
 </script>
 
@@ -46,7 +66,7 @@
 	</button>
 
 	<!-- Tooltip element -->
-	{#if showTooltip && $responsiveType !== 'mobile'}
+	{#if showTooltip && $responsiveType !== 'touch'}
 		<div
 			role="tooltip"
 			class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md"

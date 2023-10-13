@@ -38,6 +38,7 @@
 
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
+	let debounceTimer: number | undefined;
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: CANVASBEHAVIOR = canvasBehavior();
@@ -50,8 +51,6 @@
 			updateOffset();
 		});
 	}
-
-	let debounceTimer: number | undefined;
 
 	const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
 		clearTimeout(debounceTimer);
@@ -68,12 +67,14 @@
 		let x: number;
 		let y: number;
 
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
-			e.stopPropagation();
-			x = e.touches[0].clientX;
-			y = e.touches[0].clientY;
+		if (window.TouchEvent && e instanceof TouchEvent) {
+			responsiveType.set('mobile');
+
+			x = e.touches[0].clientX - offsetX + scrollX;
+			y = e.touches[0].clientY - offsetY + scrollY;
 		} else if (e instanceof MouseEvent) {
+			responsiveType.set('desktop');
+
 			x = e.clientX;
 			y = e.clientY;
 			x = x - offsetX + scrollX;
@@ -95,19 +96,6 @@
 		}
 
 		touchState.set('isTouching');
-		document.addEventListener('mousemove', handleMouseMove);
-		document.addEventListener('mouseup', handleGlobalMouseUp);
-		document.addEventListener('touchmove', handleMouseMove, { passive: false });
-		document.addEventListener('touchend', handleGlobalMouseUp, { passive: false });
-	};
-
-	const handleGlobalMouseUp = (e: MouseEvent | TouchEvent): void => {
-		document.removeEventListener('mousemove', handleMouseMove);
-		document.removeEventListener('mouseup', handleGlobalMouseUp);
-		document.removeEventListener('touchmove', handleMouseMove);
-		document.removeEventListener('touchend', handleGlobalMouseUp);
-
-		handleMouseUp(e); // then call your existing handleMouseUp function
 	};
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
@@ -117,13 +105,9 @@
 		if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
-			responsiveType.set('desktop');
-		} else if (e instanceof TouchEvent) {
-			responsiveType.set('mobile');
+		} else if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.changedTouches[0].clientX;
 			y = e.changedTouches[0].clientY;
-			e.preventDefault();
-			e.stopPropagation();
 		} else {
 			return;
 		}
@@ -154,9 +138,7 @@
 		let x: number;
 		let y: number;
 
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
-			e.stopPropagation();
+		if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
 			handleTouchMove(x, y);
@@ -280,13 +262,7 @@
 </script>
 
 <div class="w-full h-full top-0 left-0 fixed">
-	<div
-		class="h-full w-full"
-		style={`cursor: ${$touchType};`}
-		on:mousedown={handleMouseDown}
-		on:mousemove={handleMouseMove}
-		on:mouseup={handleMouseUp}
-	>
+	<div class="h-full w-full" style={`cursor: ${$touchType};`}>
 		<div id="canvasParent">
 			{#if !$activeDropZone}
 				{#each $allCharts as chart (chart.chartID)}
@@ -309,4 +285,35 @@
 			height = window.innerHeight;
 		}
 	}}
+	on:mousedown={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseDown(e);
+		}
+	}}
+	on:mousemove={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseMove(e);
+		}
+	}}
+	on:mouseup={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseUp(e);
+		}
+	}}
+	on:touchstart={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseDown(e);
+		}
+	}}
+	on:touchmove={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseMove(e);
+		}
+	}}
+	on:touchend={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseUp(e);
+		}
+	}}
 />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />

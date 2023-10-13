@@ -44,7 +44,7 @@
 </script>
 
 <div
-	class="relative bg-white overflow-auto scrollBarDiv px-4 pb-8 w-full h-3/5 pt-6 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-3xl sm:rounded-lg sm:px-10"
+	class="relative bg-white overflow-auto scrollBarDiv p-4 sm:p-10 w-full h-3/5 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-xl rounded sm:rounded-lg"
 >
 	<div class="mx-auto max-w-full">
 		<h1 class="text-2xl text-gray-800 font-normal">Add Data to Canvas</h1>

@@ -5,6 +5,10 @@
 	import Download from '$lib/components/ui/icons/Download.svelte';
 
 	const addURLToDatabase = (dataset: ExternalDataset) => {
+		if (navigator.userAgent.indexOf('Firefox') != -1) {
+			alert('FileUploads might not work in Firefox, Chromium based browsers are recommended');
+			return;
+		}
 		var tableColumnsSize = {
 			filename: dataset.name,
 			externalDataset: dataset,

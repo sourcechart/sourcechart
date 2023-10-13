@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
-	import { onMount } from 'svelte';
 	export let open = false;
 	let currentValue: string | null = '';
 	let showTooltip: boolean = false;
@@ -83,7 +82,7 @@
 		</button>
 
 		<!-- Tooltip element -->
-		{#if showTooltip && $responsiveType !== 'mobile'}
+		{#if showTooltip && $responsiveType !== 'touch'}
 			<div
 				role="tooltip"
 				class="absolute left-0 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded shadow-md z-10"

@@ -20,6 +20,7 @@
 
 	let offsetX = 0;
 	let offsetY = 0;
+	let container: HTMLElement;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
 	let dragging = false;
@@ -57,11 +58,21 @@
 		}
 	};
 
+	let eventListeners = {
+		mouseMove: (e: MouseEvent) => handleMouseMove(e),
+		mouseUp: (e: MouseEvent) => handleMouseUp(e)
+	};
+	let rafId: number;
+
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: chartOptions = getChartOptions(polygon.id); //@ts-ignore
 	$: if ($chartOptions?.chartOptions) options = $chartOptions?.chartOptions;
 	$: dataAvailable = options?.xAxis?.data?.length > 0;
 	$: isRectangleVisible = !dataAvailable || (dataAvailable && $mostRecentChartID === polygon.id);
+	$: plotWidth = getPlotWidth();
+	$: points = calculateVertices(rectWidth, rectHeight, 5);
+	$: handles = generateHandleRectangles(points, 9);
+	$: plotHeight = getPlotHeight();
 
 	$: if (dataAvailable) {
 		backupColor = 'transparent';
@@ -70,18 +81,12 @@
 	}
 
 	onMount(() => {
-		window.addEventListener('mousemove', handleMouseMove);
-		window.addEventListener('mouseup', handleMouseUp);
-		window.addEventListener('touchmove', handleMouseMove);
-		window.addEventListener('touchend', handleMouseUp);
-		document.addEventListener('mousedown', handleClickOutside);
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleMouseUp);
 
 		return () => {
-			window.removeEventListener('mousemove', handleMouseMove);
-			window.removeEventListener('mouseup', handleMouseUp);
-			window.removeEventListener('touchmove', handleMouseMove);
-			window.removeEventListener('touchend', handleMouseUp);
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
 		};
 	});
 
@@ -100,7 +105,7 @@
 
 	const handleMouseDown = (e: MouseEvent | TouchEvent) => {
 		var x, y;
-		if (e instanceof TouchEvent) {
+		if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
 		} else {
@@ -114,6 +119,8 @@
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;
+			document.addEventListener('mousemove', eventListeners.mouseMove);
+			document.addEventListener('mouseup', eventListeners.mouseUp);
 		}
 
 		if (e instanceof TouchEvent) {
@@ -129,42 +136,39 @@
 		}
 	};
 
+	const updateCanvasPosition = (x: number, y: number) => {
+		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
+			mostRecentChartID.set(polygon.id);
+			let dx = x - offsetX;
+			let dy = y - offsetY;
+
+			polygon.vertices = [
+				{ x: dx, y: dy },
+				{ x: dx + canvas.width, y: dy },
+				{ x: dx + canvas.width, y: dy + canvas.height },
+				{ x: dx, y: dy + canvas.height }
+			];
+
+			updateAllCharts(polygon);
+		}
+	};
+
 	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
 
-		var x, y;
-		if (e instanceof TouchEvent) {
+		let x: number;
+		let y: number;
+
+		if (window.TouchEvent && e instanceof TouchEvent) {
+			e.preventDefault();
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
 		} else {
 			x = (e as MouseEvent).clientX;
 			y = (e as MouseEvent).clientY;
 		}
-
-		if ($CANVASBEHAVIOR === 'isTranslating' && polygon.id) {
-			mostRecentChartID.set(polygon.id);
-
-			var newPolygon = JSON.parse(JSON.stringify(polygon)); // create a deep copy of the polygon
-			var dx = x - offsetX;
-			var dy = y - offsetY;
-
-			newPolygon.vertices[0].x = dx;
-			newPolygon.vertices[0].y = dy;
-			newPolygon.vertices[1].x = dx + canvas.width;
-			newPolygon.vertices[1].y = dy;
-			newPolygon.vertices[2].x = dx + canvas.width;
-			newPolygon.vertices[2].y = dy + canvas.height;
-			newPolygon.vertices[3].x = dx;
-			newPolygon.vertices[3].y = dy + canvas.height;
-
-			updateAllCharts(newPolygon);
-
-			polygon = newPolygon;
-		}
-
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
-		}
+		cancelAnimationFrame(rafId);
+		rafId = requestAnimationFrame(() => updateCanvasPosition(x, y));
 	};
 
 	const updateAllCharts = (updatedPolygon: Polygon) => {
@@ -176,11 +180,13 @@
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
 		if (!dragging) return;
+		cancelAnimationFrame(rafId);
 
 		var x, y;
-		if (e instanceof TouchEvent) {
+		if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.changedTouches[0].clientX;
 			y = e.changedTouches[0].clientY;
+			e.preventDefault();
 		} else {
 			x = (e as MouseEvent).clientX;
 			y = (e as MouseEvent).clientY;
@@ -202,6 +208,9 @@
 			updateAllCharts(polygon);
 			dragging = false;
 		}
+
+		window.removeEventListener('mousemove', eventListeners.mouseMove);
+		window.removeEventListener('mouseup', eventListeners.mouseUp);
 	};
 
 	const getPlotWidth = () => {
@@ -236,12 +245,6 @@
 			drawRectangleCanvas(points, context, 'transparent');
 		}
 	});
-
-	$: plotWidth = getPlotWidth();
-	$: points = calculateVertices(rectWidth, rectHeight, 5);
-	$: handles = generateHandleRectangles(points, 9);
-	$: plotHeight = getPlotHeight();
-	let container: HTMLElement;
 </script>
 
 <div

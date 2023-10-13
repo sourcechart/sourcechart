@@ -7,6 +7,17 @@
 	let value: string[] = [];
 	let isDragging = false;
 
+	function validateFileType(file: File): boolean {
+		const allowedExtensions = ['.csv', '.txt', '.parquet', '.json'];
+		const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+
+		if (!allowedExtensions.includes(fileExtension)) {
+			alert(`Invalid file type. Please select a CSV, Text, Parquet, or JSON file.`);
+			return false;
+		}
+		return true;
+	}
+
 	const insertFileHandle = async (file: File, fileHandle: any) => {
 		var tableColumnsSize = {
 			filename: file.name,
@@ -16,16 +27,25 @@
 			datasetID: generateID()
 		};
 
-		console.log(tableColumnsSize);
 		fileUploadStore.update((fileUploadStore) => [...fileUploadStore, tableColumnsSize]);
 		await set(file.name, fileHandle);
 	};
 
 	const selectFile = async () => {
 		try {
-			//@ts-ignore
+			if (navigator.userAgent.indexOf('Firefox') != -1) {
+				alert('FileUploads might not work in Firefox, Chromium based browsers are recommended');
+				return;
+			} else if (navigator.userAgent.indexOf('Safari') != -1) {
+				alert('All Features Might not work in Safari, Chromium based browsers are recommended');
+				return;
+			}
+			// @ts-ignore
 			const [fileHandle] = await window.showOpenFilePicker();
 			const file = await fileHandle.getFile();
+			if (!validateFileType(file)) {
+				return;
+			}
 			value.push(file.name);
 			insertFileHandle(file, fileHandle); // Pass both file and fileHandle
 			activeDropZone.set(false);
@@ -38,6 +58,13 @@
 	const dropHandle = (event: DragEvent) => {
 		value = [];
 		event.preventDefault();
+		if (navigator.userAgent.indexOf('Firefox') != -1) {
+			alert('FileUploads might not work in Firefox, Chromium based browsers are recommended');
+			return;
+		} else if (navigator.userAgent.indexOf('Safari') != -1) {
+			alert('All Features Might not work in Safari, Chromium based browsers are recommended');
+			return;
+		}
 		if (event.dataTransfer?.items) {
 			[...event.dataTransfer.items].forEach(async (item) => {
 				if (item.kind === 'file') {
