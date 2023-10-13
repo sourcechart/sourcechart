@@ -33,13 +33,6 @@
 
 	const selectFile = async () => {
 		try {
-			if (navigator.userAgent.indexOf('Firefox') != -1) {
-				alert('FileUploads might not work in Firefox, Chromium based browsers are recommended');
-				return;
-			} else if (navigator.userAgent.indexOf('Safari') != -1) {
-				alert('All Features Might not work in Safari, Chromium based browsers are recommended');
-				return;
-			}
 			// @ts-ignore
 			const [fileHandle] = await window.showOpenFilePicker();
 			const file = await fileHandle.getFile();
@@ -58,13 +51,7 @@
 	const dropHandle = (event: DragEvent) => {
 		value = [];
 		event.preventDefault();
-		if (navigator.userAgent.indexOf('Firefox') != -1) {
-			alert('FileUploads might not work in Firefox, Chromium based browsers are recommended');
-			return;
-		} else if (navigator.userAgent.indexOf('Safari') != -1) {
-			alert('All Features Might not work in Safari, Chromium based browsers are recommended');
-			return;
-		}
+
 		if (event.dataTransfer?.items) {
 			[...event.dataTransfer.items].forEach(async (item) => {
 				if (item.kind === 'file') {
