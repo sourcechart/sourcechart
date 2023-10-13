@@ -55,6 +55,7 @@
 			navBarState.set(selectedIcon.mode);
 		}
 	}
+
 	const setMode = (mode: NavBar, clickedIndex: number) => {
 		navBarState.set(mode);
 		activeIndex = clickedIndex;
@@ -104,7 +105,7 @@
 			on:focus={null}
 			class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
 				activeIndex === 1
-					? 'bg-[#908bd971]'
+					? 'bg-[#6f6599]'
 					: $responsiveType !== 'mobile' || isPressed
 					? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 					: ''
@@ -133,7 +134,7 @@
 				on:focus={null}
 				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
 					activeIndex === 2
-						? 'bg-[#908bd971]'
+						? 'bg-[#6f6599]'
 						: $responsiveType !== 'mobile' || isPressed
 						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 						: ''
@@ -162,7 +163,7 @@
 				on:focus={null}
 				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
 					activeIndex === 3
-						? 'bg-[#908bd971]'
+						? 'bg-[#6f6599]'
 						: $responsiveType !== 'mobile' || isPressed
 						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 						: ''
@@ -189,9 +190,9 @@
 				on:touchend={endLongPress}
 				on:blur={null}
 				on:focus={null}
-				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${
-					activeIndex === 4
-						? 'bg-[#908bd971]'
+				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
+					activeIndex === 0
+						? 'bg-[#6f6599]'
 						: $responsiveType !== 'mobile' || isPressed
 						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 						: ''
