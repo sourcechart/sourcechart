@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getColumnsFromFile, workflowIDColumn } from '$lib/io/Stores'; //@ts-ignore
+	import { getColumnsFromFile, workflowIDColumn } from '$lib/io/Stores';
 
 	$: columns = getColumnsFromFile();
 	let isDropdownOpen: boolean = false;
