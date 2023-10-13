@@ -2,8 +2,12 @@
 	import Filter from '$lib/components/ui/icons/FilterIcon.svelte';
 	import { allCharts, clickedChartIndex, responsiveType } from '$lib/io/Stores';
 
-	$: i = clickedChartIndex();
 	let filterIDCounter = 0;
+	let showTooltip: boolean = false;
+	let hoverTimeout: NodeJS.Timeout;
+	let isPressed = false;
+
+	$: i = clickedChartIndex();
 
 	const addFilterToSidebar = () => {
 		filterIDCounter += 1;
@@ -17,10 +21,6 @@
 			return charts;
 		});
 	};
-
-	let showTooltip: boolean = false;
-	let hoverTimeout: NodeJS.Timeout;
-	let isPressed = false;
 
 	const endHover = (): void => {
 		clearTimeout(hoverTimeout);
