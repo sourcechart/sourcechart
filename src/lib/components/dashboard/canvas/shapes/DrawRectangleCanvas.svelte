@@ -14,13 +14,12 @@
 	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
 	import { Chart } from '$lib/components/dashboard/echarts';
+	import { onMount } from 'svelte';
 
 	export let polygon: Polygon;
 
 	let offsetX = 0;
 	let offsetY = 0;
-	let velocity = { x: 0, y: 0 };
-
 	let container: HTMLElement;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -81,6 +80,16 @@
 		backupColor = '#9d99dc';
 	}
 
+	onMount(() => {
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleMouseUp);
+
+		return () => {
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
+		};
+	});
+
 	const drawRectangleCanvas = (
 		points: LookupTable,
 		context: CanvasRenderingContext2D,
@@ -95,8 +104,7 @@
 	};
 
 	const handleMouseDown = (e: MouseEvent | TouchEvent) => {
-		let x: number;
-		let y: number;
+		var x, y;
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
@@ -115,6 +123,9 @@
 			document.addEventListener('mouseup', eventListeners.mouseUp);
 		}
 
+		if (e instanceof TouchEvent) {
+			e.preventDefault();
+		}
 		isRectangleVisible = true;
 	};
 
@@ -150,7 +161,6 @@
 
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			e.preventDefault();
-			e.stopPropagation();
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
 		} else {
@@ -172,13 +182,11 @@
 		if (!dragging) return;
 		cancelAnimationFrame(rafId);
 
-		let x: number;
-		let y: number;
+		var x, y;
 		if (window.TouchEvent && e instanceof TouchEvent) {
-			e.preventDefault();
-			e.stopPropagation();
 			x = e.changedTouches[0].clientX;
 			y = e.changedTouches[0].clientY;
+			e.preventDefault();
 		} else {
 			x = (e as MouseEvent).clientX;
 			y = (e as MouseEvent).clientY;
@@ -255,6 +263,12 @@
 >
 	<div
 		style="position: relative; width: {plotWidth}px; height: {plotHeight}px;  cursor: {$touchType} "
+		on:mousedown={handleMouseDown}
+		on:mousemove={handleMouseMove}
+		on:mouseup={handleMouseUp}
+		on:touchstart={handleMouseDown}
+		on:touchmove={handleMouseMove}
+		on:touchend={handleMouseUp}
 		class="rounded-sm"
 	>
 		<canvas style="position: absolute;  z-index: {dragging ? 4 : 2};" bind:this={canvas} />
@@ -295,36 +309,3 @@
 		</svg>
 	</div>
 </div>
-
-<svelte:window
-	on:mousedown={(e) => {
-		if (typeof window !== undefined) {
-			handleMouseDown(e);
-		}
-	}}
-	on:mousemove={(e) => {
-		if (typeof window !== undefined) {
-			handleMouseMove(e);
-		}
-	}}
-	on:mouseup={(e) => {
-		if (typeof window !== undefined) {
-			handleMouseUp(e);
-		}
-	}}
-	on:touchstart={(e) => {
-		if (typeof window !== undefined) {
-			handleMouseDown(e);
-		}
-	}}
-	on:touchmove={(e) => {
-		if (typeof window !== undefined) {
-			handleMouseMove(e);
-		}
-	}}
-	on:touchend={(e) => {
-		if (typeof window !== undefined) {
-			handleMouseUp(e);
-		}
-	}}
-/>
