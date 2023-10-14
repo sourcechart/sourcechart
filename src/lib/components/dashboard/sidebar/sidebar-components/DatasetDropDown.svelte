@@ -6,7 +6,8 @@
 		allCharts,
 		clickedChartIndex,
 		duckDBInstanceStore,
-		fileUploadStore
+		fileUploadStore,
+		mostRecentChartID
 	} from '$lib/io/Stores';
 	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
@@ -16,6 +17,7 @@
 	import FileUploadButton from '../sidebar-components/FileUploadButton.svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	import CarrotDown from '$lib/components/ui/icons/CarrotDown.svelte';
+	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
 	let isDropdownOpen = false;
 	let selectedDataset: string | null = '';
@@ -94,6 +96,7 @@
 	};
 
 	const queryDuckDB = async (filename: string, mount?: boolean) => {
+		if ($mostRecentChartID) addChartMetaData($mostRecentChartID);
 		let resp;
 		let fname = filename;
 

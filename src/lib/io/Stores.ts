@@ -32,13 +32,13 @@ export const responsiveType = writable<string>();
 export const insideOutsideClick = writable<string>('outside');
 export const showGroupByAggregator = writable<boolean>(true);
 export const tabValue = writable<number>(1);
+export const screenSize = writable<'small' | 'large'>();
+export const duckDBInstanceStore = writable<DuckDBClient>();
 export const activeDropZone = writable<boolean>(storeFromSessionStorage('activeDropZone', true));
 export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []));
 export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 export const lockSidebar = writable<boolean>(storeFromLocalStorage('lockSidebar', true));
-export const screenSize = writable<'small' | 'large'>();
-export const duckDBInstanceStore = writable<DuckDBClient>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const polygons = writable<Polygon[]>(storeFromLocalStorage('polygon', []));
 

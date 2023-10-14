@@ -120,7 +120,7 @@
 		touchState.set('isTouching');
 	};
 
-	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
+	const handleMouseUp = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
 		let y: number;
 
@@ -158,7 +158,7 @@
 		navBarState.set('select');
 	};
 
-	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+	const handleMouseMove = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
 		let y: number;
 
@@ -254,7 +254,7 @@
 		eraserTrail = [...eraserTrail, { x: x, y: y }];
 	};
 
-	const handleResize = (x: number, y: number) => {
+	const handleResize = (x: number, y: number): void => {
 		if (chartIndex !== null && handlePosition !== null && $CANVASBEHAVIOR === 'isResizing') {
 			const poly = $polygons[chartIndex];
 			const newPolygon = resizeRectangle(x, y, poly, handlePosition);
