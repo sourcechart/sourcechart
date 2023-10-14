@@ -5,7 +5,8 @@
 		canvasBehavior,
 		getChartOptions,
 		touchType,
-		activeSidebar
+		activeSidebar,
+		screenSize
 	} from '$lib/io/Stores';
 	import {
 		isPointInPolygon,
@@ -212,7 +213,7 @@
 
 			updateAllCharts(polygon);
 			dragging = false;
-			activeSidebar.set(true);
+			if ($screenSize === 'large') activeSidebar.set(true);
 		}
 
 		window.removeEventListener('mousemove', eventListeners.mouseMove);

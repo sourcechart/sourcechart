@@ -17,7 +17,6 @@
 
 	import { onMount } from 'svelte';
 
-	$: console.log($touchType);
 	$: i = clickedChartIndex();
 	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
 
