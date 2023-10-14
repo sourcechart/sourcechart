@@ -57,16 +57,16 @@
 		}
 	}
 
-	const setMode = (mode: NavBar, clickedIndex: number) => {
+	const setMode = (mode: NavBar, indexClicked: number) => {
 		navBarState.set(mode);
-		activeIndex = clickedIndex;
+		activeIndex = indexClicked;
 
 		// Add these lines to remember the clicked button and hide the tooltip for touch devices
 		if ($responsiveType === 'touch') {
 			clickedIndex = null;
 			showTooltip = {};
 		} else {
-			clickedIndex = clickedIndex;
+			clickedIndex = indexClicked;
 		}
 	};
 
