@@ -37,6 +37,7 @@
 	let backupColor: string = '#9d99dc';
 	let offsetX = 0;
 	let offsetY = 0;
+
 	let rectWidth: number = 0;
 	let rectHeight: number = 0;
 	let points: LookupTable = {};
@@ -91,16 +92,6 @@
 	} else {
 		backupColor = '#9d99dc';
 	}
-
-	onMount(() => {
-		document.addEventListener('mousemove', handleMouseMove);
-		document.addEventListener('mouseup', handleMouseUp);
-
-		return () => {
-			document.removeEventListener('mousemove', handleMouseMove);
-			document.removeEventListener('mouseup', handleMouseUp);
-		};
-	});
 
 	const drawRectangleCanvas = (
 		points: LookupTable,
@@ -174,14 +165,11 @@
 			y = (e as MouseEvent).clientY;
 		}
 		updateCanvasPosition(x, y);
-		//cancelAnimationFrame(rafId);
-		//rafId = requestAnimationFrame(() => );
 	};
 
 	const updatePolygons = (updatedPolygon: Polygon) => {
-		console.log('updatedPolygon', updatedPolygon);
-		let i = $polygons.findIndex((polygon) => polygon.id === updatedPolygon.id);
-		$polygons[i] = updatedPolygon; // Update the specific polygon in the store
+		let i = $polygons.findIndex((polygon) => polygon.id === polygon.id);
+		$polygons[i].vertices = updatedPolygon.vertices; // Update the specific polygon in the store
 	};
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
@@ -199,25 +187,12 @@
 		}
 
 		if ($CANVASBEHAVIOR === 'isTranslating') {
-			var dx = x - offsetX;
-			var dy = y - offsetY;
-
-			polygon.vertices[0].x = dx;
-			polygon.vertices[0].y = dy;
-			polygon.vertices[1].x = dx + canvas.width;
-			polygon.vertices[1].y = dy;
-			polygon.vertices[2].x = dx + canvas.width;
-			polygon.vertices[2].y = dy + canvas.height;
-			polygon.vertices[3].x = dx;
-			polygon.vertices[3].y = dy + canvas.height;
-
-			updatePolygons(polygon);
+			updateCanvasPosition(x, y);
 			dragging = false;
 			if ($screenSize === 'large') activeSidebar.set(true);
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
 		}
-
-		window.removeEventListener('mousemove', eventListeners.mouseMove);
-		window.removeEventListener('mouseup', eventListeners.mouseUp);
 	};
 
 	const getPlotWidth = () => {
@@ -234,16 +209,18 @@
 		var startY = Math.min(polygon.vertices[0].y, polygon.vertices[2].y);
 		var endX = Math.max(polygon.vertices[0].x, polygon.vertices[2].x);
 		var endY = Math.max(polygon.vertices[0].y, polygon.vertices[2].y);
-		var width = Math.abs(endX - startX);
-		var height = Math.abs(endY - startY);
+
+		canvas.width = Math.abs(endX - startX);
+		canvas.height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
 
 		if (context) {
-			rectWidth = width;
-			rectHeight = height;
-			context.strokeStyle = 'transparent';
+			rectWidth = Math.abs(endX - startX);
+			rectHeight = Math.abs(endY - startY);
 
+			context.strokeStyle = 'transparent';
 			points = calculateVertices(rectWidth, rectHeight, 5);
+
 			plotWidth = getPlotWidth();
 			plotHeight = getPlotHeight();
 
