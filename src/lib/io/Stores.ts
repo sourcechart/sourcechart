@@ -40,7 +40,7 @@ export const lockSidebar = writable<boolean>(storeFromLocalStorage('lockSidebar'
 export const screenSize = writable<'small' | 'large'>();
 export const duckDBInstanceStore = writable<DuckDBClient>();
 export const selectedColumnStore = writable<ColumnName[]>([]);
-export const rectangles = writable<Rectangle[]>(storeFromLocalStorage('rectangles', []));
+export const polygons = writable<Polygon[]>(storeFromLocalStorage('polygon', []));
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
@@ -200,5 +200,5 @@ storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');
 storeToLocalStorage(arrows, 'arrowsStore');
 storeToLocalStorage(lockSidebar, 'lockSidebar');
-storeToLocalStorage(rectangles, 'rectangles');
+storeToLocalStorage(polygons, 'polygon');
 storeToSessionStorage(activeDropZone, 'activeDropZone');

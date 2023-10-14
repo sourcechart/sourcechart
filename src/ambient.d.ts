@@ -37,9 +37,9 @@ type Chart = {
 	yColumn: string | null;
 
 	//Maybe I should seperate this out to a different store.
-	canvasWidth: number;
-	canvasHeight: number;
-	polygon: Polygon;
+	//canvasWidth: number;
+	//canvasHeight: number;
+	//polygon: Polygon;
 
 	chartOptions: any;
 };
