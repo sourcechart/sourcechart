@@ -24,8 +24,6 @@ export const touchType = writable<string | null>();
 export const workflowIDColumn = writable<string | null>();
 export const epsilonDistance = writable<number>();
 export const minimumPointsForCluster = writable<number>();
-export const duckDBInstanceStore = writable<DuckDBClient>();
-export const selectedColumnStore = writable<ColumnName[]>([]);
 export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
 export const mobileNav = writable<MobileBar | null>(null);
@@ -40,6 +38,9 @@ export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fil
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 export const lockSidebar = writable<boolean>(storeFromLocalStorage('lockSidebar', true));
 export const screenSize = writable<'small' | 'large'>();
+export const duckDBInstanceStore = writable<DuckDBClient>();
+export const selectedColumnStore = writable<ColumnName[]>([]);
+export const rectangles = writable<Rectangle[]>(storeFromLocalStorage('rectangles', []));
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
@@ -199,4 +200,5 @@ storeToLocalStorage(fileUploadStore, 'fileUploadStore');
 storeToLocalStorage(allCharts, 'allCharts');
 storeToLocalStorage(arrows, 'arrowsStore');
 storeToLocalStorage(lockSidebar, 'lockSidebar');
+storeToLocalStorage(rectangles, 'rectangles');
 storeToSessionStorage(activeDropZone, 'activeDropZone');
