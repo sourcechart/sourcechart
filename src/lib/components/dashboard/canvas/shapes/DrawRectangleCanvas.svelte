@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {
-		allCharts,
+		polygons,
 		mostRecentChartID,
 		canvasBehavior,
 		getChartOptions,
@@ -30,20 +30,20 @@
 
 	export let polygon: Polygon;
 
-	let offsetX = 0;
-	let offsetY = 0;
 	let container: HTMLElement;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
-	let dragging = false;
-	let dataAvailable = false; // Track whether data is available in the options.axis.data
-	let backupColor: string = '#9d99dc';
 
+	let backupColor: string = '#9d99dc';
+	let offsetX = 0;
+	let offsetY = 0;
 	let rectWidth: number = 0;
 	let rectHeight: number = 0;
 	let points: LookupTable = {};
 	let plotHeight: number = 0;
 	let plotWidth: number = 0;
+	let dragging = false;
+	let dataAvailable = false; // Track whether data is available in the options.axis.data
 
 	let options: any = {
 		xAxis: {
@@ -155,7 +155,7 @@
 				{ x: dx, y: dy + canvas.height }
 			];
 
-			updateAllCharts(polygon);
+			updatePolygons(polygon);
 		}
 	};
 
@@ -173,15 +173,15 @@
 			x = (e as MouseEvent).clientX;
 			y = (e as MouseEvent).clientY;
 		}
-		cancelAnimationFrame(rafId);
-		rafId = requestAnimationFrame(() => updateCanvasPosition(x, y));
+		updateCanvasPosition(x, y);
+		//cancelAnimationFrame(rafId);
+		//rafId = requestAnimationFrame(() => );
 	};
 
-	const updateAllCharts = (updatedPolygon: Polygon) => {
-		let i = $allCharts.findIndex((chart) => chart.chartID === polygon.id);
-		let chart = $allCharts[i];
-		chart.polygon.vertices = updatedPolygon.vertices;
-		$allCharts[i] = chart;
+	const updatePolygons = (updatedPolygon: Polygon) => {
+		console.log('updatedPolygon', updatedPolygon);
+		let i = $polygons.findIndex((polygon) => polygon.id === updatedPolygon.id);
+		$polygons[i] = updatedPolygon; // Update the specific polygon in the store
 	};
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
@@ -211,7 +211,7 @@
 			polygon.vertices[3].x = dx;
 			polygon.vertices[3].y = dy + canvas.height;
 
-			updateAllCharts(polygon);
+			updatePolygons(polygon);
 			dragging = false;
 			if ($screenSize === 'large') activeSidebar.set(true);
 		}
@@ -234,18 +234,16 @@
 		var startY = Math.min(polygon.vertices[0].y, polygon.vertices[2].y);
 		var endX = Math.max(polygon.vertices[0].x, polygon.vertices[2].x);
 		var endY = Math.max(polygon.vertices[0].y, polygon.vertices[2].y);
-
-		canvas.width = Math.abs(endX - startX);
-		canvas.height = Math.abs(endY - startY);
+		var width = Math.abs(endX - startX);
+		var height = Math.abs(endY - startY);
 		context = canvas.getContext('2d');
 
 		if (context) {
-			rectWidth = Math.abs(endX - startX);
-			rectHeight = Math.abs(endY - startY);
-
+			rectWidth = width;
+			rectHeight = height;
 			context.strokeStyle = 'transparent';
-			points = calculateVertices(rectWidth, rectHeight, 5);
 
+			points = calculateVertices(rectWidth, rectHeight, 5);
 			plotWidth = getPlotWidth();
 			plotHeight = getPlotHeight();
 
