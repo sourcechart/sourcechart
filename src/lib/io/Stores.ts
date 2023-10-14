@@ -163,7 +163,6 @@ export const canvasBehavior = () => {
 			} else {
 				return 'default';
 			}
-			//controlBar(behavior, $responsiveType);
 			return behavior;
 		}
 	);

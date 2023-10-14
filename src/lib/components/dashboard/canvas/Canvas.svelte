@@ -55,7 +55,7 @@
 				touchstate === 'isDrawing') &&
 			responsiveType === 'mouse'
 		) {
-			activeSidebar.set(true);
+			//activeSidebar.set(true);
 		} else if (
 			touchstate === 'isTouching' &&
 			responsiveType === 'mouse' &&
@@ -150,8 +150,8 @@
 			};
 			newPolygon = [];
 			addChartMetaData(targetId, $navBarState, polygon);
+			activeSidebar.set(true);
 		}
-
 		touchState.set('isHovering');
 		navBarState.set('select');
 	};

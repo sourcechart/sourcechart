@@ -6,8 +6,6 @@
 
 	const toggleSidebar = () => {
 		touchType.set('pointer');
-
-		console.log('toggleSidebar');
 		if ($screenSize === 'small') {
 			$activeSidebar = !$activeSidebar;
 			lockSidebar.set(false);

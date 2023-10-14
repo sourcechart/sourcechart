@@ -128,7 +128,6 @@
 		if (inPolygon) {
 			if (polygon?.id) mostRecentChartID.set(polygon.id);
 
-			activeSidebar.set(true);
 			offsetX = x - polygon.vertices[0].x;
 			offsetY = y - polygon.vertices[0].y;
 			dragging = true;
@@ -213,6 +212,7 @@
 
 			updateAllCharts(polygon);
 			dragging = false;
+			activeSidebar.set(true);
 		}
 
 		window.removeEventListener('mousemove', eventListeners.mouseMove);
