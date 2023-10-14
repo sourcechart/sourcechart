@@ -30,7 +30,7 @@ export const filters = writable<any[]>([]);
 export const keyPress = writable<string>('');
 export const mobileNav = writable<MobileBar | null>(null);
 export const activeMobileNav = writable<boolean>(false);
-export const responsiveType = writable<ResponsiveType>();
+export const responsiveType = writable<string>();
 export const insideOutsideClick = writable<string>('outside');
 export const showGroupByAggregator = writable<boolean>(true);
 export const tabValue = writable<number>(1);
@@ -39,6 +39,7 @@ export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []
 export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 export const lockSidebar = writable<boolean>(storeFromLocalStorage('lockSidebar', true));
+export const screenSize = writable<'small' | 'large'>();
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
@@ -153,7 +154,7 @@ export const canvasBehavior = () => {
 			} else if (
 				$navBarState === 'select' &&
 				$touchState === 'isTouching' &&
-				$responsiveType === 'desktop' &&
+				$responsiveType === 'mouse' &&
 				$touchType === 'default'
 			) {
 				behavior = 'isTouching';
@@ -162,42 +163,10 @@ export const canvasBehavior = () => {
 			} else {
 				return 'default';
 			}
-			controlBar(behavior, $responsiveType);
 			return behavior;
 		}
 	);
 };
-
-function controlBar(touchstate: string, responsiveType: string) {
-	if (touchstate === 'isTouching' && responsiveType === 'desktop') {
-		activeSidebar.set(false);
-	} else if (touchstate === 'isTouching' && responsiveType === 'mobile') {
-		activeMobileNav.set(false);
-	} else if (touchstate === 'isErasing' && responsiveType === 'desktop') {
-		activeSidebar.set(false);
-	} else if (touchstate === 'isErasing' && responsiveType === 'mobile') {
-		activeMobileNav.set(false);
-	} else if (
-		(touchstate === 'isResizing' || touchstate === 'isTranslating' || touchstate === 'isDrawing') &&
-		responsiveType === 'desktop'
-	) {
-		activeSidebar.set(true);
-	} else if (
-		(touchstate === 'isResizing' || touchstate === 'isTranslating' || touchstate === 'isDrawing') &&
-		responsiveType === 'mobile'
-	) {
-		activeMobileNav.set(false);
-	}
-}
-
-export const controlSidebar = () =>
-	derived([activeSidebar, activeMobileNav, mobileNav], ([_, $activeMobileNav, $mobileNav]) => {
-		if ($activeMobileNav && $mobileNav === 'sidebar') {
-			activeSidebar.set(true);
-		} else {
-			activeSidebar.set(false);
-		}
-	});
 
 export const columnLabel = (axis: string) =>
 	derived([allCharts, mostRecentChartID], ([$allCharts, $mostRecentChartID]) => {

@@ -10,7 +10,9 @@
 		allCharts,
 		canvasBehavior,
 		activeDropZone,
-		responsiveType
+		responsiveType,
+		activeSidebar,
+		screenSize
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './draw-utils/Draw';
@@ -38,9 +40,31 @@
 
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
+	let debounceTimer: number | undefined;
 
 	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
 	$: CANVASBEHAVIOR = canvasBehavior();
+
+	$: controlBar($CANVASBEHAVIOR, $responsiveType);
+
+	function controlBar(touchstate: string, responsiveType: string) {
+		if (touchstate === 'isErasing' && responsiveType === 'mouse') {
+			activeSidebar.set(false);
+		} else if (
+			(touchstate === 'isResizing' ||
+				touchstate === 'isTranslating' ||
+				touchstate === 'isDrawing') &&
+			responsiveType === 'mouse'
+		) {
+			//activeSidebar.set(true);
+		} else if (
+			touchstate === 'isTouching' &&
+			responsiveType === 'mouse' &&
+			$touchType === 'default'
+		) {
+			activeSidebar.set(false);
+		}
+	}
 
 	if (browser) {
 		onMount(() => {
@@ -51,11 +75,9 @@
 		});
 	}
 
-	let debounceTimer: number | undefined;
-
 	const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
 		clearTimeout(debounceTimer);
-		debounceTimer = window.setTimeout(() => handleMouseMoveUp(x, y), 5);
+		debounceTimer = window.setTimeout(() => handleMove(x, y), 5);
 	};
 
 	const updateOffset = () => {
@@ -68,12 +90,14 @@
 		let x: number;
 		let y: number;
 
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
-			e.stopPropagation();
-			x = e.touches[0].clientX;
-			y = e.touches[0].clientY;
+		if (window.TouchEvent && e instanceof TouchEvent) {
+			responsiveType.set('touch');
+
+			x = e.touches[0].clientX - offsetX + scrollX;
+			y = e.touches[0].clientY - offsetY + scrollY;
 		} else if (e instanceof MouseEvent) {
+			responsiveType.set('mouse');
+
 			x = e.clientX;
 			y = e.clientY;
 			x = x - offsetX + scrollX;
@@ -95,19 +119,6 @@
 		}
 
 		touchState.set('isTouching');
-		document.addEventListener('mousemove', handleMouseMove);
-		document.addEventListener('mouseup', handleGlobalMouseUp);
-		document.addEventListener('touchmove', handleMouseMove, { passive: false });
-		document.addEventListener('touchend', handleGlobalMouseUp, { passive: false });
-	};
-
-	const handleGlobalMouseUp = (e: MouseEvent | TouchEvent): void => {
-		document.removeEventListener('mousemove', handleMouseMove);
-		document.removeEventListener('mouseup', handleGlobalMouseUp);
-		document.removeEventListener('touchmove', handleMouseMove);
-		document.removeEventListener('touchend', handleGlobalMouseUp);
-
-		handleMouseUp(e); // then call your existing handleMouseUp function
 	};
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
@@ -117,13 +128,9 @@
 		if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
-			responsiveType.set('desktop');
-		} else if (e instanceof TouchEvent) {
-			responsiveType.set('mobile');
+		} else if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.changedTouches[0].clientX;
 			y = e.changedTouches[0].clientY;
-			e.preventDefault();
-			e.stopPropagation();
 		} else {
 			return;
 		}
@@ -144,8 +151,8 @@
 			};
 			newPolygon = [];
 			addChartMetaData(targetId, $navBarState, polygon);
+			if ($screenSize === 'large') activeSidebar.set(true);
 		}
-
 		touchState.set('isHovering');
 		navBarState.set('select');
 	};
@@ -154,9 +161,7 @@
 		let x: number;
 		let y: number;
 
-		if (e instanceof TouchEvent) {
-			e.preventDefault();
-			e.stopPropagation();
+		if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
 			handleTouchMove(x, y);
@@ -191,11 +196,13 @@
 				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
 				touchType.set(direction);
 				if (handlePosition) return true;
-			}
+			} //else {
+			//	if ($touchType !== 'pointer') touchType.set('default');
+			//	}
 		});
 	};
 
-	const handleMouseMoveUp = (x: number, y: number): void => {
+	const handleMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 		const polygons = $allCharts.map((chart) => chart.polygon);
@@ -211,7 +218,7 @@
 				touchType.set(direction);
 				if (handlePosition) return true;
 			} else {
-				touchType.set('default');
+				if ($touchType !== 'pointer') touchType.set('default');
 			}
 		});
 	};
@@ -280,13 +287,7 @@
 </script>
 
 <div class="w-full h-full top-0 left-0 fixed">
-	<div
-		class="h-full w-full"
-		style={`cursor: ${$touchType};`}
-		on:mousedown={handleMouseDown}
-		on:mousemove={handleMouseMove}
-		on:mouseup={handleMouseUp}
-	>
+	<div class="h-full w-full" style={`cursor: ${$touchType};`}>
 		<div id="canvasParent">
 			{#if !$activeDropZone}
 				{#each $allCharts as chart (chart.chartID)}
@@ -309,4 +310,35 @@
 			height = window.innerHeight;
 		}
 	}}
+	on:mousedown={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseDown(e);
+		}
+	}}
+	on:mousemove={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseMove(e);
+		}
+	}}
+	on:mouseup={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseUp(e);
+		}
+	}}
+	on:touchstart={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseDown(e);
+		}
+	}}
+	on:touchmove={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseMove(e);
+		}
+	}}
+	on:touchend={(e) => {
+		if (typeof window !== undefined) {
+			handleMouseUp(e);
+		}
+	}}
 />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />

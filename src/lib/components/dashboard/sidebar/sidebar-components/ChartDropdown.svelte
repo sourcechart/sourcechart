@@ -98,7 +98,7 @@
 			<Info class="hover:text-neutral-300" />
 
 			<!-- Tooltip for Info icon -->
-			{#if showInfoTooltip && $responsiveType !== 'mobile'}
+			{#if showInfoTooltip && $responsiveType !== 'touch'}
 				<div
 					role="tooltip"
 					class="absolute -left-20 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md z-10"

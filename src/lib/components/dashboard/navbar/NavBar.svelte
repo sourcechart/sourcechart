@@ -3,6 +3,12 @@
 	import { navBarState, keyPress, responsiveType } from '$lib/io/Stores';
 
 	let activeIndex: number | null = null;
+	let showTooltip: { [key: number]: boolean } = {};
+	let hoveredIndex: number | null = null;
+	let hoverTimeout: NodeJS.Timeout;
+	let longPressTimeout: NodeJS.Timeout;
+	let isPressed = false;
+	let clickedIndex: number | null = null;
 
 	let icons: { name: string; mode: NavBar; component: any; index: number; tooltip: string }[] = [
 		{
@@ -35,11 +41,6 @@
 		}
 	];
 
-	const setMode = (mode: NavBar, clickedIndex: number) => {
-		navBarState.set(mode);
-		activeIndex = clickedIndex;
-	};
-
 	$: if ($keyPress !== null) {
 		activeIndex = parseInt($keyPress);
 	}
@@ -56,9 +57,18 @@
 		}
 	}
 
-	// Tooltip functionality
-	let hoveredIndex: number | null = null;
-	let hoverTimeout: NodeJS.Timeout;
+	const setMode = (mode: NavBar, indexClicked: number) => {
+		navBarState.set(mode);
+		activeIndex = indexClicked;
+
+		// Add these lines to remember the clicked button and hide the tooltip for touch devices
+		if ($responsiveType === 'touch') {
+			clickedIndex = null;
+			showTooltip = {};
+		} else {
+			clickedIndex = indexClicked;
+		}
+	};
 
 	const startHover = (index: number): void => {
 		hoveredIndex = index;
@@ -73,8 +83,22 @@
 		hoveredIndex = null;
 	};
 
-	// Tooltip state for each icon
-	let showTooltip: { [key: number]: boolean } = {};
+	const startLongPress = (index: number): void => {
+		isPressed = true;
+
+		startHover(index);
+
+		longPressTimeout = setTimeout(() => {
+			showTooltip[index] = true;
+		}, 500);
+	};
+
+	const endLongPress = (): void => {
+		isPressed = false;
+
+		clearTimeout(longPressTimeout);
+		endHover(); // Reset the hover state
+	};
 </script>
 
 <div class="flex justify-center h-10 items-center rounded-md shadow-lg bg-neutral-800">
@@ -83,15 +107,21 @@
 			on:click={() => setMode('select', 1)}
 			on:mouseover={() => startHover(1)}
 			on:mouseout={endHover}
+			on:touchstart={() => startLongPress(1)}
+			on:touchend={endLongPress}
 			on:keypress={null}
 			on:blur={null}
 			on:focus={null}
 			class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
-				activeIndex === 1 ? 'bg-[#908bd971]' : 'hover:text-neutral-700/90 hover:bg-neutral-500'
+				activeIndex === 1
+					? 'bg-[#6f6599]'
+					: $responsiveType !== 'touch' || isPressed
+					? 'hover:text-neutral-700/90 hover:bg-neutral-500'
+					: ''
 			}`}
 		>
 			<Cursor />
-			{#if showTooltip[1] && $responsiveType !== 'mobile'}
+			{#if showTooltip[1] && (clickedIndex !== 1 || $responsiveType !== 'touch')}
 				<div
 					role="tooltip"
 					class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
@@ -102,20 +132,25 @@
 		</div>
 
 		<div class="flex items-center justify-items-center">
-			<!-- Rectangle Icon -->
 			<div
 				on:click={() => setMode('drawRectangle', 2)}
 				on:keypress={null}
 				on:mouseover={() => startHover(2)}
 				on:mouseout={endHover}
+				on:touchstart={() => startLongPress(2)}
+				on:touchend={endLongPress}
 				on:blur={null}
 				on:focus={null}
-				class={`flex items-center justify-center ml-2 rounded-md overflow-hidden ${
-					activeIndex === 2 ? 'bg-[#908bd971]' : 'hover:text-neutral-700/90 hover:bg-neutral-500'
+				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
+					activeIndex === 2
+						? 'bg-[#6f6599]'
+						: $responsiveType !== 'touch' || isPressed
+						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
+						: ''
 				}`}
 			>
 				<Rectangle />
-				{#if showTooltip[2] && $responsiveType !== 'mobile'}
+				{#if showTooltip[2]}
 					<div
 						role="tooltip"
 						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
@@ -131,14 +166,20 @@
 				on:keypress={null}
 				on:mouseover={() => startHover(3)}
 				on:mouseout={endHover}
+				on:touchstart={() => startLongPress(3)}
+				on:touchend={endLongPress}
 				on:blur={null}
 				on:focus={null}
-				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${
-					activeIndex === 3 ? 'bg-[#908bd971]' : 'hover:text-neutral-700/90 hover:bg-neutral-500'
+				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
+					activeIndex === 3
+						? 'bg-[#6f6599]'
+						: $responsiveType !== 'touch' || isPressed
+						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
+						: ''
 				}`}
 			>
 				<Arrow />
-				{#if showTooltip[3] && $responsiveType !== 'mobile'}
+				{#if showTooltip[3]}
 					<div
 						role="tooltip"
 						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
@@ -154,14 +195,20 @@
 				on:keypress={null}
 				on:mouseover={() => startHover(0)}
 				on:mouseout={endHover}
+				on:touchstart={() => startLongPress(0)}
+				on:touchend={endLongPress}
 				on:blur={null}
 				on:focus={null}
-				class={`flex items-center justify-center mx-1 rounded-md overflow-hidden ${
-					activeIndex === 0 ? 'bg-[#908bd971]' : 'hover:text-neutral-700/90 hover:bg-neutral-500'
+				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
+					activeIndex === 0
+						? 'bg-[#6f6599]'
+						: $responsiveType !== 'touch' || isPressed
+						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
+						: ''
 				}`}
 			>
 				<Eraser />
-				{#if showTooltip[0] && $responsiveType !== 'mobile'}
+				{#if showTooltip[0]}
 					<div
 						role="tooltip"
 						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"

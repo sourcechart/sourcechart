@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { allCharts, clickedChartIndex, clearChartOptions } from '$lib/io/Stores';
+	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 
 	let aggs = ['avg', 'max', 'min', 'sum', 'count'];

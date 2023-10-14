@@ -49,7 +49,7 @@
 				<Download class="hover:text-neutral-300 " />
 			</button>
 
-			{#if showTooltip && $responsiveType !== 'mobile'}
+			{#if showTooltip && $responsiveType !== 'touch'}
 				<div
 					role="tooltip"
 					class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded shadow-md"
