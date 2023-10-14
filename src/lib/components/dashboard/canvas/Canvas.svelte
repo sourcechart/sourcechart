@@ -194,12 +194,11 @@
 				hoverPolygon = polygon;
 				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, true);
 				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
-				console.log(direction);
 				touchType.set(direction);
 				if (handlePosition) return true;
-			} else {
-				if ($touchType !== 'pointer') touchType.set('default');
-			}
+			} //else {
+			//	if ($touchType !== 'pointer') touchType.set('default');
+			//	}
 		});
 	};
 
