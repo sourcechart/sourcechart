@@ -11,8 +11,7 @@
 		canvasBehavior,
 		activeDropZone,
 		responsiveType,
-		activeSidebar,
-		activeMobileNav
+		activeSidebar
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './draw-utils/Draw';
@@ -20,7 +19,6 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
-	$: console.log($touchState, $touchType);
 	let scrollX: number = 0;
 	let scrollY: number = 0;
 	let width: number = 0;
@@ -78,7 +76,7 @@
 
 	const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
 		clearTimeout(debounceTimer);
-		debounceTimer = window.setTimeout(() => handleMouseMoveUp(x, y), 5);
+		debounceTimer = window.setTimeout(() => handleMove(x, y), 5);
 	};
 
 	const updateOffset = () => {
@@ -165,7 +163,7 @@
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
-			handleTouchMove(x, y);
+			handleMove(x, y);
 		} else if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
@@ -182,6 +180,7 @@
 		}
 	};
 
+	/*
 	const handleTouchMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
@@ -199,13 +198,13 @@
 				touchType.set(direction);
 				if (handlePosition) return true;
 			} else {
-				activeSidebar.set(false);
-				touchType.set('default');
+				if ($touchType !== 'pointer') touchType.set('default');
 			}
 		});
 	};
 
-	const handleMouseMoveUp = (x: number, y: number): void => {
+	*/
+	const handleMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
 		const polygons = $allCharts.map((chart) => chart.polygon);
@@ -221,7 +220,7 @@
 				touchType.set(direction);
 				if (handlePosition) return true;
 			} else {
-				touchType.set('default');
+				if ($touchType !== 'pointer') touchType.set('default');
 			}
 		});
 	};

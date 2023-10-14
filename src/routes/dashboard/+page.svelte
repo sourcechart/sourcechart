@@ -5,11 +5,14 @@
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 	import Help from '$lib/components/ui/icons/Help.svelte';
 	import Safety from '$lib/components/ui/icons/Safety.svelte';
+	import ToggleSidebar from '$lib/components/dashboard/sidebar/ToggleSidebar.svelte';
+
 	import { onMount } from 'svelte';
-	import { activeDropZone, keyPress, tabValue, responsiveType } from '$lib/io/Stores';
+	import { activeDropZone, keyPress, tabValue, responsiveType, screenSize } from '$lib/io/Stores';
 
 	let hoverHelp = false; // Declare a new variable
 	let hoverSecure = false;
+	let width: number = 0;
 
 	let isPressedHelp = false;
 	let isPressedSecure = false;
@@ -17,10 +20,14 @@
 	let pressTimeoutSecure: NodeJS.Timeout;
 
 	onMount(() => {
+		width = window.innerWidth;
+		handleResize();
+		window.addEventListener('resize', handleResize);
 		document.addEventListener('keydown', handleKeyPress);
 
 		return () => {
 			document.removeEventListener('keydown', handleKeyPress);
+			window.removeEventListener('resize', handleResize);
 		};
 	});
 
@@ -57,6 +64,11 @@
 		clearTimeout(pressTimeoutSecure);
 		hoverSecure = false;
 	};
+
+	const handleResize = (): void => {
+		var sc = width <= 768 ? 'small' : 'large';
+		screenSize.set(sc);
+	};
 </script>
 
 <div class="w-screen h-screen overflow-hidden bg-neutral-900 }">
@@ -66,6 +78,7 @@
 
 	<div class="absolute z-10 ml-6 mt-6">
 		<Sidebar />
+		<ToggleSidebar />
 	</div>
 
 	<div class="relative z-0 w-screen h-screen">
@@ -146,3 +159,10 @@
 		/>
 	</button>
 </div>
+<svelte:window
+	on:resize={() => {
+		if (typeof window !== undefined) {
+			width = window.innerWidth;
+		}
+	}}
+/>

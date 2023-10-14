@@ -7,13 +7,17 @@
 	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
-	import { clickInside } from '$lib/actions/MouseActions';
-	import { activeSidebar, clickedChartIndex, allCharts, lockSidebar } from '$lib/io/Stores';
-	import ChevronDown from '$lib/components/ui/icons/ChevronDown.svelte';
-	import ChevronLeft from '$lib/components/ui/icons/ChevronLeft.svelte';
-	import ChevronRight from '$lib/components/ui/icons/ChevronRight.svelte';
+	import {
+		activeSidebar,
+		clickedChartIndex,
+		allCharts,
+		lockSidebar,
+		touchType
+	} from '$lib/io/Stores';
+
 	import { onMount } from 'svelte';
 
+	$: console.log($touchType);
 	$: i = clickedChartIndex();
 	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
 
@@ -29,7 +33,6 @@
 		const target = event.target as Node;
 
 		if (!sidebarElement.contains(target) && !$lockSidebar) {
-			//$activeSidebar = false;
 		}
 	};
 
@@ -42,19 +45,28 @@
 			window.removeEventListener('click', handleClickOutside);
 		};
 	});
-	$: console.log($activeSidebar, screenSize);
 </script>
 
 <div
 	bind:this={sidebarElement}
-	class="flex fixed overflow-hidden mt-10 h-full justify-between {$activeSidebar || $lockSidebar
+	class="flex fixed overflow-hidden cursor-pointer mt-10 justify-between {$activeSidebar ||
+	$lockSidebar
 		? ''
 		: 'pointer-events-none'}"
 >
-	<div class={$activeSidebar || $lockSidebar ? '' : 'inactive-sidebar'}>
+	<div>
 		{#if $activeSidebar || $lockSidebar}
 			<div
-				use:clickInside={{ clickInside: () => ($activeSidebar = true) }}
+				on:click={() => {
+					touchType.set('pointer');
+				}}
+				on:mouseover={() => {
+					touchType.set('pointer');
+				}}
+				on:focus={() => {
+					touchType.set('pointer');
+				}}
+				on:keydown={null}
 				class="bg-neutral-800 fixed overflow-hidden h-3/5 w-72 rounded-md shadow-lg"
 			>
 				<div
@@ -134,6 +146,7 @@
 		{/if}
 	</div>
 </div>
+<!--
 <div
 	class="transform transition-transform ease-out duration-300 left-72 ml-4 {$activeSidebar ||
 	$lockSidebar
@@ -160,7 +173,7 @@
 		{/if}
 	</button>
 </div>
-
+-->
 <link
 	rel="stylesheet"
 	href="https://fonts.googleapis.com/css2?family=Oxygen+Mono:wght@400;500;700&display=swap"
@@ -191,8 +204,5 @@
 	.sidebar-inner {
 		scrollbar-width: thin;
 		scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1);
-	}
-	.inactive-sidebar > div:first-child {
-		pointer-events: none;
 	}
 </style>
