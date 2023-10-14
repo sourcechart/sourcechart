@@ -39,7 +39,7 @@ export const allCharts = writable<Chart[]>(storeFromLocalStorage('allCharts', []
 export const fileUploadStore = writable<FileUpload[]>(storeFromLocalStorage('fileUploadStore', []));
 export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', []));
 export const lockSidebar = writable<boolean>(storeFromLocalStorage('lockSidebar', true));
-export const screenSize = writable<string>();
+export const screenSize = writable<'small' | 'large'>();
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {

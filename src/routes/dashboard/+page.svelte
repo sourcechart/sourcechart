@@ -66,7 +66,7 @@
 	};
 
 	const handleResize = (): void => {
-		var sc = width <= 768 ? 'small' : 'large';
+		var sc: 'small' | 'large' = width <= 768 ? 'small' : 'large';
 		screenSize.set(sc);
 	};
 </script>

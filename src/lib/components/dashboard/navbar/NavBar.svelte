@@ -8,6 +8,7 @@
 	let hoverTimeout: NodeJS.Timeout;
 	let longPressTimeout: NodeJS.Timeout;
 	let isPressed = false;
+	let clickedIndex: number | null = null;
 
 	let icons: { name: string; mode: NavBar; component: any; index: number; tooltip: string }[] = [
 		{
@@ -59,6 +60,14 @@
 	const setMode = (mode: NavBar, clickedIndex: number) => {
 		navBarState.set(mode);
 		activeIndex = clickedIndex;
+
+		// Add these lines to remember the clicked button and hide the tooltip for touch devices
+		if ($responsiveType === 'touch') {
+			clickedIndex = null;
+			showTooltip = {};
+		} else {
+			clickedIndex = clickedIndex;
+		}
 	};
 
 	const startHover = (index: number): void => {
@@ -112,7 +121,7 @@
 			}`}
 		>
 			<Cursor />
-			{#if showTooltip[1]}
+			{#if showTooltip[1] && (clickedIndex !== 1 || $responsiveType !== 'touch')}
 				<div
 					role="tooltip"
 					class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
