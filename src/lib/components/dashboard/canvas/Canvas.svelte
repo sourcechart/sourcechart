@@ -11,7 +11,8 @@
 		canvasBehavior,
 		activeDropZone,
 		responsiveType,
-		activeSidebar
+		activeSidebar,
+		screenSize
 	} from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 	import { resizeRectangle } from './draw-utils/Draw';
@@ -150,7 +151,7 @@
 			};
 			newPolygon = [];
 			addChartMetaData(targetId, $navBarState, polygon);
-			activeSidebar.set(true);
+			if ($screenSize === 'large') activeSidebar.set(true);
 		}
 		touchState.set('isHovering');
 		navBarState.set('select');
@@ -163,7 +164,7 @@
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
-			handleMove(x, y);
+			handleTouchMove(x, y);
 		} else if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
@@ -180,7 +181,6 @@
 		}
 	};
 
-	/*
 	const handleTouchMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
@@ -190,11 +190,11 @@
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
-
 			if (insidePolygon && touchStartedOnHandle) {
 				hoverPolygon = polygon;
 				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, true);
 				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
+				console.log(direction);
 				touchType.set(direction);
 				if (handlePosition) return true;
 			} else {
@@ -203,7 +203,6 @@
 		});
 	};
 
-	*/
 	const handleMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
