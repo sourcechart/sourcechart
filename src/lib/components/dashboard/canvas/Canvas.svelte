@@ -7,14 +7,14 @@
 		mostRecentChartID,
 		touchType,
 		touchState,
-		allCharts,
 		canvasBehavior,
 		activeDropZone,
 		responsiveType,
 		activeSidebar,
-		screenSize
+		screenSize,
+		polygons
 	} from '$lib/io/Stores';
-	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
+
 	import { resizeRectangle } from './draw-utils/Draw';
 	import { generateID } from '$lib/io/GenerateID';
 	import { browser } from '$app/environment';
@@ -37,14 +37,13 @@
 	let context: CanvasRenderingContext2D | null;
 	let offsetX: number = 0;
 	let offsetY: number = 0;
+	let isDrawingShape = false;
 
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
-	let debounceTimer: number | undefined;
 
-	$: chartIndex = $allCharts.findIndex((chart) => chart.chartID === $mostRecentChartID);
+	$: chartIndex = $polygons.findIndex((poly) => poly.id === $mostRecentChartID);
 	$: CANVASBEHAVIOR = canvasBehavior();
-
 	$: controlBar($CANVASBEHAVIOR, $responsiveType);
 
 	function controlBar(touchstate: string, responsiveType: string) {
@@ -75,10 +74,10 @@
 		});
 	}
 
-	const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
-		clearTimeout(debounceTimer);
-		debounceTimer = window.setTimeout(() => handleMove(x, y), 5);
-	};
+	//const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
+	//	clearTimeout(debounceTimer);
+	//		debounceTimer = window.setTimeout(() => handleMove(x, y), 5);
+	//	};
 
 	const updateOffset = () => {
 		const rect = canvas.getBoundingClientRect();
@@ -93,35 +92,35 @@
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			responsiveType.set('touch');
 
-			x = e.touches[0].clientX - offsetX + scrollX;
-			y = e.touches[0].clientY - offsetY + scrollY;
+			x = e.touches[0].clientX;
+			y = e.touches[0].clientY;
 		} else if (e instanceof MouseEvent) {
 			responsiveType.set('mouse');
 
 			x = e.clientX;
 			y = e.clientY;
-			x = x - offsetX + scrollX;
-			y = y - offsetY + scrollY;
 		} else {
 			return;
 		}
-
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
 		startPosition = { x, y };
 
-		// Check if touch/mouse down started on a handle
-		const polygons = $allCharts.map((chart) => chart.polygon);
-		for (let polygon of polygons) {
-			const handlePosition = PolyOps.getHandlesHovered({ x, y }, polygon);
+		for (let poly of $polygons) {
+			const handlePosition = PolyOps.getHandlesHovered({ x, y }, poly);
 			if (handlePosition !== 'center' || handlePosition !== null) {
 				touchStartedOnHandle = true;
 				break;
 			}
 		}
+		if ($CANVASBEHAVIOR === 'isDrawing') {
+			isDrawingShape = true;
+		}
 
 		touchState.set('isTouching');
 	};
 
-	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
+	const handleMouseUp = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
 		let y: number;
 
@@ -150,14 +149,16 @@
 				]
 			};
 			newPolygon = [];
-			addChartMetaData(targetId, $navBarState, polygon);
+			polygons.update((value) => [...value, polygon]);
+			mostRecentChartID.set(targetId);
 			if ($screenSize === 'large') activeSidebar.set(true);
 		}
+
 		touchState.set('isHovering');
 		navBarState.set('select');
 	};
 
-	const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+	const handleMouseMove = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
 		let y: number;
 
@@ -168,14 +169,13 @@
 		} else if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
-			x = x - offsetX + scrollX;
-			y = y - offsetY + scrollY;
 		} else {
 			return;
 		}
-
+		x = x - offsetX + scrollX;
+		y = y - offsetY + scrollY;
 		if ($CANVASBEHAVIOR === 'isHovering') {
-			debouncedHandleMouseMoveUp(x, y);
+			handleMove(x, y);
 		} else {
 			handleMouseMoveDown(x, y);
 		}
@@ -184,9 +184,9 @@
 	const handleTouchMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
-		const polygons = $allCharts.map((chart) => chart.polygon);
+
 		let direction: string;
-		polygons.find((polygon) => {
+		$polygons.find((polygon) => {
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
@@ -196,18 +196,15 @@
 				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
 				touchType.set(direction);
 				if (handlePosition) return true;
-			} //else {
-			//	if ($touchType !== 'pointer') touchType.set('default');
-			//	}
+			}
 		});
 	};
 
 	const handleMove = (x: number, y: number): void => {
 		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
-		const polygons = $allCharts.map((chart) => chart.polygon);
 		let direction: string;
-		polygons.find((polygon) => {
+		$polygons.find((polygon) => {
 			let insidePolygon =
 				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
@@ -226,16 +223,15 @@
 	const handleErase = (x: number, y: number): void => {
 		currentTouchPosition = { x: x, y: y };
 		handleEraseShape(x, y);
-		const allPolygons = $allCharts.map((chart) => chart.polygon);
-		const polygon = PolyOps.getContainingPolygon(currentTouchPosition, allPolygons);
+		const polygon = PolyOps.getContainingPolygon(currentTouchPosition, $polygons);
 
 		if (polygon) {
-			allCharts.update((charts) => {
-				const index = charts.findIndex((chart) => chart.polygon === polygon);
+			polygons.update((polys) => {
+				const index = polys.findIndex((p) => p === polygon);
 				if (index > -1) {
-					charts.splice(index, 1);
+					polys.splice(index, 1);
 				}
-				return charts;
+				return polys;
 			});
 		}
 	};
@@ -258,11 +254,11 @@
 		eraserTrail = [...eraserTrail, { x: x, y: y }];
 	};
 
-	const handleResize = (x: number, y: number) => {
-		if (chartIndex !== null) {
-			const polygon = $allCharts[chartIndex].polygon;
-			const newPolygon = resizeRectangle(x, y, polygon, handlePosition);
-			$allCharts[chartIndex].polygon = newPolygon;
+	const handleResize = (x: number, y: number): void => {
+		if (chartIndex !== null && handlePosition !== null && $CANVASBEHAVIOR === 'isResizing') {
+			const poly = $polygons[chartIndex];
+			const newPolygon = resizeRectangle(x, y, poly, handlePosition);
+			$polygons[chartIndex] = newPolygon;
 		}
 	};
 
@@ -290,8 +286,8 @@
 	<div class="h-full w-full" style={`cursor: ${$touchType};`}>
 		<div id="canvasParent">
 			{#if !$activeDropZone}
-				{#each $allCharts as chart (chart.chartID)}
-					<DrawRectangleCanvas polygon={chart.polygon} />
+				{#each $polygons as polygon}
+					<DrawRectangleCanvas {polygon} />
 				{/each}
 				{#each newPolygon as polygon}
 					<DrawRectangleCanvas {polygon} />

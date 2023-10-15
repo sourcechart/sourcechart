@@ -123,7 +123,7 @@
 					-->
 
 					<!--Options-->
-					<div class="py-4 px-3 hover:bg-[#303030] hover:round-md">
+					<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 						<button class="w-full">
 							<div class="flex justify-between items-center">
 								<span class="text-sm font-light text-neutral-300">Style</span>
@@ -133,7 +133,7 @@
 					</div>
 
 					<!--Export-->
-					<div class="py-4 px-3 hover:bg-[#303030] hover:round-md">
+					<div class="py-4 px-3 hover:round-md">
 						<ExportToCSV />
 					</div>
 					<!-- Space-->

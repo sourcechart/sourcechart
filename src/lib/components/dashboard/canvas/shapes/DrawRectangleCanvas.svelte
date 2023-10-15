@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {
-		allCharts,
+		polygons,
 		mostRecentChartID,
 		canvasBehavior,
 		getChartOptions,
@@ -30,20 +30,21 @@
 
 	export let polygon: Polygon;
 
-	let offsetX = 0;
-	let offsetY = 0;
 	let container: HTMLElement;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
-	let dragging = false;
-	let dataAvailable = false; // Track whether data is available in the options.axis.data
+
 	let backupColor: string = '#9d99dc';
+	let offsetX = 0;
+	let offsetY = 0;
 
 	let rectWidth: number = 0;
 	let rectHeight: number = 0;
 	let points: LookupTable = {};
 	let plotHeight: number = 0;
 	let plotWidth: number = 0;
+	let dragging = false;
+	let dataAvailable = false; // Track whether data is available in the options.axis.data
 
 	let options: any = {
 		xAxis: {
@@ -91,16 +92,6 @@
 	} else {
 		backupColor = '#9d99dc';
 	}
-
-	onMount(() => {
-		document.addEventListener('mousemove', handleMouseMove);
-		document.addEventListener('mouseup', handleMouseUp);
-
-		return () => {
-			document.removeEventListener('mousemove', handleMouseMove);
-			document.removeEventListener('mouseup', handleMouseUp);
-		};
-	});
 
 	const drawRectangleCanvas = (
 		points: LookupTable,
@@ -155,7 +146,7 @@
 				{ x: dx, y: dy + canvas.height }
 			];
 
-			updateAllCharts(polygon);
+			updatePolygons(polygon);
 		}
 	};
 
@@ -173,15 +164,12 @@
 			x = (e as MouseEvent).clientX;
 			y = (e as MouseEvent).clientY;
 		}
-		cancelAnimationFrame(rafId);
-		rafId = requestAnimationFrame(() => updateCanvasPosition(x, y));
+		updateCanvasPosition(x, y);
 	};
 
-	const updateAllCharts = (updatedPolygon: Polygon) => {
-		let i = $allCharts.findIndex((chart) => chart.chartID === polygon.id);
-		let chart = $allCharts[i];
-		chart.polygon.vertices = updatedPolygon.vertices;
-		$allCharts[i] = chart;
+	const updatePolygons = (updatedPolygon: Polygon) => {
+		let i = $polygons.findIndex((polygon) => polygon.id === polygon.id);
+		$polygons[i].vertices = updatedPolygon.vertices; // Update the specific polygon in the store
 	};
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent) => {
@@ -199,25 +187,12 @@
 		}
 
 		if ($CANVASBEHAVIOR === 'isTranslating') {
-			var dx = x - offsetX;
-			var dy = y - offsetY;
-
-			polygon.vertices[0].x = dx;
-			polygon.vertices[0].y = dy;
-			polygon.vertices[1].x = dx + canvas.width;
-			polygon.vertices[1].y = dy;
-			polygon.vertices[2].x = dx + canvas.width;
-			polygon.vertices[2].y = dy + canvas.height;
-			polygon.vertices[3].x = dx;
-			polygon.vertices[3].y = dy + canvas.height;
-
-			updateAllCharts(polygon);
+			updateCanvasPosition(x, y);
 			dragging = false;
 			if ($screenSize === 'large') activeSidebar.set(true);
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
 		}
-
-		window.removeEventListener('mousemove', eventListeners.mouseMove);
-		window.removeEventListener('mouseup', eventListeners.mouseUp);
 	};
 
 	const getPlotWidth = () => {

@@ -2,6 +2,10 @@
 
 ## October 2023
 
+- Disables BUttons without a chart.
+- Created new landing page.
+- Optimized the queries so it only runs once.
+- Added UI/UX layering
 - fixed dropzone file drag over
 - made the mobile smoother.
 - Fixed INDEXDB annoying bug.
