@@ -2,6 +2,7 @@
 
 ## October 2023
 
+- Disables BUttons without a chart.
 - Created new landing page.
 - Optimized the queries so it only runs once.
 - Added UI/UX layering
