@@ -274,8 +274,8 @@
 					...poly,
 					vertices: poly.vertices.map((vertex) => {
 						return {
-							x: vertex.x - deltaX,
-							y: vertex.y - deltaY
+							x: vertex.x + deltaX,
+							y: vertex.y + deltaY
 						};
 					})
 				};
