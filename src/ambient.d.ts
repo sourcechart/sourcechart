@@ -20,7 +20,6 @@ type arrow = {
 
 type Chart = {
 	title: string;
-	chartShape: string;
 	chartType: string | null;
 	chartID: string;
 	workflow: WorkFlow;
@@ -36,10 +35,12 @@ type Chart = {
 	xColumn: string | null;
 	yColumn: string | null;
 
+	//chartShape: string;
+
 	//Maybe I should seperate this out to a different store.
-	canvasWidth: number;
-	canvasHeight: number;
-	polygon: Polygon;
+	//canvasWidth: number;
+	//canvasHeight: number;
+	//polygon: Polygon;
 
 	chartOptions: any;
 };

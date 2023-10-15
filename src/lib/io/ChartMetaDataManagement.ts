@@ -1,11 +1,10 @@
-import { mostRecentChartID, allCharts } from '$lib/io/Stores';
+import { allCharts } from './Stores';
 
-const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => {
+const addChartMetaData = (id: string): void => {
 	let chartMetaData: Chart = {
 		chartID: id,
 		title: '',
 		chartType: null,
-		chartShape: shape,
 		filename: null,
 		aggregator: null,
 		datasetID: null,
@@ -23,9 +22,6 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 		But... If I use a derived store, it would do that anyway. Maybe I need to do some composition instead.
 
 		*/
-		polygon: polygon,
-		canvasHeight: 0,
-		canvasWidth: 0,
 		legendValues: [],
 		legendKey: null,
 		chartOptions: {
@@ -42,7 +38,6 @@ const addChartMetaData = (id: string, shape: string, polygon: Polygon): void => 
 	};
 
 	allCharts.update((value) => [...value, chartMetaData]);
-	mostRecentChartID.set(id);
 };
 
 export { addChartMetaData };
