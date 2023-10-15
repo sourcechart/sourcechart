@@ -41,7 +41,7 @@ export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', [])
 export const lockSidebar = writable<boolean>(storeFromLocalStorage('lockSidebar', true));
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const polygons = writable<Polygon[]>(storeFromLocalStorage('polygon', []));
-export const zoom = writable<number>(storeFromLocalStorage('zoom', 1));
+export const scale = writable<number>(storeFromLocalStorage('zoom', 1));
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {

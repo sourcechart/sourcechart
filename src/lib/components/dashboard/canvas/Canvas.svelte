@@ -12,7 +12,8 @@
 		responsiveType,
 		activeSidebar,
 		screenSize,
-		polygons
+		polygons,
+		scale
 	} from '$lib/io/Stores';
 
 	import { resizeRectangle } from './draw-utils/Draw';
@@ -33,7 +34,6 @@
 	let currentMousePosition = { x: 0, y: 0 };
 	let currentTouchPosition = { x: 0, y: 0 };
 	let pan = { x: 0, y: 0 };
-	let zoom = 1;
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -47,6 +47,20 @@
 	$: chartIndex = $polygons.findIndex((poly) => poly.id === $mostRecentChartID);
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: controlBar($CANVASBEHAVIOR, $responsiveType);
+
+	const handleScroll = (event: WheelEvent) => {
+		if (event.ctrlKey) {
+			event.preventDefault();
+			event.stopPropagation(); // add this line
+
+			console.log(event);
+			if (event.deltaY > 0) {
+				scale.update((value) => value - 0.1); // adjust as needed
+			} else {
+				scale.update((value) => value + 0.1); // adjust as needed
+			}
+		}
+	};
 
 	function controlBar(touchstate: string, responsiveType: string) {
 		if (touchstate === 'isErasing' && responsiveType === 'mouse') {
@@ -73,6 +87,10 @@
 			width = window.innerWidth;
 			height = window.innerHeight;
 			updateOffset();
+			window.addEventListener('wheel', handleScroll, false);
+			return () => {
+				window.removeEventListener('wheel', handleScroll);
+			};
 		});
 	}
 
@@ -285,23 +303,15 @@
 		currentMousePosition = { x, y };
 	};
 
-	const handleZoom = (deltaY: number): void => {
-		const scaleAmount = 0.05; // you can adjust this value
-		if (deltaY > 0) {
-			zoom -= scaleAmount;
-		} else {
-			zoom += scaleAmount;
-		}
-		if (zoom < 0.2) zoom = 0.2; // minimum zoom level
-
+	const handleZoom = (): void => {
 		polygons.update((polys) => {
 			return polys.map((poly) => {
 				return {
 					...poly,
 					vertices: poly.vertices.map((vertex) => {
 						return {
-							x: (vertex.x - currentMousePosition.x) * zoom + currentMousePosition.x,
-							y: (vertex.y - currentMousePosition.y) * zoom + currentMousePosition.y
+							x: (vertex.x - currentMousePosition.x) * $scale + currentMousePosition.x,
+							y: (vertex.y - currentMousePosition.y) * $scale + currentMousePosition.y
 						};
 					})
 				};
@@ -386,4 +396,8 @@
 			handleMouseUp(e);
 		}
 	}}
+/>
+<meta
+	name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
 />

@@ -1,37 +1,19 @@
 <script lang="ts">
-	import { zoom } from '$lib/io/Stores';
+	import { scale } from '$lib/io/Stores';
 	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
 	import Minus from '$lib/components/ui/icons/Minus.svelte';
 	import { onMount } from 'svelte';
 
 	const increaseZoom = () => {
-		zoom.set($zoom + 0.1); // increase by 10%
+		scale.set($scale + 0.1); // increase by 10%
 	};
 
 	const decreaseZoom = () => {
-		if ($zoom > 0.1) {
+		if ($scale > 0.1) {
 			// ensure it doesn't go below 0
-			zoom.set($zoom - 0.1); // decrease by 10%
+			scale.set($scale - 0.1); // decrease by 10%
 		}
 	};
-
-	const handleScroll = (event: WheelEvent) => {
-		if (event.ctrlKey) {
-			event.preventDefault(); // prevent default zooming behavior of the browser
-			if (event.deltaY > 0) {
-				decreaseZoom();
-			} else {
-				increaseZoom();
-			}
-		}
-	};
-
-	onMount(() => {
-		window.addEventListener('wheel', handleScroll);
-		return () => {
-			window.removeEventListener('wheel', handleScroll);
-		};
-	});
 </script>
 
 <div class="flex justify-center h-10 w-32 items-center rounded-md shadow-lg bg-neutral-800">
@@ -41,7 +23,7 @@
 		</button>
 
 		<span>
-			{Math.round($zoom * 100) + '%'}
+			{Math.round($scale * 100) + '%'}
 		</span>
 
 		<button on:click={increaseZoom}>
