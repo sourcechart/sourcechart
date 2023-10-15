@@ -264,6 +264,51 @@
 		}
 	};
 
+	const handlePan = (x: number, y: number): void => {
+		const deltaX = x - currentMousePosition.x;
+		const deltaY = y - currentMousePosition.y;
+
+		polygons.update((polys) => {
+			return polys.map((poly) => {
+				return {
+					...poly,
+					vertices: poly.vertices.map((vertex) => {
+						return {
+							x: vertex.x - deltaX,
+							y: vertex.y - deltaY
+						};
+					})
+				};
+			});
+		});
+
+		currentMousePosition = { x, y };
+	};
+
+	const handleZoom = (deltaY: number): void => {
+		const scaleAmount = 0.05; // you can adjust this value
+		if (deltaY > 0) {
+			zoom -= scaleAmount;
+		} else {
+			zoom += scaleAmount;
+		}
+		if (zoom < 0.2) zoom = 0.2; // minimum zoom level
+
+		polygons.update((polys) => {
+			return polys.map((poly) => {
+				return {
+					...poly,
+					vertices: poly.vertices.map((vertex) => {
+						return {
+							x: (vertex.x - currentMousePosition.x) * zoom + currentMousePosition.x,
+							y: (vertex.y - currentMousePosition.y) * zoom + currentMousePosition.y
+						};
+					})
+				};
+			});
+		});
+	};
+
 	const handleMouseMoveDown = (x: number, y: number): void => {
 		switch ($CANVASBEHAVIOR) {
 			case 'isDrawing':
@@ -278,6 +323,9 @@
 				handleResize(x, y);
 				break;
 
+			case 'isPanning':
+				handlePan(x, y);
+				break;
 			default:
 				return;
 		}
@@ -339,4 +387,3 @@
 		}
 	}}
 />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />

@@ -41,6 +41,7 @@ export const arrows = writable<Arrow[]>(storeFromLocalStorage('arrowsStore', [])
 export const lockSidebar = writable<boolean>(storeFromLocalStorage('lockSidebar', true));
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const polygons = writable<Polygon[]>(storeFromLocalStorage('polygon', []));
+export const zoom = writable<number>(storeFromLocalStorage('zoom', 1));
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
@@ -152,6 +153,8 @@ export const canvasBehavior = () => {
 				behavior = 'isTranslating';
 			} else if ($navBarState === 'select' && $touchState === 'isHovering') {
 				behavior = 'isHovering';
+			} else if ($navBarState === 'pan' && $touchState === 'isTouching') {
+				behavior = 'isPanning';
 			} else if (
 				$navBarState === 'select' &&
 				$touchState === 'isTouching' &&

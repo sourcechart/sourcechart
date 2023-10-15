@@ -147,7 +147,8 @@ type TouchState =
 	| 'isResizing'
 	| 'isDrawing'
 	| 'isErasing'
-	| 'isDrawingArrow';
+	| 'isDrawingArrow'
+	| 'isPanning';
 type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
 type NavBar =
 	| 'eraser'
