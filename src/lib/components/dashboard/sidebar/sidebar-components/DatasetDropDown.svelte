@@ -7,7 +7,8 @@
 		clickedChartIndex,
 		duckDBInstanceStore,
 		fileUploadStore,
-		mostRecentChartID
+		mostRecentChartID,
+		polygons
 	} from '$lib/io/Stores';
 	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
@@ -159,6 +160,14 @@
 	const toggleDropdown = () => {
 		isDropdownOpen = !isDropdownOpen;
 	};
+
+	let tooltipText = '';
+
+	$: if (!$mostRecentChartID) {
+		tooltipText = 'Please create a chart first.';
+	} else if ($polygons.length === 0) {
+		tooltipText = 'No polygons detected. Please add some rectangles to proceed.';
+	}
 </script>
 
 <div class="py-1 flex w-full space-x-1 items-center justify-between">
@@ -169,6 +178,7 @@
 			bind:this={dropdownContainer}
 			class="bg-neutral-900 justify-between text-center rounded-sm hover:bg-neutral-900/50 flex items-center border-neutral-700/50 w-44 px-1"
 			on:click={toggleDropdown}
+			disabled={!$mostRecentChartID || $polygons.length === 0}
 		>
 			<span
 				class="text-sm text-gray-100 justify-start flex hover:text-neutral-200 font-thin ml-1 truncate"
@@ -177,6 +187,12 @@
 			</span>
 			<CarrotDown class=" hover:text-neutral-400 " />
 		</button>
+		<div
+			class="absolute left-0 mt-1 w-44 text-xs bg-neutral-800 text-neutral-200 p-2 rounded-md shadow-lg tooltip"
+			style="visibility: hidden;"
+		>
+			{tooltipText}
+		</div>
 
 		{#if isDropdownOpen}
 			<div
@@ -237,5 +253,23 @@
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
 		max-height: 200px; /* Adjust this value to your desired maximum height */
 		overflow-y: auto;
+	}
+	button[disabled] {
+		cursor: not-allowed; /* Changes the cursor on hover to indicate it's not clickable */
+		opacity: 0.5; /* Reduces the button's opacity to indicate it's disabled */
+	}
+
+	button[disabled]:hover + .tooltip {
+		visibility: visible;
+	}
+
+	button[disabled] {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+
+	.tooltip {
+		transform: translateY(100%);
+		z-index: 10;
 	}
 </style>
