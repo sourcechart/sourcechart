@@ -32,6 +32,8 @@
 	let startPosition = { x: 0, y: 0 };
 	let currentMousePosition = { x: 0, y: 0 };
 	let currentTouchPosition = { x: 0, y: 0 };
+	let pan = { x: 0, y: 0 };
+	let zoom = 1;
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;

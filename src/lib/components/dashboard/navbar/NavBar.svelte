@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Cursor, Rectangle, Eraser, Arrow } from './navbar-icons';
+	import { Cursor, Rectangle, Eraser, Arrow, HandGrab } from './navbar-icons';
 	import { navBarState, keyPress, responsiveType } from '$lib/io/Stores';
 
-	let activeIndex: number | null = null;
+	let activeIndex: number | null | undefined = null;
 	let showTooltip: { [key: number]: boolean } = {};
 	let hoveredIndex: number | null = null;
 	let hoverTimeout: NodeJS.Timeout;
@@ -11,6 +11,7 @@
 	let clickedIndex: number | null = null;
 
 	let icons: { name: string; mode: NavBar; component: any; index: number; tooltip: string }[] = [
+		{ name: 'HandGrab', mode: 'pan', component: HandGrab, index: 0, tooltip: 'Pan Canvas' },
 		{
 			name: 'Cursor',
 			mode: 'select',
@@ -36,7 +37,7 @@
 			name: 'Eraser',
 			mode: 'eraser',
 			component: Eraser,
-			index: 0,
+			index: 5,
 			tooltip: 'Erase Canvas'
 		}
 	];
@@ -103,6 +104,34 @@
 
 <div class="flex justify-center h-10 items-center rounded-md shadow-lg bg-neutral-800">
 	<div class="divide-x divide-neutral-700 flex items-center justify-items-center space-x-2">
+		<div
+			on:click={() => setMode('pan', 0)}
+			on:mouseover={() => startHover(0)}
+			on:mouseout={endHover}
+			on:touchstart={() => startLongPress(0)}
+			on:touchend={endLongPress}
+			on:keypress={null}
+			on:blur={null}
+			on:focus={null}
+			class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
+				activeIndex === 0
+					? 'bg-[#6f6599]'
+					: $responsiveType !== 'touch' || isPressed
+					? 'hover:text-neutral-700/90 hover:bg-neutral-500'
+					: ''
+			}`}
+		>
+			<HandGrab />
+			{#if showTooltip[0] && (clickedIndex !== 0 || $responsiveType !== 'touch')}
+				<div
+					role="tooltip"
+					class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
+				>
+					Select Items
+				</div>
+			{/if}
+		</div>
+
 		<div
 			on:click={() => setMode('select', 1)}
 			on:mouseover={() => startHover(1)}
@@ -191,11 +220,11 @@
 
 			<!-- Eraser Icon -->
 			<div
-				on:click={() => setMode('eraser', 0)}
+				on:click={() => setMode('eraser', 5)}
 				on:keypress={null}
-				on:mouseover={() => startHover(0)}
+				on:mouseover={() => startHover(5)}
 				on:mouseout={endHover}
-				on:touchstart={() => startLongPress(0)}
+				on:touchstart={() => startLongPress(5)}
 				on:touchend={endLongPress}
 				on:blur={null}
 				on:focus={null}
@@ -208,7 +237,7 @@
 				}`}
 			>
 				<Eraser />
-				{#if showTooltip[0]}
+				{#if showTooltip[5]}
 					<div
 						role="tooltip"
 						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
