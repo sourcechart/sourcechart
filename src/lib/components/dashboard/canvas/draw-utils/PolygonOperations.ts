@@ -234,6 +234,91 @@ function pointToLineDistance(
 	return numerator / denominator;
 }
 
+/**
+ * Resize rectangle from corner
+ *
+ * @param x
+ * @param y
+ * @param polygon
+ * @param resizeEdge
+ */
+const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: string): Polygon => {
+	//0:nw 1:ne 2:se 3:sw
+	if (resizeEdge === 'n') {
+		polygon.vertices[0].y = y;
+		polygon.vertices[1].y = y;
+	} else if (resizeEdge === 'e') {
+		polygon.vertices[1].x = x;
+		polygon.vertices[2].x = x;
+	} else if (resizeEdge === 's') {
+		polygon.vertices[2].y = y;
+		polygon.vertices[3].y = y;
+	} else if (resizeEdge === 'w') {
+		polygon.vertices[3].x = x;
+		polygon.vertices[0].x = x;
+	} else if (resizeEdge === 'ne') {
+		polygon.vertices[0].y = y;
+		polygon.vertices[1].y = y;
+		polygon.vertices[1].x = x;
+		polygon.vertices[2].x = x;
+	} else if (resizeEdge === 'se') {
+		polygon.vertices[2].x = x;
+		polygon.vertices[1].x = x;
+		polygon.vertices[2].y = y;
+		polygon.vertices[3].y = y;
+	} else if (resizeEdge === 'sw') {
+		polygon.vertices[3].x = x;
+		polygon.vertices[0].x = x;
+		polygon.vertices[2].y = y;
+		polygon.vertices[3].y = y;
+	} else if (resizeEdge === 'nw') {
+		polygon.vertices[0].x = x;
+		polygon.vertices[3].x = x;
+		polygon.vertices[0].y = y;
+		polygon.vertices[1].y = y;
+	}
+	return polygon;
+};
+
+function polygonArea(vertices: Point[]): number {
+	let area = 0;
+
+	// Calculate the sum of the products
+	for (let i = 0; i < vertices.length - 1; i++) {
+		area += vertices[i].x * vertices[i + 1].y - vertices[i + 1].x * vertices[i].y;
+	}
+
+	// Add the last term which is not included in the loop
+	area +=
+		vertices[vertices.length - 1].x * vertices[0].y -
+		vertices[0].x * vertices[vertices.length - 1].y;
+
+	// Divide by 2 and take the absolute value to get the area
+	return Math.abs(area) / 2;
+}
+
+function scaleRectangle(polygon: Polygon, scaleFactor: number): Polygon {
+	// Find the center of the rectangle
+	const centerX = (polygon.vertices[0].x + polygon.vertices[2].x) / 2;
+	const centerY = (polygon.vertices[0].y + polygon.vertices[2].y) / 2;
+
+	// Create a new polygon where each vertex is scaled relative to the center
+	const scaledPolygon: Polygon = {
+		...polygon,
+		vertices: polygon.vertices.map((vertex) => {
+			const deltaX = vertex.x - centerX;
+			const deltaY = vertex.y - centerY;
+
+			return {
+				x: centerX + deltaX * scaleFactor,
+				y: centerY + deltaY * scaleFactor
+			};
+		})
+	};
+
+	return scaledPolygon;
+}
+
 export {
 	calculateVertices,
 	pointToLineDistance,
@@ -244,5 +329,8 @@ export {
 	getContainingPolygon,
 	isNearPoint,
 	getCursorStyleFromDirection,
-	generateHandleRectangles
+	generateHandleRectangles,
+	resizeRectangle,
+	scaleRectangle,
+	polygonArea
 };

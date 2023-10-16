@@ -6,12 +6,14 @@
 		getChartOptions,
 		touchType,
 		activeSidebar,
-		screenSize
+		screenSize,
+		scale
 	} from '$lib/io/Stores';
 	import {
 		isPointInPolygon,
 		calculateVertices,
-		generateHandleRectangles
+		generateHandleRectangles,
+		polygonArea
 	} from '../draw-utils/PolygonOperations';
 	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
@@ -29,6 +31,8 @@
 	});
 
 	export let polygon: Polygon;
+
+	$: console.log(polygonArea(polygon.vertices));
 
 	let container: HTMLElement;
 	let canvas: HTMLCanvasElement;

@@ -15,8 +15,8 @@
 		polygons,
 		scale
 	} from '$lib/io/Stores';
+	import { get } from 'svelte/store';
 
-	import { resizeRectangle } from './draw-utils/Draw';
 	import { generateID } from '$lib/io/GenerateID';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
@@ -48,56 +48,18 @@
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: controlBar($CANVASBEHAVIOR, $responsiveType);
 
-	const handleScroll = (event: WheelEvent) => {
-		if (event.ctrlKey) {
-			event.preventDefault();
-			event.stopPropagation(); // add this line
-
-			console.log(event);
-			if (event.deltaY > 0) {
-				scale.update((value) => value - 0.1); // adjust as needed
-			} else {
-				scale.update((value) => value + 0.1); // adjust as needed
-			}
-		}
-	};
-
-	function controlBar(touchstate: string, responsiveType: string) {
-		if (touchstate === 'isErasing' && responsiveType === 'mouse') {
-			activeSidebar.set(false);
-		} else if (
-			(touchstate === 'isResizing' ||
-				touchstate === 'isTranslating' ||
-				touchstate === 'isDrawing') &&
-			responsiveType === 'mouse'
-		) {
-			//activeSidebar.set(true);
-		} else if (
-			touchstate === 'isTouching' &&
-			responsiveType === 'mouse' &&
-			$touchType === 'default'
-		) {
-			activeSidebar.set(false);
-		}
-	}
-
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
 			width = window.innerWidth;
 			height = window.innerHeight;
 			updateOffset();
-			window.addEventListener('wheel', handleScroll, false);
+			window.addEventListener('wheel', handleScroll, { passive: false });
 			return () => {
 				window.removeEventListener('wheel', handleScroll);
 			};
 		});
 	}
-
-	//const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
-	//	clearTimeout(debounceTimer);
-	//		debounceTimer = window.setTimeout(() => handleMove(x, y), 5);
-	//	};
 
 	const updateOffset = () => {
 		const rect = canvas.getBoundingClientRect();
@@ -139,6 +101,52 @@
 
 		touchState.set('isTouching');
 	};
+
+	const handleScroll = (event: WheelEvent) => {
+		if (event.ctrlKey) {
+			event.preventDefault();
+			const currentScale = get(scale);
+			let newValue: number;
+			let relativeScaleFactor: number;
+			if (event.deltaY > 0) {
+				console.log('scrolling down');
+				newValue = currentScale - 0.1;
+				relativeScaleFactor = newValue / currentScale;
+			} else {
+				console.log('scrolling up');
+				newValue = currentScale + 0.1;
+				relativeScaleFactor = newValue / currentScale;
+			}
+			newValue = Math.max(newValue, 0.1);
+
+			scale.set(newValue);
+
+			polygons.update((polys) => {
+				return polys.map((poly) => {
+					return PolyOps.scaleRectangle(poly, relativeScaleFactor);
+				});
+			});
+		}
+	};
+
+	function controlBar(touchstate: string, responsiveType: string) {
+		if (touchstate === 'isErasing' && responsiveType === 'mouse') {
+			activeSidebar.set(false);
+		} else if (
+			(touchstate === 'isResizing' ||
+				touchstate === 'isTranslating' ||
+				touchstate === 'isDrawing') &&
+			responsiveType === 'mouse'
+		) {
+			//activeSidebar.set(true);
+		} else if (
+			touchstate === 'isTouching' &&
+			responsiveType === 'mouse' &&
+			$touchType === 'default'
+		) {
+			activeSidebar.set(false);
+		}
+	}
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
@@ -277,7 +285,7 @@
 	const handleResize = (x: number, y: number): void => {
 		if (chartIndex !== null && handlePosition !== null && $CANVASBEHAVIOR === 'isResizing') {
 			const poly = $polygons[chartIndex];
-			const newPolygon = resizeRectangle(x, y, poly, handlePosition);
+			const newPolygon = PolyOps.resizeRectangle(x, y, poly, handlePosition);
 			$polygons[chartIndex] = newPolygon;
 		}
 	};
@@ -303,22 +311,6 @@
 		currentMousePosition = { x, y };
 	};
 
-	const handleZoom = (): void => {
-		polygons.update((polys) => {
-			return polys.map((poly) => {
-				return {
-					...poly,
-					vertices: poly.vertices.map((vertex) => {
-						return {
-							x: (vertex.x - currentMousePosition.x) * $scale + currentMousePosition.x,
-							y: (vertex.y - currentMousePosition.y) * $scale + currentMousePosition.y
-						};
-					})
-				};
-			});
-		});
-	};
-
 	const handleMouseMoveDown = (x: number, y: number): void => {
 		switch ($CANVASBEHAVIOR) {
 			case 'isDrawing':
@@ -336,6 +328,7 @@
 			case 'isPanning':
 				handlePan(x, y);
 				break;
+
 			default:
 				return;
 		}
@@ -396,8 +389,4 @@
 			handleMouseUp(e);
 		}
 	}}
-/>
-<meta
-	name="viewport"
-	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
 />
