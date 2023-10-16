@@ -102,6 +102,10 @@
 		newValue = Math.max(newValue, 0.1);
 
 		scale.set(newValue);
+
+		if (!animationFrameId) {
+			animationFrameId = requestAnimationFrame(updateCanvas);
+		}
 	};
 
 	const handleCircleMouseDown = (e: MouseEvent, index: number, end: 'start' | 'end') => {

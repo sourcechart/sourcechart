@@ -118,22 +118,38 @@ const drawArrow = (
 	const scaledLength = 15 * scaleFactor; // The scaled length of the arrowhead lines
 	const headAngle = Math.PI / 7; // Angle for the arrowhead.
 
-	const x1 = endX - scaledLength * Math.cos(angle - headAngle);
-	const y1 = endY - scaledLength * Math.sin(angle - headAngle);
-	const x2 = endX - scaledLength * Math.cos(angle + headAngle);
-	const y2 = endY - scaledLength * Math.sin(angle + headAngle);
+	const lengthOfArrow = Math.sqrt((endX - startX) ** 2 + (endY - startY) ** 2);
+	const scaledLengthOfArrow = lengthOfArrow * scaleFactor;
 
-	roughCanvas.line(startX, startY, endX, endY, {
+	const midpointX = (startX + endX) / 2;
+	const midpointY = (startY + endY) / 2;
+
+	const halfLengthOfScaledArrow = scaledLengthOfArrow / 2;
+
+	const scaledStartX = midpointX - halfLengthOfScaledArrow * Math.cos(angle);
+	const scaledStartY = midpointY - halfLengthOfScaledArrow * Math.sin(angle);
+	const scaledEndX = midpointX + halfLengthOfScaledArrow * Math.cos(angle);
+	const scaledEndY = midpointY + halfLengthOfScaledArrow * Math.sin(angle);
+
+	const x1 = scaledEndX - scaledLength * Math.cos(angle - headAngle);
+	const y1 = scaledEndY - scaledLength * Math.sin(angle - headAngle);
+	const x2 = scaledEndX - scaledLength * Math.cos(angle + headAngle);
+	const y2 = scaledEndY - scaledLength * Math.sin(angle + headAngle);
+
+	roughCanvas.line(scaledStartX, scaledStartY, scaledEndX, scaledEndY, {
 		stroke: 'white',
 		strokeWidth: strokeWidth * scaleFactor, // Scale the strokeWidth
 		roughness: roughness * scaleFactor // Optionally, scale the roughness
 	});
 
-	roughCanvas.path(`M ${endX} ${endY} L ${x1} ${y1} M ${endX} ${endY} L ${x2} ${y2}`, {
-		stroke: 'white',
-		strokeWidth: strokeWidth * scaleFactor, // Scale the strokeWidth
-		roughness: roughness * scaleFactor // Optionally, scale the roughness
-	});
+	roughCanvas.path(
+		`M ${scaledEndX} ${scaledEndY} L ${x1} ${y1} M ${scaledEndX} ${scaledEndY} L ${x2} ${y2}`,
+		{
+			stroke: 'white',
+			strokeWidth: strokeWidth * scaleFactor, // Scale the strokeWidth
+			roughness: roughness * scaleFactor // Optionally, scale the roughness
+		}
+	);
 };
 
 const getPlotTopPosition = (polygon: Polygon): number => {
