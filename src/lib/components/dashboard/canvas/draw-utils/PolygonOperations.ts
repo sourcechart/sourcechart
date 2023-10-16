@@ -319,17 +319,6 @@ function scaleRectangle(polygon: Polygon, scaleFactor: number): Polygon {
 	return scaledPolygon;
 }
 
-const scaleArrow = (arrow: Arrow, scaleFactor: number): Arrow => {
-	return {
-		startX: arrow.startX * scaleFactor,
-		startY: arrow.startY * scaleFactor,
-		endX: arrow.endX * scaleFactor,
-		endY: arrow.endY * scaleFactor,
-		midX: arrow.midX * scaleFactor,
-		midY: arrow.midY * scaleFactor
-	};
-};
-
 export {
 	calculateVertices,
 	pointToLineDistance,
@@ -343,6 +332,5 @@ export {
 	generateHandleRectangles,
 	resizeRectangle,
 	scaleRectangle,
-	scaleArrow,
 	polygonArea
 };

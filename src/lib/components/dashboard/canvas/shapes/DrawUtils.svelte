@@ -1,10 +1,6 @@
 <script lang="ts">
-	import {
-		doLinesIntersect,
-		pointToLineDistance,
-		scaleArrow
-	} from '../draw-utils/PolygonOperations';
-	import { drawEraserTrail, drawArrowhead } from '../draw-utils/Draw';
+	import { doLinesIntersect, pointToLineDistance } from '../draw-utils/PolygonOperations';
+	import { drawEraserTrail, drawArrow } from '../draw-utils/Draw';
 	import { rough } from '$lib/components/ui/roughjs/rough';
 	import { canvasBehavior, arrows, scale } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
@@ -106,12 +102,6 @@
 		newValue = Math.max(newValue, 0.1);
 
 		scale.set(newValue);
-
-		arrows.update((arrowPolys) => {
-			return arrowPolys.map((arrowPoly) => {
-				return scaleArrow(arrowPoly, relativeScaleFactor);
-			});
-		});
 	};
 
 	const handleCircleMouseDown = (e: MouseEvent, index: number, end: 'start' | 'end') => {
@@ -202,8 +192,6 @@
 			if ($CANVASBEHAVIOR === 'isErasing') {
 				drawEraserTrail(eraserTrail, context, '#433f3f50', 6);
 				eraseIntersectingArrows();
-			} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
-				drawArrowhead(roughCanvas, strokeWidth, roughness, startX, startY, clientX, clientY);
 			} else if ($CANVASBEHAVIOR === 'isPanning') {
 				const deltaX = clientX - startX;
 				const deltaY = clientY - startY;
@@ -329,14 +317,15 @@
 
 	const redrawArrows = () => {
 		for (let arrow of $arrows) {
-			drawArrowhead(
+			drawArrow(
 				roughCanvas,
 				strokeWidth,
 				roughness,
 				arrow.startX,
 				arrow.startY,
 				arrow.endX,
-				arrow.endY
+				arrow.endY,
+				$scale
 			);
 		}
 	};
