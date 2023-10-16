@@ -107,7 +107,6 @@
 		}
 		newValue = Math.max(newValue, 0.1);
 
-		// Scale the arrows based on the zoom
 		arrows.update((polys) => {
 			return polys.map((poly) => {
 				return scaleArrow(poly, relativeScaleFactor);
