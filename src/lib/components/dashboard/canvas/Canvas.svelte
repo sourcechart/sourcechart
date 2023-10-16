@@ -104,29 +104,45 @@
 
 	const handleScroll = (event: WheelEvent) => {
 		if (event.ctrlKey) {
-			event.preventDefault();
-			const currentScale = get(scale);
-			let newValue: number;
-			let relativeScaleFactor: number;
-			if (event.deltaY > 0) {
-				console.log('scrolling down');
-				newValue = currentScale - 0.1;
-				relativeScaleFactor = newValue / currentScale;
-			} else {
-				console.log('scrolling up');
-				newValue = currentScale + 0.1;
-				relativeScaleFactor = newValue / currentScale;
-			}
-			newValue = Math.max(newValue, 0.1);
-
-			scale.set(newValue);
-
+			handleZoom(event);
+		} else {
 			polygons.update((polys) => {
 				return polys.map((poly) => {
-					return PolyOps.scaleRectangle(poly, relativeScaleFactor);
+					return {
+						...poly,
+						vertices: poly.vertices.map((vertex) => {
+							return {
+								x: vertex.x,
+								y: vertex.y + event.deltaY * 0.85
+							};
+						})
+					};
 				});
 			});
 		}
+	};
+
+	const handleZoom = (event: WheelEvent) => {
+		event.preventDefault();
+		const currentScale = get(scale);
+		let newValue: number;
+		let relativeScaleFactor: number;
+		if (event.deltaY > 0) {
+			newValue = currentScale - 0.1;
+			relativeScaleFactor = newValue / currentScale;
+		} else {
+			newValue = currentScale + 0.1;
+			relativeScaleFactor = newValue / currentScale;
+		}
+		newValue = Math.max(newValue, 0.1);
+
+		scale.set(newValue);
+
+		polygons.update((polys) => {
+			return polys.map((poly) => {
+				return PolyOps.scaleRectangle(poly, relativeScaleFactor);
+			});
+		});
 	};
 
 	function controlBar(touchstate: string, responsiveType: string) {
