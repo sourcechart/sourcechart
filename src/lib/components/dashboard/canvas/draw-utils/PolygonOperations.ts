@@ -319,6 +319,38 @@ function scaleRectangle(polygon: Polygon, scaleFactor: number): Polygon {
 	return scaledPolygon;
 }
 
+function scaleArrow(arrow: Arrow, scaleFactor: number): Arrow {
+	// Find the center of the arrow. For simplicity, we'll use the midpoint between start and end.
+	const centerX = (arrow.startX + arrow.endX) / 2;
+	const centerY = (arrow.startY + arrow.endY) / 2;
+
+	const calculateScaledCoordinate = (
+		originalX: number,
+		originalY: number
+	): { x: number; y: number } => {
+		const deltaX = originalX - centerX;
+		const deltaY = originalY - centerY;
+
+		return {
+			x: centerX + deltaX * scaleFactor,
+			y: centerY + deltaY * scaleFactor
+		};
+	};
+
+	const scaledStart = calculateScaledCoordinate(arrow.startX, arrow.startY);
+	const scaledEnd = calculateScaledCoordinate(arrow.endX, arrow.endY);
+	const scaledMid = calculateScaledCoordinate(arrow.midX, arrow.midY);
+
+	return {
+		startX: scaledStart.x,
+		startY: scaledStart.y,
+		endX: scaledEnd.x,
+		endY: scaledEnd.y,
+		midX: scaledMid.x,
+		midY: scaledMid.y
+	};
+}
+
 export {
 	calculateVertices,
 	pointToLineDistance,
@@ -332,5 +364,6 @@ export {
 	generateHandleRectangles,
 	resizeRectangle,
 	scaleRectangle,
-	polygonArea
+	polygonArea,
+	scaleArrow
 };

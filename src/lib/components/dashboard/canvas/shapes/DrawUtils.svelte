@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { doLinesIntersect, pointToLineDistance } from '../draw-utils/PolygonOperations';
+	import {
+		doLinesIntersect,
+		pointToLineDistance,
+		scaleArrow
+	} from '../draw-utils/PolygonOperations';
 	import { drawEraserTrail, drawArrow } from '../draw-utils/Draw';
 	import { rough } from '$lib/components/ui/roughjs/rough';
 	import { canvasBehavior, arrows, scale } from '$lib/io/Stores';
@@ -94,37 +98,20 @@
 		let newValue: number;
 		let relativeScaleFactor: number;
 
-		const zoomFactor = 1.2; // Adjust this value as needed
-
 		if (event.deltaY > 0) {
-			newValue = currentScale / zoomFactor;
+			newValue = currentScale - 0.1;
+			relativeScaleFactor = newValue / currentScale;
 		} else {
-			newValue = currentScale * zoomFactor;
+			newValue = currentScale + 0.1;
+			relativeScaleFactor = newValue / currentScale;
 		}
-		relativeScaleFactor = newValue / currentScale;
-
-		newValue = Math.max(newValue, 0.1); // Ensure scale doesn't go too small
-
-		// Get mouse position
-		const mouseX = event.clientX;
-		const mouseY = event.clientY;
+		newValue = Math.max(newValue, 0.1);
 
 		// Scale the arrows based on the zoom
-		$arrows = $arrows.map((arrow) => {
-			const calculateScaledCoordinate = (originalValue: number, mouseCoord: number) => {
-				return mouseCoord + (originalValue - mouseCoord) * relativeScaleFactor;
-			};
-
-			return {
-				...arrow,
-				startX: calculateScaledCoordinate(arrow.startX, mouseX),
-				startY: calculateScaledCoordinate(arrow.startY, mouseY),
-				endX: calculateScaledCoordinate(arrow.endX, mouseX),
-				endY: calculateScaledCoordinate(arrow.endY, mouseY),
-				// If you also want to scale midX and midY:
-				midX: calculateScaledCoordinate(arrow.midX, mouseX),
-				midY: calculateScaledCoordinate(arrow.midY, mouseY)
-			};
+		arrows.update((polys) => {
+			return polys.map((poly) => {
+				return scaleArrow(poly, relativeScaleFactor);
+			});
 		});
 
 		scale.set(newValue);
