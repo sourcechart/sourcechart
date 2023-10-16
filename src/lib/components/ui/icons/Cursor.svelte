@@ -1,24 +1,8 @@
-<div class="w-8 h-8 rounded-md flex flex-col justify-center items-center relative">
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		x="0px"
-		y="0px"
-		width="14"
-		height="14"
-		viewBox="0 0 30 30"
-		stroke="#9CA3AF"
-		fill="#9CA3AF"
-	>
-		<path
-			d="M 9 3 A 1 1 0 0 0 8 4 L 8 21 A 1 1 0 0 0 9 22 A 1 1 0 0 0 9.796875 21.601562 L 12.919922 18.119141 L 16.382812 26.117188 C 16.701812 26.855187 17.566828 27.188469 18.298828 26.855469 C 19.020828 26.527469 19.340672 25.678078 19.013672 24.955078 L 15.439453 17.039062 L 21 17 A 1 1 0 0 0 22 16 A 1 1 0 0 0 21.628906 15.222656 L 9.7832031 3.3789062 A 1 1 0 0 0 9 3 z"
-		/>
-	</svg>
-	<div class="absolute bottom-0 right-0 text-xs mt-2 mr-1">1</div>
-</div>
-
-<style>
-	.text-xs {
-		font-size: 0.5rem;
-		color: #9ca3af;
-	}
-</style>
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 15 15" {...$$props}
+	><path
+		fill="currentColor"
+		fill-rule="evenodd"
+		d="M3.292.049a.5.5 0 0 1 .535.077L12.86 7.95a.5.5 0 0 1-.306.878l-3.334.147l1.931 4.244a.5.5 0 0 1-.247.662l-2.153.98a.5.5 0 0 1-.662-.247L6.153 10.37l-2.29 2.416A.5.5 0 0 1 3 12.44V.504a.5.5 0 0 1 .292-.455ZM4 1.599v9.589l1.938-2.044a.5.5 0 0 1 .818.137l2.035 4.463l1.242-.566l-2.031-4.463a.5.5 0 0 1 .433-.707l2.82-.124L4 1.599Z"
+		clip-rule="evenodd"
+	/></svg
+>

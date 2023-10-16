@@ -105,24 +105,24 @@
 <div class="flex justify-center h-10 items-center rounded-md shadow-lg bg-neutral-800">
 	<div class="divide-x divide-neutral-700 flex items-center justify-items-center space-x-2">
 		<div
-			on:click={() => setMode('select', 1)}
-			on:mouseover={() => startHover(1)}
+			on:click={() => setMode('pan', 0)}
+			on:mouseover={() => startHover(0)}
 			on:mouseout={endHover}
-			on:touchstart={() => startLongPress(1)}
+			on:touchstart={() => startLongPress(0)}
 			on:touchend={endLongPress}
 			on:keypress={null}
 			on:blur={null}
 			on:focus={null}
-			class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
-				activeIndex === 1
+			class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
+				activeIndex === 0
 					? 'bg-[#6f6599]'
 					: $responsiveType !== 'touch' || isPressed
 					? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 					: ''
 			}`}
 		>
-			<Cursor />
-			{#if showTooltip[1] && (clickedIndex !== 1 || $responsiveType !== 'touch')}
+			<HandGrab class="h-5 w-5" />
+			{#if showTooltip[0] && (clickedIndex !== 0 || $responsiveType !== 'touch')}
 				<div
 					role="tooltip"
 					class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
@@ -133,24 +133,24 @@
 		</div>
 
 		<div
-			on:click={() => setMode('pan', 0)}
-			on:mouseover={() => startHover(0)}
+			on:click={() => setMode('select', 1)}
+			on:mouseover={() => startHover(1)}
 			on:mouseout={endHover}
-			on:touchstart={() => startLongPress(0)}
+			on:touchstart={() => startLongPress(1)}
 			on:touchend={endLongPress}
 			on:keypress={null}
 			on:blur={null}
 			on:focus={null}
-			class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
-				activeIndex === 0
+			class={`flex items-center  bg-neutral-800 justify-center mx-1 rounded-md overflow-hidden ${
+				activeIndex === 1
 					? 'bg-[#6f6599]'
 					: $responsiveType !== 'touch' || isPressed
 					? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 					: ''
 			}`}
 		>
-			<HandGrab />
-			{#if showTooltip[0] && (clickedIndex !== 0 || $responsiveType !== 'touch')}
+			<Cursor />
+			{#if showTooltip[1] && (clickedIndex !== 1 || $responsiveType !== 'touch')}
 				<div
 					role="tooltip"
 					class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
