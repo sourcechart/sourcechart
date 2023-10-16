@@ -102,8 +102,10 @@
 	};
 </script>
 
-<div class="flex justify-center h-10 items-center rounded-md shadow-lg bg-neutral-800">
-	<div class="divide-x divide-neutral-700 flex items-center justify-items-center space-x-2">
+<div
+	class="flex justify-center items-center rounded-md shadow-lg h-12 bg-neutral-800 p-1 border border-1 border-neutral-700/70"
+>
+	<div class="divide-neutral-700 flex items-center justify-between space-x-2">
 		<div
 			on:click={() => setMode('pan', 0)}
 			on:mouseover={() => startHover(0)}
@@ -114,14 +116,20 @@
 			on:blur={null}
 			on:focus={null}
 			class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
-				activeIndex === 0
-					? 'bg-[#6f6599]'
-					: $responsiveType !== 'touch' || isPressed
+				activeIndex === 0 ? 'fill-blue-500 ' : ''
+			} ${
+				$responsiveType !== 'touch' || isPressed
 					? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 					: ''
 			}`}
 		>
-			<HandGrab class="h-5 w-5" />
+			<HandGrab
+				class="w-5 h-5 ml-1  text-neutral-400 hover:text-neutral-200 active:text-neutral-50"
+			/>
+			<div class="bottom-0 right-0 mt-4">
+				<span class="text-xs text-neutral-600">0</span>
+			</div>
+
 			{#if showTooltip[0] && (clickedIndex !== 0 || $responsiveType !== 'touch')}
 				<div
 					role="tooltip"
@@ -141,7 +149,7 @@
 			on:keypress={null}
 			on:blur={null}
 			on:focus={null}
-			class={`flex items-center  bg-neutral-800 justify-center mx-1 rounded-md overflow-hidden ${
+			class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
 				activeIndex === 1
 					? 'bg-[#6f6599]'
 					: $responsiveType !== 'touch' || isPressed
@@ -149,7 +157,13 @@
 					: ''
 			}`}
 		>
-			<Cursor />
+			<Cursor
+				class="w-5 ml-1  h-5 text-neutral-400 hover:text-neutral-200 active:text-neutral-50"
+			/>
+			<div class="bottom-0 right-0 mt-4">
+				<span class="text-xs text-neutral-500">1</span>
+			</div>
+
 			{#if showTooltip[1] && (clickedIndex !== 1 || $responsiveType !== 'touch')}
 				<div
 					role="tooltip"
@@ -160,7 +174,7 @@
 			{/if}
 		</div>
 
-		<div class="flex items-center justify-items-center">
+		<div class="flex items-center justify-items-center space-x-3">
 			<div
 				on:click={() => setMode('drawRectangle', 2)}
 				on:keypress={null}
@@ -170,15 +184,21 @@
 				on:touchend={endLongPress}
 				on:blur={null}
 				on:focus={null}
-				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
+				class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
 					activeIndex === 2
-						? 'bg-[#6f6599]'
+						? 'bg-[#6f6599] fill-blue-400'
 						: $responsiveType !== 'touch' || isPressed
 						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 						: ''
 				}`}
 			>
-				<Rectangle />
+				<Rectangle
+					class="w-5 ml-1 h-5 text-neutral-400 hover:text-neutral-200 active:text-neutral-50 "
+				/>
+				<div class="bottom-0 right-0 mt-4">
+					<span class="text-xs text-neutral-500">2</span>
+				</div>
+
 				{#if showTooltip[2]}
 					<div
 						role="tooltip"
@@ -199,7 +219,7 @@
 				on:touchend={endLongPress}
 				on:blur={null}
 				on:focus={null}
-				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
+				class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
 					activeIndex === 3
 						? 'bg-[#6f6599]'
 						: $responsiveType !== 'touch' || isPressed
@@ -207,7 +227,13 @@
 						: ''
 				}`}
 			>
-				<Arrow />
+				<Arrow
+					class="w-5 h-5 ml-1 fill:red-400 text-neutral-400 hover:text-neutral-200 active:text-neutral-50"
+				/>
+				<div class="bottom-0 right-0 mt-4">
+					<span class="text-xs text-neutral-500">3</span>
+				</div>
+
 				{#if showTooltip[3]}
 					<div
 						role="tooltip"
@@ -228,7 +254,7 @@
 				on:touchend={endLongPress}
 				on:blur={null}
 				on:focus={null}
-				class={`flex items-center  justify-center mx-1 rounded-md overflow-hidden ${
+				class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
 					activeIndex === 4
 						? 'bg-[#6f6599]'
 						: $responsiveType !== 'touch' || isPressed
@@ -236,7 +262,12 @@
 						: ''
 				}`}
 			>
-				<Eraser />
+				<Eraser
+					class="w-5 h-5 ml-1 text-neutral-400 hover:text-neutral-200 active:text-neutral-50"
+				/>
+				<div class="bottom-0 right-0 mt-4">
+					<span class="text-xs text-neutral-500">4</span>
+				</div>
 				{#if showTooltip[4]}
 					<div
 						role="tooltip"
