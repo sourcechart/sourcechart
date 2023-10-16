@@ -6,7 +6,7 @@
 
 	import Safety from '$lib/components/dashboard/buttons/Safety.svelte';
 	import Help from '$lib/components/dashboard/buttons/Help.svelte';
-	import Zoom from '$lib/components/dashboard/buttons/Zoom.svelte';
+	import ZoomButton from '$lib/components/dashboard/buttons/ZoomButton.svelte';
 	import ToggleSidebar from '$lib/components/dashboard/sidebar/ToggleSidebar.svelte';
 
 	import { onMount } from 'svelte';
@@ -64,7 +64,7 @@
 
 	<footer>
 		<div class="fixed bottom-4 left-6">
-			<Zoom />
+			<ZoomButton />
 		</div>
 
 		<div class="fixed bottom-4 right-20">
