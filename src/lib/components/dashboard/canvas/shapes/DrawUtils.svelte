@@ -1,9 +1,14 @@
 <script lang="ts">
-	import { doLinesIntersect, pointToLineDistance } from '../draw-utils/PolygonOperations';
+	import {
+		doLinesIntersect,
+		pointToLineDistance,
+		scaleArrow
+	} from '../draw-utils/PolygonOperations';
 	import { drawEraserTrail, drawArrowhead } from '../draw-utils/Draw';
 	import { rough } from '$lib/components/ui/roughjs/rough';
-	import { canvasBehavior, arrows } from '$lib/io/Stores';
+	import { canvasBehavior, arrows, scale } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
 	let roughCanvas: any;
 	let canvas: HTMLCanvasElement;
@@ -46,11 +51,68 @@
 		canvas.height = height;
 		document.addEventListener('mouseup', handleMouseUp);
 		canvas.addEventListener('mousedown', (e) => e.preventDefault());
+		window.addEventListener('wheel', handleScroll, { passive: false });
+
 		return () => {
 			document.removeEventListener('mouseup', handleMouseUp);
 			canvas.removeEventListener('mousedown', (e) => e.preventDefault());
+			window.removeEventListener('wheel', handleScroll);
 		};
 	});
+
+	let animationFrameId: number | null = null;
+
+	const updateCanvas = () => {
+		if (context) {
+			context.clearRect(0, 0, width, height);
+			redrawArrows();
+		}
+		animationFrameId = null;
+	};
+
+	const handleScroll = (event: WheelEvent) => {
+		if (event.ctrlKey) {
+			handleZoom(event);
+		} else {
+			$arrows = $arrows.map((arrow) => {
+				return {
+					...arrow,
+					startX: arrow.startX,
+					startY: arrow.startY + event.deltaY,
+					endX: arrow.endX,
+					endY: arrow.endY + event.deltaY,
+					midX: arrow.midX,
+					midY: arrow.midY + event.deltaY
+				};
+			});
+
+			if (!animationFrameId) {
+				animationFrameId = requestAnimationFrame(updateCanvas);
+			}
+		}
+	};
+	const handleZoom = (event: WheelEvent) => {
+		event.preventDefault();
+		const currentScale = get(scale);
+		let newValue: number;
+		let relativeScaleFactor: number;
+		if (event.deltaY > 0) {
+			newValue = currentScale - 0.1;
+			relativeScaleFactor = newValue / currentScale;
+		} else {
+			newValue = currentScale + 0.1;
+			relativeScaleFactor = newValue / currentScale;
+		}
+		newValue = Math.max(newValue, 0.1);
+
+		scale.set(newValue);
+
+		arrows.update((arrowPolys) => {
+			return arrowPolys.map((arrowPoly) => {
+				return scaleArrow(arrowPoly, relativeScaleFactor);
+			});
+		});
+	};
 
 	const handleCircleMouseDown = (e: MouseEvent, index: number, end: 'start' | 'end') => {
 		e.stopPropagation();

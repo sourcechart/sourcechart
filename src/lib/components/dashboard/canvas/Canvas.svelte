@@ -14,8 +14,7 @@
 		screenSize,
 		polygons,
 		scale,
-		panAmount,
-		arrows
+		panAmount
 	} from '$lib/io/Stores';
 	import { get } from 'svelte/store';
 
@@ -121,20 +120,6 @@
 					};
 				});
 			});
-
-			// Update for arrows
-			arrows.update((arrowList) => {
-				return arrowList.map((arrow) => {
-					return {
-						startX: arrow.startX,
-						startY: arrow.startY + event.deltaY * 0.85,
-						endX: arrow.endX,
-						endY: arrow.endY + event.deltaY * 0.85,
-						midX: arrow.midX,
-						midY: arrow.midY + event.deltaY * 0.85
-					};
-				});
-			});
 		}
 	};
 
@@ -157,12 +142,6 @@
 		polygons.update((polys) => {
 			return polys.map((poly) => {
 				return PolyOps.scaleRectangle(poly, relativeScaleFactor);
-			});
-		});
-
-		arrows.update((arrowPolys) => {
-			return arrowPolys.map((arrowPoly) => {
-				return PolyOps.scaleArrow(arrowPoly, relativeScaleFactor);
 			});
 		});
 	};
