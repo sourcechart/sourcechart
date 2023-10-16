@@ -92,14 +92,39 @@
 		const currentScale = get(scale);
 		let newValue: number;
 		let relativeScaleFactor: number;
+
+		const zoomFactor = 1.2; // Adjust this value as needed
+
 		if (event.deltaY > 0) {
-			newValue = currentScale - 0.1;
-			relativeScaleFactor = newValue / currentScale;
+			newValue = currentScale / zoomFactor;
 		} else {
-			newValue = currentScale + 0.1;
-			relativeScaleFactor = newValue / currentScale;
+			newValue = currentScale * zoomFactor;
 		}
-		newValue = Math.max(newValue, 0.1);
+		relativeScaleFactor = newValue / currentScale;
+
+		newValue = Math.max(newValue, 0.1); // Ensure scale doesn't go too small
+
+		// Get mouse position
+		const mouseX = event.clientX;
+		const mouseY = event.clientY;
+
+		// Scale the arrows based on the zoom
+		$arrows = $arrows.map((arrow) => {
+			const calculateScaledCoordinate = (originalValue: number, mouseCoord: number) => {
+				return mouseCoord + (originalValue - mouseCoord) * relativeScaleFactor;
+			};
+
+			return {
+				...arrow,
+				startX: calculateScaledCoordinate(arrow.startX, mouseX),
+				startY: calculateScaledCoordinate(arrow.startY, mouseY),
+				endX: calculateScaledCoordinate(arrow.endX, mouseX),
+				endY: calculateScaledCoordinate(arrow.endY, mouseY),
+				// If you also want to scale midX and midY:
+				midX: calculateScaledCoordinate(arrow.midX, mouseX),
+				midY: calculateScaledCoordinate(arrow.midY, mouseY)
+			};
+		});
 
 		scale.set(newValue);
 
@@ -351,46 +376,48 @@
 	>
 		{#if handlesActivated}
 			{#each $arrows as arrow, i}
-				<circle
-					class="circle-focusable"
-					cx={arrow.startX}
-					cy={arrow.startY}
-					r={hoveredCircleIndex === i && hoveredCircleEnd === 'start' ? '7' : '5'}
-					fill="#26262777"
-					stroke="#9d99dc77"
-					stroke-width="2"
-					on:mousedown={(e) => handleCircleMouseDown(e, i, 'start')}
-					on:mouseover={() => {
-						hoveredCircleIndex = i;
-						hoveredCircleEnd = 'start';
-					}}
-					on:mouseout={() => {
-						hoveredCircleIndex = null;
-						hoveredCircleEnd = null;
-					}}
-					on:focus={() => (isCanvasFocused = true)}
-					on:blur={() => (isCanvasFocused = false)}
-				/>
-				<circle
-					class="circle-focusable"
-					cx={arrow.endX}
-					cy={arrow.endY}
-					r={hoveredCircleIndex === i && hoveredCircleEnd === 'end' ? '7' : '5'}
-					stroke="#9d99dc77"
-					stroke-width="2"
-					fill="#26262777"
-					on:mousedown={(e) => handleCircleMouseDown(e, i, 'end')}
-					on:mouseover={() => {
-						hoveredCircleIndex = i;
-						hoveredCircleEnd = 'end';
-					}}
-					on:mouseout={() => {
-						hoveredCircleIndex = null;
-						hoveredCircleEnd = null;
-					}}
-					on:focus={() => (isCanvasFocused = true)}
-					on:blur={() => (isCanvasFocused = false)}
-				/>
+				{#if arrow}
+					<circle
+						class="circle-focusable"
+						cx={arrow.startX}
+						cy={arrow.startY}
+						r={hoveredCircleIndex === i && hoveredCircleEnd === 'start' ? '7' : '5'}
+						fill="#26262777"
+						stroke="#9d99dc77"
+						stroke-width="2"
+						on:mousedown={(e) => handleCircleMouseDown(e, i, 'start')}
+						on:mouseover={() => {
+							hoveredCircleIndex = i;
+							hoveredCircleEnd = 'start';
+						}}
+						on:mouseout={() => {
+							hoveredCircleIndex = null;
+							hoveredCircleEnd = null;
+						}}
+						on:focus={() => (isCanvasFocused = true)}
+						on:blur={() => (isCanvasFocused = false)}
+					/>
+					<circle
+						class="circle-focusable"
+						cx={arrow.endX}
+						cy={arrow.endY}
+						r={hoveredCircleIndex === i && hoveredCircleEnd === 'end' ? '7' : '5'}
+						stroke="#9d99dc77"
+						stroke-width="2"
+						fill="#26262777"
+						on:mousedown={(e) => handleCircleMouseDown(e, i, 'end')}
+						on:mouseover={() => {
+							hoveredCircleIndex = i;
+							hoveredCircleEnd = 'end';
+						}}
+						on:mouseout={() => {
+							hoveredCircleIndex = null;
+							hoveredCircleEnd = null;
+						}}
+						on:focus={() => (isCanvasFocused = true)}
+						on:blur={() => (isCanvasFocused = false)}
+					/>
+				{/if}
 			{/each}
 		{/if}
 	</svg>

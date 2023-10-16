@@ -103,7 +103,6 @@ const drawEraserTrail = (
 		context.stroke();
 	}
 };
-
 const drawArrow = (
 	roughCanvas: any,
 	strokeWidth: number,
@@ -112,44 +111,28 @@ const drawArrow = (
 	startY: number,
 	endX: number,
 	endY: number,
-	scaleFactor: number = 1 // Default to 1 (no scaling)
+	scale: number = 1
 ) => {
 	const angle = Math.atan2(endY - startY, endX - startX);
-	const scaledLength = 15 * scaleFactor; // The scaled length of the arrowhead lines
+	const arrowheadLength = 15; // The length of the arrowhead lines
 	const headAngle = Math.PI / 7; // Angle for the arrowhead.
 
-	const lengthOfArrow = Math.sqrt((endX - startX) ** 2 + (endY - startY) ** 2);
-	const scaledLengthOfArrow = lengthOfArrow * scaleFactor;
+	const x1 = endX - arrowheadLength * Math.cos(angle - headAngle);
+	const y1 = endY - arrowheadLength * Math.sin(angle - headAngle);
+	const x2 = endX - arrowheadLength * Math.cos(angle + headAngle);
+	const y2 = endY - arrowheadLength * Math.sin(angle + headAngle);
 
-	const midpointX = (startX + endX) / 2;
-	const midpointY = (startY + endY) / 2;
-
-	const halfLengthOfScaledArrow = scaledLengthOfArrow / 2;
-
-	const scaledStartX = midpointX - halfLengthOfScaledArrow * Math.cos(angle);
-	const scaledStartY = midpointY - halfLengthOfScaledArrow * Math.sin(angle);
-	const scaledEndX = midpointX + halfLengthOfScaledArrow * Math.cos(angle);
-	const scaledEndY = midpointY + halfLengthOfScaledArrow * Math.sin(angle);
-
-	const x1 = scaledEndX - scaledLength * Math.cos(angle - headAngle);
-	const y1 = scaledEndY - scaledLength * Math.sin(angle - headAngle);
-	const x2 = scaledEndX - scaledLength * Math.cos(angle + headAngle);
-	const y2 = scaledEndY - scaledLength * Math.sin(angle + headAngle);
-
-	roughCanvas.line(scaledStartX, scaledStartY, scaledEndX, scaledEndY, {
+	roughCanvas.line(startX, startY, endX, endY, {
 		stroke: 'white',
-		strokeWidth: strokeWidth * scaleFactor, // Scale the strokeWidth
-		roughness: roughness * scaleFactor // Optionally, scale the roughness
+		strokeWidth: strokeWidth * scale * 1,
+		roughness: 0
 	});
 
-	roughCanvas.path(
-		`M ${scaledEndX} ${scaledEndY} L ${x1} ${y1} M ${scaledEndX} ${scaledEndY} L ${x2} ${y2}`,
-		{
-			stroke: 'white',
-			strokeWidth: strokeWidth * scaleFactor, // Scale the strokeWidth
-			roughness: roughness * scaleFactor // Optionally, scale the roughness
-		}
-	);
+	roughCanvas.path(`M ${endX} ${endY} L ${x1} ${y1} M ${endX} ${endY} L ${x2} ${y2}`, {
+		stroke: 'white',
+		strokeWidth: strokeWidth,
+		roughness: roughness
+	});
 };
 
 const getPlotTopPosition = (polygon: Polygon): number => {
