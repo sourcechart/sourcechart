@@ -127,7 +127,7 @@
 				class="w-5 h-5 ml-1  text-neutral-400 hover:text-neutral-200 active:text-neutral-50"
 			/>
 			<div class="bottom-0 right-0 mt-4">
-				<span class="text-xs text-neutral-600">0</span>
+				<span class="text-xs text-neutral-500">0</span>
 			</div>
 
 			{#if showTooltip[0] && (clickedIndex !== 0 || $responsiveType !== 'touch')}
