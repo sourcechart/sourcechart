@@ -87,6 +87,7 @@
 			}
 		}
 	};
+
 	const handleZoom = (event: WheelEvent) => {
 		event.preventDefault();
 		const currentScale = get(scale);
@@ -221,6 +222,8 @@
 			if ($CANVASBEHAVIOR === 'isErasing') {
 				drawEraserTrail(eraserTrail, context, '#433f3f50', 6);
 				eraseIntersectingArrows();
+			} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
+				drawArrow(roughCanvas, strokeWidth, roughness, startX, startY, clientX, clientY);
 			} else if ($CANVASBEHAVIOR === 'isPanning') {
 				const deltaX = clientX - startX;
 				const deltaY = clientY - startY;
