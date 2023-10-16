@@ -42,6 +42,9 @@ export const lockSidebar = writable<boolean>(storeFromLocalStorage('lockSidebar'
 export const selectedColumnStore = writable<ColumnName[]>([]);
 export const polygons = writable<Polygon[]>(storeFromLocalStorage('polygon', []));
 export const scale = writable<number>(storeFromLocalStorage('zoom', 1));
+export const panAmount = writable<{ x: number; y: number }>(
+	storeFromLocalStorage('panAmount', { x: 0, y: 0 })
+);
 
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {

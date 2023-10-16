@@ -13,7 +13,8 @@
 		activeSidebar,
 		screenSize,
 		polygons,
-		scale
+		scale,
+		panAmount
 	} from '$lib/io/Stores';
 	import { get } from 'svelte/store';
 
@@ -33,7 +34,6 @@
 	let startPosition = { x: 0, y: 0 };
 	let currentMousePosition = { x: 0, y: 0 };
 	let currentTouchPosition = { x: 0, y: 0 };
-	let pan = { x: 0, y: 0 };
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -325,6 +325,7 @@
 		});
 
 		currentMousePosition = { x, y };
+		panAmount.set({ x: deltaX, y: deltaY });
 	};
 
 	const handleMouseMoveDown = (x: number, y: number): void => {

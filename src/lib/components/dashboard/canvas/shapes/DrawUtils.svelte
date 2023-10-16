@@ -143,6 +143,22 @@
 				eraseIntersectingArrows();
 			} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
 				drawArrowhead(startX, startY, clientX, clientY);
+			} else if ($CANVASBEHAVIOR === 'isPanning') {
+				const deltaX = clientX - startX;
+				const deltaY = clientY - startY;
+				$arrows = $arrows.map((arrow) => {
+					return {
+						...arrow,
+						startX: arrow.startX + deltaX,
+						startY: arrow.startY + deltaY,
+						endX: arrow.endX + deltaX,
+						endY: arrow.endY + deltaY,
+						midX: arrow.midX + deltaX,
+						midY: arrow.midY + deltaY
+					};
+				});
+				startX = clientX;
+				startY = clientY;
 			}
 		}
 

@@ -32,8 +32,6 @@
 
 	export let polygon: Polygon;
 
-	$: console.log(polygonArea(polygon.vertices));
-
 	let container: HTMLElement;
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
