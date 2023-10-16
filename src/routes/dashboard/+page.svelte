@@ -6,7 +6,7 @@
 
 	import Safety from '$lib/components/dashboard/buttons/Safety.svelte';
 	import Help from '$lib/components/dashboard/buttons/Help.svelte';
-	import Zoom from '$lib/components/dashboard/buttons/zoom.svelte';
+	import Zoom from '$lib/components/dashboard/buttons/Zoom.svelte';
 	import ToggleSidebar from '$lib/components/dashboard/sidebar/ToggleSidebar.svelte';
 
 	import { onMount } from 'svelte';

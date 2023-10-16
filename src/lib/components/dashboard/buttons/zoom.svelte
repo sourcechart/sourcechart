@@ -36,18 +36,20 @@
 	};
 </script>
 
-<div class="flex justify-center h-10 w-32 items-center rounded-md shadow-lg bg-neutral-800">
+<div
+	class="flex justify-center items-center rounded-md shadow-lg bg-neutral-800 p-1 border border-1 border-neutral-700/70"
+>
 	<div class="divide-neutral-700 flex items-center justify-between space-x-2">
-		<button on:click={decreaseZoom}>
-			<Minus class="w-6 h-6 " />
+		<button on:click={decreaseZoom} class="p-1.5 transition-colors duration-300 focus:outline-none">
+			<Minus class="w-6 h-6 text-neutral-300 hover:text-neutral-50" />
 		</button>
 
-		<span>
+		<span class="text-neutral-300 px-2">
 			{Math.round($scale * 100) + '%'}
 		</span>
 
-		<button on:click={increaseZoom}>
-			<PlusSolid class="w-6 h-6 " />
+		<button on:click={increaseZoom} class="p-1.5 transition-colors duration-300 focus:outline-none">
+			<PlusSolid class="w-6 h-6 text-neutral-300 hover:text-neutral-50" />
 		</button>
 	</div>
 </div>
