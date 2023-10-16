@@ -1,16 +1,6 @@
-<div class="w-8 h-8 rounded-md flex flex-col justify-center items-center relative">
-	<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-		><path
-			fill="#9ca3af"
-			d="M17.25 18H22v2h-6.75l2-2Zm-12.5 2l-2.125-2.125q-.575-.575-.588-1.425T2.6 15l11-11.4q.575-.6 1.413-.6t1.412.575L21.4 8.55q.575.575.575 1.425T21.4 11.4L13 20H4.75Z"
-		/></svg
-	>
-	<div class="absolute bottom-0 right-0 text-xs mt-1 mr-1">0</div>
-</div>
-
-<style>
-	.text-xs {
-		font-size: 0.5rem;
-		color: #9ca3af;
-	}
-</style>
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...$$props}
+	><path
+		fill="currentColor"
+		d="M15.14 3c-.51 0-1.02.2-1.41.59L2.59 14.73c-.78.77-.78 2.04 0 2.83L5.03 20h7.66l8.72-8.73c.79-.77.79-2.04 0-2.83l-4.85-4.85c-.39-.39-.91-.59-1.42-.59M17 18l-2 2h7v-2"
+	/></svg
+>
