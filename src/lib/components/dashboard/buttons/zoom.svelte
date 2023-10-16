@@ -18,9 +18,9 @@
 		let relativeScaleFactor: number;
 
 		if (zoomIn) {
-			newValue = currentScale + 0.2; // Adjusted for 20%
+			newValue = currentScale + 0.1; // Adjusted for 20%
 		} else {
-			newValue = currentScale - 0.2; // Adjusted for 20%
+			newValue = currentScale - 0.1; // Adjusted for 20%
 		}
 
 		relativeScaleFactor = newValue / currentScale;
