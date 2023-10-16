@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { doLinesIntersect, pointToLineDistance } from '../draw-utils/PolygonOperations';
-	import { drawEraserTrail } from '../draw-utils/Draw';
+	import { drawEraserTrail, drawArrowhead } from '../draw-utils/Draw';
 	import { rough } from '$lib/components/ui/roughjs/rough';
 	import { canvasBehavior, arrows } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
@@ -45,7 +45,6 @@
 		canvas.width = width;
 		canvas.height = height;
 		document.addEventListener('mouseup', handleMouseUp);
-
 		canvas.addEventListener('mousedown', (e) => e.preventDefault());
 		return () => {
 			document.removeEventListener('mouseup', handleMouseUp);
@@ -142,7 +141,7 @@
 				drawEraserTrail(eraserTrail, context, '#433f3f50', 6);
 				eraseIntersectingArrows();
 			} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
-				drawArrowhead(startX, startY, clientX, clientY);
+				drawArrowhead(roughCanvas, strokeWidth, roughness, startX, startY, clientX, clientY);
 			} else if ($CANVASBEHAVIOR === 'isPanning') {
 				const deltaX = clientX - startX;
 				const deltaY = clientY - startY;
@@ -268,32 +267,16 @@
 
 	const redrawArrows = () => {
 		for (let arrow of $arrows) {
-			drawArrowhead(arrow.startX, arrow.startY, arrow.endX, arrow.endY);
+			drawArrowhead(
+				roughCanvas,
+				strokeWidth,
+				roughness,
+				arrow.startX,
+				arrow.startY,
+				arrow.endX,
+				arrow.endY
+			);
 		}
-	};
-
-	const drawArrowhead = (startX: number, startY: number, endX: number, endY: number) => {
-		const angle = Math.atan2(endY - startY, endX - startX);
-
-		const length = 15; // The length of the arrowhead lines
-		const headAngle = Math.PI / 7; // Angle for the arrowhead. Adjust for sharper/narrower arrowheads
-
-		const x1 = endX - length * Math.cos(angle - headAngle);
-		const y1 = endY - length * Math.sin(angle - headAngle);
-		const x2 = endX - length * Math.cos(angle + headAngle);
-		const y2 = endY - length * Math.sin(angle + headAngle);
-
-		roughCanvas.line(startX, startY, endX, endY, {
-			stroke: 'white',
-			strokeWidth: strokeWidth,
-			roughness: roughness
-		});
-
-		roughCanvas.path(`M ${endX} ${endY} L ${x1} ${y1} M ${endX} ${endY} L ${x2} ${y2}`, {
-			stroke: 'white',
-			strokeWidth: strokeWidth,
-			roughness: roughness
-		});
 	};
 </script>
 

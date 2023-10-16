@@ -14,7 +14,8 @@
 		screenSize,
 		polygons,
 		scale,
-		panAmount
+		panAmount,
+		arrows
 	} from '$lib/io/Stores';
 	import { get } from 'svelte/store';
 
@@ -106,6 +107,7 @@
 		if (event.ctrlKey) {
 			handleZoom(event);
 		} else {
+			// Update for polygons
 			polygons.update((polys) => {
 				return polys.map((poly) => {
 					return {
@@ -116,6 +118,20 @@
 								y: vertex.y + event.deltaY * 0.85
 							};
 						})
+					};
+				});
+			});
+
+			// Update for arrows
+			arrows.update((arrowList) => {
+				return arrowList.map((arrow) => {
+					return {
+						startX: arrow.startX,
+						startY: arrow.startY + event.deltaY * 0.85,
+						endX: arrow.endX,
+						endY: arrow.endY + event.deltaY * 0.85,
+						midX: arrow.midX,
+						midY: arrow.midY + event.deltaY * 0.85
 					};
 				});
 			});
@@ -141,6 +157,12 @@
 		polygons.update((polys) => {
 			return polys.map((poly) => {
 				return PolyOps.scaleRectangle(poly, relativeScaleFactor);
+			});
+		});
+
+		arrows.update((arrowPolys) => {
+			return arrowPolys.map((arrowPoly) => {
+				return PolyOps.scaleArrow(arrowPoly, relativeScaleFactor);
 			});
 		});
 	};

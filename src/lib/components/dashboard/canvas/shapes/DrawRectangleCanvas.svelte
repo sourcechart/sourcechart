@@ -6,14 +6,12 @@
 		getChartOptions,
 		touchType,
 		activeSidebar,
-		screenSize,
-		scale
+		screenSize
 	} from '$lib/io/Stores';
 	import {
 		isPointInPolygon,
 		calculateVertices,
-		generateHandleRectangles,
-		polygonArea
+		generateHandleRectangles
 	} from '../draw-utils/PolygonOperations';
 	import { drawRectangle } from '../draw-utils/Draw';
 	import { afterUpdate } from 'svelte';
