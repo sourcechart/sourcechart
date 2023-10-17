@@ -147,9 +147,17 @@ type TouchState =
 	| 'isResizing'
 	| 'isDrawing'
 	| 'isErasing'
-	| 'isDrawingArrow';
+	| 'isDrawingArrow'
+	| 'isPanning';
 type HandlePosition = 'n' | 's' | 'w' | 'e' | 'ne' | 'nw' | 'sw' | 'se' | 'center';
-type NavBar = 'eraser' | 'select' | 'drawRectangle' | 'drawCircle' | 'drawArrow' | 'textbox';
+type NavBar =
+	| 'eraser'
+	| 'select'
+	| 'pan'
+	| 'drawRectangle'
+	| 'drawCircle'
+	| 'drawArrow'
+	| 'textbox';
 
 type MobileBar = 'sidebar' | 'trash';
 

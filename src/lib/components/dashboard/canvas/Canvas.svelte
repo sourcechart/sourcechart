@@ -12,10 +12,12 @@
 		responsiveType,
 		activeSidebar,
 		screenSize,
-		polygons
+		polygons,
+		scale,
+		panAmount
 	} from '$lib/io/Stores';
+	import { get } from 'svelte/store';
 
-	import { resizeRectangle } from './draw-utils/Draw';
 	import { generateID } from '$lib/io/GenerateID';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
@@ -26,6 +28,7 @@
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
 	let touchStartedOnHandle = false;
+	let initialDistance: number | null = null;
 
 	let eraserTrail: Point[] = [];
 
@@ -46,38 +49,18 @@
 	$: CANVASBEHAVIOR = canvasBehavior();
 	$: controlBar($CANVASBEHAVIOR, $responsiveType);
 
-	function controlBar(touchstate: string, responsiveType: string) {
-		if (touchstate === 'isErasing' && responsiveType === 'mouse') {
-			activeSidebar.set(false);
-		} else if (
-			(touchstate === 'isResizing' ||
-				touchstate === 'isTranslating' ||
-				touchstate === 'isDrawing') &&
-			responsiveType === 'mouse'
-		) {
-			//activeSidebar.set(true);
-		} else if (
-			touchstate === 'isTouching' &&
-			responsiveType === 'mouse' &&
-			$touchType === 'default'
-		) {
-			activeSidebar.set(false);
-		}
-	}
-
 	if (browser) {
 		onMount(() => {
 			context = canvas.getContext('2d');
 			width = window.innerWidth;
 			height = window.innerHeight;
 			updateOffset();
+			window.addEventListener('wheel', handleScroll, { passive: false });
+			return () => {
+				window.removeEventListener('wheel', handleScroll);
+			};
 		});
 	}
-
-	//const debouncedHandleMouseMoveUp = (x: number, y: number): void => {
-	//	clearTimeout(debounceTimer);
-	//		debounceTimer = window.setTimeout(() => handleMove(x, y), 5);
-	//	};
 
 	const updateOffset = () => {
 		const rect = canvas.getBoundingClientRect();
@@ -88,7 +71,9 @@
 	const handleMouseDown = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
 		let y: number;
-
+		if (window.TouchEvent && e instanceof TouchEvent && e.touches.length === 2) {
+			initialDistance = getDistance(e.touches[0], e.touches[1]);
+		}
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			responsiveType.set('touch');
 
@@ -119,6 +104,69 @@
 
 		touchState.set('isTouching');
 	};
+
+	const handleScroll = (event: WheelEvent) => {
+		if (event.ctrlKey) {
+			handleZoom(event);
+		} else {
+			// Update for polygons
+			polygons.update((polys) => {
+				return polys.map((poly) => {
+					return {
+						...poly,
+						vertices: poly.vertices.map((vertex) => {
+							return {
+								x: vertex.x,
+								y: vertex.y + event.deltaY * 0.85
+							};
+						})
+					};
+				});
+			});
+		}
+	};
+
+	const handleZoom = (event: WheelEvent) => {
+		event.preventDefault();
+		const currentScale = get(scale);
+		let newValue: number;
+		let relativeScaleFactor: number;
+		if (event.deltaY > 0) {
+			newValue = currentScale - 0.1;
+			relativeScaleFactor = newValue / currentScale;
+		} else {
+			newValue = currentScale + 0.1;
+			relativeScaleFactor = newValue / currentScale;
+		}
+		newValue = Math.max(newValue, 0.1);
+
+		scale.set(newValue);
+
+		polygons.update((polys) => {
+			return polys.map((poly) => {
+				return PolyOps.scaleRectangle(poly, relativeScaleFactor);
+			});
+		});
+	};
+
+	function controlBar(touchstate: string, responsiveType: string) {
+		if (touchstate === 'isErasing' && responsiveType === 'mouse') {
+			activeSidebar.set(false);
+		} else if (
+			(touchstate === 'isResizing' ||
+				touchstate === 'isTranslating' ||
+				touchstate === 'isDrawing') &&
+			responsiveType === 'mouse'
+		) {
+			//activeSidebar.set(true);
+		} else if (
+			touchstate === 'isTouching' &&
+			responsiveType === 'mouse' &&
+			$touchType === 'default'
+		) {
+			activeSidebar.set(false);
+		}
+	}
 
 	const handleMouseUp = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
@@ -158,22 +206,51 @@
 		navBarState.set('select');
 	};
 
+	function getDistance(touch1: Touch, touch2: Touch): number {
+		const dx = touch1.clientX - touch2.clientX;
+		const dy = touch1.clientY - touch2.clientY;
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+
 	const handleMouseMove = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
 		let y: number;
 
+		// For two-finger zooming on touch devices
+		if (
+			window.TouchEvent &&
+			e instanceof TouchEvent &&
+			e.touches.length === 2 &&
+			initialDistance !== null
+		) {
+			const currentDistance = getDistance(e.touches[0], e.touches[1]);
+			const scaleFactor = currentDistance / initialDistance;
+
+			const currentScale = get(scale);
+			scale.set(currentScale * scaleFactor);
+
+			initialDistance = currentDistance;
+			return; // We return early after handling zooming.
+		}
+
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
-			handleTouchMove(x, y);
+
+			// Decide the action based on the touch state
+			if ($touchState !== 'isPanning') {
+				handleTouchMove(x, y);
+			}
 		} else if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
 		} else {
 			return;
 		}
+
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
+
 		if ($CANVASBEHAVIOR === 'isHovering') {
 			handleMove(x, y);
 		} else {
@@ -182,17 +259,15 @@
 	};
 
 	const handleTouchMove = (x: number, y: number): void => {
-		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
-
 		let direction: string;
 		$polygons.find((polygon) => {
 			let insidePolygon =
-				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
+				PolyOps.isPointInPolygon({ x: x, y: y }, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
 			if (insidePolygon && touchStartedOnHandle) {
 				hoverPolygon = polygon;
-				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, true);
+				handlePosition = PolyOps.getHandlesHovered({ x, y }, polygon, true);
 				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
 				touchType.set(direction);
 				if (handlePosition) return true;
@@ -257,9 +332,30 @@
 	const handleResize = (x: number, y: number): void => {
 		if (chartIndex !== null && handlePosition !== null && $CANVASBEHAVIOR === 'isResizing') {
 			const poly = $polygons[chartIndex];
-			const newPolygon = resizeRectangle(x, y, poly, handlePosition);
+			const newPolygon = PolyOps.resizeRectangle(x, y, poly, handlePosition);
 			$polygons[chartIndex] = newPolygon;
 		}
+	};
+
+	const handlePan = (x: number, y: number): void => {
+		const deltaX = x - currentMousePosition.x;
+		const deltaY = y - currentMousePosition.y;
+
+		polygons.update((polys) => {
+			return polys.map((poly) => {
+				return {
+					...poly,
+					vertices: poly.vertices.map((vertex) => {
+						return {
+							x: vertex.x + deltaX,
+							y: vertex.y + deltaY
+						};
+					})
+				};
+			});
+		});
+
+		currentMousePosition = { x, y };
 	};
 
 	const handleMouseMoveDown = (x: number, y: number): void => {
@@ -274,6 +370,10 @@
 
 			case 'isResizing':
 				handleResize(x, y);
+				break;
+
+			case 'isPanning':
+				handlePan(x, y);
 				break;
 
 			default:
@@ -337,4 +437,3 @@
 		}
 	}}
 />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />

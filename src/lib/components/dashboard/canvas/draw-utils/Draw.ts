@@ -103,53 +103,6 @@ const drawEraserTrail = (
 		context.stroke();
 	}
 };
-
-/**
- * Resize rectangle from corner
- *
- * @param x
- * @param y
- * @param polygon
- * @param resizeEdge
- */
-const resizeRectangle = (x: number, y: number, polygon: Polygon, resizeEdge: string): Polygon => {
-	//0:nw 1:ne 2:se 3:sw
-	if (resizeEdge === 'n') {
-		polygon.vertices[0].y = y;
-		polygon.vertices[1].y = y;
-	} else if (resizeEdge === 'e') {
-		polygon.vertices[1].x = x;
-		polygon.vertices[2].x = x;
-	} else if (resizeEdge === 's') {
-		polygon.vertices[2].y = y;
-		polygon.vertices[3].y = y;
-	} else if (resizeEdge === 'w') {
-		polygon.vertices[3].x = x;
-		polygon.vertices[0].x = x;
-	} else if (resizeEdge === 'ne') {
-		polygon.vertices[0].y = y;
-		polygon.vertices[1].y = y;
-		polygon.vertices[1].x = x;
-		polygon.vertices[2].x = x;
-	} else if (resizeEdge === 'se') {
-		polygon.vertices[2].x = x;
-		polygon.vertices[1].x = x;
-		polygon.vertices[2].y = y;
-		polygon.vertices[3].y = y;
-	} else if (resizeEdge === 'sw') {
-		polygon.vertices[3].x = x;
-		polygon.vertices[0].x = x;
-		polygon.vertices[2].y = y;
-		polygon.vertices[3].y = y;
-	} else if (resizeEdge === 'nw') {
-		polygon.vertices[0].x = x;
-		polygon.vertices[3].x = x;
-		polygon.vertices[0].y = y;
-		polygon.vertices[1].y = y;
-	}
-	return polygon;
-};
-
 const drawArrow = (
 	roughCanvas: any,
 	strokeWidth: number,
@@ -157,22 +110,22 @@ const drawArrow = (
 	startX: number,
 	startY: number,
 	endX: number,
-	endY: number
+	endY: number,
+	scale: number = 1
 ) => {
 	const angle = Math.atan2(endY - startY, endX - startX);
+	const arrowheadLength = 15; // The length of the arrowhead lines
+	const headAngle = Math.PI / 7; // Angle for the arrowhead.
 
-	const length = 15; // The length of the arrowhead lines
-	const headAngle = Math.PI / 7; // Angle for the arrowhead. Adjust for sharper/narrower arrowheads
-
-	const x1 = endX - length * Math.cos(angle - headAngle);
-	const y1 = endY - length * Math.sin(angle - headAngle);
-	const x2 = endX - length * Math.cos(angle + headAngle);
-	const y2 = endY - length * Math.sin(angle + headAngle);
+	const x1 = endX - arrowheadLength * Math.cos(angle - headAngle);
+	const y1 = endY - arrowheadLength * Math.sin(angle - headAngle);
+	const x2 = endX - arrowheadLength * Math.cos(angle + headAngle);
+	const y2 = endY - arrowheadLength * Math.sin(angle + headAngle);
 
 	roughCanvas.line(startX, startY, endX, endY, {
 		stroke: 'white',
-		strokeWidth: strokeWidth,
-		roughness: roughness
+		strokeWidth: strokeWidth * scale * 1,
+		roughness: 0
 	});
 
 	roughCanvas.path(`M ${endX} ${endY} L ${x1} ${y1} M ${endX} ${endY} L ${x2} ${y2}`, {
@@ -196,7 +149,6 @@ export {
 	drawEraserTrail,
 	redraw,
 	drawHandles,
-	resizeRectangle,
 	getPlotTopPosition,
 	getPlotLeftPosition
 };

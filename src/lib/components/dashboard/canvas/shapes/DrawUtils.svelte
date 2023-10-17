@@ -1,9 +1,14 @@
 <script lang="ts">
-	import { doLinesIntersect, pointToLineDistance } from '../draw-utils/PolygonOperations';
-	import { drawEraserTrail } from '../draw-utils/Draw';
+	import {
+		doLinesIntersect,
+		pointToLineDistance,
+		scaleArrow
+	} from '../draw-utils/PolygonOperations';
+	import { drawEraserTrail, drawArrow } from '../draw-utils/Draw';
 	import { rough } from '$lib/components/ui/roughjs/rough';
-	import { canvasBehavior, arrows } from '$lib/io/Stores';
+	import { canvasBehavior, arrows, scale } from '$lib/io/Stores';
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
 	let roughCanvas: any;
 	let canvas: HTMLCanvasElement;
@@ -45,13 +50,75 @@
 		canvas.width = width;
 		canvas.height = height;
 		document.addEventListener('mouseup', handleMouseUp);
-
 		canvas.addEventListener('mousedown', (e) => e.preventDefault());
+		window.addEventListener('wheel', handleScroll, { passive: false });
+
 		return () => {
 			document.removeEventListener('mouseup', handleMouseUp);
 			canvas.removeEventListener('mousedown', (e) => e.preventDefault());
+			window.removeEventListener('wheel', handleScroll);
 		};
 	});
+
+	let animationFrameId: number | null = null;
+
+	const updateCanvas = () => {
+		if (context) {
+			context.clearRect(0, 0, width, height);
+			redrawArrows();
+		}
+		animationFrameId = null;
+	};
+
+	const handleScroll = (event: WheelEvent) => {
+		if (event.ctrlKey) {
+			handleZoom(event);
+		} else {
+			$arrows = $arrows.map((arrow) => {
+				return {
+					...arrow,
+					startX: arrow.startX,
+					startY: arrow.startY + event.deltaY,
+					endX: arrow.endX,
+					endY: arrow.endY + event.deltaY,
+					midX: arrow.midX,
+					midY: arrow.midY + event.deltaY
+				};
+			});
+
+			if (!animationFrameId) {
+				animationFrameId = requestAnimationFrame(updateCanvas);
+			}
+		}
+	};
+
+	const handleZoom = (event: WheelEvent) => {
+		event.preventDefault();
+		const currentScale = get(scale);
+		let newValue: number;
+		let relativeScaleFactor: number;
+
+		if (event.deltaY > 0) {
+			newValue = currentScale - 0.1;
+			relativeScaleFactor = newValue / currentScale;
+		} else {
+			newValue = currentScale + 0.1;
+			relativeScaleFactor = newValue / currentScale;
+		}
+		newValue = Math.max(newValue, 0.1);
+
+		arrows.update((polys) => {
+			return polys.map((poly) => {
+				return scaleArrow(poly, relativeScaleFactor);
+			});
+		});
+
+		scale.set(newValue);
+
+		if (!animationFrameId) {
+			animationFrameId = requestAnimationFrame(updateCanvas);
+		}
+	};
 
 	const handleCircleMouseDown = (e: MouseEvent, index: number, end: 'start' | 'end') => {
 		e.stopPropagation();
@@ -142,7 +209,23 @@
 				drawEraserTrail(eraserTrail, context, '#433f3f50', 6);
 				eraseIntersectingArrows();
 			} else if ($CANVASBEHAVIOR === 'isDrawingArrow') {
-				drawArrowhead(startX, startY, clientX, clientY);
+				drawArrow(roughCanvas, strokeWidth, roughness, startX, startY, clientX, clientY);
+			} else if ($CANVASBEHAVIOR === 'isPanning') {
+				const deltaX = clientX - startX;
+				const deltaY = clientY - startY;
+				$arrows = $arrows.map((arrow) => {
+					return {
+						...arrow,
+						startX: arrow.startX + deltaX,
+						startY: arrow.startY + deltaY,
+						endX: arrow.endX + deltaX,
+						endY: arrow.endY + deltaY,
+						midX: arrow.midX + deltaX,
+						midY: arrow.midY + deltaY
+					};
+				});
+				startX = clientX;
+				startY = clientY;
 			}
 		}
 
@@ -252,32 +335,17 @@
 
 	const redrawArrows = () => {
 		for (let arrow of $arrows) {
-			drawArrowhead(arrow.startX, arrow.startY, arrow.endX, arrow.endY);
+			drawArrow(
+				roughCanvas,
+				strokeWidth,
+				roughness,
+				arrow.startX,
+				arrow.startY,
+				arrow.endX,
+				arrow.endY,
+				$scale
+			);
 		}
-	};
-
-	const drawArrowhead = (startX: number, startY: number, endX: number, endY: number) => {
-		const angle = Math.atan2(endY - startY, endX - startX);
-
-		const length = 15; // The length of the arrowhead lines
-		const headAngle = Math.PI / 7; // Angle for the arrowhead. Adjust for sharper/narrower arrowheads
-
-		const x1 = endX - length * Math.cos(angle - headAngle);
-		const y1 = endY - length * Math.sin(angle - headAngle);
-		const x2 = endX - length * Math.cos(angle + headAngle);
-		const y2 = endY - length * Math.sin(angle + headAngle);
-
-		roughCanvas.line(startX, startY, endX, endY, {
-			stroke: 'white',
-			strokeWidth: strokeWidth,
-			roughness: roughness
-		});
-
-		roughCanvas.path(`M ${endX} ${endY} L ${x1} ${y1} M ${endX} ${endY} L ${x2} ${y2}`, {
-			stroke: 'white',
-			strokeWidth: strokeWidth,
-			roughness: roughness
-		});
 	};
 </script>
 
@@ -297,46 +365,48 @@
 	>
 		{#if handlesActivated}
 			{#each $arrows as arrow, i}
-				<circle
-					class="circle-focusable"
-					cx={arrow.startX}
-					cy={arrow.startY}
-					r={hoveredCircleIndex === i && hoveredCircleEnd === 'start' ? '7' : '5'}
-					fill="#26262777"
-					stroke="#9d99dc77"
-					stroke-width="2"
-					on:mousedown={(e) => handleCircleMouseDown(e, i, 'start')}
-					on:mouseover={() => {
-						hoveredCircleIndex = i;
-						hoveredCircleEnd = 'start';
-					}}
-					on:mouseout={() => {
-						hoveredCircleIndex = null;
-						hoveredCircleEnd = null;
-					}}
-					on:focus={() => (isCanvasFocused = true)}
-					on:blur={() => (isCanvasFocused = false)}
-				/>
-				<circle
-					class="circle-focusable"
-					cx={arrow.endX}
-					cy={arrow.endY}
-					r={hoveredCircleIndex === i && hoveredCircleEnd === 'end' ? '7' : '5'}
-					stroke="#9d99dc77"
-					stroke-width="2"
-					fill="#26262777"
-					on:mousedown={(e) => handleCircleMouseDown(e, i, 'end')}
-					on:mouseover={() => {
-						hoveredCircleIndex = i;
-						hoveredCircleEnd = 'end';
-					}}
-					on:mouseout={() => {
-						hoveredCircleIndex = null;
-						hoveredCircleEnd = null;
-					}}
-					on:focus={() => (isCanvasFocused = true)}
-					on:blur={() => (isCanvasFocused = false)}
-				/>
+				{#if arrow}
+					<circle
+						class="circle-focusable"
+						cx={arrow.startX}
+						cy={arrow.startY}
+						r={hoveredCircleIndex === i && hoveredCircleEnd === 'start' ? '7' : '5'}
+						fill="#26262777"
+						stroke="#9d99dc77"
+						stroke-width="2"
+						on:mousedown={(e) => handleCircleMouseDown(e, i, 'start')}
+						on:mouseover={() => {
+							hoveredCircleIndex = i;
+							hoveredCircleEnd = 'start';
+						}}
+						on:mouseout={() => {
+							hoveredCircleIndex = null;
+							hoveredCircleEnd = null;
+						}}
+						on:focus={() => (isCanvasFocused = true)}
+						on:blur={() => (isCanvasFocused = false)}
+					/>
+					<circle
+						class="circle-focusable"
+						cx={arrow.endX}
+						cy={arrow.endY}
+						r={hoveredCircleIndex === i && hoveredCircleEnd === 'end' ? '7' : '5'}
+						stroke="#9d99dc77"
+						stroke-width="2"
+						fill="#26262777"
+						on:mousedown={(e) => handleCircleMouseDown(e, i, 'end')}
+						on:mouseover={() => {
+							hoveredCircleIndex = i;
+							hoveredCircleEnd = 'end';
+						}}
+						on:mouseout={() => {
+							hoveredCircleIndex = null;
+							hoveredCircleEnd = null;
+						}}
+						on:focus={() => (isCanvasFocused = true)}
+						on:blur={() => (isCanvasFocused = false)}
+					/>
+				{/if}
 			{/each}
 		{/if}
 	</svg>
