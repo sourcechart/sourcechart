@@ -40,6 +40,7 @@
 	let offsetX: number = 0;
 	let offsetY: number = 0;
 	let isDrawingShape = false;
+	let initialDistance: number | null = null;
 
 	let hoverIntersection: boolean = false;
 	let handlePosition: HandlePosition;
@@ -61,6 +62,12 @@
 		});
 	}
 
+	function getDistance(touch1: Touch, touch2: Touch): number {
+		const dx = touch1.clientX - touch2.clientX;
+		const dy = touch1.clientY - touch2.clientY;
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+
 	const updateOffset = () => {
 		const rect = canvas.getBoundingClientRect();
 		offsetX = rect.left;
@@ -73,7 +80,9 @@
 
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			responsiveType.set('touch');
-
+			if (window.TouchEvent && e instanceof TouchEvent && e.touches.length === 2) {
+				initialDistance = getDistance(e.touches[0], e.touches[1]);
+			}
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
 		} else if (e instanceof MouseEvent) {
@@ -168,6 +177,7 @@
 	const handleMouseUp = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
 		let y: number;
+		initialDistance = null;
 
 		if (e instanceof MouseEvent) {
 			x = e.clientX;
@@ -208,17 +218,41 @@
 		let y: number;
 
 		if (window.TouchEvent && e instanceof TouchEvent) {
-			x = e.touches[0].clientX;
-			y = e.touches[0].clientY;
-			handleTouchMove(x, y);
+			// Handling touch-based movements
+
+			if (e.touches.length === 2 && initialDistance !== null) {
+				// Handle pinch-to-zoom
+
+				const currentDistance = getDistance(e.touches[0], e.touches[1]);
+				const scaleFactor = currentDistance / initialDistance;
+
+				// Apply the scaling
+				const currentScale = get(scale);
+				scale.set(currentScale * scaleFactor);
+
+				initialDistance = currentDistance;
+				return; // Return after handling zoom to avoid other touch logic
+			} else if (e.touches.length === 1) {
+				// Handle single touch for panning
+
+				x = e.touches[0].clientX;
+				y = e.touches[0].clientY;
+				handleTouchMove(x, y);
+			} else {
+				return;
+			}
 		} else if (e instanceof MouseEvent) {
+			// Handle mouse movements
+
 			x = e.clientX;
 			y = e.clientY;
 		} else {
 			return;
 		}
+
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
+
 		if ($CANVASBEHAVIOR === 'isHovering') {
 			handleMove(x, y);
 		} else {
