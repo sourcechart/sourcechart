@@ -340,7 +340,6 @@
 	const handlePan = (x: number, y: number): void => {
 		const deltaX = x - currentMousePosition.x;
 		const deltaY = y - currentMousePosition.y;
-		console.log(deltaX, deltaY);
 
 		polygons.update((polys) => {
 			return polys.map((poly) => {
