@@ -105,73 +105,75 @@
 <div
 	class="flex justify-center items-center rounded-md shadow-lg h-12 bg-neutral-800 p-1 border border-1 border-neutral-700/70"
 >
-	<div class="divide-neutral-700 flex items-center justify-between space-x-2">
-		<div
-			on:click={() => setMode('pan', 0)}
-			on:mouseover={() => startHover(0)}
-			on:mouseout={endHover}
-			on:touchstart={() => startLongPress(0)}
-			on:touchend={endLongPress}
-			on:keypress={null}
-			on:blur={null}
-			on:focus={null}
-			class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
-				activeIndex === 0 ? 'fill-blue-500 ' : ''
-			} ${
-				$responsiveType !== 'touch' || isPressed
-					? 'hover:text-neutral-700/90 hover:bg-neutral-500'
-					: ''
-			}`}
-		>
-			<HandGrab
-				class="w-5 h-5 ml-1  text-neutral-400 hover:text-neutral-200 active:text-neutral-50"
-			/>
-			<div class="bottom-0 right-0 mt-4">
-				<span class="text-xs text-neutral-500">0</span>
+	<div class="divide-neutral-700 divide-x space-x-2 flex justify-between">
+		<div class="flex items-center justify-items-center space-x-3">
+			<div
+				on:click={() => setMode('pan', 0)}
+				on:mouseover={() => startHover(0)}
+				on:mouseout={endHover}
+				on:touchstart={() => startLongPress(0)}
+				on:touchend={endLongPress}
+				on:keypress={null}
+				on:blur={null}
+				on:focus={null}
+				class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
+					activeIndex === 0
+						? 'bg-[#6f6599]'
+						: $responsiveType !== 'touch' || isPressed
+						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
+						: ''
+				}`}
+			>
+				<HandGrab
+					class="w-5 h-5 ml-1  text-neutral-400 hover:text-neutral-200 active:text-neutral-50"
+				/>
+				<div class="bottom-0 right-0 mt-4">
+					<span class="text-xs text-neutral-500">0</span>
+				</div>
+
+				{#if showTooltip[0] && (clickedIndex !== 0 || $responsiveType !== 'touch')}
+					<div
+						role="tooltip"
+						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
+					>
+						Select Items
+					</div>
+				{/if}
 			</div>
 
-			{#if showTooltip[0] && (clickedIndex !== 0 || $responsiveType !== 'touch')}
-				<div
-					role="tooltip"
-					class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
-				>
-					Select Items
+			<div
+				on:click={() => setMode('select', 1)}
+				on:mouseover={() => startHover(1)}
+				on:mouseout={endHover}
+				on:touchstart={() => startLongPress(1)}
+				on:touchend={endLongPress}
+				on:keypress={null}
+				on:blur={null}
+				on:focus={null}
+				class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
+					activeIndex === 1
+						? 'bg-[#6f6599]'
+						: $responsiveType !== 'touch' || isPressed
+						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
+						: ''
+				}`}
+			>
+				<Cursor
+					class="w-5 ml-1  h-5 text-neutral-400 hover:text-neutral-200 active:text-neutral-50"
+				/>
+				<div class="bottom-0 right-0 mt-4">
+					<span class="text-xs text-neutral-500">1</span>
 				</div>
-			{/if}
-		</div>
 
-		<div
-			on:click={() => setMode('select', 1)}
-			on:mouseover={() => startHover(1)}
-			on:mouseout={endHover}
-			on:touchstart={() => startLongPress(1)}
-			on:touchend={endLongPress}
-			on:keypress={null}
-			on:blur={null}
-			on:focus={null}
-			class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
-				activeIndex === 1
-					? 'bg-[#6f6599]'
-					: $responsiveType !== 'touch' || isPressed
-					? 'hover:text-neutral-700/90 hover:bg-neutral-500'
-					: ''
-			}`}
-		>
-			<Cursor
-				class="w-5 ml-1  h-5 text-neutral-400 hover:text-neutral-200 active:text-neutral-50"
-			/>
-			<div class="bottom-0 right-0 mt-4">
-				<span class="text-xs text-neutral-500">1</span>
+				{#if showTooltip[1] && (clickedIndex !== 1 || $responsiveType !== 'touch')}
+					<div
+						role="tooltip"
+						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
+					>
+						Select Items
+					</div>
+				{/if}
 			</div>
-
-			{#if showTooltip[1] && (clickedIndex !== 1 || $responsiveType !== 'touch')}
-				<div
-					role="tooltip"
-					class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
-				>
-					Select Items
-				</div>
-			{/if}
 		</div>
 
 		<div class="flex items-center justify-items-center space-x-3">
@@ -186,7 +188,7 @@
 				on:focus={null}
 				class={`flex items-center w-8 h-8 justify-center mx-1 rounded-md overflow-hidden ${
 					activeIndex === 2
-						? 'bg-[#6f6599] fill-blue-400'
+						? 'bg-[#6f6599] '
 						: $responsiveType !== 'touch' || isPressed
 						? 'hover:text-neutral-700/90 hover:bg-neutral-500'
 						: ''
