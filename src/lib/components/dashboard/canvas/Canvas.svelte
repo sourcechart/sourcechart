@@ -28,6 +28,7 @@
 	let height: number = 0;
 	let newPolygon: Polygon[] = [];
 	let touchStartedOnHandle = false;
+	let initialDistance: number | null = null;
 
 	let eraserTrail: Point[] = [];
 
@@ -70,7 +71,9 @@
 	const handleMouseDown = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
 		let y: number;
-
+		if (window.TouchEvent && e instanceof TouchEvent && e.touches.length === 2) {
+			initialDistance = getDistance(e.touches[0], e.touches[1]);
+		}
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			responsiveType.set('touch');
 
@@ -203,22 +206,51 @@
 		navBarState.set('select');
 	};
 
+	function getDistance(touch1: Touch, touch2: Touch): number {
+		const dx = touch1.clientX - touch2.clientX;
+		const dy = touch1.clientY - touch2.clientY;
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+
 	const handleMouseMove = (e: MouseEvent | TouchEvent): void => {
 		let x: number;
 		let y: number;
 
+		// For two-finger zooming on touch devices
+		if (
+			window.TouchEvent &&
+			e instanceof TouchEvent &&
+			e.touches.length === 2 &&
+			initialDistance !== null
+		) {
+			const currentDistance = getDistance(e.touches[0], e.touches[1]);
+			const scaleFactor = currentDistance / initialDistance;
+
+			const currentScale = get(scale);
+			scale.set(currentScale * scaleFactor);
+
+			initialDistance = currentDistance;
+			return; // We return early after handling zooming.
+		}
+
 		if (window.TouchEvent && e instanceof TouchEvent) {
 			x = e.touches[0].clientX;
 			y = e.touches[0].clientY;
-			handleTouchMove(x, y);
+
+			// Decide the action based on the touch state
+			if ($touchState !== 'isPanning') {
+				handleTouchMove(x, y);
+			}
 		} else if (e instanceof MouseEvent) {
 			x = e.clientX;
 			y = e.clientY;
 		} else {
 			return;
 		}
+
 		x = x - offsetX + scrollX;
 		y = y - offsetY + scrollY;
+
 		if ($CANVASBEHAVIOR === 'isHovering') {
 			handleMove(x, y);
 		} else {
@@ -227,17 +259,15 @@
 	};
 
 	const handleTouchMove = (x: number, y: number): void => {
-		currentMousePosition = { x: x, y: y };
 		let hoverPolygon = null;
-
 		let direction: string;
 		$polygons.find((polygon) => {
 			let insidePolygon =
-				PolyOps.isPointInPolygon(currentMousePosition, polygon) && $navBarState == 'select';
+				PolyOps.isPointInPolygon({ x: x, y: y }, polygon) && $navBarState == 'select';
 			hoverIntersection = insidePolygon ? true : false;
 			if (insidePolygon && touchStartedOnHandle) {
 				hoverPolygon = polygon;
-				handlePosition = PolyOps.getHandlesHovered(currentMousePosition, polygon, true);
+				handlePosition = PolyOps.getHandlesHovered({ x, y }, polygon, true);
 				direction = PolyOps.getCursorStyleFromDirection(handlePosition);
 				touchType.set(direction);
 				if (handlePosition) return true;
@@ -326,7 +356,6 @@
 		});
 
 		currentMousePosition = { x, y };
-		panAmount.set({ x: deltaX, y: deltaY });
 	};
 
 	const handleMouseMoveDown = (x: number, y: number): void => {
