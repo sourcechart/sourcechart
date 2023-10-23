@@ -1,7 +1,6 @@
 <script lang="ts">
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
-	import Canvas from '$lib/components/dashboard/canvas/Canvas.svelte';
-	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
+	//import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 
 	import Safety from '$lib/components/dashboard/buttons/Safety.svelte';
@@ -40,19 +39,16 @@
 	};
 </script>
 
-<div class="w-screen h-screen overflow-hidden bg-neutral-900 }">
+<div class="w-screen h-screen overflow-hidden bg-neutral-900">
 	<div class="flex justify-center items-center fixed top-4 left-1/2 -translate-x-1/2 z-10">
 		<NavBar />
 	</div>
 
 	<div class="absolute z-10 ml-6 mt-6">
-		<Sidebar />
 		<ToggleSidebar />
 	</div>
 
-	<div class="relative z-0 w-screen h-screen">
-		<Canvas />
-	</div>
+	<div class="relative z-0 w-screen h-screen" />
 
 	{#if $activeDropZone}
 		<div class="z-20 fixed inset-0 bg-black/60" />

@@ -4,6 +4,7 @@
 	"license": "internal",
 	"private": true,
 	"scripts": {
+		"prepare": "svelte-kit sync",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
@@ -17,13 +18,11 @@
 	"devDependencies": {
 		"@duckdb/duckdb-wasm": "^1.24.0",
 		"@playwright/test": "^1.28.1",
-		"@popperjs/core": "^2.11.6",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.5.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"autoprefixer": "^10.4.14",
-		"echarts": "^5.4.1",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
@@ -45,12 +44,10 @@
 	"type": "module",
 	"dependencies": {
 		"@supabase/auth-helpers-sveltekit": "^0.10.2",
-		"@supabase/auth-ui-shared": "^0.1.6",
-		"@supabase/auth-ui-svelte": "^0.2.2",
-		"@supabase/supabase-js": "^2.32.0",
+		"@deck.gl/core": "^8.9.22",
+		"@deck.gl/layers": "^8.9.22",
 		"@vercel/analytics": "^1.0.1",
 		"dayjs": "^1.11.9",
-		"echarts-stat": "^1.2.0",
 		"idb-keyval": "^6.2.1"
 	}
 }

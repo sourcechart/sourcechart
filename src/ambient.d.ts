@@ -205,3 +205,5 @@ interface Shapes {
 	Rectangle: Rectangle;
 	Arrow: Arrow;
 }
+
+declare module '@deck.gl/core';
