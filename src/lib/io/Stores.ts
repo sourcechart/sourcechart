@@ -47,7 +47,7 @@ export const panAmount = writable<{ x: number; y: number }>(
 );
 
 export const deckGL = writable<any>(null);
-
+export const layers = writable<any[]>([]);
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
 		const fObject = $fileUploadStore.find(

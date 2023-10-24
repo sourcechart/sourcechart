@@ -4,7 +4,6 @@
 	import XColumnDropdown from './sidebar-components/XColumnDropdown.svelte';
 	import YColumnDropdown from './sidebar-components/YColumnDropdown.svelte';
 	import Groupby from './sidebar-components/Groupby.svelte';
-	import ChartDropdown from './sidebar-components/ChartDropdown.svelte';
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
 	import {
@@ -16,7 +15,7 @@
 	} from '$lib/io/Stores';
 
 	import { onMount } from 'svelte';
-	import AddLayer from './sidebar-components/AddLayer.svelte';
+	import ChooseLayer from './sidebar-components/ChooseLayer.svelte';
 
 	$: i = clickedChartIndex();
 	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
@@ -129,7 +128,7 @@
 						<button class="w-full">
 							<div class="flex justify-between items-center">
 								<span class="text-sm font-light text-neutral-300">Layers</span>
-								<AddLayer />
+								<ChooseLayer />
 							</div>
 						</button>
 					</div>
