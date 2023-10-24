@@ -152,6 +152,7 @@
 
 	function selectLayer(layerName: string) {
 		currentLayer = layerName;
+		isDropdownOpen = false;
 		switch (layerName) {
 			case 'TextLayer':
 				addTextLayer();
