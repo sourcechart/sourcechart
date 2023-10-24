@@ -7,9 +7,8 @@
 		TextLayer,
 		ScatterplotLayer,
 		IconLayer
-		//TripsLayer
 	} from '@deck.gl/layers';
-	import { TripsLayer } from '@deck.gl/geo-layers';
+	import { TripsLayer, H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { generateID } from '$lib/io/GenerateID';
 	import { layers } from '$lib/io/Stores';
 
@@ -40,6 +39,10 @@
 		{
 			name: 'TripsLayer',
 			component: TripsLayer
+		},
+		{
+			name: 'H3',
+			component: H3HexagonLayer
 		}
 	];
 
@@ -127,26 +130,8 @@
 			//@ts-ignore
 
 			getTargetColor: (d) => [Math.sqrt(d.outbound), 140, 0],
-			//@ts-ignore
-
 			getTargetPosition: (d) => d.to.coordinates,
-			// getTilt: 0,
 			getWidth: 12,
-			// greatCircle: false,
-			// numSegments: 50,
-			// widthMaxPixels: Number.MAX_SAFE_INTEGER,
-			// widthMinPixels: 0,
-			// widthScale: 1,
-			// widthUnits: 'pixels',
-
-			/* props inherited from Layer class */
-
-			// autoHighlight: false,
-			// coordinateOrigin: [0, 0, 0],
-			// coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
-			// highlightColor: [0, 0, 128, 128],
-			// modelMatrix: null,
-			// opacity: 1,
 			pickable: true
 		});
 		layers.update((layers) => [...layers, newLayer]);
@@ -155,12 +140,41 @@
 	function addTripLayer() {
 		const newLayer = new ArcLayer({
 			id: generateID(),
-			stroked: true,
-			filled: true,
-			lineWidthMinPixels: 2,
-			opacity: 0.4,
-			getLineColor: [60, 60, 60],
-			getFillColor: [200, 200, 200]
+			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.trips.json',
+
+			/* props from TripsLayer class */
+
+			currentTime: 500,
+			// fadeTrail: true,
+			getTimestamps: (d) => d.waypoints.map((p) => p.timestamp - 1554772579000),
+			trailLength: 600,
+
+			/* props inherited from PathLayer class */
+
+			// billboard: false,
+			capRounded: true,
+			getColor: [253, 128, 93],
+			getPath: (d) => d.waypoints.map((p) => p.coordinates),
+			// getWidth: 1,
+			jointRounded: true,
+			// miterLimit: 4,
+			// rounded: true,
+			// widthMaxPixels: Number.MAX_SAFE_INTEGER,
+			widthMinPixels: 8,
+			// widthScale: 1,
+			// widthUnits: 'meters',
+
+			/* props inherited from Layer class */
+
+			// autoHighlight: false,
+			// coordinateOrigin: [0, 0, 0],
+			// coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
+			// highlightColor: [0, 0, 128, 128],
+			// modelMatrix: null,
+			opacity: 0.8
+			// pickable: false,
+			// visible: true,
+			// wrapLongitude: false,
 		});
 		layers.update((layers) => [...layers, newLayer]);
 	}
@@ -212,6 +226,54 @@
 		});
 
 		layers.update((layers) => [...layers, newLayer]);
+	}
+
+	function addH3Layer() {
+		const layer = new H3HexagonLayer({
+			id: 'H3HexagonLayer',
+			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.h3cells.json',
+
+			/* props from H3HexagonLayer class */
+
+			// centerHexagon: null,
+			// coverage: 1,
+			elevationScale: 20,
+			extruded: true,
+			filled: true,
+
+			//@ts-ignore
+			getElevation: (d) => d.count,
+			//@ts-ignore
+			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0],
+			//@ts-ignore
+			getHexagon: (d) => d.hex,
+			// getLineColor: [0, 0, 0, 255],
+			// getLineWidth: 1,
+			// highPrecision: 'auto',
+			// lineJointRounded: false,
+			// lineMiterLimit: 4,
+			// lineWidthMaxPixels: Number.MAX_SAFE_INTEGER,
+			// lineWidthMinPixels: 0,
+			// lineWidthScale: 1,
+			// lineWidthUnits: 'meters',
+			// material: true,
+			// stroked: true,
+			wireframe: false,
+
+			/* props inherited from Layer class */
+
+			// autoHighlight: false,
+			// coordinateOrigin: [0, 0, 0],
+			// coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
+			// highlightColor: [0, 0, 128, 128],
+			// modelMatrix: null,
+			// opacity: 1,
+			pickable: true
+			// visible: true,
+			// wrapLongitude: false,
+		});
+
+		layers.update((layers) => [...layers, layer]);
 	}
 
 	function addPathLayer() {
@@ -371,8 +433,13 @@
 			case 'LineLayer':
 				addLineLayer();
 				break;
+
 			case 'ScatterplotLayer':
 				addScatterplotLayer();
+				break;
+
+			case 'H3':
+				addH3Layer();
 				break;
 
 			default:

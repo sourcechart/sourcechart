@@ -43,6 +43,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@deck.gl/aggregation-layers": "^8.9.32",
     "@deck.gl/core": "^8.9.22",
     "@deck.gl/extensions": "^8.9.31",
     "@deck.gl/geo-layers": "^8.9.32",
