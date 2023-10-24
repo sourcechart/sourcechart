@@ -1,35 +1,38 @@
 <script>
-	import { TripsLayer } from '@deck.gl/geo-layers';
+	import { H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { layers } from '$lib/io/Stores';
-	function addTripsLayer() {
-		const layer = new TripsLayer({
-			id: 'TripsLayer',
-			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.trips.json',
 
-			/* props from TripsLayer class */
+	function addH3Layer() {
+		const layer = new H3HexagonLayer({
+			id: 'H3HexagonLayer',
+			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.h3cells.json',
 
-			currentTime: 500,
-			// fadeTrail: true,
+			/* props from H3HexagonLayer class */
+
+			// centerHexagon: null,
+			// coverage: 1,
+			elevationScale: 20,
+			extruded: true,
+			filled: true,
+
 			//@ts-ignore
-			getTimestamps: (d) => d.waypoints.map((p) => p.timestamp - 1554772579000),
-			trailLength: 600,
-
-			/* props inherited from PathLayer class */
-
-			// billboard: false,
-			capRounded: true,
-			getColor: [253, 128, 93],
+			getElevation: (d) => d.count,
 			//@ts-ignore
-
-			getPath: (d) => d.waypoints.map((p) => p.coordinates),
-			// getWidth: 1,
-			jointRounded: true,
-			// miterLimit: 4,
-			// rounded: true,
-			// widthMaxPixels: Number.MAX_SAFE_INTEGER,
-			widthMinPixels: 8,
-			// widthScale: 1,
-			// widthUnits: 'meters',
+			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0],
+			//@ts-ignore
+			getHexagon: (d) => d.hex,
+			// getLineColor: [0, 0, 0, 255],
+			// getLineWidth: 1,
+			// highPrecision: 'auto',
+			// lineJointRounded: false,
+			// lineMiterLimit: 4,
+			// lineWidthMaxPixels: Number.MAX_SAFE_INTEGER,
+			// lineWidthMinPixels: 0,
+			// lineWidthScale: 1,
+			// lineWidthUnits: 'meters',
+			// material: true,
+			// stroked: true,
+			wireframe: false,
 
 			/* props inherited from Layer class */
 
@@ -38,11 +41,12 @@
 			// coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
 			// highlightColor: [0, 0, 128, 128],
 			// modelMatrix: null,
-			opacity: 0.8
-			// pickable: false,
+			// opacity: 1,
+			pickable: true
 			// visible: true,
 			// wrapLongitude: false,
 		});
+
 		layers.update((layers) => [...layers, layer]);
 	}
 </script>
