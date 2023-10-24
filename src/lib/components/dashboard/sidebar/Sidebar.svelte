@@ -16,6 +16,7 @@
 	} from '$lib/io/Stores';
 
 	import { onMount } from 'svelte';
+	import AddLayer from './sidebar-components/AddLayer.svelte';
 
 	$: i = clickedChartIndex();
 	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
@@ -123,11 +124,12 @@
 					-->
 
 					<!--Options-->
+
 					<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
 						<button class="w-full">
 							<div class="flex justify-between items-center">
-								<span class="text-sm font-light text-neutral-300">Style</span>
-								<ChartDropdown />
+								<span class="text-sm font-light text-neutral-300">Layers</span>
+								<AddLayer />
 							</div>
 						</button>
 					</div>

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
-	//import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
+	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
 
+	import DeckGl from '$lib/components/dashboard/deckgl/DeckGL.svelte';
 	import Safety from '$lib/components/dashboard/buttons/Safety.svelte';
 	import Help from '$lib/components/dashboard/buttons/Help.svelte';
-	import ZoomButton from '$lib/components/dashboard/buttons/ZoomButton.svelte';
 	import ToggleSidebar from '$lib/components/dashboard/sidebar/ToggleSidebar.svelte';
 
 	import { onMount } from 'svelte';
@@ -39,39 +39,36 @@
 	};
 </script>
 
-<div class="w-screen h-screen overflow-hidden bg-neutral-900">
-	<div class="flex justify-center items-center fixed top-4 left-1/2 -translate-x-1/2 z-10">
-		<NavBar />
-	</div>
-
-	<div class="absolute z-10 ml-6 mt-6">
-		<ToggleSidebar />
-	</div>
-
-	<div class="relative z-0 w-screen h-screen" />
-
-	{#if $activeDropZone}
-		<div class="z-20 fixed inset-0 bg-black/60" />
-
-		<div class="z-30 fixed inset-0 flex justify-center items-center w-screen h-screen">
-			<FileUploadPanel activeTabValue={$tabValue} />
-		</div>
-	{/if}
-
-	<footer>
-		<div class="fixed bottom-4 left-6">
-			<ZoomButton />
-		</div>
-
-		<div class="fixed bottom-4 right-20">
-			<Safety />
-		</div>
-
-		<div class="fixed bottom-4 right-4">
-			<Help />
-		</div>
-	</footer>
+<div class="flex justify-center items-center fixed top-4 left-1/2 -translate-x-1/2 z-10">
+	<NavBar />
 </div>
+
+<div class="absolute z-10 ml-6 mt-6">
+	<Sidebar />
+	<ToggleSidebar />
+</div>
+
+<div class="fixed z-0 w-screen h-screen">
+	<DeckGl />
+</div>
+
+{#if $activeDropZone}
+	<div class="z-10 fixed inset-0 bg-black/60" />
+
+	<div class="z-10 fixed inset-0 flex justify-center items-center w-screen h-screen">
+		<FileUploadPanel activeTabValue={$tabValue} />
+	</div>
+{/if}
+
+<footer>
+	<div class="fixed z-30 bottom-4 right-20">
+		<Safety />
+	</div>
+
+	<div class="fixed z-30 bottom-4 right-4">
+		<Help />
+	</div>
+</footer>
 <svelte:window
 	on:resize={() => {
 		if (typeof window !== undefined) {

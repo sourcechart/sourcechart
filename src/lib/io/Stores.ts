@@ -46,6 +46,8 @@ export const panAmount = writable<{ x: number; y: number }>(
 	storeFromLocalStorage('panAmount', { x: 0, y: 0 })
 );
 
+export const deckGL = writable<any>(null);
+
 export const getFileFromStore = () =>
 	derived([fileUploadStore, chosenFile], ([$fileUploadStore, $chosenFile]) => {
 		const fObject = $fileUploadStore.find(
