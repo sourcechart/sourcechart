@@ -6,12 +6,11 @@
 		PathLayer,
 		LineLayer,
 		TextLayer,
+		ScatterplotLayer,
 		IconLayer
 	} from '@deck.gl/layers';
-
+	import { generateID } from '$lib/io/GenerateID';
 	import { layers } from '$lib/io/Stores';
-
-	$: console.log($layers);
 
 	let currentLayer: string = 'Select Layer';
 	let deckGlLayers = [
@@ -42,12 +41,16 @@
 		{
 			name: 'IconLayer',
 			component: IconLayer
+		},
+		{
+			name: 'ScatterplotLayer',
+			component: ScatterplotLayer
 		}
 	];
 
 	function addTextLayer() {
 		const newLayer = new TextLayer({
-			id: 'base-map',
+			id: generateID(),
 			stroked: true,
 			filled: true,
 			lineWidthMinPixels: 2,
@@ -60,7 +63,7 @@
 
 	function addIconLayer() {
 		const newLayer = new IconLayer({
-			id: 'base-map',
+			id: generateID(),
 			stroked: true,
 			filled: true,
 			lineWidthMinPixels: 2,
@@ -73,7 +76,7 @@
 
 	function addArcLayer() {
 		const newLayer = new ArcLayer({
-			id: 'base-map',
+			id: generateID(),
 			stroked: true,
 			filled: true,
 			lineWidthMinPixels: 2,
@@ -86,7 +89,7 @@
 
 	function addTripLayer() {
 		const newLayer = new ArcLayer({
-			id: 'base-map',
+			id: generateID(),
 			stroked: true,
 			filled: true,
 			lineWidthMinPixels: 2,
@@ -99,7 +102,7 @@
 
 	function addPolygonLayer() {
 		const newLayer = new PolygonLayer({
-			id: 'base-map',
+			id: generateID(),
 			stroked: true,
 			filled: true,
 			lineWidthMinPixels: 2,
@@ -113,7 +116,7 @@
 
 	function addPointCloudLayer() {
 		const newLayer = new PointCloudLayer({
-			id: 'base-map',
+			id: generateID(),
 			stroked: true,
 			filled: true,
 			lineWidthMinPixels: 2,
@@ -126,7 +129,8 @@
 
 	function addPathLayer() {
 		const newLayer = new PathLayer({
-			id: 'base-map',
+			id: generateID(),
+
 			stroked: true,
 			filled: true,
 			lineWidthMinPixels: 2,
@@ -139,13 +143,23 @@
 
 	function addLineLayer() {
 		const newLayer = new LineLayer({
-			id: 'base-map',
+			id: generateID(),
 			stroked: true,
 			filled: true,
 			lineWidthMinPixels: 2,
 			opacity: 0.4,
 			getLineColor: [60, 60, 60],
 			getFillColor: [200, 200, 200]
+		});
+		layers.update((layers) => [...layers, newLayer]);
+	}
+
+	function addScatterplotLayer() {
+		const newLayer = new ScatterplotLayer({
+			data: [{ position: [-122.45, 37.8], color: [255, 0, 0], radius: 1000 }], // @ts-ignore
+			getFillColor: (d) => d.color, // @ts-ignore
+			getRadius: (d) => d.radius, // @ts-ignore
+			id: generateID()
 		});
 		layers.update((layers) => [...layers, newLayer]);
 	}
@@ -157,26 +171,36 @@
 			case 'TextLayer':
 				addTextLayer();
 				break;
+
 			case 'IconLayer':
 				addIconLayer();
 				break;
+
 			case 'ArcLayer':
 				addArcLayer();
 				break;
+
 			case 'TripLayer':
 				addTripLayer();
 				break;
+
 			case 'PolygonLayer':
 				addPolygonLayer();
 				break;
+
 			case 'PointCloudLayer':
 				addPointCloudLayer();
 				break;
+
 			case 'PathLayer':
 				addPathLayer();
 				break;
+
 			case 'LineLayer':
 				addLineLayer();
+				break;
+			case 'ScatterplotLayer':
+				addScatterplotLayer();
 				break;
 
 			default:
