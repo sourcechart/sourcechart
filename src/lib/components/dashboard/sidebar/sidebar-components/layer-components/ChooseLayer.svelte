@@ -4,20 +4,13 @@
 		PolygonLayer,
 		PointCloudLayer,
 		PathLayer,
-		ScatterPlotLayer,
 		LineLayer,
 		TextLayer,
 		IconLayer,
-		GeoJsonLayer,
-		GridLayer,
-		HexagonLayer
+		GeoJsonLayer
 	} from '@deck.gl/layers';
 
 	let layers = [
-		{
-			name: 'HexagonLayer',
-			component: HexagonLayer
-		},
 		{
 			name: 'PolygonLayer',
 			component: PolygonLayer
@@ -49,14 +42,6 @@
 		{
 			name: 'GeoJsonLayer',
 			component: GeoJsonLayer
-		},
-		{
-			name: 'GridLayer',
-			component: GridLayer
-		},
-		{
-			name: 'ScatterPlotLayer',
-			component: ScatterPlotLayer
 		}
 	];
 
@@ -83,7 +68,7 @@
 				class="w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300"
 				on:click={() => {}}
 			>
-				{layer}
+				{layer.name}
 			</button>
 		{/each}
 	</div>

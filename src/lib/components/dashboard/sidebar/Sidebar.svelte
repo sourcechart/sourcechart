@@ -6,6 +6,8 @@
 	import Groupby from './sidebar-components/Groupby.svelte';
 	import AddFilter from './sidebar-components/AddFilter.svelte';
 	import ExportToCSV from './sidebar-components/ExportToCSV.svelte';
+	import AddLayer from './sidebar-components/AddLayer.svelte';
+
 	import {
 		activeSidebar,
 		clickedChartIndex,
@@ -15,7 +17,6 @@
 	} from '$lib/io/Stores';
 
 	import { onMount } from 'svelte';
-	import ChooseLayer from './sidebar-components/ChooseLayer.svelte';
 
 	$: i = clickedChartIndex();
 	$: filterColumns = $allCharts[$i]?.filterColumns ? $allCharts[$i].filterColumns : [];
@@ -125,12 +126,7 @@
 					<!--Options-->
 
 					<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
-						<button class="w-full">
-							<div class="flex justify-between items-center">
-								<span class="text-sm font-light text-neutral-300">Layers</span>
-								<ChooseLayer />
-							</div>
-						</button>
+						<AddLayer />
 					</div>
 
 					<!--Export-->
