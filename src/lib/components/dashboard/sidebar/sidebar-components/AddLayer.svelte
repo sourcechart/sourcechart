@@ -1,6 +1,5 @@
 <script lang="ts">
 	import ChooseLayer from './layer-components/ChooseLayer.svelte';
-	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 
 	let counter = 0;
 	let layers: any[] = [];
