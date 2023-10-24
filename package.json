@@ -45,6 +45,7 @@
   "dependencies": {
     "@deck.gl/core": "^8.9.22",
     "@deck.gl/extensions": "^8.9.31",
+    "@deck.gl/geo-layers": "^8.9.32",
     "@deck.gl/layers": "^8.9.22",
     "@supabase/auth-helpers-sveltekit": "^0.10.2",
     "@vercel/analytics": "^1.0.1",
