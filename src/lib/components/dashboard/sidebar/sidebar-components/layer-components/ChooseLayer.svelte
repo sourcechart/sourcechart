@@ -5,6 +5,12 @@
 	import PathLayer from './PathLayer.svelte';
 	import ScatterplotLayer from './ScatterplotLayer.svelte';
 	import { TripsLayer, H3HexagonLayer } from '@deck.gl/geo-layers';
+	import { layers } from '$lib/io/Stores';
+	import { createEventDispatcher } from 'svelte';
+	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
+	const dispatch = createEventDispatcher();
+
+	export let id: string;
 
 	let currentLayer: string = 'Select Layer';
 	let deckGlLayers = [
@@ -50,14 +56,32 @@
 	function toggleDropdown() {
 		isDropdownOpen = !isDropdownOpen;
 	}
+
+	function removeLayer() {
+		deckGlLayers = deckGlLayers.filter((layer) => layer.name !== currentLayer);
+		currentLayer = 'Select Layer';
+		dispatch('closeLayer', id); // Emitting a custom event with the layer's ID.
+	}
 </script>
 
-<button
-	class="w-full py-1 ml-2 rounded-sm bg-neutral-900 hover:bg-neutral-900/50 text-sm font-thin text-gray-100"
-	on:click={toggleDropdown}
->
-	{currentLayer}
-</button>
+<div {id}>
+	<button
+		class="w-full py-1 rounded-sm bg-neutral-900 hover:bg-neutral-900/50 text-sm font-thin text-gray-100 flex justify-between items-center"
+		on:click={toggleDropdown}
+	>
+		<span class="ml-2">{currentLayer}</span>
+		<button
+			class="p-0"
+			on:click={(e) => {
+				removeLayer();
+				e.stopPropagation();
+			}}
+		>
+			<CloseSolid class="w-5 h-5 text-gray-300 hover:text-gray-100" />
+		</button>
+	</button>
+</div>
+
 <div>
 	{#if isDropdownOpen}
 		<div

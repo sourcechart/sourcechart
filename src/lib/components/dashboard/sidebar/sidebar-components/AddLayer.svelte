@@ -8,6 +8,11 @@
 		counter += 1;
 		layers = [...layers, { component: ChooseLayer, id: counter }];
 	};
+
+	function handleLayerClosed(event: CustomEvent) {
+		const layerIdToRemove = event.detail;
+		layers = layers.filter((layer) => layer.id !== layerIdToRemove);
+	}
 </script>
 
 <div class="w-full">
@@ -20,7 +25,11 @@
 		<div class="flex flex-col mt-4">
 			{#each layers as layer}
 				<div class="block mb-3">
-					<svelte:component this={layer.component} />
+					<svelte:component
+						this={layer.component}
+						id={layer.id}
+						on:closeLayer={handleLayerClosed}
+					/>
 				</div>
 			{/each}
 		</div>
