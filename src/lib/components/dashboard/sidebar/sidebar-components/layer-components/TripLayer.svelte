@@ -1,48 +1,73 @@
 <script>
 	import { TripsLayer } from '@deck.gl/geo-layers';
 	import { layers } from '$lib/io/Stores';
-	function addTripsLayer() {
+
+	let currentTime = 500;
+	let trailLength = 600;
+	let capRounded = true;
+	let color = [253, 128, 93];
+	let widthMinPixels = 8;
+	let opacity = 0.8;
+
+	$: {
 		const layer = new TripsLayer({
 			id: 'TripsLayer',
 			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.trips.json',
 
 			/* props from TripsLayer class */
-
-			currentTime: 500,
-			// fadeTrail: true,
-			//@ts-ignore
+			currentTime: currentTime, // @ts-ignore
 			getTimestamps: (d) => d.waypoints.map((p) => p.timestamp - 1554772579000),
-			trailLength: 600,
+			trailLength: trailLength,
 
 			/* props inherited from PathLayer class */
-
-			// billboard: false,
-			capRounded: true,
-			getColor: [253, 128, 93],
-			//@ts-ignore
-
+			capRounded: capRounded,
+			getColor: color, // @ts-ignore
 			getPath: (d) => d.waypoints.map((p) => p.coordinates),
-			// getWidth: 1,
 			jointRounded: true,
-			// miterLimit: 4,
-			// rounded: true,
-			// widthMaxPixels: Number.MAX_SAFE_INTEGER,
-			widthMinPixels: 8,
-			// widthScale: 1,
-			// widthUnits: 'meters',
-
-			/* props inherited from Layer class */
-
-			// autoHighlight: false,
-			// coordinateOrigin: [0, 0, 0],
-			// coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
-			// highlightColor: [0, 0, 128, 128],
-			// modelMatrix: null,
-			opacity: 0.8
-			// pickable: false,
-			// visible: true,
-			// wrapLongitude: false,
+			widthMinPixels: widthMinPixels,
+			opacity: opacity
 		});
-		layers.update((layers) => [...layers, layer]);
+
+		layers.update((currentLayers) => {
+			// Remove the old TripsLayer (if it exists with the same id)
+			let updatedLayers = currentLayers.filter((layer) => layer.id !== 'TripsLayer');
+
+			// Add the new TripsLayer
+			updatedLayers.push(layer);
+
+			return updatedLayers;
+		});
 	}
 </script>
+
+<div>Trips Layer</div>
+
+<!-- Input controls to modify properties of the TripsLayer -->
+<div>
+	<input
+		type="range"
+		bind:value={currentTime}
+		min="0"
+		max="1000"
+		step="10"
+		title="Change Current Time"
+	/>
+	<input
+		type="range"
+		bind:value={trailLength}
+		min="100"
+		max="1000"
+		step="10"
+		title="Change Trail Length"
+	/>
+	<input type="color" bind:value={color} title="Change Color" />
+	<input
+		type="range"
+		bind:value={widthMinPixels}
+		min="1"
+		max="20"
+		step="0.5"
+		title="Change Width Min Pixels"
+	/>
+	<input type="range" bind:value={opacity} min="0" max="1" step="0.1" title="Change Opacity" />
+</div>

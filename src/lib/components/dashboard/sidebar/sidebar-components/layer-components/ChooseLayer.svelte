@@ -43,50 +43,6 @@
 	function selectLayer(layerName: string) {
 		currentLayer = layerName;
 		isDropdownOpen = false;
-		switch (layerName) {
-			case 'TextLayer':
-				addTextLayer();
-				break;
-
-			case 'IconLayer':
-				addIconLayer();
-				break;
-
-			case 'ArcLayer':
-				addArcLayer();
-				break;
-
-			case 'TripLayer':
-				addTripLayer();
-				break;
-
-			case 'PolygonLayer':
-				addPolygonLayer();
-				break;
-
-			case 'TripsLayer':
-				addTripsLayer();
-				break;
-
-			case 'PathLayer':
-				addPathLayer();
-				break;
-
-			case 'LineLayer':
-				addLineLayer();
-				break;
-
-			case 'ScatterplotLayer':
-				addScatterplotLayer();
-				break;
-
-			case 'H3':
-				addH3Layer();
-				break;
-
-			default:
-				console.error('Unknown layer type:', layerName);
-		}
 	}
 
 	let isDropdownOpen = false;
@@ -118,6 +74,22 @@
 		</div>
 	{/if}
 </div>
+{#if currentLayer === 'PolygonLayer'}
+	<PolygonLayer />
+{:else if currentLayer === 'PathLayer'}
+	<PathLayer />
+{:else if currentLayer === 'ArcLayer'}
+	<ArcLayer />
+{:else if currentLayer === 'LineLayer'}
+	<LineLayer />
+{:else if currentLayer === 'ScatterplotLayer'}
+	<ScatterplotLayer />
+{:else if currentLayer === 'TripsLayer'}
+	<!-- As TripsLayer and H3HexagonLayer are imported from @deck.gl/geo-layers, their usage might be different than the typical Svelte components. Ensure you use them as intended. -->
+	<TripsLayer />
+{:else if currentLayer === 'H3'}
+	<H3HexagonLayer />
+{/if}
 
 <style>
 	.scrollBarDiv::-webkit-scrollbar {

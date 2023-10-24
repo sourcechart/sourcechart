@@ -2,51 +2,69 @@
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { layers } from '$lib/io/Stores';
 
-	function addH3Layer() {
+	let elevationScale = 20;
+	let extruded = true;
+	let filled = true;
+	let wireframe = false;
+	let pickable = true;
+
+	$: {
 		const layer = new H3HexagonLayer({
 			id: 'H3HexagonLayer',
 			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.h3cells.json',
 
 			/* props from H3HexagonLayer class */
 
-			// centerHexagon: null,
-			// coverage: 1,
-			elevationScale: 20,
-			extruded: true,
-			filled: true,
+			elevationScale: elevationScale,
+			extruded: extruded,
+			filled: filled, // @ts-ignore
+			getElevation: (d) => d.count, // @ts-ignore
+			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0], // @ts-ignore
+			getHexagon: (d) => d.hex, // @ts-ignore
 
-			//@ts-ignore
-			getElevation: (d) => d.count,
-			//@ts-ignore
-			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0],
-			//@ts-ignore
-			getHexagon: (d) => d.hex,
-			// getLineColor: [0, 0, 0, 255],
-			// getLineWidth: 1,
-			// highPrecision: 'auto',
-			// lineJointRounded: false,
-			// lineMiterLimit: 4,
-			// lineWidthMaxPixels: Number.MAX_SAFE_INTEGER,
-			// lineWidthMinPixels: 0,
-			// lineWidthScale: 1,
-			// lineWidthUnits: 'meters',
-			// material: true,
-			// stroked: true,
-			wireframe: false,
-
-			/* props inherited from Layer class */
-
-			// autoHighlight: false,
-			// coordinateOrigin: [0, 0, 0],
-			// coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
-			// highlightColor: [0, 0, 128, 128],
-			// modelMatrix: null,
-			// opacity: 1,
-			pickable: true
-			// visible: true,
-			// wrapLongitude: false,
+			wireframe: wireframe,
+			pickable: pickable
 		});
 
-		layers.update((layers) => [...layers, layer]);
+		layers.update((currentLayers) => {
+			// Check if a layer with the same id exists, then remove it
+			const layerID = layer.id;
+			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerID);
+
+			// Add the new H3HexagonLayer
+			updatedLayers.push(layer);
+
+			return updatedLayers;
+		});
 	}
 </script>
+
+<div>H3 Layer</div>
+
+<!-- Input controls to modify properties of the H3HexagonLayer -->
+<div>
+	<input
+		type="range"
+		bind:value={elevationScale}
+		min="1"
+		max="50"
+		step="0.5"
+		title="Change Elevation Scale"
+	/>
+	<label>
+		<input type="checkbox" bind:checked={extruded} />
+		Extruded
+	</label>
+	<label>
+		<input type="checkbox" bind:checked={filled} />
+		Filled
+	</label>
+	<label>
+		<input type="checkbox" bind:checked={wireframe} />
+		Wireframe
+	</label>
+	<label>
+		<input type="checkbox" bind:checked={pickable} />
+		Pickable
+	</label>
+</div>

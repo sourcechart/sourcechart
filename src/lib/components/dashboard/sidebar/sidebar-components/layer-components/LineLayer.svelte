@@ -2,37 +2,45 @@
 	import { LineLayer } from '@deck.gl/layers';
 	import { generateID } from '$lib/io/GenerateID';
 	import { layers } from '$lib/io/Stores';
-	function addLineLayer() {
+
+	let width = 12;
+	let pickable = true;
+
+	$: {
 		const newLayer = new LineLayer({
 			id: generateID(),
 			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/bart-segments.json',
 
 			/* props from LineLayer class */
+			// @ts-ignore
 
-			//@ts-ignore
-			getColor: (d) => [Math.sqrt(d.inbound + d.outbound), 140, 0],
-			//@ts-ignore
-			getSourcePosition: (d) => d.from.coordinates,
-			//@ts-ignore
+			getColor: (d) => [Math.sqrt(d.inbound + d.outbound), 140, 0], // @ts-ignore
+			getSourcePosition: (d) => d.from.coordinates, // @ts-ignore
 			getTargetPosition: (d) => d.to.coordinates,
-			getWidth: 12,
-			// widthMaxPixels: Number.MAX_SAFE_INTEGER,
-			// widthMinPixels: 0,
-			// widthScale: 1,
-			// widthUnits: 'pixels',
-
-			/* props inherited from Layer class */
-
-			// autoHighlight: false,
-			// coordinateOrigin: [0, 0, 0],
-			// coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
-			// highlightColor: [0, 0, 128, 128],
-			// modelMatrix: null,
-			// opacity: 1,
-			pickable: true
-			// visible: true,
-			// wrapLongitude: false,
+			getWidth: width,
+			pickable: pickable
 		});
-		layers.update((layers) => [...layers, newLayer]);
+
+		layers.update((currentLayers) => {
+			// Check if a layer with the same id exists, then remove it
+			const layerID = newLayer.id;
+			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerID);
+
+			// Add the new LineLayer
+			updatedLayers.push(newLayer);
+
+			return updatedLayers;
+		});
 	}
 </script>
+
+<div>Line Layer</div>
+
+<!-- Input controls to modify properties of the LineLayer -->
+<div>
+	<input type="range" bind:value={width} min="1" max="30" step="0.5" title="Change Width" />
+	<label>
+		<input type="checkbox" bind:checked={pickable} />
+		Pickable
+	</label>
+</div>
