@@ -66,7 +66,7 @@ export class DuckDBClient {
 	/**
 	 * Stream rows from a specific table.
 	 *
-	 * @param tableName Name of the table to stream rows from.
+	 * @param Query Name of the table to stream rows from.
 	 * @param params Optional parameters for any placeholders in the query.
 	 * @returns  AsyncIterator that yields rows of the specified table.
 	 */

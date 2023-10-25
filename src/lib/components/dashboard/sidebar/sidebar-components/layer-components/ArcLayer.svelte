@@ -25,10 +25,16 @@
 
 		if (chart.filename) {
 			var filename = checkNameForSpacesAndHyphens(chart.filename);
-			const randomValue = await $duckDBInstanceStore.query(`SELECT * FROM ${filename} LIMIT 40`);
-			console.log(randomValue);
-			var formattedData = formatData(randomValue);
-			console.log(formattedData);
+			//const randomValue = await $duckDBInstanceStore.query();
+			//var formattedData = formatData(randomValue);
+
+			for await (const row of $duckDBInstanceStore.streamTableRows(
+				`SELECT * FROM ${filename} LIMIT 5`
+			)) {
+				console.log(row);
+			}
+
+			//console.log(formattedData);
 		}
 	};
 

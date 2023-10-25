@@ -1,11 +1,5 @@
 <script lang="ts">
-	import {
-		clickedChartIndex,
-		allCharts,
-		getColumnsFromFile,
-		responsiveType,
-		mostRecentChartID
-	} from '$lib/io/Stores';
+	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
 	export let open = false;
 
 	let currentValue: string | null = '';
@@ -15,8 +9,6 @@
 
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
-
-	$: console.log($columns);
 
 	$: if (
 		$allCharts.length > 0 &&

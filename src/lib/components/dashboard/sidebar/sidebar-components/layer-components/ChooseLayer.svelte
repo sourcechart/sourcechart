@@ -6,9 +6,10 @@
 	import ScatterplotLayer from './ScatterplotLayer.svelte';
 	import { TripsLayer, H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { createEventDispatcher } from 'svelte';
+
+	/*
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-
 	import {
 		chosenFile,
 		getFileFromStore,
@@ -18,17 +19,10 @@
 		duckDBInstanceStore,
 		fileUploadStore
 	} from '$lib/io/Stores';
+	*/
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 
 	const dispatch = createEventDispatcher();
-	$: i = clickedChartIndex();
-	$: datasets = fileDropdown();
-
-	async function testThis() {
-		const sanitizedFilename = checkNameForSpacesAndHyphens($chosenFile);
-		var resp = await $duckDBInstanceStore.query(`SELECT * FROM ${sanitizedFilename} LIMIT 300`); //@ts-ignore	}
-		console.log(resp);
-	}
 
 	export let id: string;
 
@@ -74,7 +68,6 @@
 	let isDropdownOpen = false;
 
 	function toggleDropdown() {
-		testThis();
 		isDropdownOpen = !isDropdownOpen;
 	}
 
