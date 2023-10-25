@@ -8,7 +8,6 @@
 
 	$: {
 		const newLayer = new LineLayer({
-			id: generateID(),
 			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/bart-segments.json',
 
 			/* props from LineLayer class */

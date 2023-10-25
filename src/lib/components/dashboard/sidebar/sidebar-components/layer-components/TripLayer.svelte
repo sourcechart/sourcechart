@@ -11,15 +11,12 @@
 
 	$: {
 		const layer = new TripsLayer({
-			id: 'TripsLayer',
 			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.trips.json',
 
-			/* props from TripsLayer class */
 			currentTime: currentTime, // @ts-ignore
 			getTimestamps: (d) => d.waypoints.map((p) => p.timestamp - 1554772579000),
 			trailLength: trailLength,
 
-			/* props inherited from PathLayer class */
 			capRounded: capRounded,
 			getColor: color, // @ts-ignore
 			getPath: (d) => d.waypoints.map((p) => p.coordinates),
@@ -29,12 +26,8 @@
 		});
 
 		layers.update((currentLayers) => {
-			// Remove the old TripsLayer (if it exists with the same id)
 			let updatedLayers = currentLayers.filter((layer) => layer.id !== 'TripsLayer');
-
-			// Add the new TripsLayer
 			updatedLayers.push(layer);
-
 			return updatedLayers;
 		});
 	}

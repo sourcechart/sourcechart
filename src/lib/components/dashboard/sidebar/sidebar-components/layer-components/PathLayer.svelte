@@ -1,6 +1,5 @@
 <script>
 	import { PathLayer } from '@deck.gl/layers';
-	import { generateID } from '$lib/io/GenerateID';
 	import { layers } from '$lib/io/Stores';
 
 	let widthMinPixels = 2;
@@ -9,7 +8,6 @@
 
 	$: {
 		const layer = new PathLayer({
-			id: generateID(),
 			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/bart-lines.json',
 			// @ts-ignore
 			getColor: (d) => {
@@ -26,8 +24,6 @@
 			},
 			pickable: pickable
 		});
-
-		// Assuming you'd like to include the DeckGL instantiation
 
 		layers.update((currentLayers) => {
 			const layerID = layer.id;

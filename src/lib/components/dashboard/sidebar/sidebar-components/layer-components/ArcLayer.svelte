@@ -9,39 +9,58 @@
 	let getWidth = 12;
 	let pickable = true;
 
-	function formatData(res: any) {
-		const results = JSON.parse(
-			JSON.stringify(
-				res,
-				(_, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
-			)
-		);
-		return results;
+	const data = [
+		{
+			from: {
+				coordinates: [-122.41669, 37.7853]
+			},
+			to: {
+				coordinates: [-122.41669, 37.781]
+			},
+			inbound: 100,
+			outbound: 100
+		},
+		{
+			from: {
+				coordinates: [-122.41669, 37.7853]
+			},
+			to: {
+				coordinates: [-122.41669, 37.781]
+			},
+			inbound: 100,
+			outbound: 100
+		}
+	];
+
+	async function* transformRows(rows: AsyncIterable<any>) {
+		for await (const row of rows) {
+			const obj: any = {
+				from: {
+					coordinates: [row.from_longitude, row.from_latitude]
+				},
+				to: {
+					coordinates: [row.to_longitude, row.to_latitude]
+				},
+				inbound: row.inbound,
+				outbound: row.outbound
+			};
+			yield obj;
+		}
 	}
 
-	$: loadData();
-	const loadData = async () => {
+	const loadData = async function* () {
 		let chart = $allCharts[$i];
 
 		if (chart.filename) {
 			var filename = checkNameForSpacesAndHyphens(chart.filename);
-			//const randomValue = await $duckDBInstanceStore.query();
-			//var formattedData = formatData(randomValue);
-
-			for await (const row of $duckDBInstanceStore.streamTableRows(
-				`SELECT * FROM ${filename} LIMIT 5`
-			)) {
-				console.log(row);
-			}
-
-			//console.log(formattedData);
+			const rows = $duckDBInstanceStore.streamTableRows(`SELECT * FROM ${filename}`);
+			yield* transformRows(rows);
 		}
 	};
 
 	$: {
 		const newLayer = new ArcLayer({
-			id: generateID(),
-			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/bart-segments.json',
+			data: loadData(),
 			// @ts-ignore
 			getSourceColor: (d) => [Math.sqrt(d.inbound), 140, 0], // @ts-ignore
 			getSourcePosition: (d) => d.from.coordinates, // @ts-ignore

@@ -182,7 +182,6 @@ async function processSources(db: AsyncDuckDB, sources: any): Promise<void> {
 	await Promise.all(
 		Object.entries(sources).map(async ([name, source]) => {
 			if (source instanceof File) {
-				console.log('inserting file');
 				await insertFileHandle(db, source);
 			} else if (isBufferSource(source)) {
 				//@ts-ignore

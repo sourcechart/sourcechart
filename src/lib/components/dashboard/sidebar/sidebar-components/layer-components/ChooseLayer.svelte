@@ -6,20 +6,6 @@
 	import ScatterplotLayer from './ScatterplotLayer.svelte';
 	import { TripsLayer, H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { createEventDispatcher } from 'svelte';
-
-	/*
-	import { DuckDBClient } from '$lib/io/DuckDBClient';
-	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import {
-		chosenFile,
-		getFileFromStore,
-		fileDropdown,
-		allCharts,
-		clickedChartIndex,
-		duckDBInstanceStore,
-		fileUploadStore
-	} from '$lib/io/Stores';
-	*/
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 
 	const dispatch = createEventDispatcher();
@@ -72,7 +58,6 @@
 	}
 
 	function removeLayer() {
-		deckGlLayers = deckGlLayers.filter((layer) => layer.name !== currentLayer);
 		currentLayer = 'Select Layer';
 		dispatch('closeLayer', id); // Emitting a custom event with the layer's ID.
 	}

@@ -8,14 +8,8 @@
 	let wireframe = false;
 	let pickable = true;
 
-	export let data;
-
 	$: {
 		const layer = new H3HexagonLayer({
-			id: 'H3HexagonLayer',
-
-			/* props from H3HexagonLayer class */
-
 			elevationScale: elevationScale,
 			extruded: extruded,
 			filled: filled, // @ts-ignore

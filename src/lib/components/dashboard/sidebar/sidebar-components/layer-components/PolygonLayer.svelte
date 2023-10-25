@@ -13,7 +13,6 @@
 
 	$: {
 		const newLayer = new PolygonLayer({
-			id: generateID(),
 			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf-zipcodes.json',
 			extruded: extruded,
 			filled: filled, // @ts-ignore

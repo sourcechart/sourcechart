@@ -10,11 +10,10 @@
 
 	$: {
 		const scatterLayer = new ScatterplotLayer({
-			id: 'scatter-plot',
 			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/scatterplot/manhattan.json', // eslint-disable-line,
 			radiusScale: 3,
-			radiusMinPixels: 0.25,
-			getPosition: (d) => [d[0], d[1], 0],
+			radiusMinPixels: 0.25, //@ts-ignore
+			getPosition: (d) => [d[0], d[1], 0], //@ts-ignore
 			getFillColor: (d) => (d[2] === 1 ? 'red' : 'blue'),
 			getRadius: 1,
 			updateTriggers: {

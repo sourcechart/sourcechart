@@ -111,6 +111,7 @@
 			resp = await db.query(`SELECT * FROM '${dataset?.externalDataset?.url}' LIMIT 2`);
 			fname = `${dataset?.externalDataset?.url}`;
 			selectedDataset = dataset.filename;
+			console.log('resp', resp);
 		} else if (dataset.filename) {
 			const fileHandle = await getFileHandleFromIDB(dataset.filename);
 			const file = await fileHandle.getFile();
@@ -245,19 +246,6 @@
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
 		max-height: 200px; /* Adjust this value to your desired maximum height */
 		overflow-y: auto;
-	}
-	button[disabled] {
-		cursor: not-allowed; /* Changes the cursor on hover to indicate it's not clickable */
-		opacity: 0.5; /* Reduces the button's opacity to indicate it's disabled */
-	}
-
-	button[disabled]:hover + .tooltip {
-		visibility: visible;
-	}
-
-	button[disabled] {
-		cursor: not-allowed;
-		opacity: 0.5;
 	}
 
 	.tooltip {
