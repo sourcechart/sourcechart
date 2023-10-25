@@ -10,19 +10,16 @@
 
 	$: {
 		const scatterLayer = new ScatterplotLayer({
-			id: 'ScatterplotLayer',
-			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/bart-stations.json',
-			getFillColor: fillColor,
-			getLineColor: lineColor, // @ts-ignore
-			getPosition: (d) => d.coordinates, // @ts-ignore
-			getRadius: (d) => Math.sqrt(d.exits),
-			lineWidthMinPixels: 1,
-			radiusMaxPixels: 100,
-			radiusMinPixels: 1,
-			radiusScale: radiusScale,
-			stroked: true,
-			opacity: opacity,
-			pickable: pickable
+			id: 'scatter-plot',
+			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/scatterplot/manhattan.json', // eslint-disable-line,
+			radiusScale: 3,
+			radiusMinPixels: 0.25,
+			getPosition: (d) => [d[0], d[1], 0],
+			getFillColor: (d) => (d[2] === 1 ? 'red' : 'blue'),
+			getRadius: 1,
+			updateTriggers: {
+				getFillColor: ['red', 'blue']
+			}
 		});
 
 		layers.update((currentLayers) => {

@@ -16,12 +16,11 @@
 	});
 
 	onMount(() => {
-		var id = 'map';
+		var id = 'base-map';
 		addChartMetaData(id);
 		mostRecentChartID.set(id);
 		layersStore.set([
 			new GeoJsonLayer({
-				id: 'base-map',
 				data: dataUrl,
 				stroked: true,
 				filled: true,
@@ -35,11 +34,12 @@
 
 	$: if (container) {
 		const INITIAL_VIEW_STATE = {
-			latitude: 37.8,
-			longitude: -122.45,
-			zoom: 15,
-			bearing: 0,
-			pitch: 0
+			longitude: -74,
+			latitude: 40.7,
+			zoom: 11,
+			maxZoom: 16,
+			pitch: 0,
+			bearing: 0
 		};
 
 		deckInstance = new Deck({

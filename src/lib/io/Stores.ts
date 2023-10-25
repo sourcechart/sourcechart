@@ -109,6 +109,11 @@ export const getChartOptions = (id: string | undefined) => {
 	}
 };
 
+export const getLayerOptions = () =>
+	derived([allCharts, duckDBInstanceStore], ([$allCharts, $duckDBInstanceStore]) => {
+		const db = $duckDBInstanceStore;
+	});
+
 export const fileDropdown = () =>
 	derived(fileUploadStore, ($fileUploadStore) => {
 		const filenames = $fileUploadStore.map((chart) => chart.filename);

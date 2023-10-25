@@ -1,8 +1,10 @@
 <script>
 	import { ArcLayer } from '@deck.gl/layers';
 	import { generateID } from '$lib/io/GenerateID';
-	import { layers } from '$lib/io/Stores';
+	import { layers, allCharts, clickedChartIndex } from '$lib/io/Stores';
 
+	$: i = clickedChartIndex();
+	$: console.log($allCharts[$i]);
 	let getWidth = 12;
 	let pickable = true;
 
