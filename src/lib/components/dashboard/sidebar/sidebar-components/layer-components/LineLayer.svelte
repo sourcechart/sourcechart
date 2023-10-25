@@ -1,10 +1,39 @@
-<script>
+<script lang="ts">
 	import { LineLayer } from '@deck.gl/layers';
 	import { generateID } from '$lib/io/GenerateID';
-	import { layers } from '$lib/io/Stores';
 
 	let width = 12;
 	let pickable = true;
+
+	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+
+	$: i = clickedChartIndex();
+	async function* transformRows(rows: AsyncIterable<any>) {
+		for await (const row of rows) {
+			const obj: any = {
+				from: {
+					coordinates: [row.from_longitude, row.from_latitude]
+				},
+				to: {
+					coordinates: [row.to_longitude, row.to_latitude]
+				},
+				inbound: row.inbound,
+				outbound: row.outbound
+			};
+			yield obj;
+		}
+	}
+
+	const loadData = async function* () {
+		let chart = $allCharts[$i];
+
+		if (chart.filename) {
+			var filename = checkNameForSpacesAndHyphens(chart.filename);
+			const rows = $duckDBInstanceStore.streamTableRows(`SELECT * FROM ${filename}`);
+			yield* transformRows(rows);
+		}
+	};
 
 	$: {
 		const newLayer = new LineLayer({

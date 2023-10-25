@@ -60,6 +60,7 @@
 
 	$: {
 		const newLayer = new ArcLayer({
+			id: generateID(),
 			data: loadData(),
 			// @ts-ignore
 			getSourceColor: (d) => [Math.sqrt(d.inbound), 140, 0], // @ts-ignore

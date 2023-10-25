@@ -1,6 +1,34 @@
-<script>
+<script lang="ts">
 	import { TripsLayer } from '@deck.gl/geo-layers';
-	import { layers } from '$lib/io/Stores';
+	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+
+	$: i = clickedChartIndex();
+	async function* transformRows(rows: AsyncIterable<any>) {
+		for await (const row of rows) {
+			const obj: any = {
+				from: {
+					coordinates: [row.from_longitude, row.from_latitude]
+				},
+				to: {
+					coordinates: [row.to_longitude, row.to_latitude]
+				},
+				inbound: row.inbound,
+				outbound: row.outbound
+			};
+			yield obj;
+		}
+	}
+
+	const loadData = async function* () {
+		let chart = $allCharts[$i];
+
+		if (chart.filename) {
+			var filename = checkNameForSpacesAndHyphens(chart.filename);
+			const rows = $duckDBInstanceStore.streamTableRows(`SELECT * FROM ${filename}`);
+			yield* transformRows(rows);
+		}
+	};
 
 	let currentTime = 500;
 	let trailLength = 600;
