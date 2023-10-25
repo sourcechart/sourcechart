@@ -5,7 +5,6 @@
 	import PathLayer from './PathLayer.svelte';
 	import ScatterplotLayer from './ScatterplotLayer.svelte';
 	import { TripsLayer, H3HexagonLayer } from '@deck.gl/geo-layers';
-	import { layers } from '$lib/io/Stores';
 	import { createEventDispatcher } from 'svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 	const dispatch = createEventDispatcher();

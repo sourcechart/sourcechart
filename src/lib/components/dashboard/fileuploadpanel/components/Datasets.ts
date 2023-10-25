@@ -1,5 +1,10 @@
 export const datasets = [
 	{
+		name: 'ExampleH3',
+		url: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.h3cells.json',
+		description: 'Example H3'
+	},
+	{
 		name: 'ElectionList',
 		url: 'https://raw.githubusercontent.com/sourcechart/publicdata/main/datasets/election_list_8_21.csv',
 		description: 'List of all elections since 1950'

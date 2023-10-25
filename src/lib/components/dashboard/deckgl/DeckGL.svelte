@@ -2,7 +2,8 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { Deck } from '@deck.gl/core';
 	import { GeoJsonLayer } from '@deck.gl/layers';
-	import { layers, layers as layersStore } from '$lib/io/Stores';
+	import { layers, layers as layersStore, mostRecentChartID } from '$lib/io/Stores';
+	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
 	export let dataUrl: string =
 		'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_scale_rank.geojson';
@@ -15,6 +16,9 @@
 	});
 
 	onMount(() => {
+		var id = 'map';
+		addChartMetaData(id);
+		mostRecentChartID.set(id);
 		layersStore.set([
 			new GeoJsonLayer({
 				id: 'base-map',

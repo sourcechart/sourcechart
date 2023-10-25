@@ -108,10 +108,13 @@
 		let db: DuckDBClient;
 
 		if (dataset?.externalDataset?.url) {
+			console.log('trigger');
 			db = await DuckDBClient.of([]);
-			resp = await db.query(`SELECT * FROM '${dataset?.externalDataset?.url}' LIMIT 0`);
+			resp = await db.query(`SELECT * FROM '${dataset?.externalDataset?.url}' LIMIT 2`);
+			console.log(resp);
 			fname = `${dataset?.externalDataset?.url}`;
 			selectedDataset = dataset.filename;
+			console.log('resp', resp);
 		} else if (dataset.filename) {
 			const fileHandle = await getFileHandleFromIDB(dataset.filename);
 			const file = await fileHandle.getFile();
@@ -125,6 +128,7 @@
 		//@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
+		console.log('schema', schema);
 
 		duckDBInstanceStore.set(db);
 		allCharts.update((charts) => {
@@ -162,12 +166,6 @@
 	};
 
 	let tooltipText = '';
-
-	$: if (!$mostRecentChartID) {
-		tooltipText = 'Please create a chart first.';
-	} else if ($polygons.length === 0) {
-		tooltipText = 'No polygons detected. Please add some rectangles to proceed.';
-	}
 </script>
 
 <div class="py-1 flex w-full space-x-1 items-center justify-between">
@@ -178,7 +176,6 @@
 			bind:this={dropdownContainer}
 			class="bg-neutral-900 justify-between text-center rounded-sm hover:bg-neutral-900/50 flex items-center border-neutral-700/50 w-44 px-1"
 			on:click={toggleDropdown}
-			disabled={!$mostRecentChartID || $polygons.length === 0}
 		>
 			<span
 				class="text-sm text-gray-100 justify-start flex hover:text-neutral-200 font-thin ml-1 truncate"

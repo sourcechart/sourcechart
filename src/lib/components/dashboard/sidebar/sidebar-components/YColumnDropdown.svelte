@@ -10,6 +10,7 @@
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
 
+	$: console.log($allCharts[$i]);
 	$: if (
 		$allCharts.length > 0 &&
 		$allCharts[$i] &&

@@ -8,10 +8,11 @@
 	let wireframe = false;
 	let pickable = true;
 
+	export let data;
+
 	$: {
 		const layer = new H3HexagonLayer({
 			id: 'H3HexagonLayer',
-			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.h3cells.json',
 
 			/* props from H3HexagonLayer class */
 
