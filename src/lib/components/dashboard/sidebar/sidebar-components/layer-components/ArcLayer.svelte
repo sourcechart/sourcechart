@@ -5,32 +5,8 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	$: i = clickedChartIndex();
-	$: console.log($allCharts[$i]);
 	let getWidth = 12;
 	let pickable = true;
-
-	const data = [
-		{
-			from: {
-				coordinates: [-122.41669, 37.7853]
-			},
-			to: {
-				coordinates: [-122.41669, 37.781]
-			},
-			inbound: 100,
-			outbound: 100
-		},
-		{
-			from: {
-				coordinates: [-122.41669, 37.7853]
-			},
-			to: {
-				coordinates: [-122.41669, 37.781]
-			},
-			inbound: 100,
-			outbound: 100
-		}
-	];
 
 	async function* transformRows(rows: AsyncIterable<any>) {
 		for await (const row of rows) {

@@ -4,6 +4,13 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	$: i = clickedChartIndex();
+	let currentTime = 500;
+	let trailLength = 600;
+	let capRounded = true;
+	let color = [253, 128, 93];
+	let widthMinPixels = 8;
+	let opacity = 0.8;
+
 	async function* transformRows(rows: AsyncIterable<any>) {
 		for await (const row of rows) {
 			const obj: any = {
@@ -29,13 +36,6 @@
 			yield* transformRows(rows);
 		}
 	};
-
-	let currentTime = 500;
-	let trailLength = 600;
-	let capRounded = true;
-	let color = [253, 128, 93];
-	let widthMinPixels = 8;
-	let opacity = 0.8;
 
 	$: {
 		const layer = new TripsLayer({

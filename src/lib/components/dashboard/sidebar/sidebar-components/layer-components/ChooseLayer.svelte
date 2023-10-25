@@ -108,7 +108,6 @@
 {:else if currentLayer === 'ScatterplotLayer'}
 	<ScatterplotLayer />
 {:else if currentLayer === 'TripsLayer'}
-	<!-- As TripsLayer and H3HexagonLayer are imported from @deck.gl/geo-layers, their usage might be different than the typical Svelte components. Ensure you use them as intended. -->
 	<TripsLayer />
 {:else if currentLayer === 'H3'}
 	<H3HexagonLayer />

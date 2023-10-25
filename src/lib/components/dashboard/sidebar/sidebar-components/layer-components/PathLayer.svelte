@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { PathLayer } from '@deck.gl/layers';
-
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	$: i = clickedChartIndex();
+	let widthMinPixels = 2;
+	let widthScale = 20;
+	let pickable = true;
+
 	async function* transformRows(rows: AsyncIterable<any>) {
 		for await (const row of rows) {
 			const obj: any = {
@@ -31,13 +34,9 @@
 		}
 	};
 
-	let widthMinPixels = 2;
-	let widthScale = 20;
-	let pickable = true;
-
 	$: {
 		const layer = new PathLayer({
-			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/bart-lines.json',
+			data: loadData(),
 			// @ts-ignore
 			getColor: (d) => {
 				const hex = d.color;

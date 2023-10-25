@@ -41,7 +41,7 @@
 
 	$: {
 		const newLayer = new PolygonLayer({
-			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf-zipcodes.json',
+			data: loadData(),
 			extruded: extruded,
 			filled: filled, // @ts-ignore
 			getElevation: (d) => d.population / d.area / 10, // @ts-ignore

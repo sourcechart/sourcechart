@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { LineLayer } from '@deck.gl/layers';
-	import { generateID } from '$lib/io/GenerateID';
+	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	let width = 12;
 	let pickable = true;
-
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
-	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	$: i = clickedChartIndex();
 	async function* transformRows(rows: AsyncIterable<any>) {
@@ -37,11 +35,8 @@
 
 	$: {
 		const newLayer = new LineLayer({
-			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/bart-segments.json',
-
-			/* props from LineLayer class */
+			data: loadData(),
 			// @ts-ignore
-
 			getColor: (d) => [Math.sqrt(d.inbound + d.outbound), 140, 0], // @ts-ignore
 			getSourcePosition: (d) => d.from.coordinates, // @ts-ignore
 			getTargetPosition: (d) => d.to.coordinates,

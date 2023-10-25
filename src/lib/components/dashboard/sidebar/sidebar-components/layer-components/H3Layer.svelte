@@ -3,13 +3,13 @@
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
+	$: i = clickedChartIndex();
 	let elevationScale = 20;
 	let extruded = true;
 	let filled = true;
 	let wireframe = false;
 	let pickable = true;
 
-	$: i = clickedChartIndex();
 	async function* transformRows(rows: AsyncIterable<any>) {
 		for await (const row of rows) {
 			const obj: any = {

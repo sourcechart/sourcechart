@@ -38,7 +38,7 @@
 
 	$: {
 		const scatterLayer = new ScatterplotLayer({
-			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/scatterplot/manhattan.json', // eslint-disable-line,
+			data: loadData(),
 			radiusScale: 3,
 			radiusMinPixels: 0.25, //@ts-ignore
 			getPosition: (d) => [d[0], d[1], 0], //@ts-ignore
