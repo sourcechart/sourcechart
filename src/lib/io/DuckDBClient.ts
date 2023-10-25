@@ -64,6 +64,24 @@ export class DuckDBClient {
 	}
 
 	/**
+	 * Stream rows from a specific table.
+	 *
+	 * @param tableName Name of the table to stream rows from.
+	 * @param params Optional parameters for any placeholders in the query.
+	 * @returns  AsyncIterator that yields rows of the specified table.
+	 */
+	public async *streamTableRows(query: string, params?: Array<any>): AsyncIterable<any> {
+		if (!this._db) throw new Error('Database not initialized');
+		const res = await this.queryStream(query, params);
+		//@ts-ignore
+		for await (const rows of res.readRows()) {
+			for (const row of rows) {
+				yield row;
+			}
+		}
+	}
+
+	/**
 	 * Query the duckdb database via a query string.
 	 *
 	 * @param query
