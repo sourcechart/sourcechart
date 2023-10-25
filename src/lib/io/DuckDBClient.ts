@@ -304,7 +304,7 @@ async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any)
 }
 
 async function insertFileHandle(db: AsyncDuckDB, pickedFile: File) {
-	const supportedExtensions = ['.parquet', '.csv']; // Extend this list if more extensions are supported in the future
+	const supportedExtensions = ['.parquet', '.csv', '.json', '.txt', '.TXT']; // Extend this list if more extensions are supported in the future
 	const fileExtension = pickedFile.name.slice(((pickedFile.name.lastIndexOf('.') - 1) >>> 0) + 2);
 	if (!supportedExtensions.includes(`.${fileExtension}`)) {
 		throw new Error(`Unsupported file type: ${fileExtension}`);

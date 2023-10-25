@@ -8,14 +8,19 @@
 	let getWidth = 12;
 	let pickable = true;
 
+	let fromLatitude = 'from_latitude';
+	let fromLongitude = 'from_longitude';
+	let toLatitude = 'to_latitude';
+	let toLongitude = 'to_longitude';
+
 	async function* transformRows(rows: AsyncIterable<any>) {
 		for await (const row of rows) {
 			const obj: any = {
 				from: {
-					coordinates: [row.from_longitude, row.from_latitude]
+					coordinates: [row[fromLongitude], row[fromLatitude]]
 				},
 				to: {
-					coordinates: [row.to_longitude, row.to_latitude]
+					coordinates: [row[toLongitude], row[toLatitude]]
 				},
 				inbound: row.inbound,
 				outbound: row.outbound

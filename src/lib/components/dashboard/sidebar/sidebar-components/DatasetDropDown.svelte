@@ -108,14 +108,16 @@
 
 		if (dataset?.externalDataset?.url) {
 			db = await DuckDBClient.of([]);
-			resp = await db.query(`SELECT * FROM '${dataset?.externalDataset?.url}' LIMIT 2`);
+			await db.query(`LOAD json;`);
+			resp = await db.query(`SELECT * FROM "${dataset?.externalDataset?.url}" LIMIT 2`);
 			fname = `${dataset?.externalDataset?.url}`;
-			selectedDataset = dataset.filename;
 			console.log('resp', resp);
 		} else if (dataset.filename) {
 			const fileHandle = await getFileHandleFromIDB(dataset.filename);
 			const file = await fileHandle.getFile();
 			db = await DuckDBClient.of([file]);
+
+			await db.query(`LOAD json;`);
 			const sanitizedFilename = checkNameForSpacesAndHyphens(file.name);
 			selectedDataset = dataset.filename;
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 2`); //@ts-ignore

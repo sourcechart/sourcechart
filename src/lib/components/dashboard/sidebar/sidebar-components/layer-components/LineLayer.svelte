@@ -5,33 +5,36 @@
 
 	let width = 12;
 	let pickable = true;
+	let fromLatitude = 'from_latitude';
+	let fromLongitude = 'from_longitude';
+	let toLatitude = 'to_latitude';
+	let toLongitude = 'to_longitude';
 
 	$: i = clickedChartIndex();
 	async function* transformRows(rows: AsyncIterable<any>) {
 		for await (const row of rows) {
-			const obj: any = {
+			yield {
 				from: {
-					coordinates: [row.from_longitude, row.from_latitude]
+					coordinates: [row[fromLongitude], row[fromLatitude]]
 				},
 				to: {
-					coordinates: [row.to_longitude, row.to_latitude]
+					coordinates: [row[toLongitude], row[toLatitude]]
 				},
 				inbound: row.inbound,
 				outbound: row.outbound
 			};
-			yield obj;
 		}
 	}
 
-	const loadData = async function* () {
-		let chart = $allCharts[$i];
+	async function* loadData() {
+		const chart = $allCharts[$i];
 
-		if (chart.filename) {
-			var filename = checkNameForSpacesAndHyphens(chart.filename);
+		if (chart?.filename) {
+			const filename = checkNameForSpacesAndHyphens(chart.filename);
 			const rows = $duckDBInstanceStore.streamTableRows(`SELECT * FROM ${filename}`);
 			yield* transformRows(rows);
 		}
-	};
+	}
 
 	$: {
 		const newLayer = new LineLayer({
