@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
+	import {
+		clickedChartIndex,
+		allCharts,
+		getColumnsFromFile,
+		responsiveType,
+		mostRecentChartID
+	} from '$lib/io/Stores';
 	export let open = false;
 
 	let currentValue: string | null = '';
@@ -10,6 +16,8 @@
 	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
 
+	$: console.log($columns);
+
 	$: if (
 		$allCharts.length > 0 &&
 		$allCharts[$i] &&
@@ -19,12 +27,10 @@
 	) {
 		currentValue = $allCharts[$i].yColumn;
 
-		// Check if xColumn value exists in schema's name
 		let yColumnExistsInSchema = $allCharts[$i].schema.some(
 			(item: { name: string }) => item.name === currentValue
 		);
 
-		// If xColumn value doesn't exist in schema's name, set currentValue to ''
 		if (!yColumnExistsInSchema) {
 			currentValue = '';
 		}

@@ -17,37 +17,50 @@ export class DuckDBClient {
 		});
 	}
 
-	public async queryStream(query: string, params?: Array<any>): Promise<AsyncIterable<any>> {
+	public async queryStream(query: string, params?: Array<any>) {
+		if (this._db) {
+			const connection = await this._db.connect();
+			let reader: any;
+			let batch: any;
+			try {
+				//@ts-ignore
+				if (params?.length > 0) {
+					const statement = await connection.prepare(query); //@ts-ignore
+					reader = await statement.send(...params);
+				} else {
+					reader = await connection.send(query);
+				}
+				batch = await reader.next();
+				if (batch.done) throw new Error('missing first batch');
+			} catch (error) {
+				await connection.close();
+				throw error;
+			}
+			return {
+				schema: getArrowTableSchema(batch.value),
+				async *readRows() {
+					try {
+						while (!batch.done) {
+							yield batch.value.toArray();
+							batch = await reader.next();
+						}
+					} finally {
+						await connection.close();
+					}
+				}
+			};
+		}
+	}
+
+	public async getTableSchema(tableName: string): Promise<any> {
 		if (!this._db) throw new Error('Database not initialized');
 
-		const connection = await this._db.connect();
-		let reader: any;
-		try {
-			//@ts-ignore
-			if (params?.length > 0) {
-				const statement = await connection.prepare(query); //@ts-ignore
-				reader = await statement.send(...params);
-			} else {
-				reader = await connection.send(query);
-			}
+		// Constructing the PRAGMA query to get the table info for DuckDB
+		const query = `PRAGMA table_info(${tableName})`;
 
-			let batch = await reader.next();
-			if (batch.done) throw new Error('missing first batch');
+		const result = await this.query(query);
 
-			return (async function* readRows() {
-				try {
-					while (!batch.done) {
-						yield batch.value.toArray();
-						batch = await reader.next();
-					}
-				} finally {
-					await connection.close();
-				}
-			})();
-		} catch (error) {
-			await connection.close();
-			throw error;
-		}
+		return result;
 	}
 
 	/**
@@ -55,16 +68,17 @@ export class DuckDBClient {
 	 *
 	 * @param query
 	 * @param params
-	 * @returns Promise<Array<any[any]>>
+	 * @returns  Promise <Array<any[any]>>
 	 */
 	public async query(query: string, params?: Array<any>): Promise<Array<any[any]>> {
 		const res = await this.queryStream(query, params);
-		let results = [];
-		for await (const rows of res) {
+		let results = []; //@ts-ignore
+		for await (const rows of res.readRows()) {
 			for (const row of rows) {
 				results.push(row);
 			}
-		}
+		} //@ts-ignore
+		results.schema = res.schema;
 		return results;
 	}
 
@@ -150,6 +164,7 @@ async function processSources(db: AsyncDuckDB, sources: any): Promise<void> {
 	await Promise.all(
 		Object.entries(sources).map(async ([name, source]) => {
 			if (source instanceof File) {
+				console.log('inserting file');
 				await insertFileHandle(db, source);
 			} else if (isBufferSource(source)) {
 				//@ts-ignore

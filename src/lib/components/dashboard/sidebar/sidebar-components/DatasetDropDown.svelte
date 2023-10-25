@@ -118,12 +118,14 @@
 			const sanitizedFilename = checkNameForSpacesAndHyphens(file.name);
 			selectedDataset = dataset.filename;
 			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 2`); //@ts-ignore
+			console.log('resp', resp);
 		} else {
 			return;
 		}
 		//@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
+		console.log('schema', schema);
 
 		duckDBInstanceStore.set(db);
 		allCharts.update((charts) => {

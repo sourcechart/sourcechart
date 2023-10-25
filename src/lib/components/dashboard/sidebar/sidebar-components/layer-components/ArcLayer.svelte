@@ -1,12 +1,36 @@
-<script>
+<script lang="ts">
 	import { ArcLayer } from '@deck.gl/layers';
 	import { generateID } from '$lib/io/GenerateID';
-	import { layers, allCharts, clickedChartIndex } from '$lib/io/Stores';
+	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	$: i = clickedChartIndex();
 	$: console.log($allCharts[$i]);
 	let getWidth = 12;
 	let pickable = true;
+
+	function formatData(res: any) {
+		const results = JSON.parse(
+			JSON.stringify(
+				res,
+				(_, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+			)
+		);
+		return results;
+	}
+
+	$: loadData();
+	const loadData = async () => {
+		let chart = $allCharts[$i];
+
+		if (chart.filename) {
+			var filename = checkNameForSpacesAndHyphens(chart.filename);
+			const randomValue = await $duckDBInstanceStore.query(`SELECT * FROM ${filename} LIMIT 40`);
+			console.log(randomValue);
+			var formattedData = formatData(randomValue);
+			console.log(formattedData);
+		}
+	};
 
 	$: {
 		const newLayer = new ArcLayer({
