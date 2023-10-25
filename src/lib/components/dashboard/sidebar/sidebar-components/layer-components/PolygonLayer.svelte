@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { PolygonLayer } from '@deck.gl/layers';
+	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+
+	$: i = clickedChartIndex();
 
 	let extruded = true;
 	let filled = true;
@@ -9,23 +13,14 @@
 	let wireframe = true;
 	let pickable = true;
 
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
-	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	let coordinatesColumn = 'polygons';
 
-	$: i = clickedChartIndex();
 	async function* transformRows(rows: AsyncIterable<any>) {
 		for await (const row of rows) {
-			const obj: any = {
-				from: {
-					coordinates: [row.from_longitude, row.from_latitude]
-				},
-				to: {
-					coordinates: [row.to_longitude, row.to_latitude]
-				},
-				inbound: row.inbound,
-				outbound: row.outbound
+			yield {
+				polygon: JSON.parse(row[coordinatesColumn])
+				// otherProperties: row[otherPropertiesColumn], // Add as needed
 			};
-			yield obj;
 		}
 	}
 

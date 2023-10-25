@@ -7,20 +7,17 @@
 	let widthMinPixels = 2;
 	let widthScale = 20;
 	let pickable = true;
+	let pathColumn = 'path'; // Assuming path is stored as a serialized JSON string, e.g., '[[-122.4, 37.7], [-122.5, 37.8], [-122.6, 37.85]]'
+	let nameColumn = 'name';
+	let colorColumn = 'color'; // Assu
 
 	async function* transformRows(rows: AsyncIterable<any>) {
 		for await (const row of rows) {
-			const obj: any = {
-				from: {
-					coordinates: [row.from_longitude, row.from_latitude]
-				},
-				to: {
-					coordinates: [row.to_longitude, row.to_latitude]
-				},
-				inbound: row.inbound,
-				outbound: row.outbound
+			yield {
+				path: JSON.parse(row[pathColumn]),
+				name: row[nameColumn],
+				color: JSON.parse(row[colorColumn])
 			};
-			yield obj;
 		}
 	}
 

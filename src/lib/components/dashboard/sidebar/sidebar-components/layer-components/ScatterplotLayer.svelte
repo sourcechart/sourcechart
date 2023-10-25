@@ -4,19 +4,23 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
 	$: i = clickedChartIndex();
+
+	let nameColumn = 'name';
+	let codeColumn = 'code';
+	let addressColumn = 'address';
+	let exitsColumn = 'exits';
+	let coordinatesLatitude = 'latitude';
+	let coordinatesLongitude = 'longitude';
+
 	async function* transformRows(rows: AsyncIterable<any>) {
 		for await (const row of rows) {
-			const obj: any = {
-				from: {
-					coordinates: [row.from_longitude, row.from_latitude]
-				},
-				to: {
-					coordinates: [row.to_longitude, row.to_latitude]
-				},
-				inbound: row.inbound,
-				outbound: row.outbound
+			yield {
+				name: row[nameColumn],
+				code: row[codeColumn],
+				address: row[addressColumn],
+				exits: row[exitsColumn],
+				coordinates: [row[coordinatesLongitude], row[coordinatesLatitude]]
 			};
-			yield obj;
 		}
 	}
 
