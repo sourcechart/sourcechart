@@ -13,6 +13,8 @@
 	let hexColumn = 'H3_Index';
 	let countColumn = 'Count';
 
+	const CHUNK_SIZE = 100000;
+
 	async function* transformRows(rows: AsyncIterable<any>) {
 		let data = [];
 		for await (const row of rows) {
@@ -20,12 +22,19 @@
 				hex: row[hexColumn],
 				count: row[countColumn]
 			};
-			console.log(obj);
 			data.push(obj);
+
+			if (data.length >= CHUNK_SIZE) {
+				yield data; // Yield the chunk when it reaches the CHUNK_SIZE
+				data = []; // Reset the data list for the next chunk
+			}
 		}
-		console.log('completed');
-		yield data; // yield the entire list at once after collecting all data
+
+		if (data.length > 0) {
+			yield data;
+		}
 	}
+
 	const loadData = async function* () {
 		let chart = $allCharts[$i];
 
