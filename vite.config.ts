@@ -15,11 +15,6 @@ const viteServerConfig = {
 };
 
 export default defineConfig({
-	build: {
-		rollupOptions: {
-			external: ['@deck.gl/mesh-layers', '@deck.gl/core', '@deck.gl/layers']
-		}
-	},
 	plugins: [viteServerConfig, sveltekit()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
