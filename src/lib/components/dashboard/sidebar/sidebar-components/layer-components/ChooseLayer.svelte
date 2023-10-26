@@ -4,7 +4,8 @@
 	import PolygonLayer from './PolygonLayer.svelte';
 	import PathLayer from './PathLayer.svelte';
 	import ScatterplotLayer from './ScatterplotLayer.svelte';
-	import { TripsLayer, H3HexagonLayer } from '@deck.gl/geo-layers';
+	import TripsLayer from './TripsLayer.svelte';
+	import H3Layer from './H3Layer.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
 
@@ -42,12 +43,13 @@
 		},
 		{
 			name: 'H3',
-			component: H3HexagonLayer
+			component: H3Layer
 		}
 	];
 
 	function selectLayer(layerName: string) {
 		currentLayer = layerName;
+		console.log('trigger');
 		isDropdownOpen = false;
 	}
 
@@ -110,7 +112,7 @@
 {:else if currentLayer === 'TripsLayer'}
 	<TripsLayer />
 {:else if currentLayer === 'H3'}
-	<H3HexagonLayer />
+	<H3Layer />
 {/if}
 
 <style>
