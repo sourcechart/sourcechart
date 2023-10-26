@@ -16,6 +16,7 @@
 	});
 
 	onMount(() => {
+		console.log('onMount');
 		var id = 'base-map';
 		addChartMetaData(id);
 		mostRecentChartID.set(id);

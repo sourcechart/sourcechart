@@ -63,12 +63,8 @@
 		});
 
 		layers.update((currentLayers) => {
-			// Remove the old PolygonLayer (if it exists with the same id)
 			let updatedLayers = currentLayers.filter((layer) => layer.id !== newLayer.id);
-
-			// Add the new PolygonLayer
 			updatedLayers.push(newLayer);
-
 			return updatedLayers;
 		});
 	}
