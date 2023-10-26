@@ -10,16 +10,22 @@
 	let wireframe = false;
 	let pickable = true;
 
+	let hexColumn = 'H3_Index';
+	let countColumn = 'Count';
+
 	async function* transformRows(rows: AsyncIterable<any>) {
+		let data = [];
 		for await (const row of rows) {
 			const obj = {
-				hex: row.hex,
-				count: row.count
+				hex: row[hexColumn],
+				count: row[countColumn]
 			};
-			yield obj;
+			console.log(obj);
+			data.push(obj);
 		}
+		console.log('completed');
+		yield data; // yield the entire list at once after collecting all data
 	}
-
 	const loadData = async function* () {
 		let chart = $allCharts[$i];
 
@@ -32,7 +38,6 @@
 
 	$: {
 		const layer = new H3HexagonLayer({
-			//data: data,
 			data: loadData(),
 			elevationScale: elevationScale,
 			extruded: extruded,
@@ -40,7 +45,6 @@
 			getElevation: (d) => d.count, // @ts-ignore
 			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0], // @ts-ignore
 			getHexagon: (d) => d.hex, // @ts-ignore
-
 			wireframe: wireframe,
 			pickable: pickable
 		});
