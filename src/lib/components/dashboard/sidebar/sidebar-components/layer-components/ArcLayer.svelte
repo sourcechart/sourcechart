@@ -39,6 +39,12 @@
 		}
 	};
 
+	(async () => {
+		for await (const item of loadData()) {
+			console.log(item);
+		}
+	})();
+
 	$: {
 		const newLayer = new ArcLayer({
 			id: generateID(),

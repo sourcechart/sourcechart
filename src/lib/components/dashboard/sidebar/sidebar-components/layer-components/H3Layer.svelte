@@ -9,21 +9,10 @@
 	let filled = true;
 	let wireframe = false;
 	let pickable = true;
-	/**
-	 * Data format:
-	 * [
-	 *   {
-	 *     hex: '88283082b9fffff',
-	 *     count: 96
-	 *   },
-	 *   ...
-	 * ]
-	 */
 
-	const data = [];
 	async function* transformRows(rows: AsyncIterable<any>) {
 		for await (const row of rows) {
-			const obj: any = {
+			const obj = {
 				hex: row.hex,
 				count: row.count
 			};
@@ -42,20 +31,18 @@
 	};
 
 	$: {
-		console.log('triggered');
 		const layer = new H3HexagonLayer({
-			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.h3cells.json',
+			//data: data,
+			data: loadData(),
+			elevationScale: elevationScale,
+			extruded: extruded,
+			filled: filled, // @ts-ignore
+			getElevation: (d) => d.count, // @ts-ignore
+			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0], // @ts-ignore
+			getHexagon: (d) => d.hex, // @ts-ignore
 
-			/* props from H3HexagonLayer class */
-
-			// centerHexagon: null,
-			// coverage: 1,
-			elevationScale: 20,
-			extruded: true,
-			filled: true,
-			getElevation: (d) => d.count,
-			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0],
-			getHexagon: (d) => d.hex
+			wireframe: wireframe,
+			pickable: pickable
 		});
 
 		layers.update((currentLayers) => {
