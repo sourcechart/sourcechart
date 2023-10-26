@@ -11,13 +11,27 @@
 	let nameColumn = 'name';
 	let colorColumn = 'color'; // Assu
 
+	const CHUNK_SIZE = 100000;
+
 	async function* transformRows(rows: AsyncIterable<any>) {
+		let data = [];
 		for await (const row of rows) {
-			yield {
+			const obj = {
 				path: JSON.parse(row[pathColumn]),
 				name: row[nameColumn],
 				color: JSON.parse(row[colorColumn])
 			};
+			data.push(obj);
+
+			if (data.length >= CHUNK_SIZE) {
+				yield data; // Yield the chunk when it reaches the CHUNK_SIZE
+				data = []; // Reset the data list for the next chunk
+			}
+		}
+
+		if (data.length > 0) {
+			// Yield any remaining data if there's any left
+			yield data;
 		}
 	}
 

@@ -15,12 +15,24 @@
 
 	let coordinatesColumn = 'polygons';
 
+	const CHUNK_SIZE = 100000;
+
 	async function* transformRows(rows: AsyncIterable<any>) {
+		let data = [];
 		for await (const row of rows) {
-			yield {
+			const obj = {
 				polygon: JSON.parse(row[coordinatesColumn])
-				// otherProperties: row[otherPropertiesColumn], // Add as needed
 			};
+			data.push(obj);
+
+			if (data.length >= CHUNK_SIZE) {
+				yield data;
+				data = [];
+			}
+		}
+
+		if (data.length > 0) {
+			yield data;
 		}
 	}
 

@@ -7,6 +7,7 @@
 	$: i = clickedChartIndex();
 	let getWidth = 12;
 	let pickable = true;
+	const CHUNK_SIZE = 100000;
 
 	let fromLatitude = 'from_latitude';
 	let fromLongitude = 'from_longitude';
@@ -14,8 +15,9 @@
 	let toLongitude = 'to_longitude';
 
 	async function* transformRows(rows: AsyncIterable<any>) {
+		let data = [];
 		for await (const row of rows) {
-			const obj: any = {
+			const obj = {
 				from: {
 					coordinates: [row[fromLongitude], row[fromLatitude]]
 				},
@@ -25,7 +27,16 @@
 				inbound: row.inbound,
 				outbound: row.outbound
 			};
-			yield obj;
+			data.push(obj);
+
+			if (data.length >= CHUNK_SIZE) {
+				yield data; // Yield the chunk when it reaches the CHUNK_SIZE
+				data = []; // Reset the data list for the next chunk
+			}
+		}
+
+		if (data.length > 0) {
+			yield data;
 		}
 	}
 
@@ -38,12 +49,6 @@
 			yield* transformRows(rows);
 		}
 	};
-
-	(async () => {
-		for await (const item of loadData()) {
-			console.log(item);
-		}
-	})();
 
 	$: {
 		const newLayer = new ArcLayer({

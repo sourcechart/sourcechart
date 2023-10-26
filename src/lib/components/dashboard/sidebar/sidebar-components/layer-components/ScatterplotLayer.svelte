@@ -12,15 +12,28 @@
 	let coordinatesLatitude = 'latitude';
 	let coordinatesLongitude = 'longitude';
 
+	const CHUNK_SIZE = 100000;
+
 	async function* transformRows(rows: AsyncIterable<any>) {
+		let data = [];
 		for await (const row of rows) {
-			yield {
+			const obj = {
 				name: row[nameColumn],
 				code: row[codeColumn],
 				address: row[addressColumn],
 				exits: row[exitsColumn],
 				coordinates: [row[coordinatesLongitude], row[coordinatesLatitude]]
 			};
+			data.push(obj);
+
+			if (data.length >= CHUNK_SIZE) {
+				yield data; // Yield the chunk when it reaches the CHUNK_SIZE
+				data = []; // Reset the data list for the next chunk
+			}
+		}
+
+		if (data.length > 0) {
+			yield data;
 		}
 	}
 

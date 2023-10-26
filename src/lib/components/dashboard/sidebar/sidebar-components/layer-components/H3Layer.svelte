@@ -59,11 +59,9 @@
 		});
 
 		layers.update((currentLayers) => {
-			// Check if a layer with the same id exists, then remove it
 			const layerID = layer.id;
 			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerID);
 
-			// Add the new H3HexagonLayer
 			updatedLayers.push(layer);
 
 			return updatedLayers;
