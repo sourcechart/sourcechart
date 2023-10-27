@@ -6,6 +6,31 @@
 
 type WorkFlow = 'basic' | 'cluster';
 type ChartType = 'Scatter' | 'Bar' | 'Line' | 'Pie' | 'Area' | 'ClusterDensity';
+type DropdownType =
+	| 'chartType'
+	| 'aggregator'
+	| 'dataset'
+	| 'column'
+	| 'groupby'
+	| 'legend'
+	| 'filter'
+	| 'x'
+	| 'y'
+	| 'workflow'
+	| 'source'
+	| 'target'
+	| 'weight'
+	| 'fromlatitude'
+	| 'tolatitude'
+	| 'fromlongitude'
+	| 'tolongitude'
+	| 'from'
+	| 'to'
+	| 'polygon'
+	| 'startPoint'
+	| 'endPoint'
+	| 'H3';
+
 type DistanceFunction = (a: number[], b: number[]) => number;
 type PointVector = number[];
 

@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { ArcLayer } from '@deck.gl/layers';
 	import { generateID } from '$lib/io/GenerateID';
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import {
+		layers,
+		allCharts,
+		clickedChartIndex,
+		duckDBInstanceStore,
+		getColumnsFromFile
+	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 
+	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 	let getWidth = 12;
 	let pickable = true;
@@ -30,8 +37,8 @@
 			data.push(obj);
 
 			if (data.length >= CHUNK_SIZE) {
-				yield data; // Yield the chunk when it reaches the CHUNK_SIZE
-				data = []; // Reset the data list for the next chunk
+				yield data;
+				data = [];
 			}
 		}
 
@@ -64,13 +71,9 @@
 		});
 
 		layers.update((currentLayers) => {
-			// Check if a layer with the same id exists, then remove it
 			const layerID = newLayer.id;
 			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerID);
-
-			// Add the new ArcLayer
 			updatedLayers.push(newLayer);
-
 			return updatedLayers;
 		});
 	}
