@@ -2,6 +2,7 @@
 	import { PathLayer } from '@deck.gl/layers';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import ColumnDropdown from './ColumnDropdown.svelte';
 
 	$: i = clickedChartIndex();
 	let widthMinPixels = 2;
@@ -24,13 +25,12 @@
 			data.push(obj);
 
 			if (data.length >= CHUNK_SIZE) {
-				yield data; // Yield the chunk when it reaches the CHUNK_SIZE
-				data = []; // Reset the data list for the next chunk
+				yield data;
+				data = [];
 			}
 		}
 
 		if (data.length > 0) {
-			// Yield any remaining data if there's any left
 			yield data;
 		}
 	}
@@ -98,3 +98,8 @@
 		Pickable
 	</label>
 </div>
+
+<ColumnDropdown columnType="fromLatitude" on:choose={() => {}} />
+<ColumnDropdown columnType="fromLongitude" on:choose={() => {}} />
+<ColumnDropdown columnType="toLatitude" on:choose={() => {}} />
+<ColumnDropdown columnType="toLongitude" on:choose={() => {}} />
