@@ -2,7 +2,7 @@
 	import { PathLayer } from '@deck.gl/layers';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from './ColumnDropdown.svelte';
+	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
 
 	$: i = clickedChartIndex();
 	let widthMinPixels = 2;
@@ -75,7 +75,6 @@
 
 <div>Path Layer</div>
 
-<!-- Input controls to modify properties of the PathLayer -->
 <div>
 	<input
 		type="range"

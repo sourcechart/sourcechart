@@ -2,7 +2,7 @@
 	import { LineLayer } from '@deck.gl/layers';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from './ColumnDropdown.svelte';
+	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
 
 	let width = 12;
 	let pickable = true;

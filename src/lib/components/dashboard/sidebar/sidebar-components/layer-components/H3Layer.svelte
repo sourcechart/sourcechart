@@ -1,15 +1,8 @@
 <script lang="ts">
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
-	import {
-		layers,
-		allCharts,
-		clickedChartIndex,
-		duckDBInstanceStore,
-		columnLabel
-	} from '$lib/io/Stores';
+	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from './ColumnDropdown.svelte';
-	import ChooseLayer from './ChooseLayer.svelte';
+	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
 
 	$: i = clickedChartIndex();
 	let elevationScale = 20;

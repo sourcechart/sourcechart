@@ -1,15 +1,9 @@
 <script lang="ts">
 	import { ArcLayer } from '@deck.gl/layers';
 	import { generateID } from '$lib/io/GenerateID';
-	import {
-		layers,
-		allCharts,
-		clickedChartIndex,
-		duckDBInstanceStore,
-		getColumnsFromFile
-	} from '$lib/io/Stores';
+	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from './ColumnDropdown.svelte';
+	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
 
 	$: i = clickedChartIndex();
 	let getWidth = 12;
