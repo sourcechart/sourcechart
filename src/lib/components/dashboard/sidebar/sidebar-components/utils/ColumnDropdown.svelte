@@ -37,50 +37,53 @@
 	};
 </script>
 
-<div bind:this={container} class="flex-grow relative">
-	<div class="flex items-center">
-		<button
-			aria-label="Toggle Dropdown"
-			class="mx-auto bg-neutral-900 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center border-neutral-700/50"
-			on:click={() => (open = !open)}
-			on:mouseover={startHover}
-			on:mouseout={endHover}
-			on:blur={null}
-			on:focus={null}
-		>
-			<span class="text-sm text-neutral-300 ml-1">{columnType}</span>
-			<span class="text-sm text-gray-100 w-full justify-center truncate px-3">
-				{currentValue}
-			</span>
-		</button>
-
-		<!-- Tooltip element -->
-		{#if showTooltip && $responsiveType !== 'touch'}
-			<div
-				role="tooltip"
-				class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md z-10"
+<div {...$$props}>
+	``
+	<div bind:this={container}>
+		<div class="flex items-center">
+			<button
+				aria-label="Toggle Dropdown"
+				class="mx-auto bg-neutral-900 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center border-neutral-700/50"
+				on:click={() => (open = !open)}
+				on:mouseover={startHover}
+				on:mouseout={endHover}
+				on:blur={null}
+				on:focus={null}
 			>
-				Toggle Dropdown for Y-axis
+				<span class="text-sm text-neutral-300 ml-1">{columnType}</span>
+				<span class="text-sm text-gray-100 w-full justify-center truncate px-3">
+					{currentValue}
+				</span>
+			</button>
+
+			<!-- Tooltip element -->
+			{#if showTooltip && $responsiveType !== 'touch'}
+				<div
+					role="tooltip"
+					class="absolute -left-10 top-full mt-2 p-2 bg-neutral-200 text-gray-700 text-xs rounded-sm shadow-md z-10"
+				>
+					Toggle Dropdown for Y-axis
+				</div>
+			{/if}
+		</div>
+		{#if open}
+			<div
+				class="scrollBarDiv bg-neutral-900 rounded-md absolute top-0 left-0 mt-5 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			>
+				{#each $columns as column}
+					<button
+						class="block w-full text-left px-3 py-2 text-gray-300 hover:bg-neutral-700 font-thin text-sm truncate"
+						on:click={() => {
+							chooseColumn(column);
+							open = false;
+						}}
+					>
+						{column}
+					</button>
+				{/each}
 			</div>
 		{/if}
 	</div>
-	{#if open}
-		<div
-			class="scrollBarDiv bg-neutral-900 rounded-md absolute top-0 left-0 mt-5 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-		>
-			{#each $columns as column}
-				<button
-					class="block w-full text-left px-3 py-2 text-gray-300 hover:bg-neutral-700 font-thin text-sm truncate"
-					on:click={() => {
-						chooseColumn(column);
-						open = false;
-					}}
-				>
-					{column}
-				</button>
-			{/each}
-		</div>
-	{/if}
 </div>
 
 <style>
