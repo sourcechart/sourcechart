@@ -1,19 +1,18 @@
 <script lang="ts">
-	import { clickedChartIndex, allCharts, getColumnsFromFile, responsiveType } from '$lib/io/Stores';
+	import { getColumnsFromFile, responsiveType } from '$lib/io/Stores';
 	import { createEventDispatcher } from 'svelte';
 
-	dispatchEvent = createEventDispatcher();
-
-	export let open = false;
-	export let columnType: string;
+	let open = false;
+	export let columnType: DropdownType;
 
 	let currentValue: string | null = '';
 	let showTooltip: boolean = false;
 	let hoverTimeout: NodeJS.Timeout;
 	let container: HTMLElement;
 
-	$: i = clickedChartIndex();
 	$: columns = getColumnsFromFile();
+
+	const dispatch = createEventDispatcher();
 
 	const startHover = (): void => {
 		hoverTimeout = setTimeout(() => {
@@ -26,7 +25,10 @@
 		showTooltip = false;
 	};
 
-	const handleChoose = (column: string) => {};
+	const chooseColumn = (column: string) => {
+		dispatch('choose', { column });
+		currentValue = column;
+	};
 
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (container && !container.contains(event.target as Node)) {
@@ -46,7 +48,7 @@
 			on:blur={null}
 			on:focus={null}
 		>
-			<span class="text-sm text-neutral-300 ml-1">Y</span>
+			<span class="text-sm text-neutral-300 ml-1">{columnType}</span>
 			<span class="text-sm text-gray-100 w-full justify-center truncate px-3">
 				{currentValue}
 			</span>
@@ -70,7 +72,7 @@
 				<button
 					class="block w-full text-left px-3 py-2 text-gray-300 hover:bg-neutral-700 font-thin text-sm truncate"
 					on:click={() => {
-						handleChoose(column);
+						chooseColumn(column);
 						open = false;
 					}}
 				>

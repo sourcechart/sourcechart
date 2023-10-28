@@ -2,6 +2,7 @@
 	import { ScatterplotLayer } from '@deck.gl/layers';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import ColumnDropdown from './ColumnDropdown.svelte';
 
 	$: i = clickedChartIndex();
 
@@ -11,6 +12,11 @@
 	let exitsColumn = 'exits';
 	let coordinatesLatitude = 'latitude';
 	let coordinatesLongitude = 'longitude';
+	let fillColor = [255, 140, 0];
+	let lineColor = [0, 0, 0];
+	let opacity = 0.8;
+	let radiusScale = 6;
+	let pickable = true;
 
 	const CHUNK_SIZE = 100000;
 
@@ -47,12 +53,6 @@
 		}
 	};
 
-	let fillColor = [255, 140, 0];
-	let lineColor = [0, 0, 0];
-	let opacity = 0.8;
-	let radiusScale = 6;
-	let pickable = true;
-
 	$: {
 		const scatterLayer = new ScatterplotLayer({
 			data: loadData(),
@@ -72,6 +72,10 @@
 			return updatedLayers;
 		});
 	}
+
+	const handleChoose = () => {
+		console.log('choose');
+	};
 </script>
 
 <div>Scatter Plot Layer</div>
@@ -84,3 +88,5 @@
 	<input type="range" bind:value={opacity} min="0" max="1" step="0.1" />
 	<input type="checkbox" bind:checked={pickable} /> Pickable
 </div>
+<ColumnDropdown columnType="startPoint" on:choose={handleChoose} />
+<ColumnDropdown columnType="endPoint" on:choose={handleChoose} />

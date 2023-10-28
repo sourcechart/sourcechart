@@ -2,6 +2,7 @@
 	import { TripsLayer } from '@deck.gl/geo-layers';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import ColumnDropdown from './ColumnDropdown.svelte';
 
 	$: i = clickedChartIndex();
 	let currentTime = 500;
@@ -92,3 +93,6 @@
 	/>
 	<input type="range" bind:value={opacity} min="0" max="1" step="0.1" title="Change Opacity" />
 </div>
+
+<ColumnDropdown columnType="startPoint" on:choose={() => {}} />
+<ColumnDropdown columnType="endPoint" on:choose={() => {}} />

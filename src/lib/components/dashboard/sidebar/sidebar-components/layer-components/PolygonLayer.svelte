@@ -2,6 +2,7 @@
 	import { PolygonLayer } from '@deck.gl/layers';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import ColumnDropdown from './ColumnDropdown.svelte';
 
 	$: i = clickedChartIndex();
 
@@ -89,3 +90,5 @@
 	<input type="checkbox" bind:checked={wireframe} /> Wireframe
 	<input type="checkbox" bind:checked={pickable} /> Pickable
 </div>
+
+<ColumnDropdown columnType="polygon" on:choose={() => {}} />

@@ -9,8 +9,8 @@
 		getColumnsFromFile
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import ColumnDropdown from './ColumnDropdown.svelte';
 
-	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 	let getWidth = 12;
 	let pickable = true;
@@ -77,6 +77,10 @@
 			return updatedLayers;
 		});
 	}
+
+	const handleChoose = (e: CustomEvent) => {
+		let column = e.detail.column;
+	};
 </script>
 
 <div>Arc Layer</div>
@@ -89,3 +93,6 @@
 		Pickable
 	</label>
 </div>
+
+<ColumnDropdown columnType="startPoint" on:choose={handleChoose} />
+<ColumnDropdown columnType="endPoint" on:choose={handleChoose} />

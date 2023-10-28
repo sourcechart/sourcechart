@@ -1,7 +1,15 @@
 <script lang="ts">
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import {
+		layers,
+		allCharts,
+		clickedChartIndex,
+		duckDBInstanceStore,
+		columnLabel
+	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import ColumnDropdown from './ColumnDropdown.svelte';
+	import ChooseLayer from './ChooseLayer.svelte';
 
 	$: i = clickedChartIndex();
 	let elevationScale = 20;
@@ -67,6 +75,11 @@
 			return updatedLayers;
 		});
 	}
+
+	const handleChoose = (e: CustomEvent) => {
+		hexColumn = e.detail.hexColumn;
+		countColumn = e.detail.countColumn;
+	};
 </script>
 
 <div>H3 Layer</div>
@@ -98,3 +111,4 @@
 		Pickable
 	</label>
 </div>
+<ColumnDropdown columnType="H3" on:choose={handleChoose} />
