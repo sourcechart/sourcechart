@@ -33,13 +33,9 @@
 
 	<div class="w-full">
 		<div class="flex flex-col mt-4">
-			{#each $layers as layer}
+			{#each newLayers as nl}
 				<div class="block mb-3">
-					<svelte:component
-						this={layer.component}
-						id={layer.id}
-						on:closeLayer={handleLayerClosed}
-					/>
+					<svelte:component this={nl.component} id={nl.id} on:closeLayer={handleLayerClosed} />
 				</div>
 			{/each}
 		</div>

@@ -8,7 +8,6 @@
 	import H3Layer from './H3Layer.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
-	import { layers } from '$lib/io/Stores';
 
 	const dispatch = createEventDispatcher();
 

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { ArcLayer } from '@deck.gl/layers';
-	import { generateID } from '$lib/io/GenerateID';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import ColumnDropdown from '../utils/Dropdown.svelte';
+	import { ArcLayer } from '@deck.gl/layers';
 	import { deepEqual } from './utils';
 
 	export let id: string;
+
 	$: i = clickedChartIndex();
 	let getWidth = 12;
 	let pickable = true;
@@ -68,10 +68,13 @@
 			if (!deepEqual($allCharts[$i].layers[0].type, newArcLayer)) {
 				allCharts.update((currentCharts) => {
 					let updatedCharts = [...currentCharts];
-					updatedCharts[$i].layers[0] = {
-						layerID: generateID(),
-						type: newArcLayer
-					};
+					updatedCharts[$i].layers = [
+						...updatedCharts[$i].layers,
+						{
+							layerID: id,
+							type: newArcLayer
+						}
+					];
 					return updatedCharts;
 				});
 			}

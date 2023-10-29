@@ -19,17 +19,16 @@
 		var id = 'base-map';
 		addChartMetaData(id);
 		mostRecentChartID.set(id);
-		layersStore.set([
-			new GeoJsonLayer({
-				data: dataUrl,
-				stroked: true,
-				filled: true,
-				lineWidthMinPixels: 2,
-				opacity: 0.4,
-				getLineColor: [60, 60, 60],
-				getFillColor: [200, 200, 200]
-			})
-		]);
+		const geojsonLayer = new GeoJsonLayer({
+			data: dataUrl,
+			stroked: true,
+			filled: true,
+			lineWidthMinPixels: 2,
+			opacity: 0.4,
+			getLineColor: [60, 60, 60],
+			getFillColor: [200, 200, 200]
+		});
+		layersStore.set([{ id: 'geojson', layer: geojsonLayer }]);
 	});
 
 	$: if (container) {

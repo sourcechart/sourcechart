@@ -76,7 +76,7 @@
 		layers.update((currentLayers) => {
 			const layerID = layer.id;
 			let updatedLayers = currentLayers.filter((l) => l.id !== layerID);
-			updatedLayers.push(layer);
+			updatedLayers.push({ layer, id });
 			return updatedLayers;
 		});
 	}

@@ -4,14 +4,13 @@
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { getColumnsFromFile } from '$lib/io/Stores';
 	import Dropdown from '../utils/Dropdown.svelte';
-	import { generateID } from '$lib/io/GenerateID';
 	import { deepEqual } from './utils';
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
+	$: console.log($allCharts[$i], $layers);
 
 	export let id: string;
-
 	let elevationScale = 1;
 	let extruded = true;
 	let filled = true;
@@ -37,13 +36,28 @@
 				fillColor: [255, (1 - 1 / 500) * 255, 0]
 			};
 
-			if (!deepEqual($allCharts[$i].layers[0].type, newLayer)) {
+			let layerToUpdate = $allCharts[$i].layers.find((l) => l.layerID === id);
+
+			if (layerToUpdate) {
+				if (!deepEqual(layerToUpdate.type, newLayer)) {
+					allCharts.update((currentCharts) => {
+						let updatedCharts = [...currentCharts];
+						const layerIndex = updatedCharts[$i].layers.findIndex((l) => l.layerID === id);
+						updatedCharts[$i].layers[layerIndex] = {
+							layerID: id,
+							type: newLayer
+						};
+						return updatedCharts;
+					});
+				}
+			} else {
+				// If layer does not exist, add it
 				allCharts.update((currentCharts) => {
 					let updatedCharts = [...currentCharts];
-					updatedCharts[$i].layers[0] = {
-						layerID: generateID(),
+					updatedCharts[$i].layers.push({
+						layerID: id,
 						type: newLayer
-					};
+					});
 					return updatedCharts;
 				});
 			}
@@ -94,13 +108,11 @@
 		});
 
 		layers.update((currentLayers) => {
-			const layerID = layer.id;
-			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerID);
-			updatedLayers.push({
+			currentLayers.push({
 				id: id,
 				layer: layer
 			});
-			return updatedLayers;
+			return currentLayers;
 		});
 	}
 
