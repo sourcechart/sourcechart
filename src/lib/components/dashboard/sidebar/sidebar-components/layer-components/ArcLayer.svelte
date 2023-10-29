@@ -3,7 +3,7 @@
 	import { generateID } from '$lib/io/GenerateID';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
+	import ColumnDropdown from '../utils/Dropdown.svelte';
 
 	$: i = clickedChartIndex();
 	let getWidth = 12;
@@ -74,6 +74,14 @@
 
 	const handleChoose = (e: CustomEvent) => {
 		let column = e.detail.column;
+		allCharts.update((charts) => {
+			let chart = charts[$i];
+			if (chart.layers) {
+				chart.layers[0].type = 'Arc';
+				chart.layers = [...chart.layers[0].columns, column.columnName];
+			}
+			return charts;
+		});
 	};
 </script>
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { TripsLayer } from '@deck.gl/geo-layers';
 	import {
 		layers,
 		allCharts,
@@ -8,6 +7,7 @@
 		duckDBInstanceStore
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import { TripsLayer } from '@deck.gl/geo-layers';
 	import Dropdown from '../utils/Dropdown.svelte';
 
 	$: columns = getColumnsFromFile();
@@ -71,7 +71,6 @@
 
 <div>Trips Layer</div>
 
-<!-- Input controls to modify properties of the TripsLayer -->
 <div>
 	<input
 		type="range"

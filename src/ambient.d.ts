@@ -59,15 +59,68 @@ type Chart = {
 	filterColumns: Array<any>;
 	xColumn: string | null;
 	yColumn: string | null;
-
-	//chartShape: string;
-
-	//Maybe I should seperate this out to a different store.
-	//canvasWidth: number;
-	//canvasHeight: number;
-	//polygon: Polygon;
-
 	chartOptions: any;
+	layers?: Layer[];
+};
+
+type Layer = {
+	id: string;
+	type:
+		| ArcLayer
+		| LineLayer
+		| ScatterplotLayer
+		| PathLayer
+		| PolygonLayer
+		| GeoJsonLayer
+		| H3HexagonLayer;
+
+	columns: string[];
+};
+
+type ArcLayer = {
+	id: string;
+	type: 'Arc';
+	fromLatitudeColumn: string;
+	fromLongitudeColumn: string;
+	toLatitudeColumn: string;
+	toLongitudeColumn: string;
+	columns: string[];
+};
+
+type LineLayer = {
+	id: string;
+	type: 'Line';
+	columns: string[];
+};
+
+type ScatterplotLayer = {
+	id: string;
+	type: 'Scatterplot';
+	columns: string[];
+};
+
+type PathLayer = {
+	id: string;
+	type: 'Path';
+	columns: string[];
+};
+
+type PolygonLayer = {
+	id: string;
+	type: 'Polygon';
+	columns: string[];
+};
+
+type GeoJsonLayer = {
+	id: string;
+	type: 'GeoJson';
+	columns: string[];
+};
+
+type H3HexagonLayer = {
+	id: string;
+	type: 'H3HexagonLayer';
+	columns: string[];
 };
 
 type Canvas = {
