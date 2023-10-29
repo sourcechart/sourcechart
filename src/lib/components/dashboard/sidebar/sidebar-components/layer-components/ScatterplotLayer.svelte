@@ -91,12 +91,12 @@
 
 	$: {
 		const scatterLayer = new ScatterplotLayer({
+			id: id,
 			data: loadData(),
 			radiusScale,
 			radiusMinPixels: 0.25,
 			// @ts-ignore
 			getPosition: (d) => [d[0], d[1], 0],
-			// @ts-ignore
 			getFillColor: fillColor,
 			getRadius: radiusScale,
 			pickable,

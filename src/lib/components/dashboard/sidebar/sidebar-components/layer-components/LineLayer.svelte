@@ -62,6 +62,7 @@
 
 	$: {
 		const newLayer = new LineLayer({
+			id: id,
 			data: loadData(),
 			// @ts-ignore
 			getColor: (d) => [Math.sqrt(d.inbound + d.outbound), 140, 0], // @ts-ignore

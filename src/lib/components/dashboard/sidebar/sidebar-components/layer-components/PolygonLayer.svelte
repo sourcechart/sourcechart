@@ -57,11 +57,12 @@
 
 	$: {
 		const newLayer = new PolygonLayer({
+			id: id,
 			data: loadData(),
 			extruded: extruded,
 			filled: filled, //@ts-ignore
 			getElevation: (d) => d.population / d.area / 10, //@ts-ignore
-			getFillColor: (d) => [d.population / d.area / 60, 140, 0], //@ts-ignore
+			getFillColor: (d) => [d.population / d.area / 60, 140, 0],
 			getLineColor: lineColor, //@ts-ignore
 			getLineWidth: (d) => 1, //@ts-ignore
 			getPolygon: (d) => d.contour,

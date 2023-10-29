@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { layers, mostRecentChartID } from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
+	import { layers, mostRecentChartID } from '$lib/io/Stores';
 	import { GeoJsonLayer } from '@deck.gl/layers';
 	import { onDestroy, onMount } from 'svelte';
 	import { Deck } from '@deck.gl/core';
@@ -35,13 +35,13 @@
 		const INITIAL_VIEW_STATE = {
 			longitude: -74,
 			latitude: 40.7,
-			zoom: 11,
+			zoom: 4,
 			maxZoom: 16,
 			pitch: 0,
 			bearing: 0
 		};
 
-		deckInstance = new Deck({
+		new Deck({
 			initialViewState: INITIAL_VIEW_STATE,
 			controller: true,
 			layers: $layers.filter((l) => l.layer).map((l) => l.layer)

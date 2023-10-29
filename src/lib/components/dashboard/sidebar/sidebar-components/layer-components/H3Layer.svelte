@@ -8,7 +8,6 @@
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
-	$: console.log($allCharts[$i], $layers);
 
 	export let id: string;
 	let elevationScale = 1;
@@ -51,7 +50,6 @@
 					});
 				}
 			} else {
-				// If layer does not exist, add it
 				allCharts.update((currentCharts) => {
 					let updatedCharts = [...currentCharts];
 					updatedCharts[$i].layers.push({
@@ -95,23 +93,32 @@
 	};
 
 	$: {
-		const layer = new H3HexagonLayer({
+		const layerInstance = new H3HexagonLayer({
+			id: id,
 			data: loadData(),
 			elevationScale: elevationScale,
 			extruded: extruded,
-			filled: filled, // @ts-ignore
-			getElevation: (d) => d.count, // @ts-ignore
-			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0], // @ts-ignore
-			getHexagon: (d) => d.hex, // @ts-ignore
+			filled: filled, //@ts-ignore
+			getElevation: (d) => d.count, //@ts-ignore
+			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0], //@ts-ignore
+			getHexagon: (d) => d.hex,
 			wireframe: wireframe,
-			pickable: pickable
+			pickable: pickable,
+			updateTrigger: {
+				getFillColor: [countColumn],
+				getHexagon: [hexColumn],
+				getElevation: [countColumn],
+				getLineWidth: [countColumn]
+			}
 		});
 
 		layers.update((currentLayers) => {
-			currentLayers.push({
-				id: id,
-				layer: layer
-			});
+			const existingIndex = currentLayers.findIndex((layer) => layer.id === id);
+			if (existingIndex !== -1) {
+				currentLayers[existingIndex] = { id: id, layer: layerInstance };
+			} else {
+				currentLayers.push({ id: id, layer: layerInstance });
+			}
 			return currentLayers;
 		});
 	}

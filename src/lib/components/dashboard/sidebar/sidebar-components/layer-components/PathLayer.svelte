@@ -23,6 +23,43 @@
 
 	const CHUNK_SIZE = 100000;
 
+	$: {
+		const newLayer: PathLayer = {
+			id: id,
+			type: 'Path',
+			width: widthMinPixels,
+			pickable: pickable,
+			pathColumn: pathColumn,
+			nameColumn: nameColumn,
+			colorColumn: colorColumn
+		};
+
+		if ($allCharts && $allCharts.length > $i && $allCharts[$i]) {
+			let layerToUpdate = $allCharts[$i].layers.find((l) => l.layerID === id);
+
+			if (layerToUpdate) {
+				allCharts.update((currentCharts) => {
+					let updatedCharts = [...currentCharts];
+					const layerIndex = updatedCharts[$i].layers.findIndex((l) => l.layerID === id);
+					updatedCharts[$i].layers[layerIndex] = {
+						layerID: id,
+						type: newLayer
+					};
+					return updatedCharts;
+				});
+			} else {
+				allCharts.update((currentCharts) => {
+					let updatedCharts = [...currentCharts];
+					updatedCharts[$i].layers.push({
+						layerID: id,
+						type: newLayer
+					});
+					return updatedCharts;
+				});
+			}
+		}
+	}
+
 	async function* transformRows(rows: AsyncIterable<any>) {
 		let data = [];
 		for await (const row of rows) {
@@ -56,6 +93,7 @@
 
 	$: {
 		const layer = new PathLayer({
+			id: id,
 			data: loadData(), //@ts-ignore
 			getColor: (d) => {
 				const hex = d.color; //@ts-ignore
@@ -70,8 +108,6 @@
 			},
 			pickable: pickable
 		});
-
-		console.log(layer, layer.id);
 
 		layers.update((currentLayers) => {
 			const layerID = layer.id;
