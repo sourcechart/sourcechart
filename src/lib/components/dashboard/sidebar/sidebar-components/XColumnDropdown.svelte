@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { clickedChartIndex, allCharts } from '$lib/io/Stores';
-	import ColumnDropdown from './utils/ColumnDropdown.svelte';
+	import ColumnDropdown from './utils/Dropdown.svelte';
+	import { getColumnsFromFile } from '$lib/io/Stores';
 
 	let currentValue: string | null = '';
 
 	$: i = clickedChartIndex();
+	$: columns = getColumnsFromFile();
 
 	$: if (
 		$allCharts.length > 0 &&
@@ -46,4 +48,4 @@
 	};
 </script>
 
-<ColumnDropdown columnType="x" on:choose={handleChoose} class="top-0" />
+<ColumnDropdown columnType="x" items={$columns} on:choose={handleChoose} class="top-0" />

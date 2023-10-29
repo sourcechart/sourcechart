@@ -1,17 +1,14 @@
 <script lang="ts">
-	import { getColumnsFromFile } from '$lib/io/Stores';
 	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
 	export let columnType: DropdownType;
+	export let items: string[] = [];
 
 	let open = false;
 	let currentValue: string | null = '';
 	let container: HTMLElement;
 
-	$: columns = getColumnsFromFile();
-
 	const dispatch = createEventDispatcher();
-	// Close dropdown on outside click
 	onMount(() => {
 		document.addEventListener('click', handleOutsideClick);
 		return () => {
@@ -33,7 +30,6 @@
 
 <div {...$$props} bind:this={container}>
 	<div class="relative">
-		<!-- Make this div relative -->
 		<button
 			aria-label="Toggle Dropdown"
 			class="mx-auto bg-neutral-900 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center border-neutral-700/50"
@@ -45,12 +41,11 @@
 			</span>
 		</button>
 
-		<!-- Dropdown Menu -->
 		{#if open}
 			<div
 				class="scrollBarDiv bg-neutral-900 rounded-md absolute w-full left-0 top-full mt-1 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			>
-				{#each $columns as column}
+				{#each items as column}
 					<button
 						class="block w-full text-left px-3 py-2 text-gray-300 hover:bg-neutral-700 font-thin text-sm truncate"
 						on:click={() => chooseColumn(column)}

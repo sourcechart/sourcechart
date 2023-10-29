@@ -1,10 +1,18 @@
 <script lang="ts">
 	import { PathLayer } from '@deck.gl/layers';
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import {
+		layers,
+		allCharts,
+		clickedChartIndex,
+		duckDBInstanceStore,
+		getColumnsFromFile
+	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
+	import Dropdown from '../utils/Dropdown.svelte';
 
+	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
+
 	let widthMinPixels = 2;
 	let widthScale = 20;
 	let pickable = true;
@@ -98,7 +106,7 @@
 	</label>
 </div>
 
-<ColumnDropdown columnType="fromLatitude" on:choose={() => {}} />
-<ColumnDropdown columnType="fromLongitude" on:choose={() => {}} />
-<ColumnDropdown columnType="toLatitude" on:choose={() => {}} />
-<ColumnDropdown columnType="toLongitude" on:choose={() => {}} />
+<Dropdown columnType="fromLatitude" items={$columns} on:choose={() => {}} />
+<Dropdown columnType="fromLongitude" items={$columns} on:choose={() => {}} />
+<Dropdown columnType="toLatitude" items={$columns} on:choose={() => {}} />
+<Dropdown columnType="toLongitude" items={$columns} on:choose={() => {}} />

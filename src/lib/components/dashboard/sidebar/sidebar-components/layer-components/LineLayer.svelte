@@ -2,8 +2,10 @@
 	import { LineLayer } from '@deck.gl/layers';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
+	import Dropdown from '../utils/Dropdown.svelte';
+	import { getColumnsFromFile } from '$lib/io/Stores';
 
+	$: columns = getColumnsFromFile();
 	let width = 12;
 	let pickable = true;
 	let fromLatitude = 'from_latitude';
@@ -85,26 +87,30 @@
 		Pickable
 	</label>
 </div>
-<ColumnDropdown
+<Dropdown
 	columnType="fromLatitude"
+	items={$columns}
 	on:choose={() => {
 		console.log('fromLatitude');
 	}}
 />
 
-<ColumnDropdown
+<Dropdown
 	columnType="toLatitude"
+	items={$columns}
 	on:choose={() => {
 		console.log('toLatitude');
 	}}
 />
-<ColumnDropdown
+<Dropdown
 	columnType="fromLongitude"
+	items={$columns}
 	on:choose={() => {
 		console.log('fromLongitude');
 	}}
 />
-<ColumnDropdown
+<Dropdown
+	items={$columns}
 	columnType="toLongitude"
 	on:choose={() => {
 		console.log('toLongitude');

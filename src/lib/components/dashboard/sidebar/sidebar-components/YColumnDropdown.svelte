@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { clickedChartIndex, allCharts } from '$lib/io/Stores';
-	import ColumnDropdown from './utils/ColumnDropdown.svelte';
+	import Dropdown from './utils/Dropdown.svelte';
+	import { getColumnsFromFile } from '$lib/io/Stores';
 
+	$: columns = getColumnsFromFile();
 	let currentValue: string | null = '';
 
 	$: i = clickedChartIndex();
@@ -44,4 +46,4 @@
 	};
 </script>
 
-<ColumnDropdown columnType="y" on:choose={handleChoose} />
+<Dropdown columnType="y" items={$columns} on:choose={handleChoose} />

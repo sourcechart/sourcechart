@@ -2,9 +2,12 @@
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
-	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
+	import { getColumnsFromFile } from '$lib/io/Stores';
+	import Dropdown from '../utils/Dropdown.svelte';
 
+	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
+
 	let elevationScale = 20;
 	let extruded = true;
 	let filled = true;
@@ -104,4 +107,4 @@
 		Pickable
 	</label>
 </div>
-<ColumnDropdown columnType="H3" on:choose={handleChoose} />
+<Dropdown columnType="H3" items={$columns} on:choose={handleChoose} />

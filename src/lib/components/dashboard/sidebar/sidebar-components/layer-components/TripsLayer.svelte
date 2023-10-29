@@ -1,10 +1,18 @@
 <script lang="ts">
 	import { TripsLayer } from '@deck.gl/geo-layers';
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import {
+		layers,
+		allCharts,
+		getColumnsFromFile,
+		clickedChartIndex,
+		duckDBInstanceStore
+	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
+	import Dropdown from '../utils/Dropdown.svelte';
 
+	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
+
 	let currentTime = 500;
 	let trailLength = 600;
 	let capRounded = true;
@@ -40,8 +48,7 @@
 
 	$: {
 		const layer = new TripsLayer({
-			data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.trips.json',
-
+			data: loadData(),
 			currentTime: currentTime, // @ts-ignore
 			getTimestamps: (d) => d.waypoints.map((p) => p.timestamp - 1554772579000),
 			trailLength: trailLength,
@@ -94,5 +101,5 @@
 	<input type="range" bind:value={opacity} min="0" max="1" step="0.1" title="Change Opacity" />
 </div>
 
-<ColumnDropdown columnType="startPoint" on:choose={() => {}} />
-<ColumnDropdown columnType="endPoint" on:choose={() => {}} />
+<Dropdown columnType="startPoint" items={$columns} on:choose={() => {}} />
+<Dropdown columnType="endPoint" items={$columns} on:choose={() => {}} />

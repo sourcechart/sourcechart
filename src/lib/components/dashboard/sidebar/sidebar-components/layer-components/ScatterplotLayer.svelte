@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { ScatterplotLayer } from '@deck.gl/layers';
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import {
+		layers,
+		getColumnsFromFile,
+		allCharts,
+		clickedChartIndex,
+		duckDBInstanceStore
+	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
+	import Dropdown from '../utils/Dropdown.svelte';
 
+	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
-
 	let nameColumn = 'name';
 	let codeColumn = 'code';
 	let addressColumn = 'address';
@@ -88,5 +94,5 @@
 	<input type="range" bind:value={opacity} min="0" max="1" step="0.1" />
 	<input type="checkbox" bind:checked={pickable} /> Pickable
 </div>
-<ColumnDropdown columnType="startPoint" on:choose={handleChoose} />
-<ColumnDropdown columnType="endPoint" on:choose={handleChoose} />
+<Dropdown columnType="startPoint" items={$columns} on:choose={handleChoose} />
+<Dropdown columnType="endPoint" items={$columns} on:choose={handleChoose} />

@@ -2,8 +2,11 @@
 	import { PolygonLayer } from '@deck.gl/layers';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
+	import Dropdown from '../utils/Dropdown.svelte';
 
+	import { getColumnsFromFile } from '$lib/io/Stores';
+
+	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
 	let extruded = true;
@@ -91,4 +94,4 @@
 	<input type="checkbox" bind:checked={pickable} /> Pickable
 </div>
 
-<ColumnDropdown columnType="polygon" on:choose={() => {}} />
+<Dropdown columnType="polygon" items={$columns} on:choose={() => {}} />
