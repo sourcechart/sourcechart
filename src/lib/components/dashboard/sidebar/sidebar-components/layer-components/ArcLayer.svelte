@@ -4,6 +4,7 @@
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import ColumnDropdown from '../utils/Dropdown.svelte';
+	import { deepEqual } from './utils';
 
 	$: i = clickedChartIndex();
 	let getWidth = 12;
@@ -52,6 +53,31 @@
 	};
 
 	$: {
+		if ($allCharts && $allCharts.length > $i && $allCharts[$i]) {
+			const newArcLayer: ArcLayer = {
+				layerType: 'Arc',
+				fromLatitudeColumn: fromLatitude,
+				fromLongitudeColumn: fromLongitude,
+				toLatitudeColumn: toLatitude,
+				toLongitudeColumn: toLongitude,
+				width: getWidth, // Assuming getWidth is a numeric value or function elsewhere in your code
+				pickable: pickable
+			};
+
+			if (!deepEqual($allCharts[$i].layers[0].type, newArcLayer)) {
+				allCharts.update((currentCharts) => {
+					let updatedCharts = [...currentCharts];
+					updatedCharts[$i].layers[0] = {
+						layerID: generateID(),
+						type: newArcLayer
+					};
+					return updatedCharts;
+				});
+			}
+		}
+	}
+
+	$: {
 		const newLayer = new ArcLayer({
 			id: generateID(),
 			data: loadData(),
@@ -72,13 +98,20 @@
 		});
 	}
 
-	const handleChoose = (e: CustomEvent) => {
-		let column = e.detail.column;
-		allCharts.update((charts) => {
-			let chart = charts[$i];
-			console.log(chart.layers);
-			return charts;
-		});
+	const handleFromLatitude = (e: CustomEvent) => {
+		fromLatitude = e.detail.column;
+	};
+
+	const handleFromLongitude = (e: CustomEvent) => {
+		fromLongitude = e.detail.column;
+	};
+
+	const handleToLatitude = (e: CustomEvent) => {
+		toLatitude = e.detail.column;
+	};
+
+	const handleToLongitude = (e: CustomEvent) => {
+		toLongitude = e.detail.column;
 	};
 </script>
 
@@ -93,5 +126,7 @@
 	</label>
 </div>
 
-<ColumnDropdown columnType="startPoint" on:choose={handleChoose} />
-<ColumnDropdown columnType="endPoint" on:choose={handleChoose} />
+<ColumnDropdown columnType="fromLatitude" on:choose={handleFromLatitude} />
+<ColumnDropdown columnType="fromLongitude" on:choose={handleFromLongitude} />
+<ColumnDropdown columnType="fromLongitude" on:choose={handleToLatitude} />
+<ColumnDropdown columnType="fromLongitude" on:choose={handleToLongitude} />

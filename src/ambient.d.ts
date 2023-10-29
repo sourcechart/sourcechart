@@ -77,19 +77,16 @@ type LayerOptions = {
 };
 
 type ArcLayer = {
-	id: string;
 	layerType: 'Arc';
 	fromLatitudeColumn: string;
 	fromLongitudeColumn: string;
 	toLatitudeColumn: string;
 	toLongitudeColumn: string;
-	color: string;
 	width: number;
 	pickable: boolean;
 };
 
 type LineLayer = {
-	id: string;
 	layerType: 'Line';
 	fromLatitude: string;
 	fromLongitude: string;
@@ -100,7 +97,6 @@ type LineLayer = {
 };
 
 type ScatterplotLayer = {
-	id: string;
 	type: 'Scatterplot';
 	pickable: boolean;
 	fillColor: string;
