@@ -4,6 +4,7 @@
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { getColumnsFromFile } from '$lib/io/Stores';
 	import Dropdown from '../utils/Dropdown.svelte';
+	import { generateID } from '$lib/io/GenerateID';
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
@@ -78,6 +79,30 @@
 
 	const handleCountChoose = (e: CustomEvent) => {
 		countColumn = e.detail.column;
+		allCharts.update((currentCharts) => {
+			let updatedCharts = currentCharts;
+
+			const layer: H3HexagonLayer = {
+				id: generateID(),
+				type: 'H3HexagonLayer',
+				wireframe: wireframe,
+				pickable: pickable,
+				elevationScale: elevationScale,
+				filled: filled,
+				countColumn: countColumn,
+				extruded: extruded,
+				hexColumn: hexColumn,
+				fillColor: [255, (1 - 1 / 500) * 255, 0]
+			};
+			updatedCharts[$i].layers[0].type = layer;
+			return updatedCharts;
+		});
+		//allCharts.update((currentCharts) => {
+		//	let updatedCharts = currentCharts;
+		//	return updatedCharts;
+		//});
+
+		console.log('allCharts', $allCharts[$i]);
 	};
 </script>
 

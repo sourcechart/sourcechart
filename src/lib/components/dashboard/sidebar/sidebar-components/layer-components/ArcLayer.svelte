@@ -74,7 +74,6 @@
 
 	const handleChoose = (e: CustomEvent) => {
 		let column = e.detail.column;
-		console.log(column);
 		allCharts.update((charts) => {
 			let chart = charts[$i];
 			console.log(chart.layers);

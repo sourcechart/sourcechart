@@ -61,10 +61,10 @@ type Chart = {
 	xColumn: string | null;
 	yColumn: string | null;
 	chartOptions: any;
-	layers?: Layer[];
+	layers?: LayerOptions[];
 };
 
-type Layer = {
+type LayerOptions = {
 	id: string;
 	type:
 		| ArcLayer
@@ -134,15 +134,14 @@ type GeoJsonLayer = {
 type H3HexagonLayer = {
 	id: string;
 	wireframe: boolean;
-	fillColor: string;
+	fillColor: number[];
 	elevationScale: number;
-	elevated: boolean;
+	extruded: boolean;
 	filled: boolean;
 	pickable: boolean;
 	hexColumn: string;
 	countColumn: string;
 	type: 'H3HexagonLayer';
-	columns: string[];
 };
 
 type Canvas = {
