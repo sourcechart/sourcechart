@@ -12,6 +12,7 @@
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
+
 	let nameColumn = 'name';
 	let codeColumn = 'code';
 	let addressColumn = 'address';

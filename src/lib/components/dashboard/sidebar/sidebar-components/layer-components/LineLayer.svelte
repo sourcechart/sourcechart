@@ -38,7 +38,6 @@
 		}
 
 		if (data.length > 0) {
-			// Yield any remaining data if there's any left
 			yield data;
 		}
 	}
@@ -65,13 +64,9 @@
 		});
 
 		layers.update((currentLayers) => {
-			// Check if a layer with the same id exists, then remove it
 			const layerID = newLayer.id;
 			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerID);
-
-			// Add the new LineLayer
 			updatedLayers.push(newLayer);
-
 			return updatedLayers;
 		});
 	}

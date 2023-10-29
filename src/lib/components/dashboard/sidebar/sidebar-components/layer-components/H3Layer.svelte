@@ -8,7 +8,7 @@
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
-	let elevationScale = 20;
+	let elevationScale = 1;
 	let extruded = true;
 	let filled = true;
 	let wireframe = false;

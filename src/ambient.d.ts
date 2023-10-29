@@ -79,23 +79,36 @@ type Layer = {
 
 type ArcLayer = {
 	id: string;
-	type: 'Arc';
+	layerType: 'Arc';
 	fromLatitudeColumn: string;
 	fromLongitudeColumn: string;
 	toLatitudeColumn: string;
 	toLongitudeColumn: string;
-	columns: string[];
+	color: string;
+	width: number;
+	pickable: boolean;
 };
 
 type LineLayer = {
 	id: string;
-	type: 'Line';
-	columns: string[];
+	layerType: 'Line';
+	fromLatitude: string;
+	fromLongitude: string;
+	toLatitude: string;
+	toLongitude: string;
+	pickable: boolean;
+	color: string;
 };
 
 type ScatterplotLayer = {
 	id: string;
 	type: 'Scatterplot';
+	pickable: boolean;
+	fillColor: string;
+	radius: number;
+	strokeColor: string;
+	lineColor: string;
+	opacity: number;
 	columns: string[];
 };
 
@@ -119,6 +132,14 @@ type GeoJsonLayer = {
 
 type H3HexagonLayer = {
 	id: string;
+	wireframe: boolean;
+	fillColor: string;
+	elevationScale: number;
+	elevated: boolean;
+	filled: boolean;
+	pickable: boolean;
+	hexColumn: string;
+	countColumn: string;
 	type: 'H3HexagonLayer';
 	columns: string[];
 };

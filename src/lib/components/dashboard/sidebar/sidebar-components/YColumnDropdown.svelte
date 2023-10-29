@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { clickedChartIndex, allCharts } from '$lib/io/Stores';
-	import Dropdown from './utils/Dropdown.svelte';
 	import { getColumnsFromFile } from '$lib/io/Stores';
+	import Dropdown from './utils/Dropdown.svelte';
 
 	$: columns = getColumnsFromFile();
 	let currentValue: string | null = '';
