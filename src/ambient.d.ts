@@ -30,7 +30,10 @@ type DropdownType =
 	| 'startPoint'
 	| 'endPoint'
 	| 'H3'
-	| 'count';
+	| 'count'
+	| 'color'
+	| 'name'
+	| 'path';
 
 type DistanceFunction = (a: number[], b: number[]) => number;
 type PointVector = number[];
@@ -107,7 +110,11 @@ type ScatterplotLayer = {
 type PathLayer = {
 	id: string;
 	type: 'Path';
-	columns: string[];
+	width: number | string;
+	pickable: boolean;
+	pathColumn: string;
+	nameColumn: string;
+	colorColumn: string;
 };
 
 type PolygonLayer = {

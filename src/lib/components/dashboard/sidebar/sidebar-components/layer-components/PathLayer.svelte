@@ -16,9 +16,9 @@
 	let widthMinPixels = 2;
 	let widthScale = 20;
 	let pickable = true;
-	let pathColumn = 'path'; // Assuming path is stored as a serialized JSON string, e.g., '[[-122.4, 37.7], [-122.5, 37.8], [-122.6, 37.85]]'
+	let pathColumn = 'path';
 	let nameColumn = 'name';
-	let colorColumn = 'color'; // Assu
+	let colorColumn = 'color';
 
 	const CHUNK_SIZE = 100000;
 
@@ -56,13 +56,11 @@
 	$: {
 		const layer = new PathLayer({
 			data: loadData(),
-			// @ts-ignore
 			getColor: (d) => {
 				const hex = d.color;
-				// @ts-ignore
 				return hex.match(/[0-9a-f]{2}/g).map((x) => parseInt(x, 16));
-			}, // @ts-ignore
-			getPath: (d) => d.path, // @ts-ignore
+			},
+			getPath: (d) => d.path,
 			getWidth: (d) => 5,
 			widthMinPixels: widthMinPixels,
 			widthScale: widthScale,
@@ -79,6 +77,12 @@
 			return updatedLayers;
 		});
 	}
+
+	const handleColumnChoice = (type: string, detail: any) => {
+		if (type === 'path') pathColumn = detail.column;
+		if (type === 'name') nameColumn = detail.column;
+		if (type === 'color') colorColumn = detail.column;
+	};
 </script>
 
 <div>Path Layer</div>
@@ -106,7 +110,18 @@
 	</label>
 </div>
 
-<Dropdown columnType="fromLatitude" items={$columns} on:choose={() => {}} />
-<Dropdown columnType="fromLongitude" items={$columns} on:choose={() => {}} />
-<Dropdown columnType="toLatitude" items={$columns} on:choose={() => {}} />
-<Dropdown columnType="toLongitude" items={$columns} on:choose={() => {}} />
+<Dropdown
+	columnType="path"
+	items={$columns}
+	on:choose={(e) => handleColumnChoice('path', e.detail)}
+/>
+<Dropdown
+	columnType="name"
+	items={$columns}
+	on:choose={(e) => handleColumnChoice('name', e.detail)}
+/>
+<Dropdown
+	columnType="color"
+	items={$columns}
+	on:choose={(e) => handleColumnChoice('color', e.detail)}
+/>
