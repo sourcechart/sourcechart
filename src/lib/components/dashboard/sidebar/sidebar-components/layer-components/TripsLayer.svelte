@@ -2,7 +2,7 @@
 	import { TripsLayer } from '@deck.gl/geo-layers';
 	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import ColumnDropdown from './ColumnDropdown.svelte';
+	import ColumnDropdown from '../utils/ColumnDropdown.svelte';
 
 	$: i = clickedChartIndex();
 	let currentTime = 500;

@@ -20,7 +20,6 @@
 			(item: { name: string }) => item.name === currentValue
 		);
 
-		// If xColumn value doesn't exist in schema's name, set currentValue to ''
 		if (!xColumnExistsInSchema) {
 			currentValue = '';
 		}
@@ -47,4 +46,4 @@
 	};
 </script>
 
-<ColumnDropdown columnType="x" on:choose={handleChoose} />
+<ColumnDropdown columnType="x" on:choose={handleChoose} class="top-0" />

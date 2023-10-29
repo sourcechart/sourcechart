@@ -91,6 +91,7 @@
 		console.log('fromLatitude');
 	}}
 />
+
 <ColumnDropdown
 	columnType="toLatitude"
 	on:choose={() => {
