@@ -55,12 +55,12 @@
 
 	$: {
 		const layer = new PathLayer({
-			data: loadData(),
+			data: loadData(), //@ts-ignore
 			getColor: (d) => {
-				const hex = d.color;
+				const hex = d.color; //@ts-ignore
 				return hex.match(/[0-9a-f]{2}/g).map((x) => parseInt(x, 16));
-			},
-			getPath: (d) => d.path,
+			}, //@ts-ignore
+			getPath: (d) => d.path, //@ts-ignore
 			getWidth: (d) => 5,
 			widthMinPixels: widthMinPixels,
 			widthScale: widthScale,

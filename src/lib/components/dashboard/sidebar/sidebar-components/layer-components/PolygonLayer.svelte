@@ -54,11 +54,11 @@
 		const newLayer = new PolygonLayer({
 			data: loadData(),
 			extruded: extruded,
-			filled: filled, // @ts-ignore
-			getElevation: (d) => d.population / d.area / 10, // @ts-ignore
-			getFillColor: (d) => [d.population / d.area / 60, 140, 0], // @ts-ignore
-			getLineColor: lineColor, // @ts-ignore
-			getLineWidth: (d) => 1, // @ts-ignore
+			filled: filled, //@ts-ignore
+			getElevation: (d) => d.population / d.area / 10, //@ts-ignore
+			getFillColor: (d) => [d.population / d.area / 60, 140, 0], //@ts-ignore
+			getLineColor: lineColor, //@ts-ignore
+			getLineWidth: (d) => 1, //@ts-ignore
 			getPolygon: (d) => d.contour,
 			lineWidthMinPixels: lineWidthMinPixels,
 			stroked: stroked,
@@ -72,11 +72,14 @@
 			return updatedLayers;
 		});
 	}
+
+	const handleColumnChoice = (detail: any) => {
+		coordinatesColumn = detail.column;
+	};
 </script>
 
 <div>Polygon Layer</div>
 
-<!-- Input controls to modify properties of the PolygonLayer -->
 <div>
 	<input type="checkbox" bind:checked={extruded} /> Extruded
 	<input type="checkbox" bind:checked={filled} /> Filled
@@ -94,4 +97,4 @@
 	<input type="checkbox" bind:checked={pickable} /> Pickable
 </div>
 
-<Dropdown columnType="polygon" items={$columns} on:choose={() => {}} />
+<Dropdown columnType="polygon" items={$columns} on:choose={(e) => handleColumnChoice(e.detail)} />
