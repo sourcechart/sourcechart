@@ -6,6 +6,7 @@
 	import ColumnDropdown from '../utils/Dropdown.svelte';
 	import { deepEqual } from './utils';
 
+	export let id: string;
 	$: i = clickedChartIndex();
 	let getWidth = 12;
 	let pickable = true;
@@ -79,9 +80,7 @@
 
 	$: {
 		const newLayer = new ArcLayer({
-			id: generateID(),
-			data: loadData(),
-			// @ts-ignore
+			data: loadData(), // @ts-ignore
 			getSourceColor: (d) => [Math.sqrt(d.inbound), 140, 0], // @ts-ignore
 			getSourcePosition: (d) => d.from.coordinates, // @ts-ignore
 			getTargetColor: (d) => [Math.sqrt(d.outbound), 140, 0], // @ts-ignore
@@ -93,7 +92,10 @@
 		layers.update((currentLayers) => {
 			const layerID = newLayer.id;
 			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerID);
-			updatedLayers.push(newLayer);
+			updatedLayers.push({
+				id: id,
+				layer: newLayer
+			});
 			return updatedLayers;
 		});
 	}
@@ -115,18 +117,16 @@
 	};
 </script>
 
-<div>Arc Layer</div>
-
-<!-- Input controls to modify properties of the ArcLayer -->
-<div>
+<div {id}>
+	<div>Arc Layer</div>
 	<input type="range" bind:value={getWidth} min="1" max="50" step="0.5" title="Change Width" />
 	<label>
 		<input type="checkbox" bind:checked={pickable} />
 		Pickable
 	</label>
-</div>
 
-<ColumnDropdown columnType="fromLatitude" on:choose={handleFromLatitude} />
-<ColumnDropdown columnType="fromLongitude" on:choose={handleFromLongitude} />
-<ColumnDropdown columnType="fromLongitude" on:choose={handleToLatitude} />
-<ColumnDropdown columnType="fromLongitude" on:choose={handleToLongitude} />
+	<ColumnDropdown columnType="fromLatitude" on:choose={handleFromLatitude} />
+	<ColumnDropdown columnType="fromLongitude" on:choose={handleFromLongitude} />
+	<ColumnDropdown columnType="fromLongitude" on:choose={handleToLatitude} />
+	<ColumnDropdown columnType="fromLongitude" on:choose={handleToLongitude} />
+</div>

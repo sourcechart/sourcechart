@@ -1,11 +1,16 @@
 <script lang="ts">
 	import { PolygonLayer } from '@deck.gl/layers';
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import {
+		layers,
+		allCharts,
+		clickedChartIndex,
+		duckDBInstanceStore,
+		getColumnsFromFile
+	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import Dropdown from '../utils/Dropdown.svelte';
 
-	import { getColumnsFromFile } from '$lib/io/Stores';
-
+	export let id: string;
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
@@ -67,9 +72,8 @@
 		});
 
 		layers.update((currentLayers) => {
-			let updatedLayers = currentLayers.filter((layer) => layer.id !== newLayer.id);
-			updatedLayers.push(newLayer);
-			return updatedLayers;
+			currentLayers.push({ id: id, layer: newLayer });
+			return currentLayers;
 		});
 	}
 

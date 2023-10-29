@@ -1,18 +1,24 @@
 <script lang="ts">
 	import ChooseLayer from './layer-components/ChooseLayer.svelte';
 	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
+	import { generateID } from '$lib/io/GenerateID';
+	import { layers } from '$lib/io/Stores';
 
 	let counter = 0;
-	let layers: any[] = [];
+	let newLayers: any[] = [];
 
 	const addLayerToList = () => {
 		counter += 1;
-		layers = [...layers, { component: ChooseLayer, id: counter }];
+		newLayers = [...newLayers, { component: ChooseLayer, id: generateID() }];
 	};
 
 	function handleLayerClosed(event: CustomEvent) {
 		const layerIdToRemove = event.detail;
-		layers = layers.filter((layer) => layer.id !== layerIdToRemove);
+		newLayers = newLayers.filter((layer) => layer.id !== layerIdToRemove);
+		layers.update((currentLayers) => {
+			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerIdToRemove);
+			return updatedLayers;
+		});
 	}
 </script>
 
@@ -27,7 +33,7 @@
 
 	<div class="w-full">
 		<div class="flex flex-col mt-4">
-			{#each layers as layer}
+			{#each $layers as layer}
 				<div class="block mb-3">
 					<svelte:component
 						this={layer.component}

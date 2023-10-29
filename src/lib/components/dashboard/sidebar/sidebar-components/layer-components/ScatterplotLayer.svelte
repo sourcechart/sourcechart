@@ -14,6 +14,7 @@
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
+	export let id: string;
 
 	let nameColumn = 'name';
 	let codeColumn = 'code';
@@ -106,9 +107,8 @@
 		});
 
 		layers.update((currentLayers) => {
-			let updatedLayers = currentLayers.filter((layer) => layer.id !== 'ScatterplotLayer');
-			updatedLayers.push(scatterLayer);
-			return updatedLayers;
+			currentLayers.push({ id: id, layer: scatterLayer });
+			return currentLayers;
 		});
 	}
 

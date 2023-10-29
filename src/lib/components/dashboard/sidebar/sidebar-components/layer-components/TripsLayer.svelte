@@ -13,6 +13,7 @@
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
+	export let id: string;
 	let currentTime = 500;
 	let trailLength = 600;
 	let capRounded = true;
@@ -62,9 +63,8 @@
 		});
 
 		layers.update((currentLayers) => {
-			let updatedLayers = currentLayers.filter((layer) => layer.id !== 'TripsLayer');
-			updatedLayers.push(layer);
-			return updatedLayers;
+			currentLayers.push({ id: id, layer: layer });
+			return currentLayers;
 		});
 	}
 </script>

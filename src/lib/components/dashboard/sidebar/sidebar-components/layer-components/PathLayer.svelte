@@ -10,6 +10,7 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import Dropdown from '../utils/Dropdown.svelte';
 
+	export let id: string;
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
@@ -69,6 +70,8 @@
 			},
 			pickable: pickable
 		});
+
+		console.log(layer, layer.id);
 
 		layers.update((currentLayers) => {
 			const layerID = layer.id;

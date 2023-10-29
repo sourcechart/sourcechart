@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { LineLayer } from '@deck.gl/layers';
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import {
+		layers,
+		allCharts,
+		clickedChartIndex,
+		duckDBInstanceStore,
+		getColumnsFromFile
+	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import Dropdown from '../utils/Dropdown.svelte';
-	import { getColumnsFromFile } from '$lib/io/Stores';
 
-	$: columns = getColumnsFromFile();
+	export let id: string;
+
 	let width = 12;
 	let pickable = true;
 	let fromLatitude = 'from_latitude';
@@ -13,6 +19,7 @@
 	let toLatitude = 'to_latitude';
 	let toLongitude = 'to_longitude';
 
+	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 	const CHUNK_SIZE = 100000;
 
@@ -66,48 +73,50 @@
 		layers.update((currentLayers) => {
 			const layerID = newLayer.id;
 			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerID);
-			updatedLayers.push(newLayer);
+			updatedLayers.push({ id: id, layer: newLayer });
 			return updatedLayers;
 		});
 	}
 </script>
 
-<div>Line Layer</div>
+<div {id}>
+	<div>Line Layer</div>
 
-<!-- Input controls to modify properties of the LineLayer -->
-<div>
-	<input type="range" bind:value={width} min="1" max="30" step="0.5" title="Change Width" />
-	<label>
-		<input type="checkbox" bind:checked={pickable} />
-		Pickable
-	</label>
+	<!-- Input controls to modify properties of the LineLayer -->
+	<div>
+		<input type="range" bind:value={width} min="1" max="30" step="0.5" title="Change Width" />
+		<label>
+			<input type="checkbox" bind:checked={pickable} />
+			Pickable
+		</label>
+	</div>
+	<Dropdown
+		columnType="fromLatitude"
+		items={$columns}
+		on:choose={() => {
+			console.log('fromLatitude');
+		}}
+	/>
+
+	<Dropdown
+		columnType="toLatitude"
+		items={$columns}
+		on:choose={() => {
+			console.log('toLatitude');
+		}}
+	/>
+	<Dropdown
+		columnType="fromLongitude"
+		items={$columns}
+		on:choose={() => {
+			console.log('fromLongitude');
+		}}
+	/>
+	<Dropdown
+		items={$columns}
+		columnType="toLongitude"
+		on:choose={() => {
+			console.log('toLongitude');
+		}}
+	/>
 </div>
-<Dropdown
-	columnType="fromLatitude"
-	items={$columns}
-	on:choose={() => {
-		console.log('fromLatitude');
-	}}
-/>
-
-<Dropdown
-	columnType="toLatitude"
-	items={$columns}
-	on:choose={() => {
-		console.log('toLatitude');
-	}}
-/>
-<Dropdown
-	columnType="fromLongitude"
-	items={$columns}
-	on:choose={() => {
-		console.log('fromLongitude');
-	}}
-/>
-<Dropdown
-	items={$columns}
-	columnType="toLongitude"
-	on:choose={() => {
-		console.log('toLongitude');
-	}}
-/>

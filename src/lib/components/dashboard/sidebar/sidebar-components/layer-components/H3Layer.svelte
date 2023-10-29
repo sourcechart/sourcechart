@@ -10,6 +10,8 @@
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
 
+	export let id: string;
+
 	let elevationScale = 1;
 	let extruded = true;
 	let filled = true;
@@ -94,7 +96,10 @@
 		layers.update((currentLayers) => {
 			const layerID = layer.id;
 			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerID);
-			updatedLayers.push(layer);
+			updatedLayers.push({
+				id: id,
+				layer: layer
+			});
 			return updatedLayers;
 		});
 	}
@@ -108,33 +113,35 @@
 	};
 </script>
 
-<div>H3 Layer</div>
+<div {id}>
+	<div>H3 Layer</div>
 
-<div>
-	<input
-		type="range"
-		bind:value={elevationScale}
-		min="1"
-		max="50"
-		step="0.5"
-		title="Change Elevation Scale"
-	/>
-	<label>
-		<input type="checkbox" bind:checked={extruded} />
-		Extruded
-	</label>
-	<label>
-		<input type="checkbox" bind:checked={filled} />
-		Filled
-	</label>
-	<label>
-		<input type="checkbox" bind:checked={wireframe} />
-		Wireframe
-	</label>
-	<label>
-		<input type="checkbox" bind:checked={pickable} />
-		Pickable
-	</label>
+	<div>
+		<input
+			type="range"
+			bind:value={elevationScale}
+			min="1"
+			max="50"
+			step="0.5"
+			title="Change Elevation Scale"
+		/>
+		<label>
+			<input type="checkbox" bind:checked={extruded} />
+			Extruded
+		</label>
+		<label>
+			<input type="checkbox" bind:checked={filled} />
+			Filled
+		</label>
+		<label>
+			<input type="checkbox" bind:checked={wireframe} />
+			Wireframe
+		</label>
+		<label>
+			<input type="checkbox" bind:checked={pickable} />
+			Pickable
+		</label>
+	</div>
+	<Dropdown columnType="H3" items={$columns} on:choose={handleHexChoose} />
+	<Dropdown columnType="count" items={$columns} on:choose={handleCountChoose} />
 </div>
-<Dropdown columnType="H3" items={$columns} on:choose={handleHexChoose} />
-<Dropdown columnType="count" items={$columns} on:choose={handleCountChoose} />

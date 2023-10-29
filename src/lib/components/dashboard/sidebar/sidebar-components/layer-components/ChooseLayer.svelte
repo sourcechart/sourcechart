@@ -8,43 +8,22 @@
 	import H3Layer from './H3Layer.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
+	import { layers } from '$lib/io/Stores';
 
 	const dispatch = createEventDispatcher();
 
 	export let id: string;
 
 	let currentLayer: string = 'Select Layer';
+
 	let deckGlLayers = [
-		{
-			name: 'PolygonLayer',
-			component: PolygonLayer
-		},
-
-		{
-			name: 'PathLayer',
-			component: PathLayer
-		},
-		{
-			name: 'ArcLayer',
-			component: ArcLayer
-		},
-		{
-			name: 'LineLayer',
-			component: LineLayer
-		},
-
-		{
-			name: 'ScatterplotLayer',
-			component: ScatterplotLayer
-		},
-		{
-			name: 'TripsLayer',
-			component: TripsLayer
-		},
-		{
-			name: 'H3',
-			component: H3Layer
-		}
+		'PolygonLayer',
+		'PathLayer',
+		'ArcLayer',
+		'LineLayer',
+		'ScatterplotLayer',
+		'TripsLayer',
+		'H3'
 	];
 
 	function selectLayer(layerName: string) {
@@ -80,38 +59,38 @@
 			<CloseSolid class="w-5 h-5 text-gray-300 hover:text-gray-100" />
 		</button>
 	</button>
-</div>
 
-<div>
-	{#if isDropdownOpen}
-		<div
-			class="w-48 top-0 absolute left-12 ml-2 mt-72 bg-neutral-900 rounded-md h-48 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 scrollBarDiv"
-		>
-			{#each deckGlLayers as layer (layer.name)}
-				<button
-					class="w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300"
-					on:click={() => selectLayer(layer.name)}
-				>
-					{layer.name}
-				</button>
-			{/each}
-		</div>
-	{/if}
+	<div>
+		{#if isDropdownOpen}
+			<div
+				class="w-48 top-0 absolute left-12 ml-2 mt-72 bg-neutral-900 rounded-md h-48 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 scrollBarDiv"
+			>
+				{#each deckGlLayers as layer (layer)}
+					<button
+						class="w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300"
+						on:click={() => selectLayer(layer)}
+					>
+						{layer}
+					</button>
+				{/each}
+			</div>
+		{/if}
+	</div>
 </div>
 {#if currentLayer === 'PolygonLayer'}
-	<PolygonLayer />
+	<PolygonLayer {id} />
 {:else if currentLayer === 'PathLayer'}
-	<PathLayer />
+	<PathLayer {id} />
 {:else if currentLayer === 'ArcLayer'}
-	<ArcLayer />
+	<ArcLayer {id} />
 {:else if currentLayer === 'LineLayer'}
-	<LineLayer />
+	<LineLayer {id} />
 {:else if currentLayer === 'ScatterplotLayer'}
-	<ScatterplotLayer />
+	<ScatterplotLayer {id} />
 {:else if currentLayer === 'TripsLayer'}
-	<TripsLayer />
+	<TripsLayer {id} />
 {:else if currentLayer === 'H3'}
-	<H3Layer />
+	<H3Layer {id} />
 {/if}
 
 <style>
