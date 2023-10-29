@@ -20,6 +20,31 @@
 
 	const CHUNK_SIZE = 100000;
 
+	$: {
+		if ($allCharts && $allCharts.length > $i && $allCharts[$i]) {
+			allCharts.update((currentCharts) => {
+				let updatedCharts = [...currentCharts];
+
+				const layer: H3HexagonLayer = {
+					type: 'H3HexagonLayer',
+					wireframe: wireframe,
+					pickable: pickable,
+					elevationScale: elevationScale,
+					filled: filled,
+					countColumn: countColumn,
+					extruded: extruded,
+					hexColumn: hexColumn,
+					fillColor: [255, (1 - 1 / 500) * 255, 0]
+				};
+				updatedCharts[$i].layers[0] = {
+					layerID: generateID(),
+					type: layer
+				};
+				return updatedCharts;
+			});
+		}
+	}
+
 	async function* transformRows(rows: AsyncIterable<any>) {
 		let data = [];
 		for await (const row of rows) {
@@ -66,9 +91,7 @@
 		layers.update((currentLayers) => {
 			const layerID = layer.id;
 			let updatedLayers = currentLayers.filter((layer) => layer.id !== layerID);
-
 			updatedLayers.push(layer);
-
 			return updatedLayers;
 		});
 	}
@@ -79,36 +102,11 @@
 
 	const handleCountChoose = (e: CustomEvent) => {
 		countColumn = e.detail.column;
-		allCharts.update((currentCharts) => {
-			let updatedCharts = currentCharts;
-
-			const layer: H3HexagonLayer = {
-				id: generateID(),
-				type: 'H3HexagonLayer',
-				wireframe: wireframe,
-				pickable: pickable,
-				elevationScale: elevationScale,
-				filled: filled,
-				countColumn: countColumn,
-				extruded: extruded,
-				hexColumn: hexColumn,
-				fillColor: [255, (1 - 1 / 500) * 255, 0]
-			};
-			updatedCharts[$i].layers[0].type = layer;
-			return updatedCharts;
-		});
-		//allCharts.update((currentCharts) => {
-		//	let updatedCharts = currentCharts;
-		//	return updatedCharts;
-		//});
-
-		console.log('allCharts', $allCharts[$i]);
 	};
 </script>
 
 <div>H3 Layer</div>
 
-<!-- Input controls to modify properties of the H3HexagonLayer -->
 <div>
 	<input
 		type="range"
