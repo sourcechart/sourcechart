@@ -1,9 +1,9 @@
 <script lang="ts">
+	import { layers, mostRecentChartID } from '$lib/io/Stores';
+	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
+	import { GeoJsonLayer } from '@deck.gl/layers';
 	import { onDestroy, onMount } from 'svelte';
 	import { Deck } from '@deck.gl/core';
-	import { GeoJsonLayer } from '@deck.gl/layers';
-	import { layers, layers as layersStore, mostRecentChartID } from '$lib/io/Stores';
-	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
 
 	export let dataUrl: string =
 		'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_scale_rank.geojson';
@@ -28,7 +28,7 @@
 			getLineColor: [60, 60, 60],
 			getFillColor: [200, 200, 200]
 		});
-		layersStore.set([{ id: 'geojson', layer: geojsonLayer }]);
+		layers.set([{ id: 'geojson', layer: geojsonLayer }]);
 	});
 
 	$: if (container) {
@@ -44,7 +44,7 @@
 		deckInstance = new Deck({
 			initialViewState: INITIAL_VIEW_STATE,
 			controller: true,
-			layers: $layers
+			layers: $layers.filter((l) => l.layer).map((l) => l.layer)
 		});
 	}
 </script>
