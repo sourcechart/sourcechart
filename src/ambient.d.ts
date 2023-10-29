@@ -99,12 +99,9 @@ type LineLayer = {
 type ScatterplotLayer = {
 	type: 'Scatterplot';
 	pickable: boolean;
-	fillColor: string;
 	radius: number;
-	strokeColor: string;
-	lineColor: string;
-	opacity: number;
-	columns: string[];
+	latitudeColumn: string;
+	longitudeColumn: string;
 };
 
 type PathLayer = {

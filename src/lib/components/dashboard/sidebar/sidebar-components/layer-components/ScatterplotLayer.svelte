@@ -9,6 +9,8 @@
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import Dropdown from '../utils/Dropdown.svelte';
+	import { deepEqual } from './utils';
+	import { generateID } from '$lib/io/GenerateID';
 
 	$: columns = getColumnsFromFile();
 	$: i = clickedChartIndex();
@@ -40,8 +42,8 @@
 			data.push(obj);
 
 			if (data.length >= CHUNK_SIZE) {
-				yield data; // Yield the chunk when it reaches the CHUNK_SIZE
-				data = []; // Reset the data list for the next chunk
+				yield data;
+				data = [];
 			}
 		}
 
@@ -61,15 +63,45 @@
 	};
 
 	$: {
+		const scatterLayerConfig: ScatterplotLayer = {
+			type: 'Scatterplot',
+			latitudeColumn: coordinatesLatitude,
+			longitudeColumn: coordinatesLongitude,
+			pickable,
+			radius: radiusScale
+		};
+
+		if (
+			$allCharts &&
+			$allCharts.length > $i &&
+			$allCharts[$i] &&
+			!deepEqual($allCharts[$i].layers[0].type, scatterLayerConfig)
+		) {
+			allCharts.update((currentCharts) => {
+				let updatedCharts = [...currentCharts];
+				updatedCharts[$i].layers[0] = {
+					layerID: generateID(),
+					type: scatterLayerConfig
+				};
+				return updatedCharts;
+			});
+		}
+	}
+
+	$: {
 		const scatterLayer = new ScatterplotLayer({
 			data: loadData(),
-			radiusScale: 3,
-			radiusMinPixels: 0.25, //@ts-ignore
-			getPosition: (d) => [d[0], d[1], 0], //@ts-ignore
-			getFillColor: (d) => (d[2] === 1 ? 'red' : 'blue'),
-			getRadius: 1,
+			radiusScale,
+			radiusMinPixels: 0.25,
+			// @ts-ignore
+			getPosition: (d) => [d[0], d[1], 0],
+			// @ts-ignore
+			getFillColor: fillColor,
+			getRadius: radiusScale,
+			pickable,
 			updateTriggers: {
-				getFillColor: ['red', 'blue']
+				getFillColor: fillColor,
+				getLineColor: lineColor
 			}
 		});
 
@@ -80,8 +112,13 @@
 		});
 	}
 
-	const handleChoose = () => {
-		console.log('choose');
+	const handleChoose = (e: CustomEvent) => {
+		const columnType = e.detail.columnType;
+		if (columnType === 'startPoint') {
+			coordinatesLatitude = e.detail.value;
+		} else if (columnType === 'endPoint') {
+			coordinatesLongitude = e.detail.value;
+		}
 	};
 </script>
 
