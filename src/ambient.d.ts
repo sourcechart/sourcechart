@@ -29,7 +29,8 @@ type DropdownType =
 	| 'polygon'
 	| 'startPoint'
 	| 'endPoint'
-	| 'H3';
+	| 'H3'
+	| 'count';
 
 type DistanceFunction = (a: number[], b: number[]) => number;
 type PointVector = number[];

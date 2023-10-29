@@ -49,7 +49,6 @@
 
 	function selectLayer(layerName: string) {
 		currentLayer = layerName;
-		console.log('trigger');
 		isDropdownOpen = false;
 	}
 

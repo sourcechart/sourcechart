@@ -72,9 +72,12 @@
 		});
 	}
 
-	const handleChoose = (e: CustomEvent) => {
-		hexColumn = e.detail.hexColumn;
-		countColumn = e.detail.countColumn;
+	const handleHexChoose = (e: CustomEvent) => {
+		hexColumn = e.detail.column;
+	};
+
+	const handleCountChoose = (e: CustomEvent) => {
+		countColumn = e.detail.column;
 	};
 </script>
 
@@ -107,4 +110,5 @@
 		Pickable
 	</label>
 </div>
-<Dropdown columnType="H3" items={$columns} on:choose={handleChoose} />
+<Dropdown columnType="H3" items={$columns} on:choose={handleHexChoose} />
+<Dropdown columnType="count" items={$columns} on:choose={handleCountChoose} />

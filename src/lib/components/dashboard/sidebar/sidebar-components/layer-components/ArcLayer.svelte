@@ -74,12 +74,10 @@
 
 	const handleChoose = (e: CustomEvent) => {
 		let column = e.detail.column;
+		console.log(column);
 		allCharts.update((charts) => {
 			let chart = charts[$i];
-			if (chart.layers) {
-				chart.layers[0].type = 'Arc';
-				chart.layers = [...chart.layers[0].columns, column.columnName];
-			}
+			console.log(chart.layers);
 			return charts;
 		});
 	};
