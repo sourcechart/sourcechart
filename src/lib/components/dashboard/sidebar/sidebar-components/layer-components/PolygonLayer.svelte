@@ -83,23 +83,22 @@
 	};
 </script>
 
-<div>Polygon Layer</div>
+<div {id}>
+	<div>
+		<input type="checkbox" bind:checked={extruded} /> Extruded
+		<input type="checkbox" bind:checked={filled} /> Filled
+		<input
+			type="range"
+			bind:value={lineWidthMinPixels}
+			min="1"
+			max="10"
+			step="0.5"
+			title="Change Line Width Min Pixels"
+		/>
+		<input type="checkbox" bind:checked={stroked} /> Stroked
+		<input type="checkbox" bind:checked={wireframe} /> Wireframe
+		<input type="checkbox" bind:checked={pickable} /> Pickable
+	</div>
 
-<div>
-	<input type="checkbox" bind:checked={extruded} /> Extruded
-	<input type="checkbox" bind:checked={filled} /> Filled
-	<input type="color" bind:value={lineColor} title="Change Line Color" />
-	<input
-		type="range"
-		bind:value={lineWidthMinPixels}
-		min="1"
-		max="10"
-		step="0.5"
-		title="Change Line Width Min Pixels"
-	/>
-	<input type="checkbox" bind:checked={stroked} /> Stroked
-	<input type="checkbox" bind:checked={wireframe} /> Wireframe
-	<input type="checkbox" bind:checked={pickable} /> Pickable
+	<Dropdown columnType="polygon" items={$columns} on:choose={(e) => handleColumnChoice(e.detail)} />
 </div>
-
-<Dropdown columnType="polygon" items={$columns} on:choose={(e) => handleColumnChoice(e.detail)} />

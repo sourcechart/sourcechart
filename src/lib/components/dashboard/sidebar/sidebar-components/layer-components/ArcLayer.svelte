@@ -121,7 +121,6 @@
 </script>
 
 <div {id}>
-	<div>Arc Layer</div>
 	<input type="range" bind:value={getWidth} min="1" max="50" step="0.5" title="Change Width" />
 	<label>
 		<input type="checkbox" bind:checked={pickable} />

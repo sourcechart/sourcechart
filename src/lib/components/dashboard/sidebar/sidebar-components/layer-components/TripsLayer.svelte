@@ -14,6 +14,7 @@
 	$: i = clickedChartIndex();
 
 	export let id: string;
+
 	let currentTime = 500;
 	let trailLength = 600;
 	let capRounded = true;
@@ -49,6 +50,7 @@
 
 	$: {
 		const layer = new TripsLayer({
+			id: id,
 			data: loadData(),
 			currentTime: currentTime, // @ts-ignore
 			getTimestamps: (d) => d.waypoints.map((p) => p.timestamp - 1554772579000),

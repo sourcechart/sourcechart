@@ -133,34 +133,22 @@
 </script>
 
 <div {id}>
-	<div>H3 Layer</div>
-
-	<div>
-		<input
-			type="range"
-			bind:value={elevationScale}
-			min="1"
-			max="50"
-			step="0.5"
-			title="Change Elevation Scale"
-		/>
-		<label>
-			<input type="checkbox" bind:checked={extruded} />
-			Extruded
-		</label>
-		<label>
-			<input type="checkbox" bind:checked={filled} />
-			Filled
-		</label>
-		<label>
-			<input type="checkbox" bind:checked={wireframe} />
-			Wireframe
-		</label>
-		<label>
-			<input type="checkbox" bind:checked={pickable} />
-			Pickable
-		</label>
-	</div>
+	<label>
+		<input type="checkbox" bind:checked={extruded} />
+		Extruded
+	</label>
+	<label>
+		<input type="checkbox" bind:checked={filled} />
+		Filled
+	</label>
+	<label>
+		<input type="checkbox" bind:checked={wireframe} />
+		Wireframe
+	</label>
+	<label>
+		<input type="checkbox" bind:checked={pickable} />
+		Pickable
+	</label>
 	<Dropdown columnType="H3" items={$columns} on:choose={handleHexChoose} />
 	<Dropdown columnType="count" items={$columns} on:choose={handleCountChoose} />
 </div>

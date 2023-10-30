@@ -24,6 +24,43 @@
 	$: i = clickedChartIndex();
 	const CHUNK_SIZE = 100000;
 
+	$: {
+		const newLayerType: LineLayer = {
+			layerType: 'Line',
+			pickable: pickable,
+			fromLatitude: fromLatitude,
+			fromLongitude: fromLongitude,
+			toLatitude: toLatitude,
+			toLongitude: toLongitude,
+			color: 'black'
+		};
+
+		if ($allCharts && $allCharts.length > $i && $allCharts[$i]) {
+			let layerToUpdate = $allCharts[$i].layers.find((l) => l.layerID === id);
+
+			if (layerToUpdate) {
+				allCharts.update((currentCharts) => {
+					let updatedCharts = [...currentCharts];
+					const layerIndex = updatedCharts[$i].layers.findIndex((l) => l.layerID === id);
+					updatedCharts[$i].layers[layerIndex] = {
+						layerID: id,
+						type: newLayerType
+					};
+					return updatedCharts;
+				});
+			} else {
+				allCharts.update((currentCharts) => {
+					let updatedCharts = [...currentCharts];
+					updatedCharts[$i].layers.push({
+						layerID: id,
+						type: newLayerType
+					});
+					return updatedCharts;
+				});
+			}
+		}
+	}
+
 	async function* transformRows(rows: AsyncIterable<any>) {
 		let data = [];
 		for await (const row of rows) {
@@ -82,8 +119,6 @@
 </script>
 
 <div {id}>
-	<div>Line Layer</div>
-
 	<!-- Input controls to modify properties of the LineLayer -->
 	<div>
 		<input type="range" bind:value={width} min="1" max="30" step="0.5" title="Change Width" />

@@ -41,11 +41,14 @@
 			bearing: 0
 		};
 
-		new Deck({
+		deckInstance = new Deck({
 			initialViewState: INITIAL_VIEW_STATE,
 			controller: true,
-			layers: $layers.filter((l) => l.layer).map((l) => l.layer)
+			layers: []
 		});
+
+		const updatedLayers = $layers.filter((l) => l.layer).map((l) => l.layer);
+		deckInstance.setProps({ layers: updatedLayers });
 	}
 </script>
 
