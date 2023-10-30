@@ -56,7 +56,7 @@
 	};
 </script>
 
-<div {...$$props} bind:this={container}>
+<div bind:this={container}>
 	<div class="relative">
 		<button
 			aria-label="Toggle Dropdown"
@@ -77,7 +77,7 @@
 
 		{#if isDropdownOpen}
 			<div
-				class="scrollBarDiv bg-neutral-900 rounded-md absolute w-full left-0 top-full mt-1 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+				class="scrollBarDiv h-36 bg-neutral-900 rounded-md absolute w-full left-0 top-full mt-1 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			>
 				{#each deckGlLayers as layer}
 					<button
