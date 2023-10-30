@@ -100,7 +100,7 @@ type LineLayer = {
 };
 
 type ScatterplotLayer = {
-	type: 'Scatterplot';
+	layerType: 'Scatterplot';
 	pickable: boolean;
 	radius: number;
 	latitudeColumn: string;
@@ -109,7 +109,7 @@ type ScatterplotLayer = {
 
 type PathLayer = {
 	id: string;
-	type: 'Path';
+	layerType: 'Path';
 	width: number | string;
 	pickable: boolean;
 	pathColumn: string;
@@ -119,13 +119,13 @@ type PathLayer = {
 
 type PolygonLayer = {
 	id: string;
-	type: 'Polygon';
+	layerType: 'Polygon';
 	columns: string[];
 };
 
 type GeoJsonLayer = {
 	id: string;
-	type: 'GeoJson';
+	layerType: 'GeoJson';
 	columns: string[];
 };
 
@@ -138,7 +138,7 @@ type H3HexagonLayer = {
 	pickable: boolean;
 	hexColumn: string;
 	countColumn: string;
-	type: 'H3HexagonLayer';
+	layerType: 'H3HexagonLayer';
 };
 
 type Canvas = {

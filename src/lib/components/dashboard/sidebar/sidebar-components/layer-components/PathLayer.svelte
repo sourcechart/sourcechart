@@ -26,7 +26,7 @@
 	$: {
 		const newLayer: PathLayer = {
 			id: id,
-			type: 'Path',
+			layerType: 'Path',
 			width: widthMinPixels,
 			pickable: pickable,
 			pathColumn: pathColumn,

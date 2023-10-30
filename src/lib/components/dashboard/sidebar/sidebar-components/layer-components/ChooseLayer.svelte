@@ -7,12 +7,16 @@
 	import LineLayer from './LineLayer.svelte';
 	import ArcLayer from './ArcLayer.svelte';
 	import H3Layer from './H3Layer.svelte';
+	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
 	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
 
 	export let id: string;
 
+	$: i = clickedChartIndex();
+
+	$: console.log($allCharts[$i]);
 	let container: HTMLElement;
 	let currentLayer: string = 'Select Layer';
 	let deckGlLayers = [

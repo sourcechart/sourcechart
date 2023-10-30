@@ -10,55 +10,72 @@
 	$: i = clickedChartIndex();
 
 	export let id: string;
-	let elevationScale = 1;
-	let extruded = true;
-	let filled = true;
-	let wireframe = false;
-	let pickable = true;
-
-	let hexColumn = 'H3_Index';
-	let countColumn = 'Count';
 
 	const CHUNK_SIZE = 100000;
 
+	let wireframe = false;
+	let pickable = true;
+	let elevationScale = 1;
+	let filled = true;
+	let countColumn = 'Count';
+	let extruded = true;
+	let hexColumn = 'H3_Index';
+
+	$: if ($allCharts && $allCharts.length > 0) {
+		let existingLayer = $allCharts[0].layers.find((l) => l.layerID === id);
+		if (existingLayer) {
+			switch (
+				existingLayer.type.layerType // or existingLayer.type.layerType for some layers
+			) {
+				case 'H3HexagonLayer':
+					wireframe = existingLayer.type.wireframe;
+					pickable = existingLayer.type.pickable;
+					elevationScale = existingLayer.type.elevationScale;
+					filled = existingLayer.type.filled;
+					countColumn = existingLayer.type.countColumn;
+					extruded = existingLayer.type.extruded;
+					hexColumn = existingLayer.type.hexColumn;
+					break;
+			}
+		}
+	}
+
 	$: {
-		if ($allCharts && $allCharts.length > $i && $allCharts[$i]) {
-			const newLayer: H3HexagonLayer = {
-				type: 'H3HexagonLayer',
-				wireframe: wireframe,
-				pickable: pickable,
-				elevationScale: elevationScale,
-				filled: filled,
-				countColumn: countColumn,
-				extruded: extruded,
-				hexColumn: hexColumn,
-				fillColor: [255, (1 - 1 / 500) * 255, 0]
-			};
+		const newLayer: H3HexagonLayer = {
+			layerType: 'H3HexagonLayer',
+			wireframe,
+			pickable,
+			elevationScale,
+			filled,
+			countColumn,
+			extruded,
+			hexColumn,
+			fillColor: [255, (1 - 1 / 500) * 255, 0]
+		};
 
-			let layerToUpdate = $allCharts[$i].layers.find((l) => l.layerID === id);
+		let layerToUpdate = $allCharts[$i].layers.find((l) => l.layerID === id);
 
-			if (layerToUpdate) {
-				if (!deepEqual(layerToUpdate.type, newLayer)) {
-					allCharts.update((currentCharts) => {
-						let updatedCharts = [...currentCharts];
-						const layerIndex = updatedCharts[$i].layers.findIndex((l) => l.layerID === id);
-						updatedCharts[$i].layers[layerIndex] = {
-							layerID: id,
-							type: newLayer
-						};
-						return updatedCharts;
-					});
-				}
-			} else {
+		if (layerToUpdate) {
+			if (!deepEqual(layerToUpdate.type, newLayer)) {
 				allCharts.update((currentCharts) => {
 					let updatedCharts = [...currentCharts];
-					updatedCharts[$i].layers.push({
+					const layerIndex = updatedCharts[$i].layers.findIndex((l) => l.layerID === id);
+					updatedCharts[$i].layers[layerIndex] = {
 						layerID: id,
 						type: newLayer
-					});
+					};
 					return updatedCharts;
 				});
 			}
+		} else {
+			allCharts.update((currentCharts) => {
+				let updatedCharts = [...currentCharts];
+				updatedCharts[$i].layers.push({
+					layerID: id,
+					type: newLayer
+				});
+				return updatedCharts;
+			});
 		}
 	}
 
