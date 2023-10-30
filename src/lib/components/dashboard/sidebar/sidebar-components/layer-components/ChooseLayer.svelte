@@ -1,13 +1,14 @@
 <script lang="ts">
-	import ArcLayer from './ArcLayer.svelte';
-	import LineLayer from './LineLayer.svelte';
-	import PolygonLayer from './PolygonLayer.svelte';
-	import PathLayer from './PathLayer.svelte';
-	import ScatterplotLayer from './ScatterplotLayer.svelte';
-	import TripsLayer from './TripsLayer.svelte';
-	import H3Layer from './H3Layer.svelte';
-	import { createEventDispatcher } from 'svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
+	import ScatterplotLayer from './ScatterplotLayer.svelte';
+	import PolygonLayer from './PolygonLayer.svelte';
+	import TripsLayer from './TripsLayer.svelte';
+	import PathLayer from './PathLayer.svelte';
+	import LineLayer from './LineLayer.svelte';
+	import ArcLayer from './ArcLayer.svelte';
+	import H3Layer from './H3Layer.svelte';
+
+	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
 
 	export let id: string;
