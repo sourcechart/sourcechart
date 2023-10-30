@@ -11,9 +11,19 @@
 	let deckInstance: any;
 	let container: HTMLElement;
 
-	onDestroy(() => {
-		deckInstance && deckInstance.finalize();
-	});
+	let INITIAL_VIEW_STATE = {
+		longitude: -74,
+		latitude: 40.7,
+		zoom: 4,
+		maxZoom: 16,
+		pitch: 0,
+		bearing: 0
+	};
+
+	$: if (container) {
+		const updatedLayers = $layers.filter((l) => l.layer).map((l) => l.layer);
+		deckInstance.setProps({ layers: updatedLayers });
+	}
 
 	onMount(() => {
 		var id = 'base-map';
@@ -29,27 +39,16 @@
 			getFillColor: [200, 200, 200]
 		});
 		layers.set([{ id: 'geojson', layer: geojsonLayer }]);
-	});
-
-	$: if (container) {
-		const INITIAL_VIEW_STATE = {
-			longitude: -74,
-			latitude: 40.7,
-			zoom: 4,
-			maxZoom: 16,
-			pitch: 0,
-			bearing: 0
-		};
-
 		deckInstance = new Deck({
 			initialViewState: INITIAL_VIEW_STATE,
 			controller: true,
 			layers: []
 		});
+	});
 
-		const updatedLayers = $layers.filter((l) => l.layer).map((l) => l.layer);
-		deckInstance.setProps({ layers: updatedLayers });
-	}
+	onDestroy(() => {
+		deckInstance && deckInstance.finalize();
+	});
 </script>
 
 <div bind:this={container} style="width: 100%; height: 100%;" />
