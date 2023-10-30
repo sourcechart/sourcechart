@@ -8,13 +8,12 @@
 	import H3Layer from './H3Layer.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
-
-	const dispatch = createEventDispatcher();
+	import { onMount } from 'svelte';
 
 	export let id: string;
 
+	let container: HTMLElement;
 	let currentLayer: string = 'Select Layer';
-
 	let deckGlLayers = [
 		'PolygonLayer',
 		'PathLayer',
@@ -24,6 +23,15 @@
 		'TripsLayer',
 		'H3'
 	];
+
+	onMount(() => {
+		document.addEventListener('click', handleOutsideClick);
+		return () => {
+			document.removeEventListener('click', handleOutsideClick);
+		};
+	});
+
+	const dispatch = createEventDispatcher();
 
 	function selectLayer(layerName: string) {
 		currentLayer = layerName;
@@ -40,33 +48,40 @@
 		currentLayer = 'Select Layer';
 		dispatch('closeLayer', id); // Emitting a custom event with the layer's ID.
 	}
+
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (container && !container.contains(event.target as Node)) {
+			isDropdownOpen = false;
+		}
+	};
 </script>
 
-<div {id}>
-	<button
-		class="w-full py-1 rounded-sm bg-neutral-900 hover:bg-neutral-900/50 text-sm font-thin text-gray-100 flex justify-between items-center"
-		on:click={toggleDropdown}
-	>
-		<span class="ml-2">{currentLayer}</span>
+<div {...$$props} bind:this={container}>
+	<div class="relative">
 		<button
-			class="p-0"
-			on:click={(e) => {
-				removeLayer();
-				e.stopPropagation();
-			}}
+			aria-label="Toggle Dropdown"
+			class="mx-auto bg-neutral-900 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center border-neutral-700/50"
+			on:click={toggleDropdown}
 		>
-			<CloseSolid class="w-5 h-5 text-gray-300 hover:text-gray-100" />
+			<span class="text-sm text-neutral-300 ml-1">{currentLayer}</span>
+			<button
+				class="p-0 ml-auto"
+				on:click={(e) => {
+					removeLayer();
+					e.stopPropagation();
+				}}
+			>
+				<CloseSolid class="w-5 h-5 text-gray-300 hover:text-gray-100" />
+			</button>
 		</button>
-	</button>
 
-	<div>
 		{#if isDropdownOpen}
 			<div
-				class="w-48 top-0 absolute left-12 ml-2 mt-72 bg-neutral-900 rounded-md h-48 shadow-lg transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10 scrollBarDiv"
+				class="scrollBarDiv bg-neutral-900 rounded-md absolute w-full left-0 top-full mt-1 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			>
-				{#each deckGlLayers as layer (layer)}
+				{#each deckGlLayers as layer}
 					<button
-						class="w-full text-left px-3 py-2 hover:bg-neutral-700 font-thin text-sm text-gray-300"
+						class="block w-full text-left px-3 py-2 text-gray-300 hover:bg-neutral-700 font-thin text-sm truncate"
 						on:click={() => selectLayer(layer)}
 					>
 						{layer}

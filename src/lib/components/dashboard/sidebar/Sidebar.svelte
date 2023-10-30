@@ -79,6 +79,7 @@
 					</div>
 
 					<!-- X and Y dropdown-->
+					<!--
 					<div class="py-4 px-3 w-full hover:bg-[#303030]">
 						<div class="flex items-center justify-between space-x-3 mt-1">
 							<span class="text-sm text-neutral-300">Select</span>
@@ -90,15 +91,17 @@
 							</div>
 						</div>
 					</div>
-
+					-->
 					<!--GroupBy-->
+					<!--
 					<div class="py-4 px-3 hover:bg-[#303030]">
 						<div class="my-1">
 							<Groupby />
 						</div>
 					</div>
-
+					-->
 					<!--Filters-->
+					<!--
 					<div class="py-4 px-3 hover:bg-[#303030] hover:round-md">
 						<div class="flex justify-between items-center w-full">
 							<span class="text-sm font-light text-neutral-300">Filters</span>
@@ -111,7 +114,7 @@
 							</div>
 						{/each}
 					</div>
-
+					-->
 					<!--Analysis-->
 					<!--
 						<div class="py-2 px-3 hover:bg-[#303030] hover:round-md">
@@ -130,9 +133,11 @@
 					</div>
 
 					<!--Export-->
+					<!--
 					<div class="py-4 px-3 hover:round-md">
 						<ExportToCSV />
 					</div>
+					-->
 					<!-- Space-->
 					<div>
 						<div />

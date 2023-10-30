@@ -1,15 +1,15 @@
 <script lang="ts">
-	import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
-	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
 	import FileUploadPanel from '$lib/components/dashboard/fileuploadpanel/FileUploadPanel.svelte';
+	//import ToggleSidebar from '$lib/components/dashboard/sidebar/ToggleSidebar.svelte';
+	import Sidebar from '$lib/components/dashboard/sidebar/Sidebar.svelte';
+	//import NavBar from '$lib/components/dashboard/navbar/NavBar.svelte';
 
 	import DeckGl from '$lib/components/dashboard/deckgl/DeckGL.svelte';
 	import Safety from '$lib/components/dashboard/buttons/Safety.svelte';
 	import Help from '$lib/components/dashboard/buttons/Help.svelte';
-	import ToggleSidebar from '$lib/components/dashboard/sidebar/ToggleSidebar.svelte';
 
-	import { onMount } from 'svelte';
 	import { activeDropZone, keyPress, tabValue, screenSize } from '$lib/io/Stores';
+	import { onMount } from 'svelte';
 
 	let width: number = 0;
 
@@ -40,12 +40,12 @@
 </script>
 
 <div class="flex justify-center items-center fixed top-4 left-1/2 -translate-x-1/2 z-10">
-	<NavBar />
+	<!--<NavBar />-->
 </div>
 
 <div class="absolute z-10 ml-6 mt-6">
 	<Sidebar />
-	<ToggleSidebar />
+	<!--<ToggleSidebar />-->
 </div>
 
 <div class="fixed z-0 w-screen h-screen">
