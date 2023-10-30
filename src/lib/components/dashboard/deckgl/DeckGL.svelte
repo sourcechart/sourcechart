@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
-	import { layers, mostRecentChartID } from '$lib/io/Stores';
+	import { layers, mostRecentChartID, allCharts, clickedChartIndex } from '$lib/io/Stores';
 	import { onDestroy, onMount } from 'svelte';
 	import { Deck } from '@deck.gl/core';
 	import mapboxgl from 'mapbox-gl';
@@ -20,6 +20,7 @@
 		bearing: 0
 	};
 
+	$: i = clickedChartIndex();
 	$: if (container) {
 		const updatedLayers = $layers.filter((l) => l.layer).map((l) => l.layer);
 		if (updatedLayers.length > 0) deckInstance.setProps({ layers: updatedLayers });
@@ -32,9 +33,11 @@
 
 	onMount(() => {
 		var id = 'base-map';
-		addChartMetaData(id);
-		mostRecentChartID.set(id);
+		if (!$allCharts.some((c) => c.chartID === id)) {
+			addChartMetaData(id);
+		}
 
+		mostRecentChartID.set(id);
 		map = new mapboxgl.Map({
 			container: container,
 			style: 'mapbox://styles/mapbox/navigation-night-v1',
