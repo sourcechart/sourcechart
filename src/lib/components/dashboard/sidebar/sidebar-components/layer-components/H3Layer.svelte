@@ -14,7 +14,6 @@
 	export let defaultLayer: any;
 	const CHUNK_SIZE = 100000;
 
-	console.log(defaultLayer);
 	// Your default values for the properties
 	let wireframe = false;
 	let pickable: boolean = true;
@@ -104,7 +103,6 @@
 	};
 
 	$: {
-		console.log('trigger');
 		const layerInstance = new H3HexagonLayer({
 			id: id,
 			data: loadData(),
