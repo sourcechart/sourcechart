@@ -5,7 +5,7 @@
 	export let items: string[] = [];
 
 	let open = false;
-	let currentValue: string | null = '';
+	export let currentValue: string | null = '';
 	let container: HTMLElement;
 
 	const dispatch = createEventDispatcher();

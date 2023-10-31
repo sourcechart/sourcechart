@@ -43,7 +43,7 @@
 					const layerIndex = updatedCharts[$i].layers.findIndex((l) => l.layerID === id);
 					updatedCharts[$i].layers[layerIndex] = {
 						layerID: id,
-						type: newLayer
+						layer: newLayer
 					};
 					return updatedCharts;
 				});
@@ -52,7 +52,7 @@
 					let updatedCharts = [...currentCharts];
 					updatedCharts[$i].layers.push({
 						layerID: id,
-						type: newLayer
+						layer: newLayer
 					});
 					return updatedCharts;
 				});

@@ -69,7 +69,7 @@ type Chart = {
 
 type LayerOptions = {
 	layerID: string;
-	type:
+	layer:
 		| ArcLayer
 		| LineLayer
 		| ScatterplotLayer

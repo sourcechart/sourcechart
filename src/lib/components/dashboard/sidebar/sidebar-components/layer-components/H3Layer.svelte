@@ -10,35 +10,30 @@
 	$: i = clickedChartIndex();
 
 	export let id: string;
-
+	export let defaultLayer: any;
+	console.log(defaultLayer);
 	const CHUNK_SIZE = 100000;
 
+	// Your default values for the properties
 	let wireframe = false;
-	let pickable = true;
+	let pickable: boolean = true;
 	let elevationScale = 1;
-	let filled = true;
+	let filled: boolean = true;
 	let countColumn = 'Count';
-	let extruded = true;
+	let extruded: boolean = true;
 	let hexColumn = 'H3_Index';
 
-	$: if ($allCharts && $allCharts.length > 0) {
-		let existingLayer = $allCharts[0].layers.find((l) => l.layerID === id);
-		if (existingLayer) {
-			switch (
-				existingLayer.type.layerType // or existingLayer.type.layerType for some layers
-			) {
-				case 'H3HexagonLayer':
-					wireframe = existingLayer.type.wireframe;
-					pickable = existingLayer.type.pickable;
-					elevationScale = existingLayer.type.elevationScale;
-					filled = existingLayer.type.filled;
-					countColumn = existingLayer.type.countColumn;
-					extruded = existingLayer.type.extruded;
-					hexColumn = existingLayer.type.hexColumn;
-					break;
-			}
-		}
+	// Reactive block to update based on changes in defaultLayer
+	$: {
+		wireframe = defaultLayer?.wireframe || false;
+		pickable = defaultLayer?.pickable || true;
+		elevationScale = defaultLayer?.elevationScale || 1;
+		filled = defaultLayer?.filled || true;
+		countColumn = defaultLayer?.countColumn || 'Count';
+		extruded = defaultLayer?.extruded || true;
+		hexColumn = defaultLayer?.hexColumn || 'H3_Index';
 	}
+	$: console.log(hexColumn, countColumn);
 
 	$: {
 		const newLayer: H3HexagonLayer = {
@@ -56,13 +51,13 @@
 		let layerToUpdate = $allCharts[$i].layers.find((l) => l.layerID === id);
 
 		if (layerToUpdate) {
-			if (!deepEqual(layerToUpdate.type, newLayer)) {
+			if (!deepEqual(layerToUpdate.layer, newLayer)) {
 				allCharts.update((currentCharts) => {
 					let updatedCharts = [...currentCharts];
 					const layerIndex = updatedCharts[$i].layers.findIndex((l) => l.layerID === id);
 					updatedCharts[$i].layers[layerIndex] = {
 						layerID: id,
-						type: newLayer
+						layer: newLayer
 					};
 					return updatedCharts;
 				});
@@ -72,7 +67,7 @@
 				let updatedCharts = [...currentCharts];
 				updatedCharts[$i].layers.push({
 					layerID: id,
-					type: newLayer
+					layer: newLayer
 				});
 				return updatedCharts;
 			});
@@ -166,6 +161,16 @@
 		<input type="checkbox" bind:checked={pickable} />
 		Pickable
 	</label>
-	<Dropdown columnType="H3" items={$columns} on:choose={handleHexChoose} />
-	<Dropdown columnType="count" items={$columns} on:choose={handleCountChoose} />
+	<Dropdown
+		columnType="H3"
+		items={$columns}
+		on:choose={handleHexChoose}
+		bind:currentValue={hexColumn}
+	/>
+	<Dropdown
+		columnType="count"
+		items={$columns}
+		on:choose={handleCountChoose}
+		bind:currentValue={countColumn}
+	/>
 </div>

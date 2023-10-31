@@ -7,18 +7,14 @@
 	import LineLayer from './LineLayer.svelte';
 	import ArcLayer from './ArcLayer.svelte';
 	import H3Layer from './H3Layer.svelte';
-	import { allCharts, clickedChartIndex } from '$lib/io/Stores';
 
-	import { createEventDispatcher } from 'svelte';
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let id: string;
+	export let defaultLayer: LayerOptions['layer'];
+	let currentLayer: string = defaultLayer.layerType || 'Select Layer';
 
-	$: i = clickedChartIndex();
-
-	$: console.log($allCharts[$i]);
 	let container: HTMLElement;
-	let currentLayer: string = 'Select Layer';
 	let deckGlLayers = [
 		'PolygonLayer',
 		'PathLayer',
@@ -26,7 +22,7 @@
 		'LineLayer',
 		'ScatterplotLayer',
 		'TripsLayer',
-		'H3'
+		'H3HexagonLayer'
 	];
 
 	onMount(() => {
@@ -108,8 +104,8 @@
 	<ScatterplotLayer {id} />
 {:else if currentLayer === 'TripsLayer'}
 	<TripsLayer {id} />
-{:else if currentLayer === 'H3'}
-	<H3Layer {id} />
+{:else if currentLayer === 'H3HexagonLayer'}
+	<H3Layer {id} {defaultLayer} />
 {/if}
 
 <style>
