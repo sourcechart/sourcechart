@@ -3,7 +3,13 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { getColumnsFromFile } from '$lib/io/Stores';
+	import { setContext } from 'svelte';
+
+	import DropdownButton from '../utils/DropdownButton.svelte';
+	//import DropdownWrapper from '../utils/DropdownWrapper.svelte';
+	import DropdownItem from '../utils/DropdownItem.svelte';
 	import Dropdown from '../utils/Dropdown.svelte';
+
 	import { deepEqual } from './utils';
 
 	$: columns = getColumnsFromFile();
@@ -11,7 +17,6 @@
 
 	export let id: string;
 	export let defaultLayer: any;
-	console.log(defaultLayer);
 	const CHUNK_SIZE = 100000;
 
 	// Your default values for the properties
@@ -22,8 +27,8 @@
 	let countColumn = 'Count';
 	let extruded: boolean = true;
 	let hexColumn = 'H3_Index';
+	let openDropdown: boolean = false;
 
-	// Reactive block to update based on changes in defaultLayer
 	$: {
 		wireframe = defaultLayer?.wireframe || false;
 		pickable = defaultLayer?.pickable || true;
@@ -33,7 +38,6 @@
 		extruded = defaultLayer?.extruded || true;
 		hexColumn = defaultLayer?.hexColumn || 'H3_Index';
 	}
-	$: console.log(hexColumn, countColumn);
 
 	$: {
 		const newLayer: H3HexagonLayer = {
@@ -123,7 +127,6 @@
 				getLineWidth: [countColumn]
 			}
 		});
-
 		layers.update((currentLayers) => {
 			const existingIndex = currentLayers.findIndex((layer) => layer.id === id);
 			if (existingIndex !== -1) {
@@ -141,6 +144,9 @@
 
 	const handleCountChoose = (e: CustomEvent) => {
 		countColumn = e.detail.column;
+	};
+	const toggleDropdown = () => {
+		openDropdown = !openDropdown;
 	};
 </script>
 
@@ -161,16 +167,13 @@
 		<input type="checkbox" bind:checked={pickable} />
 		Pickable
 	</label>
-	<Dropdown
-		columnType="H3"
-		items={$columns}
-		on:choose={handleHexChoose}
-		bind:currentValue={hexColumn}
-	/>
-	<Dropdown
-		columnType="count"
-		items={$columns}
-		on:choose={handleCountChoose}
-		bind:currentValue={countColumn}
-	/>
+
+	<div>
+		<Dropdown>
+			<DropdownButton class="bg-red-500 w-32 h-10">Select Column</DropdownButton>
+			{#each $columns as column}
+				<DropdownItem>{column}</DropdownItem>
+			{/each}
+		</Dropdown>
+	</div>
 </div>

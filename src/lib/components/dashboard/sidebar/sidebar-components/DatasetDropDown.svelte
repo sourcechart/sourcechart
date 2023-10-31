@@ -22,12 +22,13 @@
 	let isDropdownOpen = false;
 	let selectedDataset: string | null = '';
 	let dropdownContainer: HTMLElement;
+	let shouldLoadFilename = false;
 
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	$: if ($allCharts[$i]?.filename) {
+	$: if (shouldLoadFilename && $allCharts[$i]?.filename) {
 		if (isURL($allCharts[$i].filename)) {
 			selectedDataset = extractFilenameFromURLOrString($allCharts[$i].filename);
 		} else {
@@ -41,12 +42,8 @@
 		if (!input) {
 			return false; // Default to false if input is null or empty.
 		}
-		// More comprehensive regex pattern for URL detection.
-		// Covers http, https, ftp, file protocols, IP addresses, localhost, and more.
 		const urlPattern = /^(https?|ftp|file):\/\/|^(localhost|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/\S*)?$/;
-
 		const filenamePattern = /^[^\/\\]*\.([a-z0-9]+)$/i;
-
 		return urlPattern.test(input) || !filenamePattern.test(input);
 	}
 
@@ -169,7 +166,6 @@
 
 	<div class="relative flex justify-between">
 		<button
-			bind:this={dropdownContainer}
 			class="bg-neutral-900 justify-between text-center rounded-sm hover:bg-neutral-900/50 flex items-center border-neutral-700/50 w-44 px-1"
 			on:click={toggleDropdown}
 		>
@@ -201,6 +197,7 @@
 								on:click={async () => {
 									queryDuckDB(dataset);
 									isDropdownOpen = false;
+									shouldLoadFilename = true;
 								}}
 								on:keypress={async (e) => e.key === 'Enter' && queryDuckDB(dataset)}
 							>

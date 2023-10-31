@@ -302,7 +302,12 @@ interface Shapes {
 	Arrow: Arrow;
 }
 
+interface DropdownContext {
+	toggleDropdown: () => void;
+}
+
 declare module '@deck.gl/core';
 declare module '@deck.gl/layers';
 declare module '@deck.gl/geo-layers';
 declare module '@deck.gl/mapbox';
+type SizeType = typeof xs | typeof sm | typeof md | typeof lg | typeof xl;
