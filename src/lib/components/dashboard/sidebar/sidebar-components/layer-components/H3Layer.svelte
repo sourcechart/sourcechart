@@ -3,11 +3,6 @@
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { getColumnsFromFile } from '$lib/io/Stores';
-	import { setContext } from 'svelte';
-
-	import DropdownButton from '../utils/DropdownButton.svelte';
-	//import DropdownWrapper from '../utils/DropdownWrapper.svelte';
-	import DropdownItem from '../utils/DropdownItem.svelte';
 	import Dropdown from '../utils/Dropdown.svelte';
 
 	import { deepEqual } from './utils';
@@ -19,6 +14,7 @@
 	export let defaultLayer: any;
 	const CHUNK_SIZE = 100000;
 
+	console.log(defaultLayer);
 	// Your default values for the properties
 	let wireframe = false;
 	let pickable: boolean = true;
@@ -27,7 +23,6 @@
 	let countColumn = 'Count';
 	let extruded: boolean = true;
 	let hexColumn = 'H3_Index';
-	let openDropdown: boolean = false;
 
 	$: {
 		wireframe = defaultLayer?.wireframe || false;
@@ -109,6 +104,7 @@
 	};
 
 	$: {
+		console.log('trigger');
 		const layerInstance = new H3HexagonLayer({
 			id: id,
 			data: loadData(),
@@ -145,9 +141,6 @@
 	const handleCountChoose = (e: CustomEvent) => {
 		countColumn = e.detail.column;
 	};
-	const toggleDropdown = () => {
-		openDropdown = !openDropdown;
-	};
 </script>
 
 <div {id}>
@@ -168,12 +161,16 @@
 		Pickable
 	</label>
 
-	<div>
-		<Dropdown>
-			<DropdownButton class="bg-red-500 w-32 h-10">Select Column</DropdownButton>
-			{#each $columns as column}
-				<DropdownItem>{column}</DropdownItem>
-			{/each}
-		</Dropdown>
-	</div>
+	<Dropdown
+		columnType="H3"
+		items={$columns}
+		currentValue={defaultLayer.hexColumn}
+		on:choose={handleHexChoose}
+	/>
+	<Dropdown
+		columnType="count"
+		items={$columns}
+		currentValue={defaultLayer.countColumn}
+		on:choose={handleCountChoose}
+	/>
 </div>

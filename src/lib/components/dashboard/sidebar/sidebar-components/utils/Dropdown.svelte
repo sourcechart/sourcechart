@@ -1,25 +1,62 @@
 <script lang="ts">
-	import { setContext } from 'svelte';
-	export let isOpen = false;
+	import { createEventDispatcher } from 'svelte';
+	import { onMount } from 'svelte';
+	export let columnType: DropdownType;
+	export let items: string[] = [];
 
-	const toggleDropdown = () => {
-		isOpen = !isOpen;
+	let open = false;
+	export let currentValue: string | null = '';
+	let container: HTMLElement;
+
+	const dispatch = createEventDispatcher();
+	onMount(() => {
+		document.addEventListener('click', handleOutsideClick);
+		return () => {
+			document.removeEventListener('click', handleOutsideClick);
+		};
+	});
+	const chooseColumn = (column: string) => {
+		dispatch('choose', { column });
+		currentValue = column;
+		open = false;
 	};
 
-	type DropdownContext = {
-		toggleDropdown: typeof toggleDropdown;
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (container && !container.contains(event.target as Node)) {
+			open = false;
+		}
 	};
-
-	setContext<DropdownContext>('dropdown', { toggleDropdown });
 </script>
 
-{#if isOpen}
-	<div
-		class="scrollBarDiv bg-neutral-900 rounded-md absolute w-full left-0 top-full mt-1 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
-	>
-		<slot />
+<div {...$$props} bind:this={container}>
+	<div class="relative">
+		<button
+			aria-label="Toggle Dropdown"
+			class="mx-auto bg-neutral-900 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center border-neutral-700/50"
+			on:click={() => (open = !open)}
+		>
+			<span class="text-sm text-neutral-300 ml-1">{columnType}</span>
+			<span class="text-sm text-gray-100 w-full justify-center truncate px-3">
+				{currentValue || 'Select a column'}
+			</span>
+		</button>
+
+		{#if open}
+			<div
+				class="scrollBarDiv bg-neutral-900 rounded-md absolute w-full left-0 top-full mt-1 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+			>
+				{#each items as column}
+					<button
+						class="block w-full text-left px-3 py-2 text-gray-300 hover:bg-neutral-700 font-thin text-sm truncate"
+						on:click={() => chooseColumn(column)}
+					>
+						{column}
+					</button>
+				{/each}
+			</div>
+		{/if}
 	</div>
-{/if}
+</div>
 
 <style>
 	/* For WebKit (Chrome, Safari) */
