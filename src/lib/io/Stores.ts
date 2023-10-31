@@ -45,6 +45,7 @@ export const scale = writable<number>(storeFromLocalStorage('zoom', 1));
 export const panAmount = writable<{ x: number; y: number }>(
 	storeFromLocalStorage('panAmount', { x: 0, y: 0 })
 );
+export const rerender = writable<number>(0);
 
 export const deckGL = writable<any>(null);
 export const layers = writable<any[]>([]);

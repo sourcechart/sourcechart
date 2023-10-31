@@ -7,7 +7,8 @@
 		clickedChartIndex,
 		duckDBInstanceStore,
 		fileUploadStore,
-		mostRecentChartID
+		mostRecentChartID,
+		rerender
 	} from '$lib/io/Stores';
 	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
@@ -107,7 +108,6 @@
 			db = await DuckDBClient.of([]);
 			resp = await db.query(`SELECT * FROM "${dataset?.externalDataset?.url}" LIMIT 2`);
 			fname = `${dataset?.externalDataset?.url}`;
-			console.log('resp', resp);
 		} else if (dataset.filename) {
 			const fileHandle = await getFileHandleFromIDB(dataset.filename);
 			const file = await fileHandle.getFile();
@@ -119,6 +119,7 @@
 		} else {
 			return;
 		}
+		$rerender += 1;
 		//@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);

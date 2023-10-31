@@ -1,10 +1,15 @@
 <script lang="ts">
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import {
+		layers,
+		allCharts,
+		clickedChartIndex,
+		duckDBInstanceStore,
+		rerender
+	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { getColumnsFromFile } from '$lib/io/Stores';
 	import Dropdown from '../utils/Dropdown.svelte';
-
 	import { deepEqual } from './utils';
 
 	$: columns = getColumnsFromFile();
@@ -14,7 +19,6 @@
 	export let defaultLayer: any;
 	const CHUNK_SIZE = 100000;
 
-	// Your default values for the properties
 	let wireframe = false;
 	let pickable: boolean = true;
 	let elevationScale = 1;
@@ -101,6 +105,37 @@
 			yield* transformRows(rows);
 		}
 	};
+
+	//This is a terrible hack that should not exist... but alas, it does
+	$: if ($rerender > 0) {
+		const layerInstance = new H3HexagonLayer({
+			id: id,
+			data: loadData(),
+			elevationScale: elevationScale,
+			extruded: extruded,
+			filled: filled, //@ts-ignore
+			getElevation: (d) => d.count, //@ts-ignore
+			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0], //@ts-ignore
+			getHexagon: (d) => d.hex,
+			wireframe: wireframe,
+			pickable: pickable,
+			updateTrigger: {
+				getFillColor: [countColumn],
+				getHexagon: [hexColumn],
+				getElevation: [countColumn],
+				getLineWidth: [countColumn]
+			}
+		});
+		layers.update((currentLayers) => {
+			const existingIndex = currentLayers.findIndex((layer) => layer.id === id);
+			if (existingIndex !== -1) {
+				currentLayers[existingIndex] = { id: id, layer: layerInstance };
+			} else {
+				currentLayers.push({ id: id, layer: layerInstance });
+			}
+			return currentLayers;
+		});
+	}
 
 	$: {
 		const layerInstance = new H3HexagonLayer({
