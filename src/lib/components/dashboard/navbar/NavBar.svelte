@@ -171,7 +171,16 @@
 				>
 					Select Items
 				</div>
-			{/if}
+
+				{#if showTooltip[1] && (clickedIndex !== 1 || $responsiveType !== 'touch')}
+					<div
+						role="tooltip"
+						class="absolute -bottom-6 left-1/2 z-30 transform -translate-x-1/2 px-1 bg-neutral-200 text-gray-700 text-xs shadow-sm"
+					>
+						Select Items
+					</div>
+				{/if}
+			</div>
 		</div>
 
 		<div class="flex items-center justify-items-center space-x-3">
