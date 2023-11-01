@@ -12,7 +12,6 @@
 	import Dropdown from '../utils/Dropdown.svelte';
 
 	export let id: string;
-	console.log('H3 Layer: ', id);
 
 	let width = 12;
 	let pickable = true;
