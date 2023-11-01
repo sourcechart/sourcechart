@@ -13,8 +13,7 @@
 		activeSidebar,
 		screenSize,
 		polygons,
-		scale,
-		panAmount
+		scale
 	} from '$lib/io/Stores';
 	import { get } from 'svelte/store';
 

@@ -52,6 +52,35 @@ export class DuckDBClient {
 		}
 	}
 
+	public async getTableSchema(tableName: string): Promise<any> {
+		if (!this._db) throw new Error('Database not initialized');
+
+		// Constructing the PRAGMA query to get the table info for DuckDB
+		const query = `PRAGMA table_info(${tableName})`;
+
+		const result = await this.query(query);
+
+		return result;
+	}
+
+	/**
+	 * Stream rows from a specific table.
+	 *
+	 * @param Query Name of the table to stream rows from.
+	 * @param params Optional parameters for any placeholders in the query.
+	 * @returns  AsyncIterator that yields rows of the specified table.
+	 */
+	public async *streamTableRows(query: string, params?: Array<any>): AsyncIterable<any> {
+		if (!this._db) throw new Error('Database not initialized');
+		const res = await this.queryStream(query, params);
+		//@ts-ignore
+		for await (const rows of res.readRows()) {
+			for (const row of rows) {
+				yield row;
+			}
+		}
+	}
+
 	/**
 	 * Query the duckdb database via a query string.
 	 *
@@ -275,7 +304,7 @@ async function insertFile(db: AsyncDuckDB, name: any, file: File, options?: any)
 }
 
 async function insertFileHandle(db: AsyncDuckDB, pickedFile: File) {
-	const supportedExtensions = ['.parquet', '.csv']; // Extend this list if more extensions are supported in the future
+	const supportedExtensions = ['.parquet', '.csv', '.json', '.txt', '.TXT']; // Extend this list if more extensions are supported in the future
 	const fileExtension = pickedFile.name.slice(((pickedFile.name.lastIndexOf('.') - 1) >>> 0) + 2);
 	if (!supportedExtensions.includes(`.${fileExtension}`)) {
 		throw new Error(`Unsupported file type: ${fileExtension}`);
