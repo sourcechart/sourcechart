@@ -9,6 +9,7 @@
 	import H3Layer from './H3Layer.svelte';
 
 	import { createEventDispatcher, onMount } from 'svelte';
+	import Bar from '$lib/components/ui/colorbar/Bar.svelte';
 
 	export let id: string;
 	export let defaultLayer: LayerOptions['layer'];
@@ -107,6 +108,8 @@
 {:else if currentLayer === 'H3HexagonLayer'}
 	<H3Layer {id} {defaultLayer} />
 {/if}
+
+<Bar />
 
 <style>
 	.scrollBarDiv::-webkit-scrollbar {

@@ -3,7 +3,7 @@ import numpy as np
 import csv
 import random
 
-def get_h3_indexes_for_bbox(bbox, resolution=12):
+def get_h3_indexes_for_bbox(bbox, resolution=13):
     """
     Fill bounding box with H3 hexagons.
     :param bbox: List of bounding box coordinates in the format [[lon1, lat1], [lon2, lat2], ...]
@@ -19,11 +19,12 @@ def get_h3_indexes_for_bbox(bbox, resolution=12):
 
     # Start from a corner and move across and up/down to cover the bounding box
     hexagons = set()
-    lat_step, lng_step = 0.01, 0.01  # Small step values to ensure coverage
+    lat_step, lng_step = 0.0001, 0.0001  # Small step values to ensure coverage
 
     lat, lng = min_lat, min_lng
     while lat <= max_lat:
         while lng <= max_lng:
+            print("trigger")
             # Convert (lat, lng) to H3 index and add to the set
             h = h3.geo_to_h3(lat, lng, resolution)
             hexagons.add(h)
@@ -45,11 +46,12 @@ def write_hexagons_to_csv(hexagons, filename="h3_cells.csv"):
         writer = csv.writer(file)
         writer.writerow(["H3_Index", "Count"])  # header
         for hexagon in hexagons:
-            count = random.randint(1, 100)  # Generate a random count between 1 and 100
+            print(hexagon)
+            count = random.randint(1, 1000)  # Generate a random count between 1 and 100
             writer.writerow([hexagon, count])
 
 bbox = [[-125.0532049122,34.3253254368],[-116.0631447543,34.3253254368],[-116.0631447543,44.5909874911],[-125.0532049122,44.5909874911],[-125.0532049122,34.3253254368]]
-hexes = get_h3_indexes_for_bbox(bbox, resolution=9)
+hexes = get_h3_indexes_for_bbox(bbox, resolution=13)
 write_hexagons_to_csv(hexes)
 
 print(f"Data written to h3_cells.csv")
