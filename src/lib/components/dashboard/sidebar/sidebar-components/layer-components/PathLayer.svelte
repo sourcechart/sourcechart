@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { PathLayer } from '@deck.gl/layers';
 	import {
+		rerender,
 		layers,
 		allCharts,
 		clickedChartIndex,
@@ -91,7 +92,7 @@
 		}
 	};
 
-	$: {
+	$: if ($rerender > 0) {
 		const layer = new PathLayer({
 			id: id,
 			data: loadData(), //@ts-ignore

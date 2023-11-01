@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { layers, allCharts, clickedChartIndex, duckDBInstanceStore } from '$lib/io/Stores';
+	import {
+		layers,
+		allCharts,
+		clickedChartIndex,
+		duckDBInstanceStore,
+		rerender
+	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
 	import ColumnDropdown from '../utils/Dropdown.svelte';
 	import { ArcLayer } from '@deck.gl/layers';
@@ -65,14 +71,14 @@
 				pickable: pickable
 			};
 
-			if (!deepEqual($allCharts[$i].layers[0].type, newArcLayer)) {
+			if (!deepEqual($allCharts[$i].layers[0].layer, newArcLayer)) {
 				allCharts.update((currentCharts) => {
 					let updatedCharts = [...currentCharts];
 					updatedCharts[$i].layers = [
 						...updatedCharts[$i].layers,
 						{
 							layerID: id,
-							type: newArcLayer
+							layer: newArcLayer
 						}
 					];
 					return updatedCharts;
@@ -81,7 +87,7 @@
 		}
 	}
 
-	$: {
+	$: if ($rerender > 0) {
 		const newLayer = new ArcLayer({
 			data: loadData(), // @ts-ignore
 			getSourceColor: (d) => [Math.sqrt(d.inbound), 140, 0], // @ts-ignore

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { PolygonLayer } from '@deck.gl/layers';
 	import {
+		rerender,
 		layers,
 		allCharts,
 		clickedChartIndex,
@@ -55,7 +56,7 @@
 		}
 	};
 
-	$: {
+	$: if ($rerender > 0) {
 		const newLayer = new PolygonLayer({
 			id: id,
 			data: loadData(),

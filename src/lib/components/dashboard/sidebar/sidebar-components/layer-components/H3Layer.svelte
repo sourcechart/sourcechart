@@ -137,36 +137,6 @@
 		});
 	}
 
-	$: {
-		const layerInstance = new H3HexagonLayer({
-			id: id,
-			data: loadData(),
-			elevationScale: elevationScale,
-			extruded: extruded,
-			filled: filled, //@ts-ignore
-			getElevation: (d) => d.count, //@ts-ignore
-			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0], //@ts-ignore
-			getHexagon: (d) => d.hex,
-			wireframe: wireframe,
-			pickable: pickable,
-			updateTrigger: {
-				getFillColor: [countColumn],
-				getHexagon: [hexColumn],
-				getElevation: [countColumn],
-				getLineWidth: [countColumn]
-			}
-		});
-		layers.update((currentLayers) => {
-			const existingIndex = currentLayers.findIndex((layer) => layer.id === id);
-			if (existingIndex !== -1) {
-				currentLayers[existingIndex] = { id: id, layer: layerInstance };
-			} else {
-				currentLayers.push({ id: id, layer: layerInstance });
-			}
-			return currentLayers;
-		});
-	}
-
 	const handleHexChoose = (e: CustomEvent) => {
 		hexColumn = e.detail.column;
 	};

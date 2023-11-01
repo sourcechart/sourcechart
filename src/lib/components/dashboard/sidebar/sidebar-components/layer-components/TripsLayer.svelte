@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		rerender,
 		layers,
 		allCharts,
 		getColumnsFromFile,
@@ -48,7 +49,7 @@
 		}
 	};
 
-	$: {
+	$: if ($rerender > 0) {
 		const layer = new TripsLayer({
 			id: id,
 			data: loadData(),

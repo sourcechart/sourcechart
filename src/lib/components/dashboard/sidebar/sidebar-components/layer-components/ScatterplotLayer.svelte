@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ScatterplotLayer } from '@deck.gl/layers';
 	import {
+		rerender,
 		layers,
 		getColumnsFromFile,
 		allCharts,
@@ -65,7 +66,7 @@
 
 	$: {
 		const scatterLayerConfig: ScatterplotLayer = {
-			type: 'Scatterplot',
+			layerType: 'Scatterplot',
 			latitudeColumn: coordinatesLatitude,
 			longitudeColumn: coordinatesLongitude,
 			pickable,
@@ -76,20 +77,20 @@
 			$allCharts &&
 			$allCharts.length > $i &&
 			$allCharts[$i] &&
-			!deepEqual($allCharts[$i].layers[0].type, scatterLayerConfig)
+			!deepEqual($allCharts[$i].layers[0].layer, scatterLayerConfig)
 		) {
 			allCharts.update((currentCharts) => {
 				let updatedCharts = [...currentCharts];
 				updatedCharts[$i].layers[0] = {
 					layerID: generateID(),
-					type: scatterLayerConfig
+					layer: scatterLayerConfig
 				};
 				return updatedCharts;
 			});
 		}
 	}
 
-	$: {
+	$: if ($rerender > 0) {
 		const scatterLayer = new ScatterplotLayer({
 			id: id,
 			data: loadData(),

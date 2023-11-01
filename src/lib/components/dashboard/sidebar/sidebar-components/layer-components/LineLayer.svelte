@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { LineLayer } from '@deck.gl/layers';
 	import {
+		rerender,
 		layers,
 		allCharts,
 		clickedChartIndex,
@@ -44,7 +45,7 @@
 					const layerIndex = updatedCharts[$i].layers.findIndex((l) => l.layerID === id);
 					updatedCharts[$i].layers[layerIndex] = {
 						layerID: id,
-						type: newLayerType
+						layer: newLayerType
 					};
 					return updatedCharts;
 				});
@@ -53,7 +54,7 @@
 					let updatedCharts = [...currentCharts];
 					updatedCharts[$i].layers.push({
 						layerID: id,
-						type: newLayerType
+						layer: newLayerType
 					});
 					return updatedCharts;
 				});
@@ -97,7 +98,7 @@
 		}
 	}
 
-	$: {
+	$: if ($rerender > 0) {
 		const newLayer = new LineLayer({
 			id: id,
 			data: loadData(),
