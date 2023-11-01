@@ -2,7 +2,7 @@
 	import { ColorScale, ColorScales } from './ColorScale';
 
 	export let k: number = 10;
-	export let selectedColorScale = ColorScales.BLUES; // Default value
+	export let selectedColorScale: ColorScales = ColorScales.BLUES; // Default value
 	const myColorScales = new ColorScale(k);
 	const segments = 10; // Number of segments to divide the color scale into
 </script>

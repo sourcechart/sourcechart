@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ChooseLayer from './layer-components/ChooseLayer.svelte';
+	import LayerManagement from './layer-components/LayerManagement.svelte';
 	import PlusSolid from '$lib/components/ui/icons/PlusSolid.svelte';
 	import { generateID } from '$lib/io/GenerateID';
 	import { layers, allCharts, clickedChartIndex } from '$lib/io/Stores';
@@ -12,7 +12,7 @@
 		const savedLayers = $allCharts[$i].layers || [];
 		newLayers = savedLayers.map((layer) => {
 			return {
-				component: ChooseLayer,
+				component: LayerManagement,
 				id: layer.layerID,
 				defaultLayer: layer.layer // Assuming layerType or similar property exists
 			};
@@ -21,7 +21,7 @@
 
 	const addLayerToList = () => {
 		counter += 1;
-		newLayers = [...newLayers, { component: ChooseLayer, id: generateID(), defaultLayer: {} }];
+		newLayers = [...newLayers, { component: LayerManagement, id: generateID(), defaultLayer: {} }];
 	};
 
 	function handleLayerClosed(event: CustomEvent) {

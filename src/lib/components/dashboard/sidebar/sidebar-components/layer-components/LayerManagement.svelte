@@ -7,6 +7,7 @@
 	import LineLayer from './LineLayer.svelte';
 	import ArcLayer from './ArcLayer.svelte';
 	import H3Layer from './H3Layer.svelte';
+	import ColorDropdown from '../ColorDropdown.svelte';
 
 	import { createEventDispatcher, onMount } from 'svelte';
 	import Bar from '$lib/components/ui/colorbar/Bar.svelte';
@@ -109,7 +110,7 @@
 	<H3Layer {id} {defaultLayer} />
 {/if}
 
-<Bar />
+<ColorDropdown />
 
 <style>
 	.scrollBarDiv::-webkit-scrollbar {

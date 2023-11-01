@@ -29,7 +29,7 @@
 	};
 </script>
 
-<div {...$$props} bind:this={container}>
+<div class={$$props.class} bind:this={container}>
 	<div class="relative">
 		<button
 			aria-label="Toggle Dropdown"
