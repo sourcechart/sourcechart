@@ -16,12 +16,12 @@
 
 	let container: HTMLElement;
 	let deckGlLayers = [
-		'PolygonLayer',
-		'PathLayer',
-		'ArcLayer',
-		'LineLayer',
-		'ScatterplotLayer',
-		'TripsLayer',
+		//'PolygonLayer',
+		//'PathLayer',
+		//'ArcLayer',
+		//'LineLayer',
+		//'ScatterplotLayer',
+		//'TripsLayer',
 		'H3HexagonLayer'
 	];
 

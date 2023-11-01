@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
+
 	export let columnType: DropdownType;
 	export let items: string[] = [];
-
-	let open = false;
 	export let currentValue: string | null = '';
+
 	let container: HTMLElement;
+	let open = false;
 
 	const dispatch = createEventDispatcher();
 	onMount(() => {
