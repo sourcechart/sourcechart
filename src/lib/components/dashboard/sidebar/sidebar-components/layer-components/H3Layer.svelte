@@ -18,24 +18,13 @@
 	export let id: string;
 	export let defaultLayer: any;
 	const CHUNK_SIZE = 100000;
-
-	let wireframe = false;
-	let pickable: boolean = true;
-	let elevationScale = 1;
-	let filled: boolean = true;
-	let countColumn = 'Count';
-	let extruded: boolean = true;
-	let hexColumn = 'H3_Index';
-
-	$: {
-		wireframe = defaultLayer?.wireframe || false;
-		pickable = defaultLayer?.pickable || true;
-		elevationScale = defaultLayer?.elevationScale || 1;
-		filled = defaultLayer?.filled || true;
-		countColumn = defaultLayer?.countColumn || 'Count';
-		extruded = defaultLayer?.extruded || true;
-		hexColumn = defaultLayer?.hexColumn || 'H3_Index';
-	}
+	let wireframe = defaultLayer?.wireframe || false;
+	let pickable = defaultLayer?.pickable || true;
+	let elevationScale = defaultLayer?.elevationScale || 1;
+	let filled = defaultLayer?.filled || true;
+	let countColumn = defaultLayer?.countColumn || 'Count';
+	let extruded = defaultLayer?.extruded || true;
+	let hexColumn = defaultLayer?.hexColumn || 'H3_Index';
 
 	$: {
 		const newLayer: H3HexagonLayer = {
