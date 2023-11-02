@@ -129,9 +129,8 @@
 	};
 
 	$: {
-		console.log(colorScale.getRGBColorArray(currentColorScale));
 		scaleQuant = scaleQuantile()
-			.domain([globalMin, globalMax]) // Set the domain with your min and max
+			.domain([globalMin, globalMax]) //@ts-ignore
 			.range(colorScale.getRGBColorArray(currentColorScale)); // Assuming this returns
 	}
 
