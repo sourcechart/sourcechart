@@ -30,7 +30,7 @@
 	let hexColumn = defaultLayer?.hexColumn || 'H3_Index';
 	let scaleQuant: any;
 	let currentColorScale: ColorPalletes = ColorPalletes.BLUES; // Default to REDS
-	const colorScale = new ColorScale(2);
+	const colorScale = new ColorScale(5);
 
 	type Data = {
 		hex: string;
@@ -129,6 +129,7 @@
 	};
 
 	$: {
+		console.log(colorScale.getRGBColorArray(currentColorScale));
 		scaleQuant = scaleQuantile()
 			.domain([globalMin, globalMax]) // Set the domain with your min and max
 			.range(colorScale.getRGBColorArray(currentColorScale)); // Assuming this returns
