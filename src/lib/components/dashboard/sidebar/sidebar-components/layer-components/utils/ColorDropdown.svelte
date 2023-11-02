@@ -48,7 +48,7 @@
 			>
 				{#each colorValueArray as scale}
 					<button on:click={() => handleButtonClick(ColorPalletes[scale])} class="w-full h-4">
-						<Bar selectedColorScale={scale} />
+						<Bar selectedColorScale={scale} k={5} />
 					</button>
 				{/each}
 			</div>
