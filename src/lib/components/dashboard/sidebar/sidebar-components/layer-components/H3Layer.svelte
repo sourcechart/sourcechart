@@ -12,6 +12,7 @@
 	import { getColumnsFromFile } from '$lib/io/Stores';
 	import { deepEqual } from './utils/utils';
 
+	import * as d3 from 'd3';
 	import ColorDropdown from './utils/ColorDropdown.svelte';
 	import Dropdown from '../utils/Dropdown.svelte';
 
@@ -31,7 +32,9 @@
 	let currentColorScale: ColorScales = ColorScales.BLUES; // Default to REDS
 
 	const handleColorChoose = (e: CustomEvent) => {
-		currentColorScale = e.detail.value;
+		console.log(e.detail);
+		currentColorScale = e.detail.scale;
+		console.log(currentColorScale);
 	};
 
 	$: columns = getColumnsFromFile();
@@ -105,6 +108,13 @@
 		}
 	};
 
+	function convertToRGBA(hex: string) {
+		const r = parseInt(hex.slice(1, 3), 16);
+		const g = parseInt(hex.slice(3, 5), 16);
+		const b = parseInt(hex.slice(5, 7), 16);
+		return [r, g, b, 255]; // Assuming the color is fully opaque
+	}
+
 	$: if ($rerender > 0 || currentColorScale) {
 		const layerInstance = new H3HexagonLayer({
 			id: id,
@@ -115,8 +125,11 @@
 			getElevation: (d) => d.count, //@ts-ignore
 			getFillColor: (d) => {
 				//@ts-ignore
-				return colorScale.getColorFromValue(currentColorScale, d.count).map((c) => parseInt(c));
-			}, //@ts-ignore
+				const colorHex = colorScale.getColorFromValue(currentColorScale, d.count);
+				const rgba = d3.color(colorHex).rgb();
+				return [rgba.r, rgba.g, rgba.b, 255]; // Assuming full opacity
+			},
+
 			getHexagon: (d) => d.hex,
 			wireframe: wireframe,
 			pickable: pickable,
@@ -179,4 +192,5 @@
 	/>
 </div>
 
+<span>Colors</span>
 <ColorDropdown on:choose={handleColorChoose} />
