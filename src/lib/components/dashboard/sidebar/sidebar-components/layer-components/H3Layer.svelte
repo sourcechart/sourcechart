@@ -7,16 +7,19 @@
 		rerender
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import { ColorScale, ColorPalletes } from './utils/ColorScale';
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { getColumnsFromFile } from '$lib/io/Stores';
+	import { deepEqual } from './utils/utils';
+	import { scaleQuantile } from 'd3-scale';
+	import ColorDropdown from './utils/ColorDropdown.svelte';
 	import Dropdown from '../utils/Dropdown.svelte';
-	import { deepEqual } from './utils';
-
-	$: columns = getColumnsFromFile();
-	$: i = clickedChartIndex();
 
 	export let id: string;
 	export let defaultLayer: any;
+
+	let globalMin: number;
+	let globalMax: number;
 	const CHUNK_SIZE = 100000;
 	let wireframe = defaultLayer?.wireframe || false;
 	let pickable = defaultLayer?.pickable || true;
@@ -25,6 +28,17 @@
 	let countColumn = defaultLayer?.countColumn || 'Count';
 	let extruded = defaultLayer?.extruded || true;
 	let hexColumn = defaultLayer?.hexColumn || 'H3_Index';
+	let scaleQuant: any;
+	let currentColorScale: ColorPalletes = ColorPalletes.BLUES; // Default to REDS
+	const colorScale = new ColorScale(5);
+
+	type Data = {
+		hex: string;
+		count: number;
+	};
+
+	$: columns = getColumnsFromFile();
+	$: i = clickedChartIndex();
 
 	$: {
 		const newLayer: H3HexagonLayer = {
@@ -65,6 +79,23 @@
 		}
 	}
 
+	const handleColorChoose = (e: CustomEvent) => {
+		currentColorScale = e.detail.scale;
+	};
+
+	const getMinMax = async () => {
+		let chart = $allCharts[$i];
+		if (chart.filename) {
+			var filename = checkNameForSpacesAndHyphens(chart.filename);
+			$duckDBInstanceStore
+				.query(`SELECT MIN(${countColumn}) as min, MAX(${countColumn}) as max FROM ${filename}`)
+				.then((result) => {
+					globalMax = result[0].max;
+					globalMin = result[0].min;
+				});
+		}
+	};
+
 	async function* transformRows(rows: AsyncIterable<any>) {
 		let data = [];
 		for await (const row of rows) {
@@ -86,6 +117,8 @@
 	}
 
 	const loadData = async function* () {
+		await getMinMax();
+
 		let chart = $allCharts[$i];
 
 		if (chart.filename) {
@@ -95,21 +128,26 @@
 		}
 	};
 
-	//This is a terrible hack that should not exist... but alas, it does
-	$: if ($rerender > 0) {
+	$: {
+		scaleQuant = scaleQuantile()
+			.domain([globalMin, globalMax]) //@ts-ignore
+			.range(colorScale.getRGBColorArray(currentColorScale)); // Assuming this returns
+	}
+
+	$: if ($rerender > 0 || currentColorScale) {
 		const layerInstance = new H3HexagonLayer({
 			id: id,
 			data: loadData(),
-			elevationScale: elevationScale,
+			elevationScale: 1,
 			extruded: extruded,
-			filled: filled, //@ts-ignore
-			getElevation: (d) => d.count, //@ts-ignore
-			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0], //@ts-ignore
-			getHexagon: (d) => d.hex,
+			filled: filled,
+			getElevation: (d: Data) => d.count,
+			getFillColor: (d: Data) => scaleQuant(d.count),
+			getHexagon: (d: Data) => d.hex,
 			wireframe: wireframe,
 			pickable: pickable,
 			updateTrigger: {
-				getFillColor: [countColumn],
+				getFillColor: [currentColorScale, countColumn], // add currentColorScale as a dependency
 				getHexagon: [hexColumn],
 				getElevation: [countColumn],
 				getLineWidth: [countColumn]
@@ -166,3 +204,6 @@
 		on:choose={handleCountChoose}
 	/>
 </div>
+
+<span>Colors</span>
+<ColorDropdown on:choose={handleColorChoose} />

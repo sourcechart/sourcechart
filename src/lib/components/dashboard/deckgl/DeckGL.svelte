@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { layers, mostRecentChartID, allCharts } from '$lib/io/Stores';
 	import { addChartMetaData } from '$lib/io/ChartMetaDataManagement';
-	import { layers, mostRecentChartID, allCharts, clickedChartIndex } from '$lib/io/Stores';
 	import { onDestroy, onMount } from 'svelte';
 	import { Deck } from '@deck.gl/core';
 	import mapboxgl from 'mapbox-gl';
@@ -20,7 +20,6 @@
 		bearing: 0
 	};
 
-	$: i = clickedChartIndex();
 	$: if (container) {
 		const updatedLayers = $layers.filter((l) => l.layer).map((l) => l.layer);
 		if (updatedLayers.length > 0) deckInstance.setProps({ layers: updatedLayers });

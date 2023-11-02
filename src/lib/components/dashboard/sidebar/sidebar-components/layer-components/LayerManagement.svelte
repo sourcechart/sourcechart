@@ -1,12 +1,13 @@
 <script lang="ts">
 	import CloseSolid from '$lib/components/ui/icons/CloseSolid.svelte';
-	import ScatterplotLayer from './ScatterplotLayer.svelte';
-	import PolygonLayer from './PolygonLayer.svelte';
-	import TripsLayer from './TripsLayer.svelte';
-	import PathLayer from './PathLayer.svelte';
-	import LineLayer from './LineLayer.svelte';
-	import ArcLayer from './ArcLayer.svelte';
+	//import ScatterplotLayer from './ScatterplotLayer.svelte';
+	//import PolygonLayer from './PolygonLayer.svelte';
+	//import TripsLayer from './TripsLayer.svelte';
+	//import PathLayer from './PathLayer.svelte';
+	//import LineLayer from './LineLayer.svelte';
+	//import ArcLayer from './ArcLayer.svelte';
 	import H3Layer from './H3Layer.svelte';
+	//import ColorDropdown from './utils/ColorDropdown.svelte';
 
 	import { createEventDispatcher, onMount } from 'svelte';
 
@@ -92,6 +93,7 @@
 		{/if}
 	</div>
 </div>
+<!--
 {#if currentLayer === 'PolygonLayer'}
 	<PolygonLayer {id} />
 {:else if currentLayer === 'PathLayer'}
@@ -105,8 +107,10 @@
 {:else if currentLayer === 'TripsLayer'}
 	<TripsLayer {id} />
 {:else if currentLayer === 'H3HexagonLayer'}
-	<H3Layer {id} {defaultLayer} />
-{/if}
+	
+-->
+
+<H3Layer {id} {defaultLayer} />
 
 <style>
 	.scrollBarDiv::-webkit-scrollbar {

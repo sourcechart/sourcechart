@@ -1,32 +1,35 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import { onMount } from 'svelte';
-
-	export let columnType: DropdownType;
-	export let items: string[] = [];
-	export let currentValue: string | null = '';
-
-	let container: HTMLElement;
-	let open = false;
+	import { ColorPalletes } from '$lib/components/dashboard/sidebar/sidebar-components/layer-components/utils/ColorScale';
+	import { onMount, createEventDispatcher } from 'svelte';
+	import Bar from '$lib/components/dashboard/sidebar/sidebar-components/layer-components/utils/Bar.svelte';
 
 	const dispatch = createEventDispatcher();
+
+	let container: HTMLElement;
+	let open: boolean = false;
+	let selectedColorScale = ColorPalletes.BLUES;
+	const colorValueArray = Object.keys(ColorPalletes).map(
+		(key) => ColorPalletes[key as keyof typeof ColorPalletes]
+	);
+
 	onMount(() => {
 		document.addEventListener('click', handleOutsideClick);
 		return () => {
 			document.removeEventListener('click', handleOutsideClick);
 		};
 	});
-	const chooseColumn = (column: string) => {
-		dispatch('choose', { column });
-		currentValue = column;
-		open = false;
-	};
 
 	const handleOutsideClick = (event: MouseEvent) => {
 		if (container && !container.contains(event.target as Node)) {
 			open = false;
 		}
 	};
+
+	function handleButtonClick(scale: ColorPalletes) {
+		dispatch('choose', { scale });
+		selectedColorScale = scale;
+		open = false;
+	}
 </script>
 
 <div class={$$props.class} bind:this={container}>
@@ -36,22 +39,16 @@
 			class="mx-auto bg-neutral-900 w-full rounded-sm justify-center hover:bg-neutral-900/50 flex-grow flex items-center text-center border-neutral-700/50"
 			on:click={() => (open = !open)}
 		>
-			<span class="text-sm text-neutral-300 ml-1">{columnType}</span>
-			<span class="text-sm text-gray-100 w-full justify-center truncate px-3">
-				{currentValue || 'Select a column'}
-			</span>
+			<Bar {selectedColorScale} />
 		</button>
 
 		{#if open}
 			<div
-				class="scrollBarDiv bg-neutral-900 rounded-md absolute w-full left-0 top-full mt-1 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
+				class="scrollBarDiv h-40 bg-neutral-900 rounded-md absolute w-full left-0 top-full mt-1 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			>
-				{#each items as column}
-					<button
-						class="block w-full text-left px-3 py-2 text-gray-300 hover:bg-neutral-700 font-thin text-sm truncate"
-						on:click={() => chooseColumn(column)}
-					>
-						{column}
+				{#each colorValueArray as scale}
+					<button on:click={() => handleButtonClick(ColorPalletes[scale])} class="w-full h-4">
+						<Bar selectedColorScale={scale} k={5} />
 					</button>
 				{/each}
 			</div>
