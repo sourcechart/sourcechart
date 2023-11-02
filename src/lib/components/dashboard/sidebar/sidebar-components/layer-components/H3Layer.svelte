@@ -108,13 +108,6 @@
 		}
 	};
 
-	function convertToRGBA(hex: string) {
-		const r = parseInt(hex.slice(1, 3), 16);
-		const g = parseInt(hex.slice(3, 5), 16);
-		const b = parseInt(hex.slice(5, 7), 16);
-		return [r, g, b, 255]; // Assuming the color is fully opaque
-	}
-
 	$: if ($rerender > 0 || currentColorScale) {
 		const layerInstance = new H3HexagonLayer({
 			id: id,
@@ -124,12 +117,15 @@
 			filled: filled, //@ts-ignore
 			getElevation: (d) => d.count, //@ts-ignore
 			getFillColor: (d) => {
-				//@ts-ignore
 				const colorHex = colorScale.getColorFromValue(currentColorScale, d.count);
-				const rgba = d3.color(colorHex).rgb();
-				return [rgba.r, rgba.g, rgba.b, 255]; // Assuming full opacity
-			},
-
+				if (!colorHex) {
+					return [0, 0, 0, 0];
+				} else {
+					//@ts-ignore
+					const rgba = d3.color(colorHex).rgb();
+					return [rgba.r, rgba.g, rgba.b, 255]; // Assuming full opacity
+				}
+			}, //@ts-ignore
 			getHexagon: (d) => d.hex,
 			wireframe: wireframe,
 			pickable: pickable,
