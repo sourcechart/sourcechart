@@ -7,16 +7,18 @@
 		rerender
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
+	import { ColorScale, ColorScales } from './utils/ColorScale';
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { getColumnsFromFile } from '$lib/io/Stores';
-	import Dropdown from '../utils/Dropdown.svelte';
-	import { deepEqual } from './utils';
+	import { deepEqual } from './utils/utils';
 
-	$: columns = getColumnsFromFile();
-	$: i = clickedChartIndex();
+	import ColorDropdown from './utils/ColorDropdown.svelte';
+	import Dropdown from '../utils/Dropdown.svelte';
 
 	export let id: string;
 	export let defaultLayer: any;
+
+	const colorScale = new ColorScale(5);
 	const CHUNK_SIZE = 100000;
 	let wireframe = defaultLayer?.wireframe || false;
 	let pickable = defaultLayer?.pickable || true;
@@ -26,6 +28,14 @@
 	let extruded = defaultLayer?.extruded || true;
 	let hexColumn = defaultLayer?.hexColumn || 'H3_Index';
 
+	let currentColorScale: ColorScales = ColorScales.BLUES; // Default to REDS
+
+	const handleColorChoose = (e: CustomEvent) => {
+		currentColorScale = e.detail.value;
+	};
+
+	$: columns = getColumnsFromFile();
+	$: i = clickedChartIndex();
 	$: {
 		const newLayer: H3HexagonLayer = {
 			layerType: 'H3HexagonLayer',
@@ -95,8 +105,7 @@
 		}
 	};
 
-	//This is a terrible hack that should not exist... but alas, it does
-	$: if ($rerender > 0) {
+	$: if ($rerender > 0 || currentColorScale) {
 		const layerInstance = new H3HexagonLayer({
 			id: id,
 			data: loadData(),
@@ -104,12 +113,15 @@
 			extruded: extruded,
 			filled: filled, //@ts-ignore
 			getElevation: (d) => d.count, //@ts-ignore
-			getFillColor: (d) => [255, (1 - d.count / 500) * 255, 0], //@ts-ignore
+			getFillColor: (d) => {
+				//@ts-ignore
+				return colorScale.getColorFromValue(currentColorScale, d.count).map((c) => parseInt(c));
+			}, //@ts-ignore
 			getHexagon: (d) => d.hex,
 			wireframe: wireframe,
 			pickable: pickable,
 			updateTrigger: {
-				getFillColor: [countColumn],
+				getFillColor: [currentColorScale, countColumn], // add currentColorScale as a dependency
 				getHexagon: [hexColumn],
 				getElevation: [countColumn],
 				getLineWidth: [countColumn]
@@ -166,3 +178,5 @@
 		on:choose={handleCountChoose}
 	/>
 </div>
+
+<ColorDropdown on:choose={handleColorChoose} />

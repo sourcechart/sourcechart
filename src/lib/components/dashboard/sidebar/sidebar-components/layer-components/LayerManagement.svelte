@@ -10,7 +10,6 @@
 	import ColorDropdown from '../ColorDropdown.svelte';
 
 	import { createEventDispatcher, onMount } from 'svelte';
-	import Bar from '$lib/components/ui/colorbar/Bar.svelte';
 
 	export let id: string;
 	export let defaultLayer: LayerOptions['layer'];
@@ -110,7 +109,7 @@
 	<H3Layer {id} {defaultLayer} />
 {/if}
 
-<ColorDropdown />
+<ColorDropdown on:choose={() => {}} />
 
 <style>
 	.scrollBarDiv::-webkit-scrollbar {

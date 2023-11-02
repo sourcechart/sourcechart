@@ -1,17 +1,32 @@
 <script lang="ts">
-	import Bar from '$lib/components/ui/colorbar/Bar.svelte';
-	import { ColorScales } from '$lib/components/ui/colorbar/ColorScale';
+	import { ColorScales } from '$lib/components/dashboard/sidebar/sidebar-components/layer-components/utils/ColorScale';
+	import { onMount, createEventDispatcher } from 'svelte';
+	import Bar from '$lib/components/dashboard/sidebar/sidebar-components/layer-components/utils/Bar.svelte';
+
+	const dispatch = createEventDispatcher();
 
 	let container: HTMLElement;
 	let open: boolean = false;
 	let selectedColorScale = ColorScales.BLUES;
-
-	//@ts-ignore
 	const colorValueArray = Object.keys(ColorScales).map(
 		(key) => ColorScales[key as keyof typeof ColorScales]
 	);
 
+	onMount(() => {
+		document.addEventListener('click', handleOutsideClick);
+		return () => {
+			document.removeEventListener('click', handleOutsideClick);
+		};
+	});
+
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (container && !container.contains(event.target as Node)) {
+			open = false;
+		}
+	};
+
 	function handleButtonClick(scale: ColorScales) {
+		dispatch('choose', { scale });
 		selectedColorScale = scale;
 		open = false;
 	}
