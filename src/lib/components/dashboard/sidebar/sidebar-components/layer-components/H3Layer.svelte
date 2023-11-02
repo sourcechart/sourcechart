@@ -7,7 +7,7 @@
 		rerender
 	} from '$lib/io/Stores';
 	import { checkNameForSpacesAndHyphens } from '$lib/io/FileUtils';
-	import { ColorScale, ColorScales } from './utils/ColorScale';
+	import { ColorScale, ColorPalletes } from './utils/ColorScale';
 	import { H3HexagonLayer } from '@deck.gl/geo-layers';
 	import { getColumnsFromFile } from '$lib/io/Stores';
 	import { deepEqual } from './utils/utils';
@@ -29,7 +29,7 @@
 	let extruded = defaultLayer?.extruded || true;
 	let hexColumn = defaultLayer?.hexColumn || 'H3_Index';
 
-	let currentColorScale: ColorScales = ColorScales.BLUES; // Default to REDS
+	let currentColorScale: ColorPalletes = ColorPalletes.BLUES; // Default to REDS
 
 	const handleColorChoose = (e: CustomEvent) => {
 		console.log(e.detail);

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ColorScales } from '$lib/components/dashboard/sidebar/sidebar-components/layer-components/utils/ColorScale';
+	import { ColorPalletes } from '$lib/components/dashboard/sidebar/sidebar-components/layer-components/utils/ColorScale';
 	import { onMount, createEventDispatcher } from 'svelte';
 	import Bar from '$lib/components/dashboard/sidebar/sidebar-components/layer-components/utils/Bar.svelte';
 
@@ -7,9 +7,9 @@
 
 	let container: HTMLElement;
 	let open: boolean = false;
-	let selectedColorScale = ColorScales.BLUES;
-	const colorValueArray = Object.keys(ColorScales).map(
-		(key) => ColorScales[key as keyof typeof ColorScales]
+	let selectedColorScale = ColorPalletes.BLUES;
+	const colorValueArray = Object.keys(ColorPalletes).map(
+		(key) => ColorPalletes[key as keyof typeof ColorPalletes]
 	);
 
 	onMount(() => {
@@ -25,7 +25,7 @@
 		}
 	};
 
-	function handleButtonClick(scale: ColorScales) {
+	function handleButtonClick(scale: ColorPalletes) {
 		dispatch('choose', { scale });
 		selectedColorScale = scale;
 		open = false;
@@ -47,7 +47,7 @@
 				class="scrollBarDiv h-40 bg-neutral-900 rounded-md absolute w-full left-0 top-full mt-1 transform transition-transform origin-top overflow-y-auto overflow-x-hidden z-10"
 			>
 				{#each colorValueArray as scale}
-					<button on:click={() => handleButtonClick(ColorScales[scale])} class="w-full h-4">
+					<button on:click={() => handleButtonClick(ColorPalletes[scale])} class="w-full h-4">
 						<Bar selectedColorScale={scale} />
 					</button>
 				{/each}
