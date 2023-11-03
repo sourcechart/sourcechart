@@ -8,7 +8,7 @@
 		duckDBInstanceStore,
 		fileUploadStore,
 		mostRecentChartID,
-		polygons
+		rerender
 	} from '$lib/io/Stores';
 	import { removeFromIndexedDB } from '$lib/io/IDBUtils';
 	import { DuckDBClient } from '$lib/io/DuckDBClient';
@@ -23,12 +23,13 @@
 	let isDropdownOpen = false;
 	let selectedDataset: string | null = '';
 	let dropdownContainer: HTMLElement;
+	let shouldLoadFilename = false;
 
 	$: file = getFileFromStore();
 	$: i = clickedChartIndex();
 	$: datasets = fileDropdown();
 
-	$: if ($allCharts[$i]?.filename) {
+	$: if (shouldLoadFilename && $allCharts[$i]?.filename) {
 		if (isURL($allCharts[$i].filename)) {
 			selectedDataset = extractFilenameFromURLOrString($allCharts[$i].filename);
 		} else {
@@ -42,12 +43,8 @@
 		if (!input) {
 			return false; // Default to false if input is null or empty.
 		}
-		// More comprehensive regex pattern for URL detection.
-		// Covers http, https, ftp, file protocols, IP addresses, localhost, and more.
 		const urlPattern = /^(https?|ftp|file):\/\/|^(localhost|(\d{1,3}\.){3}\d{1,3})(:\d+)?(\/\S*)?$/;
-
 		const filenamePattern = /^[^\/\\]*\.([a-z0-9]+)$/i;
-
 		return urlPattern.test(input) || !filenamePattern.test(input);
 	}
 
@@ -109,19 +106,20 @@
 
 		if (dataset?.externalDataset?.url) {
 			db = await DuckDBClient.of([]);
-			resp = await db.query(`SELECT * FROM '${dataset?.externalDataset?.url}' LIMIT 0`);
+			resp = await db.query(`SELECT * FROM "${dataset?.externalDataset?.url}" LIMIT 2`);
 			fname = `${dataset?.externalDataset?.url}`;
-			selectedDataset = dataset.filename;
 		} else if (dataset.filename) {
 			const fileHandle = await getFileHandleFromIDB(dataset.filename);
 			const file = await fileHandle.getFile();
 			db = await DuckDBClient.of([file]);
+
 			const sanitizedFilename = checkNameForSpacesAndHyphens(file.name);
 			selectedDataset = dataset.filename;
-			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 0`); //@ts-ignore
+			resp = await db.query(`SELECT * FROM ${sanitizedFilename} LIMIT 2`); //@ts-ignore
 		} else {
 			return;
 		}
+		$rerender += 1;
 		//@ts-ignore
 		var schema = resp.schema; //@ts-ignore
 		var columns = schema.map((item) => item['name']);
@@ -162,12 +160,6 @@
 	};
 
 	let tooltipText = '';
-
-	$: if (!$mostRecentChartID) {
-		tooltipText = 'Please create a chart first.';
-	} else if ($polygons.length === 0) {
-		tooltipText = 'No polygons detected. Please add some rectangles to proceed.';
-	}
 </script>
 
 <div class="py-1 flex w-full space-x-1 items-center justify-between">
@@ -175,10 +167,8 @@
 
 	<div class="relative flex justify-between">
 		<button
-			bind:this={dropdownContainer}
 			class="bg-neutral-900 justify-between text-center rounded-sm hover:bg-neutral-900/50 flex items-center border-neutral-700/50 w-44 px-1"
 			on:click={toggleDropdown}
-			disabled={!$mostRecentChartID || $polygons.length === 0}
 		>
 			<span
 				class="text-sm text-gray-100 justify-start flex hover:text-neutral-200 font-thin ml-1 truncate"
@@ -208,6 +198,7 @@
 								on:click={async () => {
 									queryDuckDB(dataset);
 									isDropdownOpen = false;
+									shouldLoadFilename = true;
 								}}
 								on:keypress={async (e) => e.key === 'Enter' && queryDuckDB(dataset)}
 							>
@@ -253,19 +244,6 @@
 		scrollbar-color: rgba(40, 40, 40, 0.3) rgba(0, 0, 0, 0.1);
 		max-height: 200px; /* Adjust this value to your desired maximum height */
 		overflow-y: auto;
-	}
-	button[disabled] {
-		cursor: not-allowed; /* Changes the cursor on hover to indicate it's not clickable */
-		opacity: 0.5; /* Reduces the button's opacity to indicate it's disabled */
-	}
-
-	button[disabled]:hover + .tooltip {
-		visibility: visible;
-	}
-
-	button[disabled] {
-		cursor: not-allowed;
-		opacity: 0.5;
 	}
 
 	.tooltip {

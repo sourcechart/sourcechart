@@ -13,8 +13,7 @@
 		activeSidebar,
 		screenSize,
 		polygons,
-		scale,
-		panAmount
+		scale
 	} from '$lib/io/Stores';
 	import { get } from 'svelte/store';
 
@@ -223,23 +222,14 @@
 			e.touches.length === 2 &&
 			initialDistance !== null
 		) {
-			{
-				const currentDistance = getDistance(e.touches[0], e.touches[1]);
-				let scaleFactor = currentDistance / initialDistance;
+			const currentDistance = getDistance(e.touches[0], e.touches[1]);
+			const scaleFactor = currentDistance / initialDistance;
 
-				const currentScale = get(scale); // Assuming 'get' retrieves the current scale value.
-				const newScale = Math.max(0.1, currentScale * scaleFactor); // Ensure the scale doesn't go below 0.1
+			const currentScale = get(scale);
+			scale.set(currentScale * scaleFactor);
 
-				scale.set(newScale);
-
-				initialDistance = currentDistance;
-				polygons.update((polys) => {
-					return polys.map((poly) => {
-						return PolyOps.scaleRectangle(poly, $scale);
-					});
-				});
-				return; // We return early after handling zooming.
-			}
+			initialDistance = currentDistance;
+			return; // We return early after handling zooming.
 		}
 
 		if (window.TouchEvent && e instanceof TouchEvent) {

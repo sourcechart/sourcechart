@@ -34,7 +34,8 @@ const addChartMetaData = (id: string): void => {
 			legend: {
 				data: []
 			}
-		}
+		},
+		layers: []
 	};
 
 	allCharts.update((value) => [...value, chartMetaData]);

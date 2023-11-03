@@ -6,6 +6,35 @@
 
 type WorkFlow = 'basic' | 'cluster';
 type ChartType = 'Scatter' | 'Bar' | 'Line' | 'Pie' | 'Area' | 'ClusterDensity';
+type DropdownType =
+	| 'chartType'
+	| 'aggregator'
+	| 'dataset'
+	| 'column'
+	| 'groupby'
+	| 'legend'
+	| 'filter'
+	| 'x'
+	| 'y'
+	| 'workflow'
+	| 'source'
+	| 'target'
+	| 'weight'
+	| 'fromLatitude'
+	| 'toLatitude'
+	| 'fromLongitude'
+	| 'toLongitude'
+	| 'from'
+	| 'to'
+	| 'polygon'
+	| 'startPoint'
+	| 'endPoint'
+	| 'H3'
+	| 'count'
+	| 'color'
+	| 'name'
+	| 'path';
+
 type DistanceFunction = (a: number[], b: number[]) => number;
 type PointVector = number[];
 
@@ -34,15 +63,82 @@ type Chart = {
 	filterColumns: Array<any>;
 	xColumn: string | null;
 	yColumn: string | null;
-
-	//chartShape: string;
-
-	//Maybe I should seperate this out to a different store.
-	//canvasWidth: number;
-	//canvasHeight: number;
-	//polygon: Polygon;
-
 	chartOptions: any;
+	layers: LayerOptions[];
+};
+
+type LayerOptions = {
+	layerID: string;
+	layer:
+		| ArcLayer
+		| LineLayer
+		| ScatterplotLayer
+		| PathLayer
+		| PolygonLayer
+		| GeoJsonLayer
+		| H3HexagonLayer;
+};
+
+type ArcLayer = {
+	layerType: 'Arc';
+	fromLatitudeColumn: string;
+	fromLongitudeColumn: string;
+	toLatitudeColumn: string;
+	toLongitudeColumn: string;
+	width: number;
+	pickable: boolean;
+};
+
+type LineLayer = {
+	layerType: 'Line';
+	fromLatitude: string;
+	fromLongitude: string;
+	toLatitude: string;
+	toLongitude: string;
+	pickable: boolean;
+	color: string;
+};
+
+type ScatterplotLayer = {
+	layerType: 'Scatterplot';
+	pickable: boolean;
+	radius: number;
+	latitudeColumn: string;
+	longitudeColumn: string;
+};
+
+type PathLayer = {
+	id: string;
+	layerType: 'Path';
+	width: number | string;
+	pickable: boolean;
+	pathColumn: string;
+	nameColumn: string;
+	colorColumn: string;
+};
+
+type PolygonLayer = {
+	id: string;
+	layerType: 'Polygon';
+	columns: string[];
+};
+
+type GeoJsonLayer = {
+	id: string;
+	layerType: 'GeoJson';
+	columns: string[];
+};
+
+type H3HexagonLayer = {
+	wireframe: boolean;
+	fillColor: number[];
+	elevationScale: number;
+	extruded: boolean;
+	filled: boolean;
+	pickable: boolean;
+	hexColumn: string;
+	countColumn: string;
+	layerType: 'H3HexagonLayer';
 };
 
 type Canvas = {
@@ -205,3 +301,13 @@ interface Shapes {
 	Rectangle: Rectangle;
 	Arrow: Arrow;
 }
+
+interface DropdownContext {
+	toggleDropdown: () => void;
+}
+
+declare module '@deck.gl/core';
+declare module '@deck.gl/layers';
+declare module '@deck.gl/geo-layers';
+declare module '@deck.gl/mapbox';
+type SizeType = typeof xs | typeof sm | typeof md | typeof lg | typeof xl;
